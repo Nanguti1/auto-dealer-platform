@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('opening_hours', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('branch_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->unsignedTinyInteger('day_of_week')->index();
+            $table->time('opens_at')->nullable();
+            $table->time('closes_at')->nullable();
+            $table->boolean('is_closed')->default(false);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('opening_hours');

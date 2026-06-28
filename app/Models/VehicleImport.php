@@ -2,9 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VehicleImport extends Model
 {
-    //
+    use HasFactory, SoftDeletes;
+
+    protected $fillable = ['user_id', 'supplier_id', 'vehicle_id', 'reference_number', 'origin_country', 'destination_port', 'estimated_cost', 'status', 'request_data'];
+
+    protected function casts(): array
+    {
+        return [
+            'request_data' => 'array',
+            'estimated_cost' => 'decimal:2',
+        ];
+    }
+
+    public function scopeRecent($query)
+    {
+        return $query->latest();
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+
+    public function vehicle(): BelongsTo
+    {
+        return $this->belongsTo(Vehicle::class, 'vehicle_id');
+    }
 }
