@@ -6,20 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('testimonials', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->string('position')->nullable();
+            $table->string('avatar_path')->nullable();
+            $table->unsignedTinyInteger('rating')->nullable();
+            $table->text('body');
+            $table->boolean('is_active')->default(true);
+            $table->unsignedInteger('sort_order')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('testimonials');
