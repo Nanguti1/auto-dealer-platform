@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Vehicle extends Model
 {
@@ -88,5 +90,20 @@ class Vehicle extends Model
     public function vehicleCondition(): BelongsTo
     {
         return $this->belongsTo(VehicleCondition::class, 'vehicle_condition_id');
+    }
+
+    public function features(): BelongsToMany
+    {
+        return $this->belongsToMany(VehicleFeature::class, 'vehicle_feature_mappings');
+    }
+
+    public function galleries(): HasMany
+    {
+        return $this->hasMany(VehicleGallery::class);
+    }
+
+    public function specifications(): HasMany
+    {
+        return $this->hasMany(VehicleSpecification::class);
     }
 }
