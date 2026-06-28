@@ -54,11 +54,15 @@ export default function DashboardLayout({
   };
 
   const navigation = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'My Vehicles', href: '/dashboard/vehicles', icon: Car },
-    { name: 'Favorites', href: '/dashboard/favorites', icon: Heart },
-    { name: 'Applications', href: '/dashboard/applications', icon: FileText },
-    { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+    { name: 'Dashboard', href: '/customer/dashboard', icon: LayoutDashboard },
+    { name: 'Wishlist', href: '/customer/wishlist', icon: Heart },
+    { name: 'Recently Viewed', href: '/customer/recently-viewed', icon: Car },
+    { name: 'Saved Searches', href: '/customer/saved-searches', icon: FileText },
+    { name: 'Reservations', href: '/customer/reservations', icon: Car },
+    { name: 'Bookings', href: '/customer/bookings', icon: FileText },
+    { name: 'Notifications', href: '/customer/notifications', icon: Bell },
+    { name: 'Profile', href: '/customer/profile', icon: Settings },
+    { name: 'Settings', href: '/customer/settings', icon: Settings },
   ];
 
   return (
@@ -75,7 +79,7 @@ export default function DashboardLayout({
         >
           <div className="flex h-16 items-center justify-between border-b px-4">
             {sidebarOpen && (
-              <Link href="/dashboard" className="flex items-center space-x-2">
+              <Link href="/customer/dashboard" className="flex items-center space-x-2">
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                   <span className="text-sm font-bold text-primary-foreground">DL</span>
                 </div>
@@ -160,7 +164,7 @@ export default function DashboardLayout({
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/dashboard/settings">
+                    <Link href="/customer/settings">
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
                     </Link>

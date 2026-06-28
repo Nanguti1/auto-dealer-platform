@@ -19,6 +19,16 @@ createInertiaApp({
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
+            case name.startsWith('inventory/'):
+            case name.startsWith('finance/'):
+            case name.startsWith('trade-in/'):
+            case name.startsWith('import/'):
+            case name.startsWith('contact/'):
+                return undefined;
+            case name.startsWith('customer/'):
+                return undefined;
+            case name.startsWith('public/'):
+                return undefined;
             default:
                 return AppLayout;
         }
@@ -37,5 +47,4 @@ createInertiaApp({
     },
 });
 
-// This will set light / dark mode on load...
 initializeTheme();
