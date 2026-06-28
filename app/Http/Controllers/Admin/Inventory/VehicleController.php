@@ -1,0 +1,111 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin\Inventory;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Inventory\StoreVehicleRequest;
+use App\Http\Requests\Inventory\UpdateVehicleRequest;
+use App\Models\Vehicle;
+use App\Services\Inventory\VehicleService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class VehicleController extends Controller
+{
+    public function __construct(private readonly VehicleService $service)
+    {
+    }
+
+    public function index(Request $request): Response
+    {
+        $this->authorize('viewAny', Vehicle::class);
+
+        return Inertia::render('Admin/Inventory/Vehicles/Index', [
+            'vehicles' => $this->service->paginate($request->query()),
+            'filters' => $request->query(),
+        ]);
+    }
+
+    public function create(): Response
+    {
+        $this->authorize('create', Vehicle::class);
+
+        return Inertia::render('Admin/Inventory/Vehicles/Create');
+    }
+
+    public function store(StoreVehicleRequest $request): RedirectResponse
+    {
+        $this->service->create($request->validated());
+
+        return redirect()->route('admin.vehicles.index')->with('success', 'Created successfully.');
+    }
+
+    public function show(Vehicle $vehicle): Response
+    {
+        $this->authorize('view', $vehicle);
+
+        return Inertia::render('Admin/Inventory/Vehicles/Show', [
+            'vehicle' => $vehicle,
+        ]);
+    }
+
+    public function edit(Vehicle $vehicle): Response
+    {
+        $this->authorize('update', $vehicle);
+
+        return Inertia::render('Admin/Inventory/Vehicles/Edit', [
+            'vehicle' => $vehicle,
+        ]);
+    }
+
+    public function update(UpdateVehicleRequest $request, Vehicle $vehicle): RedirectResponse
+    {
+        $this->service->update($vehicle, $request->validated());
+
+        return back()->with('success', 'Updated successfully.');
+    }
+
+    public function destroy(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('delete', $vehicle);
+        $this->service->delete($vehicle);
+
+        return redirect()->route('admin.vehicles.index')->with('success', 'Deleted successfully.');
+    }
+
+    public function feature(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('feature', $vehicle);
+        $this->service->feature($vehicle);
+
+        return back()->with('success', 'Vehicle featured successfully.');
+    }
+
+    public function unfeature(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('feature', $vehicle);
+        $this->service->unfeature($vehicle);
+
+        return back()->with('success', 'Vehicle removed from featured inventory.');
+    }
+
+    public function markSold(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('update', $vehicle);
+        $this->service->markSold($vehicle);
+
+        return back()->with('success', 'Vehicle marked as sold.');
+    }
+
+    public function duplicate(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('create', Vehicle::class);
+        $copy = $this->service->duplicate($vehicle);
+
+        return redirect()->route('admin.vehicles.edit', $copy)->with('success', 'Vehicle duplicated successfully.');
+    }
+}
