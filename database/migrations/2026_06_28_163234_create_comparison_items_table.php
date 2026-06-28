@@ -6,20 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('comparison_items', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('vehicle_comparison_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
+            $table->unique(['vehicle_comparison_id','vehicle_id']);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('comparison_items');

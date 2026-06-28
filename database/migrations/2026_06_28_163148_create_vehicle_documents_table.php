@@ -6,20 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('vehicle_documents', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->string('path');
+            $table->string('type')->index();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('vehicle_documents');

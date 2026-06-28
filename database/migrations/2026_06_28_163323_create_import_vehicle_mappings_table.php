@@ -6,20 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('import_vehicle_mappings', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('vehicle_import_id')->constrained('vehicle_imports')->cascadeOnDelete();
+            $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
+            $table->unique(['vehicle_import_id','vehicle_id']);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('import_vehicle_mappings');

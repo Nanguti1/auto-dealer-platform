@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('analytics_data', function (Blueprint $table) {
             $table->id();
+            $table->string('metric')->index();
+            $table->string('dimension')->nullable()->index();
+            $table->decimal('value',15,4)->default(0);
+            $table->date('recorded_on')->index();
+            $table->json('metadata')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('analytics_data');

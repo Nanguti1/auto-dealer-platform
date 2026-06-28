@@ -6,20 +6,20 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('dynamic_cms_pages', function (Blueprint $table) {
             $table->id();
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->longText('body');
+            $table->string('status')->default('draft')->index();
+            $table->timestamp('published_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('dynamic_cms_pages');
