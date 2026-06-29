@@ -2,8 +2,7 @@ import * as React from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Menu, Search, X, Phone, Mail } from 'lucide-react';
+import { Menu, Search, Phone, Mail } from 'lucide-react';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +12,7 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import SearchOverlay from './search-overlay';
 
 interface StickyNavProps {
   className?: string;
@@ -22,6 +22,7 @@ export default function StickyNav({ className }: StickyNavProps) {
   const { auth } = usePage().props as any;
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [searchOpen, setSearchOpen] = React.useState(false);
 
   React.useEffect(() => {
     const handleScroll = () => {
@@ -30,16 +31,6 @@ export default function StickyNav({ className }: StickyNavProps) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const getInitials = (name?: string) => {
-    if (!name) return 'U';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .slice(0, 2);
-  };
 
   return (
     <header
@@ -226,7 +217,7 @@ export default function StickyNav({ className }: StickyNavProps) {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" className="hidden lg:flex">
+            <Button variant="ghost" size="icon" className="hidden lg:flex" onClick={() => setSearchOpen(true)} aria-label="Open search">
               <Search className="h-5 w-5" />
             </Button>
 
@@ -306,6 +297,7 @@ export default function StickyNav({ className }: StickyNavProps) {
           </div>
         </div>
       </div>
+      <SearchOverlay open={searchOpen} onOpenChange={setSearchOpen} />
     </header>
   );
 }

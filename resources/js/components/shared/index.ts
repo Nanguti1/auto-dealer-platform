@@ -6,3 +6,6 @@ export { default as StatisticCard } from './statistic-card';
 export { default as PartnerCard } from './partner-card';
 export { default as BlogCard } from './blog-card';
 export { default as HeroSection } from './hero-section';
+export { default as Lightbox } from './lightbox';
+export { ImageDropzone, ImageSortableGrid, MediaUpload } from './media-upload';
+export type { MediaUploadItem } from './media-upload';

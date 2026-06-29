@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import type { VehicleGalleryImage } from '@/types/vehicle';
 import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import Lightbox from '@/components/shared/lightbox';
 
 interface VehicleGalleryProps {
     images: VehicleGalleryImage[];
@@ -91,11 +91,13 @@ export default function VehicleGallery({ images, className }: VehicleGalleryProp
                 </div>
             )}
 
-            <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
-                <DialogContent className="max-w-5xl border-none bg-black/95 p-2 sm:p-4">
-                    <img src={active.path} alt={active.alt} className="max-h-[85vh] w-full object-contain" />
-                </DialogContent>
-            </Dialog>
+            <Lightbox
+                open={lightboxOpen}
+                onOpenChange={setLightboxOpen}
+                index={activeIndex}
+                onIndexChange={setActiveIndex}
+                images={sorted.map((image) => ({ src: image.path, alt: image.alt }))}
+            />
         </div>
     );
 }

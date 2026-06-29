@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { router } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -18,12 +19,18 @@ interface SearchOverlayProps {
 export default function SearchOverlay({ open, onOpenChange }: SearchOverlayProps) {
   const [query, setQuery] = React.useState('');
 
+  const submit = (term = query) => {
+    if (!term.trim()) return;
+    router.visit(`/search?q=${encodeURIComponent(term.trim())}`);
+    onOpenChange(false);
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="sr-only">Search</DialogTitle>
-          <div className="flex items-center gap-2">
+          <form className="flex items-center gap-2" onSubmit={(event) => { event.preventDefault(); submit(); }}>
             <Search className="h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Search vehicles, brands, models..."
@@ -39,7 +46,7 @@ export default function SearchOverlay({ open, onOpenChange }: SearchOverlayProps
             >
               <X className="h-5 w-5" />
             </Button>
-          </div>
+          </form>
         </DialogHeader>
         
         {query && (
@@ -69,7 +76,7 @@ export default function SearchOverlay({ open, onOpenChange }: SearchOverlayProps
                   key={term}
                   variant="outline"
                   size="sm"
-                  onClick={() => setQuery(term)}
+                  onClick={() => submit(term)}
                 >
                   {term}
                 </Button>
