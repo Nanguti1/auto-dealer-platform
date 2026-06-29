@@ -58,10 +58,10 @@ export default function CustomerLayout({
             <Link href="/inventory" className="text-sm font-medium hover:text-primary">
               Inventory
             </Link>
-            <Link href="/finance" className="text-sm font-medium hover:text-primary">
+            <Link href="/finance/calculator" className="text-sm font-medium hover:text-primary">
               Finance
             </Link>
-            <Link href="/trade-in" className="text-sm font-medium hover:text-primary">
+            <Link href="/trade-in/request" className="text-sm font-medium hover:text-primary">
               Trade-In
             </Link>
             <Link href="/contact" className="text-sm font-medium hover:text-primary">
@@ -91,13 +91,13 @@ export default function CustomerLayout({
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link href="/profile">
+                    <Link href="/customer/profile">
                       <User className="mr-2 h-4 w-4" />
                       Profile
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href="/settings">
+                    <Link href="/customer/settings">
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
                     </Link>
@@ -121,7 +121,7 @@ export default function CustomerLayout({
                 </Button>
               </div>
             )}
-            <Button variant="ghost" size="icon" className="md:hidden">
+            <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open customer navigation">
               <Menu className="h-5 w-5" />
             </Button>
           </div>
@@ -150,8 +150,8 @@ export default function CustomerLayout({
               <h3 className="font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li><Link href="/inventory" className="hover:text-primary">Inventory</Link></li>
-                <li><Link href="/finance" className="hover:text-primary">Finance</Link></li>
-                <li><Link href="/trade-in" className="hover:text-primary">Trade-In</Link></li>
+                <li><Link href="/finance/calculator" className="hover:text-primary">Finance</Link></li>
+                <li><Link href="/trade-in/request" className="hover:text-primary">Trade-In</Link></li>
                 <li><Link href="/about" className="hover:text-primary">About Us</Link></li>
               </ul>
             </div>
@@ -175,7 +175,7 @@ export default function CustomerLayout({
             </div>
           </div>
           <div className="mt-8 border-t pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 Dealership. All rights reserved.</p>
+            <p>&copy; 2026 Dealership. All rights reserved.</p>
           </div>
         </div>
       </footer>
