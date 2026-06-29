@@ -11,3 +11,4 @@ export { default as VehicleLoadingGrid } from './vehicle-loading-grid';
 export { default as VehicleLoadingDetail } from './vehicle-loading-detail';
 export { default as FinanceCalculator } from './finance-calculator';
 export { default as VehicleInquiryForm } from './vehicle-inquiry-form';
+export { default as VehicleCarousel } from './vehicle-carousel';

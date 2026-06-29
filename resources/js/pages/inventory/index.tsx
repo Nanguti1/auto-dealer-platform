@@ -11,13 +11,15 @@ import {
 import { H1, P } from '@/components/design-system/typography';
 import { EmptyState } from '@/components/design-system';
 import { Button } from '@/components/ui/button';
+import { Pagination } from '@/components/ui/pagination';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { useWishlist } from '@/hooks/use-wishlist';
 import { useCompare } from '@/hooks/use-compare';
 import { useSavedSearches } from '@/hooks/use-saved-searches';
 import { filterVehicles, mockFilterOptions } from '@/data/mock-vehicles';
 import type { FilterOptions, InventoryFilters, PaginatedVehicles, VehicleSummary } from '@/types/vehicle';
-import { GitCompareArrows, BookmarkPlus, Car } from 'lucide-react';
+import { GitCompareArrows, BookmarkPlus, Car, List, Grid3X3, RotateCcw } from 'lucide-react';
 
 interface InventoryIndexProps {
     vehicles?: PaginatedVehicles;
@@ -31,11 +33,27 @@ export default function InventoryIndex({
     filterOptions: serverOptions,
 }: InventoryIndexProps) {
     const [loading, setLoading] = React.useState(false);
+    const [viewMode, setViewMode] = React.useState<'grid' | 'list'>(() => {
+        if (typeof window === 'undefined') return 'grid';
+        return (localStorage.getItem('dealership:inventory-view') as 'grid' | 'list' | null) ?? 'grid';
+    });
     const filters = serverFilters;
     const filterOptions = serverOptions ?? mockFilterOptions;
     const { toggle: toggleWishlist, isWishlisted } = useWishlist();
     const { toggle: toggleCompare, isInCompare, ids: compareIds, maxReached } = useCompare();
     const { save: saveSearch } = useSavedSearches();
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('dealership:inventory-filters', JSON.stringify(filters));
+        }
+    }, [filters]);
+
+    React.useEffect(() => {
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('dealership:inventory-view', viewMode);
+        }
+    }, [viewMode]);
 
     const vehicles: VehicleSummary[] = React.useMemo(() => {
         const data = serverVehicles?.data ?? filterVehicles(filters as Record<string, string | number | undefined>);
@@ -50,6 +68,8 @@ export default function InventoryIndex({
         setLoading(true);
         router.get('/inventory', next as Record<string, string | number | undefined>, {
             preserveState: true,
+            preserveScroll: true,
+            replace: true,
             onFinish: () => setLoading(false),
         });
     };
@@ -61,8 +81,10 @@ export default function InventoryIndex({
 
     const handleSaveSearch = () => {
         const name = `Search ${new Date().toLocaleDateString()}`;
-        saveSearch(name, filters);
+        saveSearch(name, filters, true);
     };
+
+    const resetFilters = () => applyFilters({ sort: filters.sort });
 
     return (
         <PublicLayout title="Inventory">
@@ -88,6 +110,10 @@ export default function InventoryIndex({
                                     </Link>
                                 </Button>
                             )}
+                            <Button variant="outline" onClick={resetFilters}>
+                                <RotateCcw className="mr-2 h-4 w-4" />
+                                Reset Filters
+                            </Button>
                             <Button variant="outline" onClick={handleSaveSearch}>
                                 <BookmarkPlus className="mr-2 h-4 w-4" />
                                 Save Search
@@ -117,16 +143,24 @@ export default function InventoryIndex({
                                 <p className="text-sm text-muted-foreground">
                                     {serverVehicles?.total ?? vehicles.length} vehicles found
                                 </p>
-                                <select
-                                    value={filters.sort ?? 'newest'}
-                                    onChange={(e) => applyFilters({ ...filters, sort: e.target.value })}
-                                    className="h-10 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                                >
-                                    <option value="newest">Newest First</option>
-                                    <option value="price_asc">Price: Low to High</option>
-                                    <option value="price_desc">Price: High to Low</option>
-                                    <option value="mileage_asc">Mileage: Low to High</option>
-                                </select>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <Tabs defaultValue={viewMode} value={viewMode} onValueChange={(value) => setViewMode(value as 'grid' | 'list')}>
+                                        <TabsList aria-label="Inventory view">
+                                            <TabsTrigger value="grid"><Grid3X3 className="size-4" /> Grid</TabsTrigger>
+                                            <TabsTrigger value="list"><List className="size-4" /> List</TabsTrigger>
+                                        </TabsList>
+                                    </Tabs>
+                                    <select
+                                        value={filters.sort ?? 'newest'}
+                                        onChange={(e) => applyFilters({ ...filters, sort: e.target.value })}
+                                        className="h-10 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                                    >
+                                        <option value="newest">Newest First</option>
+                                        <option value="price_asc">Price: Low to High</option>
+                                        <option value="price_desc">Price: High to Low</option>
+                                        <option value="mileage_asc">Mileage: Low to High</option>
+                                    </select>
+                                </div>
                             </div>
 
                             {loading ? (
@@ -143,17 +177,40 @@ export default function InventoryIndex({
                                     }
                                 />
                             ) : (
-                                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-                                    {vehicles.map((vehicle) => (
-                                        <VehicleCard
-                                            key={vehicle.id}
-                                            vehicle={vehicle}
-                                            onWishlistToggle={toggleWishlist}
-                                            onCompareToggle={toggleCompare}
-                                            compareDisabled={maxReached}
-                                        />
-                                    ))}
-                                </div>
+                                <>
+                                    {viewMode === 'grid' ? (
+                                        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                                            {vehicles.map((vehicle) => (
+                                                <VehicleCard
+                                                    key={vehicle.id}
+                                                    vehicle={vehicle}
+                                                    onWishlistToggle={toggleWishlist}
+                                                    onCompareToggle={toggleCompare}
+                                                    compareDisabled={maxReached}
+                                                />
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            {vehicles.map((vehicle) => (
+                                                <article key={vehicle.id} className="group grid gap-4 rounded-2xl border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg md:grid-cols-[240px_1fr_auto]">
+                                                    <img src={vehicle.image} alt={vehicle.name} className="aspect-[4/3] w-full rounded-xl object-cover md:aspect-auto md:h-full" loading="lazy" />
+                                                    <div className="space-y-2">
+                                                        <Badge variant="secondary" className="capitalize">{vehicle.condition ?? 'available'}</Badge>
+                                                        <h3 className="text-xl font-semibold group-hover:text-primary"><Link href={`/inventory/${vehicle.slug}`}>{vehicle.name}</Link></h3>
+                                                        <p className="text-sm text-muted-foreground">{vehicle.year} • {vehicle.mileage.toLocaleString()} mi • {vehicle.fuelType} • {vehicle.transmission}</p>
+                                                        <p className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(vehicle.price)}</p>
+                                                    </div>
+                                                    <div className="flex items-center gap-2 md:flex-col md:justify-center">
+                                                        <Button asChild><Link href={`/inventory/${vehicle.slug}`}>View Details</Link></Button>
+                                                        <Button variant="outline" onClick={() => toggleWishlist(vehicle.id)}>Wishlist</Button>
+                                                    </div>
+                                                </article>
+                                            ))}
+                                        </div>
+                                    )}
+                                    <Pagination className="mt-10" links={serverVehicles?.links} currentPage={serverVehicles?.current_page ?? 1} lastPage={serverVehicles?.last_page ?? 1} />
+                                </>
                             )}
                         </div>
                     </div>

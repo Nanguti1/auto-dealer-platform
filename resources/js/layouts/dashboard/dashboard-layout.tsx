@@ -23,6 +23,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
+import NotificationDropdown from '@/components/navigation/notification-dropdown';
+import CommandPalette from '@/components/navigation/command-palette';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -42,6 +44,7 @@ export default function DashboardLayout({
   user,
 }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = React.useState(true);
+  const [commandOpen, setCommandOpen] = React.useState(false);
 
   const getInitials = (name?: string) => {
     if (!name) return 'U';
@@ -60,6 +63,9 @@ export default function DashboardLayout({
     { name: 'Saved Searches', href: '/customer/saved-searches', icon: FileText },
     { name: 'Reservations', href: '/customer/reservations', icon: Car },
     { name: 'Bookings', href: '/customer/bookings', icon: FileText },
+    { name: 'Trade-Ins', href: '/customer/trade-ins', icon: FileText },
+    { name: 'Finance', href: '/customer/finance-applications', icon: FileText },
+    { name: 'Imports', href: '/customer/import-requests', icon: FileText },
     { name: 'Notifications', href: '/customer/notifications', icon: Bell },
     { name: 'Profile', href: '/customer/profile', icon: Settings },
     { name: 'Settings', href: '/customer/settings', icon: Settings },
@@ -138,9 +144,10 @@ export default function DashboardLayout({
             </div>
 
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon">
-                <Bell className="h-5 w-5" />
+              <Button variant="outline" size="sm" onClick={() => setCommandOpen(true)} className="hidden sm:inline-flex">
+                Search <kbd className="ml-2 rounded bg-muted px-1.5 py-0.5 text-[10px]">⌘K</kbd>
               </Button>
+              <NotificationDropdown />
 
               <Separator orientation="vertical" className="h-6" />
 
@@ -185,6 +192,7 @@ export default function DashboardLayout({
           <main className="flex-1 overflow-y-auto p-6">{children}</main>
         </div>
       </div>
+      <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
     </div>
   );
 }

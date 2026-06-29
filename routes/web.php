@@ -20,9 +20,38 @@ use App\Http\Controllers\Admin\VehicleGallery\VehicleGalleryController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
+Route::inertia('about', 'public/about')->name('about');
+Route::inertia('contact', 'public/contact')->name('contact');
+Route::inertia('faq', 'public/faq')->name('faq');
+Route::inertia('testimonials', 'public/testimonials')->name('testimonials');
+Route::inertia('privacy', 'public/privacy')->name('privacy');
+Route::inertia('terms', 'public/terms')->name('terms');
+Route::inertia('newsletter', 'public/newsletter')->name('newsletter');
+Route::inertia('search', 'search-results')->name('search');
+Route::inertia('blog', 'blog-index')->name('blog.index');
+Route::inertia('blog/{slug}', 'blog-show')->name('blog.show');
+Route::inertia('inventory', 'inventory/index')->name('inventory.index');
+Route::inertia('inventory/compare', 'inventory/compare')->name('inventory.compare');
+Route::inertia('inventory/{slug}', 'inventory/show')->name('inventory.show');
+Route::inertia('finance/calculator', 'finance/calculator')->name('finance.calculator');
+Route::inertia('trade-in/request', 'trade-in/request')->name('trade-in.request');
+Route::inertia('import/request', 'import/request')->name('import.request');
+Route::inertia('contact/dealer', 'contact/dealer')->name('contact.dealer');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::inertia('customer/dashboard', 'customer/dashboard')->name('customer.dashboard');
+    Route::inertia('customer/wishlist', 'customer/wishlist')->name('customer.wishlist');
+    Route::inertia('customer/saved-searches', 'customer/saved-searches')->name('customer.saved-searches');
+    Route::inertia('customer/recently-viewed', 'customer/recently-viewed')->name('customer.recently-viewed');
+    Route::inertia('customer/reservations', 'customer/reservations')->name('customer.reservations');
+    Route::inertia('customer/bookings', 'customer/bookings')->name('customer.bookings');
+    Route::inertia('customer/notifications', 'customer/notifications')->name('customer.notifications');
+    Route::inertia('customer/profile', 'customer/profile')->name('customer.profile');
+    Route::inertia('customer/settings', 'customer/settings')->name('customer.settings');
+    Route::inertia('customer/trade-ins', 'customer/trade-ins')->name('customer.trade-ins');
+    Route::inertia('customer/finance-applications', 'customer/finance-applications')->name('customer.finance-applications');
+    Route::inertia('customer/import-requests', 'customer/import-requests')->name('customer.import-requests');
 });
 
 Route::middleware(['auth', 'verified'])

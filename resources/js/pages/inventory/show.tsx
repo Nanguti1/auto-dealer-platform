@@ -14,6 +14,10 @@ import {
 } from '@/components/vehicles';
 import VehicleCard from '@/components/shared/vehicle-card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useWishlist } from '@/hooks/use-wishlist';
@@ -21,7 +25,7 @@ import { useCompare } from '@/hooks/use-compare';
 import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 import { findVehicleBySlug, mockVehicles, toSummary } from '@/data/mock-vehicles';
 import type { VehicleDetail } from '@/types/vehicle';
-import { Calendar, Gauge, Fuel, ArrowLeft, Share2, Phone } from 'lucide-react';
+import { Calendar, Gauge, Fuel, ArrowLeft, Share2, Phone, CheckCircle2, TrendingDown } from 'lucide-react';
 
 interface InventoryShowProps {
     vehicle?: VehicleDetail;
@@ -37,6 +41,7 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
     const { toggle: toggleWishlist, isWishlisted } = useWishlist();
     const { toggle: toggleCompare, isInCompare, maxReached } = useCompare();
     const { record } = useRecentlyViewed();
+    const [shareCopied, setShareCopied] = React.useState(false);
 
     React.useEffect(() => {
         record(vehicle.id);
@@ -46,6 +51,31 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
         new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
 
     const formatMileage = (mileage: number) => new Intl.NumberFormat('en-US').format(mileage);
+
+    const persistLead = (type: string) => {
+        if (typeof window === 'undefined') return;
+        const key = 'dealership:vehicle-leads';
+        const current = JSON.parse(localStorage.getItem(key) ?? '[]') as Array<Record<string, unknown>>;
+        localStorage.setItem(key, JSON.stringify([{ type, vehicleId: vehicle.id, vehicleName: vehicle.name, createdAt: new Date().toISOString() }, ...current]));
+    };
+
+    const shareVehicle = async () => {
+        const shareUrl = typeof window !== 'undefined' ? window.location.href : `/inventory/${vehicle.slug}`;
+        if (typeof navigator !== 'undefined' && 'share' in navigator) {
+            await navigator.share({ title: vehicle.name, url: shareUrl });
+            return;
+        }
+        await navigator.clipboard?.writeText(shareUrl);
+        setShareCopied(true);
+        window.setTimeout(() => setShareCopied(false), 2000);
+    };
+
+    const priceHistory = [
+        { label: 'Listed', value: vehicle.msrp && vehicle.msrp > vehicle.price ? vehicle.msrp : Math.round(vehicle.price * 1.04) },
+        { label: 'Market', value: Math.round(vehicle.price * 1.02) },
+        { label: 'Today', value: vehicle.price },
+    ];
+    const maxPrice = Math.max(...priceHistory.map((point) => point.value));
 
     return (
         <PublicLayout title={vehicle.name}>
@@ -67,8 +97,8 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
                             disabled={maxReached && !isInCompare(vehicle.id)}
                             onToggle={() => toggleCompare(vehicle.id)}
                         />
-                        <Button variant="ghost" size="icon" aria-label="Share">
-                            <Share2 className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" aria-label="Share" onClick={() => void shareVehicle()}>
+                            {shareCopied ? <CheckCircle2 className="h-4 w-4 text-primary" /> : <Share2 className="h-4 w-4" />}
                         </Button>
                     </div>
                 </div>
@@ -179,13 +209,48 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
                                             </div>
                                         )}
                                     </dl>
+                                    <div className="mt-5 rounded-xl border bg-primary/5 p-3 text-sm text-primary">
+                                        <span className="inline-flex items-center gap-2"><CheckCircle2 className="size-4" /> Available now — reserve online or book a private viewing.</span>
+                                    </div>
                                     <div className="mt-6 space-y-3">
-                                        <Button className="w-full" size="lg" asChild>
-                                            <Link href="/contact">Schedule Test Drive</Link>
-                                        </Button>
+                                        <Dialog>
+                                            <DialogTrigger asChild><Button className="w-full" size="lg">Reserve Vehicle</Button></DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader><DialogTitle>Reserve {vehicle.name}</DialogTitle></DialogHeader>
+                                                <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); persistLead('reservation'); }}>
+                                                    <div className="grid gap-2"><Label htmlFor="reserve-name">Name</Label><Input id="reserve-name" required /></div>
+                                                    <div className="grid gap-2"><Label htmlFor="reserve-email">Email</Label><Input id="reserve-email" type="email" required /></div>
+                                                    <div className="rounded-lg bg-muted p-3 text-sm text-muted-foreground">A specialist will confirm availability and deposit details.</div>
+                                                    <Button type="submit" className="w-full">Submit Reservation</Button>
+                                                </form>
+                                            </DialogContent>
+                                        </Dialog>
+                                        <Dialog>
+                                            <DialogTrigger asChild><Button className="w-full" size="lg" variant="outline">Book Test Drive</Button></DialogTrigger>
+                                            <DialogContent>
+                                                <DialogHeader><DialogTitle>Book a private test drive</DialogTitle></DialogHeader>
+                                                <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); persistLead('test-drive'); }}>
+                                                    <div className="grid gap-2"><Label htmlFor="drive-date">Preferred date</Label><Input id="drive-date" type="date" required /></div>
+                                                    <div className="grid gap-2"><Label htmlFor="drive-notes">Notes</Label><Textarea id="drive-notes" placeholder="Preferred time, questions, or trade-in details" /></div>
+                                                    <Button type="submit" className="w-full">Request Test Drive</Button>
+                                                </form>
+                                            </DialogContent>
+                                        </Dialog>
                                         <Button className="w-full" size="lg" variant="outline" asChild>
                                             <Link href="/finance/calculator">Get Pre-Approved</Link>
                                         </Button>
+                                    </div>
+                                </div>
+
+                                <div className="rounded-2xl border bg-card p-6 shadow-sm">
+                                    <div className="mb-4 flex items-center gap-2"><TrendingDown className="size-5 text-primary" /><h3 className="font-semibold">Price history</h3></div>
+                                    <div className="space-y-3">
+                                        {priceHistory.map((point) => (
+                                            <div key={point.label}>
+                                                <div className="mb-1 flex justify-between text-sm"><span className="text-muted-foreground">{point.label}</span><span className="font-medium">{formatPrice(point.value)}</span></div>
+                                                <div className="h-2 rounded-full bg-muted"><div className="h-2 rounded-full bg-primary" style={{ width: `${(point.value / maxPrice) * 100}%` }} /></div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
 
