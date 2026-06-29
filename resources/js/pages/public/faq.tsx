@@ -58,7 +58,7 @@ export default function FAQ() {
   ];
 
   return (
-    <GuestLayout>
+    <GuestLayout title="FAQ" description="Find answers about inventory, financing, trade-ins, reservations, test drives, delivery, and ownership support.">
       <Head title="FAQ" />
       <StickyNav />
       

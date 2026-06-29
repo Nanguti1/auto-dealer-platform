@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import type { Auth } from '@/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -11,7 +12,7 @@ interface MobileNavProps {
 }
 
 export default function MobileNav({ className }: MobileNavProps) {
-  const { auth } = usePage().props as any;
+  const { auth } = usePage().props as { auth?: Partial<Auth> };
   const [open, setOpen] = React.useState(false);
 
   const getInitials = (name?: string) => {
@@ -27,8 +28,8 @@ export default function MobileNav({ className }: MobileNavProps) {
   const navigation = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'Inventory', href: '/inventory', icon: Car },
-    { name: 'Finance', href: '/finance', icon: DollarSign },
-    { name: 'Trade-In', href: '/trade-in', icon: FileText },
+    { name: 'Finance', href: '/finance/calculator', icon: DollarSign },
+    { name: 'Trade-In', href: '/trade-in/request', icon: FileText },
     { name: 'Contact', href: '/contact', icon: Phone },
   ];
 
@@ -58,6 +59,7 @@ export default function MobileNav({ className }: MobileNavProps) {
               variant="ghost"
               size="icon"
               onClick={() => setOpen(false)}
+              aria-label="Close menu"
             >
               <X className="h-6 w-6" />
             </Button>
@@ -67,7 +69,7 @@ export default function MobileNav({ className }: MobileNavProps) {
           {auth?.user && (
             <div className="flex items-center gap-3 p-4 bg-muted/50 rounded-lg mb-6">
               <Avatar className="h-10 w-10">
-                <AvatarImage src={auth.user.avatar_url} alt={auth.user.name} />
+                <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
                 <AvatarFallback>{getInitials(auth.user.name)}</AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
@@ -96,7 +98,7 @@ export default function MobileNav({ className }: MobileNavProps) {
             {auth?.user ? (
               <>
                 <Link
-                  href="/dashboard"
+                  href="/customer/dashboard"
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
                 >

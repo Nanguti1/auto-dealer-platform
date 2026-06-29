@@ -43,7 +43,7 @@ const categories = ['Electric Vehicles', 'Buying Guides', 'Finance', 'Ownership'
 
 export default function BlogIndex() {
     return (
-        <PublicLayout title="Blog">
+        <PublicLayout title="Blog" description="Read premium automotive guides, finance insights, EV trends, maintenance tips, and buying advice from Dealership.">
             <Head title="Blog" />
             <section className="bg-gradient-to-b from-muted/60 to-background py-20 md:py-28">
                 <div className="container text-center">

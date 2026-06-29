@@ -23,7 +23,7 @@ export default function ComparePage({ vehicles: serverVehicles }: ComparePagePro
     }, [serverVehicles, ids]);
 
     return (
-        <PublicLayout title="Compare Vehicles">
+        <PublicLayout title="Compare Vehicles" description="Compare selected vehicles side by side across pricing, specifications, features, performance, and ownership details.">
             <Head title="Compare Vehicles" />
 
             <section className="py-12 md:py-16">

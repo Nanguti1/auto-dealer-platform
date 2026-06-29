@@ -156,7 +156,7 @@ export default function MegaMenu({ className }: MegaMenuProps) {
                 <NavigationMenuLink asChild>
                   <Link
                     className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground group"
-                    href="/finance"
+                    href="/finance/calculator"
                   >
                     <div className="text-sm font-medium leading-none group-hover:text-primary transition-colors">Finance Center</div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -169,7 +169,7 @@ export default function MegaMenu({ className }: MegaMenuProps) {
                 <NavigationMenuLink asChild>
                   <Link
                     className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground group"
-                    href="/trade-in"
+                    href="/trade-in/request"
                   >
                     <div className="text-sm font-medium leading-none group-hover:text-primary transition-colors">Trade-In Value</div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -182,9 +182,9 @@ export default function MegaMenu({ className }: MegaMenuProps) {
                 <NavigationMenuLink asChild>
                   <Link
                     className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground group"
-                    href="/service"
+                    href="/faq"
                   >
-                    <div className="text-sm font-medium leading-none group-hover:text-primary transition-colors">Service Center</div>
+                    <div className="text-sm font-medium leading-none group-hover:text-primary transition-colors">Service & FAQ</div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                       Schedule maintenance and repairs
                     </p>
@@ -195,9 +195,9 @@ export default function MegaMenu({ className }: MegaMenuProps) {
                 <NavigationMenuLink asChild>
                   <Link
                     className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground group"
-                    href="/parts"
+                    href="/contact"
                   >
-                    <div className="text-sm font-medium leading-none group-hover:text-primary transition-colors">Parts & Accessories</div>
+                    <div className="text-sm font-medium leading-none group-hover:text-primary transition-colors">Parts Concierge</div>
                     <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                       Genuine OEM parts and accessories
                     </p>

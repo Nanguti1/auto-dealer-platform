@@ -1,19 +1,9 @@
 import * as React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { 
-  Facebook, 
-  Twitter, 
-  Instagram, 
-  Linkedin, 
-  Youtube,
-  Mail,
-  Phone,
-  MapPin,
-  Clock
-} from 'lucide-react';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, Clock } from 'lucide-react';
 
 interface FooterProps {
   className?: string;
@@ -24,9 +14,11 @@ export default function Footer({ className }: FooterProps) {
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter subscription
-    console.log('Newsletter subscription:', email);
-    setEmail('');
+    router.visit('/newsletter', {
+      method: 'get',
+      data: { email },
+      preserveScroll: true,
+    });
   };
 
   return (
@@ -45,20 +37,20 @@ export default function Footer({ className }: FooterProps) {
               Your trusted partner in finding the perfect vehicle. We offer quality vehicles, competitive pricing, and exceptional service.
             </p>
             <div className="flex gap-4">
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Facebook className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Visit us on Facebook">
+                <Facebook className="h-4 w-4" aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Twitter className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Visit us on X / Twitter">
+                <Twitter className="h-4 w-4" aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Instagram className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Visit us on Instagram">
+                <Instagram className="h-4 w-4" aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Linkedin className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Visit us on LinkedIn">
+                <Linkedin className="h-4 w-4" aria-hidden="true" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Youtube className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Visit us on YouTube">
+                <Youtube className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
           </div>
@@ -73,18 +65,18 @@ export default function Footer({ className }: FooterProps) {
                 </Link>
               </li>
               <li>
-                <Link href="/finance" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/finance/calculator" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Finance
                 </Link>
               </li>
               <li>
-                <Link href="/trade-in" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/trade-in/request" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Trade-In
                 </Link>
               </li>
               <li>
-                <Link href="/service" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  Service Center
+                <Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  FAQ
                 </Link>
               </li>
               <li>
@@ -130,6 +122,7 @@ export default function Footer({ className }: FooterProps) {
             </p>
             <form onSubmit={handleNewsletterSubmit} className="space-y-2">
               <Input
+                aria-label="Email address for newsletter"
                 type="email"
                 placeholder="Enter your email"
                 value={email}
@@ -146,7 +139,7 @@ export default function Footer({ className }: FooterProps) {
         <div className="mt-12 border-t pt-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <p className="text-sm text-muted-foreground">
-              &copy; 2024 Dealership. All rights reserved.
+              &copy; 2026 Dealership. All rights reserved.
             </p>
             <div className="flex gap-6 text-sm text-muted-foreground">
               <Link href="/privacy" className="hover:text-foreground transition-colors">
@@ -155,8 +148,8 @@ export default function Footer({ className }: FooterProps) {
               <Link href="/terms" className="hover:text-foreground transition-colors">
                 Terms of Service
               </Link>
-              <Link href="/cookie-policy" className="hover:text-foreground transition-colors">
-                Cookie Policy
+              <Link href="/privacy" className="hover:text-foreground transition-colors">
+                Privacy Choices
               </Link>
             </div>
           </div>

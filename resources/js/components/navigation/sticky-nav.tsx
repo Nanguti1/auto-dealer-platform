@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import type { Auth } from '@/types';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Menu, Search, Phone, Mail } from 'lucide-react';
@@ -19,7 +20,7 @@ interface StickyNavProps {
 }
 
 export default function StickyNav({ className }: StickyNavProps) {
-  const { auth } = usePage().props as any;
+  const { auth } = usePage().props as { auth?: Partial<Auth> };
   const [isScrolled, setIsScrolled] = React.useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
   const [searchOpen, setSearchOpen] = React.useState(false);
@@ -63,7 +64,7 @@ export default function StickyNav({ className }: StickyNavProps) {
               About Us
             </Link>
             {auth?.user ? (
-              <Link href="/dashboard" className="text-muted-foreground hover:text-foreground">
+              <Link href="/customer/dashboard" className="text-muted-foreground hover:text-foreground">
                 Dashboard
               </Link>
             ) : (
@@ -115,7 +116,7 @@ export default function StickyNav({ className }: StickyNavProps) {
                       <NavigationMenuLink asChild>
                         <Link
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/inventory/new"
+                          href="/inventory?condition=new"
                         >
                           <div className="text-sm font-medium leading-none">New Vehicles</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -128,7 +129,7 @@ export default function StickyNav({ className }: StickyNavProps) {
                       <NavigationMenuLink asChild>
                         <Link
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/inventory/used"
+                          href="/inventory?condition=used"
                         >
                           <div className="text-sm font-medium leading-none">Used Vehicles</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -141,7 +142,7 @@ export default function StickyNav({ className }: StickyNavProps) {
                       <NavigationMenuLink asChild>
                         <Link
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/inventory/certified"
+                          href="/inventory?condition=certified"
                         >
                           <div className="text-sm font-medium leading-none">Certified Pre-Owned</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -162,7 +163,7 @@ export default function StickyNav({ className }: StickyNavProps) {
                       <NavigationMenuLink asChild>
                         <Link
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/finance"
+                          href="/finance/calculator"
                         >
                           <div className="text-sm font-medium leading-none">Finance</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -175,7 +176,7 @@ export default function StickyNav({ className }: StickyNavProps) {
                       <NavigationMenuLink asChild>
                         <Link
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/trade-in"
+                          href="/trade-in/request"
                         >
                           <div className="text-sm font-medium leading-none">Trade-In</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -188,7 +189,7 @@ export default function StickyNav({ className }: StickyNavProps) {
                       <NavigationMenuLink asChild>
                         <Link
                           className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                          href="/service"
+                          href="/faq"
                         >
                           <div className="text-sm font-medium leading-none">Service Center</div>
                           <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
@@ -223,12 +224,12 @@ export default function StickyNav({ className }: StickyNavProps) {
 
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="lg:hidden">
+                <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open menu">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                <nav className="flex flex-col gap-4">
+                <nav className="flex flex-col gap-4" aria-label="Mobile navigation">
                   <Link
                     href="/inventory"
                     className="text-lg font-medium"
@@ -237,14 +238,14 @@ export default function StickyNav({ className }: StickyNavProps) {
                     Inventory
                   </Link>
                   <Link
-                    href="/finance"
+                    href="/finance/calculator"
                     className="text-lg font-medium"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Finance
                   </Link>
                   <Link
-                    href="/trade-in"
+                    href="/trade-in/request"
                     className="text-lg font-medium"
                     onClick={() => setMobileMenuOpen(false)}
                   >
@@ -264,10 +265,24 @@ export default function StickyNav({ className }: StickyNavProps) {
                   >
                     Contact
                   </Link>
+                  <Link
+                    href="/blog"
+                    className="text-lg font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Blog
+                  </Link>
+                  <Link
+                    href="/inventory/compare"
+                    className="text-lg font-medium"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Compare
+                  </Link>
                   <div className="h-px bg-border" />
                   {auth?.user ? (
                     <Link
-                      href="/dashboard"
+                      href="/customer/dashboard"
                       className="text-lg font-medium"
                       onClick={() => setMobileMenuOpen(false)}
                     >

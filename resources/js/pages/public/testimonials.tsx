@@ -59,7 +59,7 @@ export default function Testimonials() {
   ];
 
   return (
-    <GuestLayout>
+    <GuestLayout title="Testimonials" description="Read customer stories from drivers who found premium vehicles and concierge support through Dealership.">
       <Head title="Testimonials" />
       <StickyNav />
       

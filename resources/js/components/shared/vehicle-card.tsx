@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -44,13 +44,14 @@ export default function VehicleCard({
   };
 
   const href = `/inventory/${vehicle.slug ?? vehicle.id}`;
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.4, ease: 'easeOut' }}
+      initial={shouldReduceMotion ? false : { opacity: 0, y: 16 }}
+      whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={shouldReduceMotion ? undefined : { once: true, margin: '-40px' }}
+      transition={shouldReduceMotion ? undefined : { duration: 0.4, ease: 'easeOut' }}
     >
       <Card className={cn('group overflow-hidden border-0 shadow-sm ring-1 ring-border/50 transition-all hover:-translate-y-1 hover:shadow-xl', className)}>
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
@@ -58,7 +59,9 @@ export default function VehicleCard({
             <img
               src={vehicle.image}
               alt={`${vehicle.year} ${vehicle.brand} ${vehicle.model}`}
-              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
             />
           </Link>
 

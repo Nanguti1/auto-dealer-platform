@@ -11,7 +11,7 @@ import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 
 export default function Contact() {
   return (
-    <GuestLayout>
+    <GuestLayout title="Contact Us" description="Contact Dealership for vehicle questions, appointments, finance support, trade-ins, and concierge automotive help.">
       <Head title="Contact Us" />
       <StickyNav />
       

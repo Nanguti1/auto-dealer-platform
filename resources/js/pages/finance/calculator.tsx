@@ -7,7 +7,7 @@ import CTASection from '@/components/shared/cta-section';
 
 export default function FinanceCalculatorPage() {
     return (
-        <PublicLayout title="Finance Calculator">
+        <PublicLayout title="Finance Calculator" description="Estimate luxury vehicle payments, terms, down payments, and financing scenarios before applying for approval.">
             <Head title="Finance Calculator" />
 
             <section className="border-b bg-gradient-to-b from-muted/50 to-background py-12 md:py-16">

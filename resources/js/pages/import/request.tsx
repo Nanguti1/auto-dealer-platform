@@ -10,7 +10,7 @@ import InputError from '@/components/input-error';
 
 export default function ImportRequestPage() {
     return (
-        <PublicLayout title="Import Request">
+        <PublicLayout title="Import Request" description="Request concierge import support for rare, luxury, performance, or specialty vehicles from global markets.">
             <Head title="Import Your Dream Car" />
 
             <section className="border-b bg-gradient-to-b from-muted/50 to-background py-12 md:py-16">
