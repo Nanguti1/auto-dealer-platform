@@ -6,7 +6,7 @@ import { H1, H2, P } from '@/components/design-system/typography';
 
 export default function Privacy() {
   return (
-    <GuestLayout>
+    <GuestLayout title="Privacy Policy" description="Review how Dealership protects customer data, communication preferences, and privacy choices.">
       <Head title="Privacy Policy" />
       <StickyNav />
       

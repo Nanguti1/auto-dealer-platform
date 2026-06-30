@@ -31,7 +31,7 @@ const relatedPosts = [
 
 export default function BlogShow() {
     return (
-        <PublicLayout title="Automotive Insight">
+        <PublicLayout title="Automotive Insight" description="Read an expert automotive insight on premium mobility, ownership strategy, buying considerations, and market trends.">
             <Head title="Automotive Insight" />
             <article>
                 <section className="bg-gradient-to-b from-muted/60 to-background py-16 md:py-24">

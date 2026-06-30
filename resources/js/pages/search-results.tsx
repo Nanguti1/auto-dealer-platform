@@ -27,7 +27,7 @@ export default function SearchResults() {
     const vehicles = mockVehicles.map(toSummary).slice(0, 3);
 
     return (
-        <PublicLayout title="Search Results">
+        <PublicLayout title="Search Results" description="Search Dealership inventory, articles, services, and ownership tools from one premium discovery experience.">
             <Head title="Search Results" />
             <section className="bg-gradient-to-b from-muted/60 to-background py-16 md:py-24">
                 <div className="container max-w-4xl text-center">

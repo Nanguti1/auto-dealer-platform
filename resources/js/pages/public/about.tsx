@@ -9,7 +9,7 @@ import { Award, Users, Shield, Clock, Zap, Heart } from 'lucide-react';
 
 export default function About() {
   return (
-    <GuestLayout>
+    <GuestLayout title="About Us" description="Learn about Dealership's premium automotive team, values, and customer-first vehicle buying experience.">
       <Head title="About Us" />
       <StickyNav />
       

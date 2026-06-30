@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import PublicLayout from '@/layouts/public/public-layout';
 import {
     VehicleGallery,
@@ -42,6 +42,7 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
     const { toggle: toggleCompare, isInCompare, maxReached } = useCompare();
     const { record } = useRecentlyViewed();
     const [shareCopied, setShareCopied] = React.useState(false);
+    const shouldReduceMotion = useReducedMotion();
 
     React.useEffect(() => {
         record(vehicle.id);
@@ -78,7 +79,26 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
     const maxPrice = Math.max(...priceHistory.map((point) => point.value));
 
     return (
-        <PublicLayout title={vehicle.name}>
+        <PublicLayout
+            title={vehicle.name}
+            description={`${vehicle.year} ${vehicle.name} with ${formatMileage(vehicle.mileage)} miles, ${vehicle.fuelType} powertrain, and premium Dealership purchase support.`}
+            image={vehicle.galleries[0]?.url}
+            structuredData={{
+                '@context': 'https://schema.org',
+                '@type': 'Vehicle',
+                name: vehicle.name,
+                brand: vehicle.brand,
+                model: vehicle.model,
+                vehicleModelDate: String(vehicle.year),
+                mileageFromOdometer: `${vehicle.mileage} miles`,
+                offers: {
+                    '@type': 'Offer',
+                    price: vehicle.price,
+                    priceCurrency: 'USD',
+                    availability: 'https://schema.org/InStock',
+                },
+            }}
+        >
             <Head title={vehicle.name} />
 
             {/* Breadcrumb bar */}
@@ -112,9 +132,9 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
                             <VehicleGallery images={vehicle.galleries} />
 
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5 }}
+                                initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+                                animate={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
+                                transition={shouldReduceMotion ? undefined : { duration: 0.5 }}
                             >
                                 <div className="mb-4 flex flex-wrap gap-2">
                                     {vehicle.condition && (

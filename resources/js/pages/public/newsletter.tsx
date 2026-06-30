@@ -12,7 +12,7 @@ import { Mail, Car, DollarSign, Bell } from 'lucide-react';
 
 export default function Newsletter() {
   return (
-    <GuestLayout>
+    <GuestLayout title="Newsletter" description="Subscribe to Dealership updates for premium inventory alerts, market insights, finance tips, and ownership news.">
       <Head title="Newsletter" />
       <StickyNav />
       

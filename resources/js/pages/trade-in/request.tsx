@@ -10,7 +10,7 @@ import InputError from '@/components/input-error';
 
 export default function TradeInRequestPage() {
     return (
-        <PublicLayout title="Trade-In Request">
+        <PublicLayout title="Trade-In Request" description="Start a trade-in valuation for your current vehicle and connect it to your next premium purchase.">
             <Head title="Trade-In Your Vehicle" />
 
             <section className="border-b bg-gradient-to-b from-muted/50 to-background py-12 md:py-16">
