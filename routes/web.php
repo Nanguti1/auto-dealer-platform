@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\Imports\ShipmentController;
 use App\Http\Controllers\Admin\Inventory\VehicleController;
 use App\Http\Controllers\Admin\Payments\PaymentController;
 use App\Http\Controllers\Admin\Promotions\PromotionController;
+use App\Http\Controllers\Admin\Reports\ReportController;
 use App\Http\Controllers\Admin\Reservations\ReservationController;
 use App\Http\Controllers\Admin\Reviews\ReviewController;
 use App\Http\Controllers\Admin\Sales\InvoiceController;
@@ -139,6 +140,16 @@ Route::middleware(['auth', 'verified'])
         Route::resource('media', MediaController::class);
         Route::resource('seo-metadata', SeoMetadataController::class);
         Route::resource('analytics', AnalyticsController::class)->only(['index', 'show']);
+        Route::prefix('reports')->group(function (): void {
+            Route::get('/', [ReportController::class, 'index'])->name('reports.index');
+            Route::get('/sales', [ReportController::class, 'sales'])->name('reports.sales');
+            Route::get('/inventory', [ReportController::class, 'inventory'])->name('reports.inventory');
+            Route::get('/leads', [ReportController::class, 'leads'])->name('reports.leads');
+            Route::get('/finance', [ReportController::class, 'finance'])->name('reports.finance');
+            Route::post('/', [ReportController::class, 'store'])->name('reports.store');
+            Route::delete('/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
+            Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
+        });
         Route::resource('settings', SettingController::class)->except(['show']);
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
