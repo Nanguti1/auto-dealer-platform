@@ -6,12 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { ImportRequest } from './types';
 
-export default function ImportForm({ vehicleImport, action }: { vehicleImport?: ImportRequest; action: string }) {
+export default function ImportForm({ vehicleImport, action, method = 'post' }: { vehicleImport?: ImportRequest; action: string; method?: 'post' | 'put' }) {
   return (
     <Form action={action} method="post" className="grid max-w-4xl gap-4 rounded-xl border bg-card p-4">
       {({ errors, processing }) => (
         <>
-          <input type="hidden" name="_method" value={vehicleImport ? 'put' : 'post'} />
+          {method === 'put' && <input type="hidden" name="_method" value="put" />}
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="reference_number">Reference number</Label>

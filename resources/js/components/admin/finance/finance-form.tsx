@@ -6,12 +6,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { FinanceApplication } from './types';
 
-export default function FinanceForm({ financeApplication, action }: { financeApplication?: FinanceApplication; action: string }) {
+export default function FinanceForm({ financeApplication, action, method = 'post' }: { financeApplication?: FinanceApplication; action: string; method?: 'post' | 'put' }) {
   return (
     <Form action={action} method="post" className="grid max-w-4xl gap-4 rounded-xl border bg-card p-4">
       {({ errors, processing }) => (
         <>
-          <input type="hidden" name="_method" value={financeApplication ? 'put' : 'post'} />
+          {method === 'put' && <input type="hidden" name="_method" value="put" />}
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
               <Label htmlFor="requested_amount">Requested amount</Label>

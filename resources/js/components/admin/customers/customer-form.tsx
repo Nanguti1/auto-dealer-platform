@@ -26,14 +26,14 @@ function Field({ name, label, type = 'text', value, error }: FieldProps) {
   );
 }
 
-export default function CustomerForm({ customer, action }: { customer: CustomerRecord; action: string }) {
+export default function CustomerForm({ customer, action, method = 'post' }: { customer: CustomerRecord; action: string; method?: 'post' | 'put' }) {
   const preferences = customer.preferences ?? {};
 
   return (
     <Form action={action} method="post" className="space-y-6">
       {({ errors, processing }) => (
         <>
-          <input type="hidden" name="_method" value="put" />
+          {method === 'put' && <input type="hidden" name="_method" value="put" />}
           <Tabs defaultValue="personal">
             <TabsList className="flex h-auto w-full flex-wrap justify-start">
               <TabsTrigger value="personal">Personal Information</TabsTrigger>

@@ -7,7 +7,7 @@ import { admin } from '@/routes/admin';
 export default function Edit({ customer }: { customer: CustomerRecord }) {
   return (
     <CustomerShell title={`Edit ${customerName(customer)}`} description="Update personal information, contact preferences, address, and account status." actions={<CustomerBackButton href={admin.customers.show(customer.id).url} />}>
-      <CustomerForm customer={customer} action={admin.customers.update.form(customer.id).action} />
+      <CustomerForm customer={customer} action={admin.customers.update.form(customer.id).action} method="put" />
     </CustomerShell>
   );
 }
