@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Admin\AuditLogController;
 use App\Http\Controllers\Admin\Analytics\AnalyticsController;
 use App\Http\Controllers\Admin\Blog\BlogCategoryController;
 use App\Http\Controllers\Admin\Blog\BlogPostController;
@@ -154,6 +155,8 @@ Route::middleware(['auth', 'verified'])
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
         Route::resource('permissions', PermissionController::class);
+        Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
+        Route::get('audit-logs/export', [AuditLogController::class, 'export'])->name('audit-logs.export');
     });
 
 require __DIR__.'/settings.php';
