@@ -22,6 +22,9 @@ use App\Http\Controllers\Admin\Reservations\ReservationController;
 use App\Http\Controllers\Admin\Reviews\ReviewController;
 use App\Http\Controllers\Admin\Settings\SettingController;
 use App\Http\Controllers\Admin\TradeIns\TradeInController;
+use App\Http\Controllers\Admin\Users\PermissionController;
+use App\Http\Controllers\Admin\Users\RoleController;
+use App\Http\Controllers\Admin\Users\UserController;
 use App\Http\Controllers\Admin\VehicleFeatures\VehicleFeatureController;
 use App\Http\Controllers\Admin\VehicleGallery\VehicleGalleryController;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +96,9 @@ Route::middleware(['auth', 'verified'])
         Route::resource('seo-metadata', SeoMetadataController::class);
         Route::resource('analytics', AnalyticsController::class)->only(['index', 'show']);
         Route::resource('settings', SettingController::class)->except(['show']);
+        Route::resource('users', UserController::class);
+        Route::resource('roles', RoleController::class);
+        Route::resource('permissions', PermissionController::class);
     });
 
 require __DIR__.'/settings.php';

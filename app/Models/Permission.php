@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Permission as SpatiePermission;
 
-class Permission extends Model
+class Permission extends SpatiePermission
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'display_name', 'module', 'description'];
+    protected $fillable = ['name', 'display_name', 'module', 'description', 'guard_name'];
 
     public function scopeRecent($query)
     {
