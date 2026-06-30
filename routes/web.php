@@ -15,9 +15,13 @@ use App\Http\Controllers\Admin\CRM\LeadController;
 use App\Http\Controllers\Admin\CRM\PipelineController;
 use App\Http\Controllers\Admin\CRM\TaskController;
 use App\Http\Controllers\Admin\Customers\CustomerController;
+use App\Http\Controllers\Admin\Customers\DocumentController;
+use App\Http\Controllers\Admin\Customers\NoteController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
 use App\Http\Controllers\Admin\Financing\FinanceController;
+use App\Http\Controllers\Admin\Financing\FinanceDocumentController;
 use App\Http\Controllers\Admin\Imports\ImportController;
+use App\Http\Controllers\Admin\Imports\ImportDocumentController;
 use App\Http\Controllers\Admin\Inventory\VehicleController;
 use App\Http\Controllers\Admin\Payments\PaymentController;
 use App\Http\Controllers\Admin\Promotions\PromotionController;
@@ -80,6 +84,10 @@ Route::middleware(['auth', 'verified'])
         Route::resource('vehicle-galleries', VehicleGalleryController::class);
         Route::resource('vehicle-features', VehicleFeatureController::class);
         Route::resource('customers', CustomerController::class);
+        Route::prefix('customers/{customer}')->group(function (): void {
+            Route::resource('documents', DocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+            Route::resource('notes', NoteController::class);
+        });
         Route::resource('leads', LeadController::class);
         Route::resource('activities', ActivityController::class);
         Route::resource('tasks', TaskController::class);
@@ -87,8 +95,14 @@ Route::middleware(['auth', 'verified'])
         Route::patch('leads/{lead}/stage', [PipelineController::class, 'updateStage'])->name('leads.update-stage');
         Route::resource('trade-ins', TradeInController::class);
         Route::resource('finance-applications', FinanceController::class);
+        Route::prefix('finance-applications/{financeApplication}')->group(function (): void {
+            Route::resource('documents', FinanceDocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+        });
         Route::resource('reservations', ReservationController::class);
         Route::resource('imports', ImportController::class);
+        Route::prefix('imports/{vehicleImport}')->group(function (): void {
+            Route::resource('documents', ImportDocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
+        });
         Route::resource('payments', PaymentController::class);
         Route::resource('blog-categories', BlogCategoryController::class);
         Route::resource('blog-tags', BlogTagController::class);

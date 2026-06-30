@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class FinanceApplication extends Model
 {
@@ -37,5 +38,10 @@ class FinanceApplication extends Model
     public function lender(): BelongsTo
     {
         return $this->belongsTo(Lender::class, 'lender_id');
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(FinanceDocument::class, 'finance_application_id');
     }
 }
