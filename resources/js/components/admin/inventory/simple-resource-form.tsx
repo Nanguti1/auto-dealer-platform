@@ -1,9 +1,89 @@
-import { Form } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import InputError from '@/components/input-error';
-import { Switch } from '@/components/ui/switch';
+import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import type { AdminFeature, AdminGallery } from './types';
-export function FeatureForm({ feature, action }: { feature?: AdminFeature; action: string }) { return <Form action={action} method="post" className="grid max-w-2xl gap-4 rounded-xl border bg-card p-4">{({ errors, processing }) => <><input type="hidden" name="_method" value={feature ? 'put' : 'post'} /><div className="space-y-2"><Label>Name</Label><Input name="name" defaultValue={feature?.name ?? feature?.title ?? ''} /><InputError message={errors.name} /></div><div className="space-y-2"><Label>Slug</Label><Input name="slug" defaultValue={feature?.slug ?? ''} /><InputError message={errors.slug} /></div><div className="space-y-2"><Label>Category</Label><Input name="category" defaultValue={feature?.category ?? ''} /><InputError message={errors.category} /></div><div className="flex items-center justify-between rounded-lg border p-4"><Label>Active</Label><Switch name="is_active" defaultChecked={feature?.is_active ?? true} value="1" /></div><Button disabled={processing}>{processing ? 'Saving…' : 'Save feature'}</Button></>}</Form>; }
-export function GalleryForm({ gallery, action }: { gallery?: AdminGallery; action: string }) { return <Form action={action} method="post" encType="multipart/form-data" className="grid max-w-2xl gap-4 rounded-xl border bg-card p-4">{({ errors, processing }) => <><input type="hidden" name="_method" value={gallery ? 'put' : 'post'} /><div className="space-y-2"><Label>Vehicle ID</Label><Input name="vehicle_id" type="number" defaultValue={gallery?.vehicle_id ?? ''} /><InputError message={errors.vehicle_id} /></div><div className="space-y-2"><Label>Image path</Label><Input name="path" defaultValue={gallery?.path ?? ''} /><InputError message={errors.path} /></div><div className="space-y-2"><Label>Alt text</Label><Input name="alt_text" defaultValue={gallery?.alt_text ?? ''} /><InputError message={errors.alt_text} /></div><div className="space-y-2"><Label>Sort order</Label><Input name="sort_order" type="number" defaultValue={gallery?.sort_order ?? 0} /></div><div className="flex items-center justify-between rounded-lg border p-4"><Label>Primary image</Label><Switch name="is_primary" defaultChecked={Boolean(gallery?.is_primary)} value="1" /></div><Button disabled={processing}>{processing ? 'Saving…' : 'Save image'}</Button></>}</Form>; }
+
+export function FeatureForm({ feature, action }: { feature?: AdminFeature; action: string }) {
+  return (
+    <FormShell
+      action={action}
+      method={feature ? 'put' : 'post'}
+      submitLabel="Save feature"
+      className="max-w-2xl"
+    >
+      <FormSection gridCols={1}>
+        <FormField
+          name="name"
+          label="Name"
+          value={feature?.name ?? feature?.title ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="slug"
+          label="Slug"
+          value={feature?.slug ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="category"
+          label="Category"
+          value={feature?.category ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="is_active"
+          label="Active"
+          type="switch"
+          value={feature?.is_active ?? true}
+          onChange={() => {}}
+        />
+      </FormSection>
+    </FormShell>
+  );
+}
+
+export function GalleryForm({ gallery, action }: { gallery?: AdminGallery; action: string }) {
+  return (
+    <FormShell
+      action={action}
+      method={gallery ? 'put' : 'post'}
+      submitLabel="Save image"
+      encType="multipart/form-data"
+      className="max-w-2xl"
+    >
+      <FormSection gridCols={1}>
+        <FormField
+          name="vehicle_id"
+          label="Vehicle ID"
+          type="number"
+          value={String(gallery?.vehicle_id ?? '')}
+          onChange={() => {}}
+        />
+        <FormField
+          name="path"
+          label="Image path"
+          value={gallery?.path ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="alt_text"
+          label="Alt text"
+          value={gallery?.alt_text ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="sort_order"
+          label="Sort order"
+          type="number"
+          value={String(gallery?.sort_order ?? 0)}
+          onChange={() => {}}
+        />
+        <FormField
+          name="is_primary"
+          label="Primary image"
+          type="switch"
+          value={Boolean(gallery?.is_primary)}
+          onChange={() => {}}
+        />
+      </FormSection>
+    </FormShell>
+  );
+}

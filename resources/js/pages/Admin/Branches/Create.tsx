@@ -2,10 +2,7 @@ import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
+import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import { useForm } from '@inertiajs/react';
 import branches from '@/routes/admin/branches';
 
@@ -48,200 +45,149 @@ export default function Create() {
         </Button>
       </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle>Basic Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Branch Name *</Label>
-                  <Input
-                    id="name"
-                    value={data.name}
-                    onChange={(e) => setData('name', e.target.value)}
-                    placeholder="Main Street Location"
-                    required
-                  />
-                  {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="code">Branch Code *</Label>
-                  <Input
-                    id="code"
-                    value={data.code}
-                    onChange={(e) => setData('code', e.target.value.toUpperCase())}
-                    placeholder="MAIN"
-                    required
-                  />
-                  {errors.code && <p className="text-sm text-destructive">{errors.code}</p>}
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="slug">Slug *</Label>
-                <Input
-                  id="slug"
-                  value={data.slug}
-                  onChange={(e) => setData('slug', e.target.value.toLowerCase().replace(/\s+/g, '-'))}
-                  placeholder="main-street-location"
-                  required
-                />
-                {errors.slug && <p className="text-sm text-destructive">{errors.slug}</p>}
-              </div>
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="is_active"
-                  checked={data.is_active}
-                  onCheckedChange={(checked) => setData('is_active', checked)}
-                />
-                <Label htmlFor="is_active">Active Branch</Label>
-              </div>
-            </CardContent>
-          </Card>
+      <FormShell
+        action={branches.store.url()}
+        method="post"
+        submitLabel="Create Branch"
+        cancelLabel="Cancel"
+        cancelUrl={branches.index.url()}
+        className="grid gap-6 md:grid-cols-2"
+      >
+        <FormSection title="Basic Information" className="md:col-span-2" gridCols={2}>
+          <FormField
+            name="name"
+            label="Branch Name"
+            value={data.name}
+            error={errors.name}
+            placeholder="Main Street Location"
+            required
+            onChange={(value) => setData('name', value)}
+          />
+          <FormField
+            name="code"
+            label="Branch Code"
+            value={data.code}
+            error={errors.code}
+            placeholder="MAIN"
+            required
+            onChange={(value) => setData('code', value.toUpperCase())}
+          />
+          <FormField
+            name="slug"
+            label="Slug"
+            value={data.slug}
+            error={errors.slug}
+            placeholder="main-street-location"
+            required
+            onChange={(value) => setData('slug', value.toLowerCase().replace(/\s+/g, '-'))}
+            className="md:col-span-2"
+          />
+          <FormField
+            name="is_active"
+            label="Active Branch"
+            type="switch"
+            value={data.is_active}
+            onChange={(value) => setData('is_active', value)}
+            className="md:col-span-2"
+          />
+        </FormSection>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={data.email}
-                  onChange={(e) => setData('email', e.target.value)}
-                  placeholder="branch@example.com"
-                />
-                {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Phone</Label>
-                <Input
-                  id="phone"
-                  value={data.phone}
-                  onChange={(e) => setData('phone', e.target.value)}
-                  placeholder="+1 (555) 123-4567"
-                />
-                {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
-              </div>
-            </CardContent>
-          </Card>
+        <FormSection title="Contact Information" gridCols={1}>
+          <FormField
+            name="email"
+            label="Email"
+            type="email"
+            value={data.email}
+            error={errors.email}
+            placeholder="branch@example.com"
+            onChange={(value) => setData('email', value)}
+          />
+          <FormField
+            name="phone"
+            label="Phone"
+            type="tel"
+            value={data.phone}
+            error={errors.phone}
+            placeholder="+1 (555) 123-4567"
+            onChange={(value) => setData('phone', value)}
+          />
+        </FormSection>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Location</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="address_line_1">Address Line 1 *</Label>
-                <Input
-                  id="address_line_1"
-                  value={data.address_line_1}
-                  onChange={(e) => setData('address_line_1', e.target.value)}
-                  placeholder="123 Main Street"
-                  required
-                />
-                {errors.address_line_1 && <p className="text-sm text-destructive">{errors.address_line_1}</p>}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="address_line_2">Address Line 2</Label>
-                <Input
-                  id="address_line_2"
-                  value={data.address_line_2}
-                  onChange={(e) => setData('address_line_2', e.target.value)}
-                  placeholder="Suite 100"
-                />
-                {errors.address_line_2 && <p className="text-sm text-destructive">{errors.address_line_2}</p>}
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="city">City *</Label>
-                  <Input
-                    id="city"
-                    value={data.city}
-                    onChange={(e) => setData('city', e.target.value)}
-                    placeholder="New York"
-                    required
-                  />
-                  {errors.city && <p className="text-sm text-destructive">{errors.city}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="state">State *</Label>
-                  <Input
-                    id="state"
-                    value={data.state}
-                    onChange={(e) => setData('state', e.target.value)}
-                    placeholder="NY"
-                    required
-                  />
-                  {errors.state && <p className="text-sm text-destructive">{errors.state}</p>}
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="postal_code">Postal Code</Label>
-                  <Input
-                    id="postal_code"
-                    value={data.postal_code}
-                    onChange={(e) => setData('postal_code', e.target.value)}
-                    placeholder="10001"
-                  />
-                  {errors.postal_code && <p className="text-sm text-destructive">{errors.postal_code}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="country">Country *</Label>
-                  <Input
-                    id="country"
-                    value={data.country}
-                    onChange={(e) => setData('country', e.target.value)}
-                    placeholder="US"
-                    required
-                  />
-                  {errors.country && <p className="text-sm text-destructive">{errors.country}</p>}
-                </div>
-              </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="latitude">Latitude</Label>
-                  <Input
-                    id="latitude"
-                    type="number"
-                    step="0.0000001"
-                    value={data.latitude}
-                    onChange={(e) => setData('latitude', e.target.value)}
-                    placeholder="40.7128"
-                  />
-                  {errors.latitude && <p className="text-sm text-destructive">{errors.latitude}</p>}
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="longitude">Longitude</Label>
-                  <Input
-                    id="longitude"
-                    type="number"
-                    step="0.0000001"
-                    value={data.longitude}
-                    onChange={(e) => setData('longitude', e.target.value)}
-                    placeholder="-74.0060"
-                  />
-                  {errors.longitude && <p className="text-sm text-destructive">{errors.longitude}</p>}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="flex justify-end gap-4 mt-6">
-          <Button variant="outline" type="button" asChild>
-            <Link href={branches.index.url()}>Cancel</Link>
-          </Button>
-          <Button type="submit" disabled={processing}>
-            {processing ? 'Creating...' : 'Create Branch'}
-          </Button>
-        </div>
-      </form>
+        <FormSection title="Location" gridCols={1}>
+          <FormField
+            name="address_line_1"
+            label="Address Line 1"
+            value={data.address_line_1}
+            error={errors.address_line_1}
+            placeholder="123 Main Street"
+            required
+            onChange={(value) => setData('address_line_1', value)}
+          />
+          <FormField
+            name="address_line_2"
+            label="Address Line 2"
+            value={data.address_line_2}
+            error={errors.address_line_2}
+            placeholder="Suite 100"
+            onChange={(value) => setData('address_line_2', value)}
+          />
+          <FormField
+            name="city"
+            label="City"
+            value={data.city}
+            error={errors.city}
+            placeholder="New York"
+            required
+            onChange={(value) => setData('city', value)}
+          />
+          <FormField
+            name="state"
+            label="State"
+            value={data.state}
+            error={errors.state}
+            placeholder="NY"
+            required
+            onChange={(value) => setData('state', value)}
+          />
+          <FormField
+            name="postal_code"
+            label="Postal Code"
+            value={data.postal_code}
+            error={errors.postal_code}
+            placeholder="10001"
+            onChange={(value) => setData('postal_code', value)}
+          />
+          <FormField
+            name="country"
+            label="Country"
+            value={data.country}
+            error={errors.country}
+            placeholder="US"
+            required
+            onChange={(value) => setData('country', value)}
+          />
+          <FormField
+            name="latitude"
+            label="Latitude"
+            type="number"
+            value={data.latitude}
+            error={errors.latitude}
+            placeholder="40.7128"
+            step="0.0000001"
+            onChange={(value) => setData('latitude', value)}
+          />
+          <FormField
+            name="longitude"
+            label="Longitude"
+            type="number"
+            value={data.longitude}
+            error={errors.longitude}
+            placeholder="-74.0060"
+            step="0.0000001"
+            onChange={(value) => setData('longitude', value)}
+          />
+        </FormSection>
+      </FormShell>
     </div>
   );
 }

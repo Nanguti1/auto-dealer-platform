@@ -1,10 +1,79 @@
-import { Form } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import type { TradeInRequest } from './types';
+
 export default function TradeInForm({ tradeInRequest, action, method = 'post' }: { tradeInRequest?: TradeInRequest; action: string; method?: 'post' | 'put' }) {
-  return <Form action={action} method="post" className="grid max-w-4xl gap-4 rounded-xl border bg-card p-4">{({ errors, processing }) => <>{method === 'put' && <input type="hidden" name="_method" value="put" />}<div className="grid gap-4 md:grid-cols-3"><div className="space-y-2"><Label>Year</Label><Input name="year" type="number" defaultValue={tradeInRequest?.year ?? ''} /><InputError message={errors.year} /></div><div className="space-y-2"><Label>Make</Label><Input name="make" defaultValue={tradeInRequest?.make ?? ''} /><InputError message={errors.make} /></div><div className="space-y-2"><Label>Model</Label><Input name="model" defaultValue={tradeInRequest?.model ?? ''} /><InputError message={errors.model} /></div><div className="space-y-2"><Label>VIN</Label><Input name="vin" defaultValue={tradeInRequest?.vin ?? ''} /><InputError message={errors.vin} /></div><div className="space-y-2"><Label>Mileage</Label><Input name="mileage" type="number" defaultValue={tradeInRequest?.mileage ?? ''} /><InputError message={errors.mileage} /></div><div className="space-y-2"><Label>Status</Label><Input name="status" defaultValue={tradeInRequest?.status ?? 'pending'} /><InputError message={errors.status} /></div><div className="space-y-2"><Label>Estimated value</Label><Input name="estimated_value" type="number" defaultValue={tradeInRequest?.estimated_value ?? ''} /></div><div className="space-y-2"><Label>Offered value</Label><Input name="offered_value" type="number" defaultValue={tradeInRequest?.offered_value ?? ''} /></div></div><div className="space-y-2"><Label>Condition report</Label><Textarea name="condition_report" rows={6} defaultValue={JSON.stringify(tradeInRequest?.condition_report ?? {}, null, 2)} /></div><Button className="w-fit" disabled={processing}>{processing ? 'Saving…' : 'Save trade-in request'}</Button></>}</Form>;
+  return (
+    <FormShell
+      action={action}
+      method={method}
+      submitLabel="Save trade-in request"
+      className="max-w-4xl"
+    >
+      <FormSection title="Vehicle Information" gridCols={3}>
+        <FormField
+          name="year"
+          label="Year"
+          type="number"
+          value={String(tradeInRequest?.year ?? '')}
+          onChange={() => {}}
+        />
+        <FormField
+          name="make"
+          label="Make"
+          value={tradeInRequest?.make ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="model"
+          label="Model"
+          value={tradeInRequest?.model ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="vin"
+          label="VIN"
+          value={tradeInRequest?.vin ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="mileage"
+          label="Mileage"
+          type="number"
+          value={String(tradeInRequest?.mileage ?? '')}
+          onChange={() => {}}
+        />
+        <FormField
+          name="status"
+          label="Status"
+          value={tradeInRequest?.status ?? 'pending'}
+          onChange={() => {}}
+        />
+        <FormField
+          name="estimated_value"
+          label="Estimated value"
+          type="number"
+          value={String(tradeInRequest?.estimated_value ?? '')}
+          onChange={() => {}}
+        />
+        <FormField
+          name="offered_value"
+          label="Offered value"
+          type="number"
+          value={String(tradeInRequest?.offered_value ?? '')}
+          onChange={() => {}}
+        />
+      </FormSection>
+
+      <FormSection title="Condition Report" gridCols={1} fullWidth>
+        <FormField
+          name="condition_report"
+          label="Condition report"
+          type="textarea"
+          value={JSON.stringify(tradeInRequest?.condition_report ?? {}, null, 2)}
+          onChange={() => {}}
+          className="font-mono text-xs"
+        />
+      </FormSection>
+    </FormShell>
+  );
 }

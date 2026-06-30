@@ -1,67 +1,80 @@
-import { Form } from '@inertiajs/react';
-import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import type { ImportRequest } from './types';
 
 export default function ImportForm({ vehicleImport, action, method = 'post' }: { vehicleImport?: ImportRequest; action: string; method?: 'post' | 'put' }) {
   return (
-    <Form action={action} method="post" className="grid max-w-4xl gap-4 rounded-xl border bg-card p-4">
-      {({ errors, processing }) => (
-        <>
-          {method === 'put' && <input type="hidden" name="_method" value="put" />}
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-2">
-              <Label htmlFor="reference_number">Reference number</Label>
-              <Input id="reference_number" name="reference_number" defaultValue={vehicleImport?.reference_number ?? ''} />
-              <InputError message={errors.reference_number} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="origin_country">Origin country</Label>
-              <Input id="origin_country" name="origin_country" defaultValue={vehicleImport?.origin_country ?? ''} />
-              <InputError message={errors.origin_country} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="destination_port">Destination port</Label>
-              <Input id="destination_port" name="destination_port" defaultValue={vehicleImport?.destination_port ?? ''} />
-              <InputError message={errors.destination_port} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="estimated_cost">Estimated cost</Label>
-              <Input id="estimated_cost" name="estimated_cost" type="number" step="0.01" defaultValue={vehicleImport?.estimated_cost ?? ''} />
-              <InputError message={errors.estimated_cost} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="status">Status</Label>
-              <Input id="status" name="status" defaultValue={vehicleImport?.status ?? 'pending'} />
-              <InputError message={errors.status} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="supplier_id">Supplier ID</Label>
-              <Input id="supplier_id" name="supplier_id" type="number" defaultValue={String(vehicleImport?.supplier_id ?? '')} />
-              <InputError message={errors.supplier_id} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="vehicle_id">Vehicle ID</Label>
-              <Input id="vehicle_id" name="vehicle_id" type="number" defaultValue={String(vehicleImport?.vehicle_id ?? '')} />
-              <InputError message={errors.vehicle_id} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="user_id">User ID</Label>
-              <Input id="user_id" name="user_id" type="number" defaultValue={String(vehicleImport?.user_id ?? '')} />
-              <InputError message={errors.user_id} />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="request_data">Request data (JSON)</Label>
-            <Textarea id="request_data" name="request_data" rows={6} defaultValue={JSON.stringify(vehicleImport?.request_data ?? {}, null, 2)} />
-            <InputError message={errors.request_data} />
-          </div>
-          <Button className="w-fit" disabled={processing}>{processing ? 'Saving…' : 'Save import request'}</Button>
-        </>
-      )}
-    </Form>
+    <FormShell
+      action={action}
+      method={method}
+      submitLabel="Save import request"
+      className="max-w-4xl"
+    >
+      <FormSection title="Basic Information" gridCols={3}>
+        <FormField
+          name="reference_number"
+          label="Reference number"
+          value={vehicleImport?.reference_number ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="origin_country"
+          label="Origin country"
+          value={vehicleImport?.origin_country ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="destination_port"
+          label="Destination port"
+          value={vehicleImport?.destination_port ?? ''}
+          onChange={() => {}}
+        />
+        <FormField
+          name="estimated_cost"
+          label="Estimated cost"
+          type="number"
+          step="0.01"
+          value={String(vehicleImport?.estimated_cost ?? '')}
+          onChange={() => {}}
+        />
+        <FormField
+          name="status"
+          label="Status"
+          value={vehicleImport?.status ?? 'pending'}
+          onChange={() => {}}
+        />
+        <FormField
+          name="supplier_id"
+          label="Supplier ID"
+          type="number"
+          value={String(vehicleImport?.supplier_id ?? '')}
+          onChange={() => {}}
+        />
+        <FormField
+          name="vehicle_id"
+          label="Vehicle ID"
+          type="number"
+          value={String(vehicleImport?.vehicle_id ?? '')}
+          onChange={() => {}}
+        />
+        <FormField
+          name="user_id"
+          label="User ID"
+          type="number"
+          value={String(vehicleImport?.user_id ?? '')}
+          onChange={() => {}}
+        />
+      </FormSection>
+
+      <FormSection title="Request Data" gridCols={1} fullWidth>
+        <FormField
+          name="request_data"
+          label="Request data (JSON)"
+          type="textarea"
+          value={JSON.stringify(vehicleImport?.request_data ?? {}, null, 2)}
+          onChange={() => {}}
+          className="font-mono text-xs"
+        />
+      </FormSection>
+    </FormShell>
   );
 }
