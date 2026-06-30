@@ -1,5 +1,5 @@
-import type { Filters } from './types';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
+import type { Filters } from './types';
 
 export { formatCurrency, formatNumber };
 

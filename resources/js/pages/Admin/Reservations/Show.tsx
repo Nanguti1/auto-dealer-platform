@@ -1,7 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Calendar, Car, DollarSign, Pencil, Trash2, User } from 'lucide-react';
-import ReservationShell, { ReservationBackButton } from '@/components/admin/reservations/reservation-shell';
 import { customerName, formatCurrency, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
+import ReservationShell, { ReservationBackButton } from '@/components/admin/reservations/reservation-shell';
 import type { ReservationRecord } from '@/components/admin/reservations/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

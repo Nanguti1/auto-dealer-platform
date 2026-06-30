@@ -1,6 +1,6 @@
-import type { Paginated } from '@/components/admin/inventory/types';
 import type { CustomerRecord, TimelineEvent } from '@/components/admin/customers/types';
 import type { ImportVehicle } from '@/components/admin/imports/types';
+import type { Paginated } from '@/components/admin/inventory/types';
 
 export interface PaymentVehicle { id?: number; title?: string; stock_number?: string; vin?: string; year?: number; make?: string | { name?: string }; model?: string | { name?: string }; mileage?: number; sale_price?: string | number; image_url?: string; [key: string]: unknown }
 export interface PaymentUser { id?: number; name?: string; email?: string; phone?: string; first_name?: string; last_name?: string; avatar_url?: string }

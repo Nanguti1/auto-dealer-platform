@@ -1,14 +1,15 @@
 import { Form } from '@inertiajs/react';
 import { UploadCloud } from 'lucide-react';
+import * as React from 'react';
 import CustomerShell, { CustomerBackButton } from '@/components/admin/customers/customer-shell';
 import type { CustomerRecord } from '@/components/admin/customers/types';
 import InputError from '@/components/input-error';
-import { ImageDropzone, MediaUploadItem } from '@/components/shared/media-upload';
+import type { MediaUploadItem } from '@/components/shared/media-upload';
+import { ImageDropzone } from '@/components/shared/media-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import * as React from 'react';
 
 export default function Upload({ customer }: { customer?: CustomerRecord }) {
   const [items, setItems] = React.useState<MediaUploadItem[]>([]);

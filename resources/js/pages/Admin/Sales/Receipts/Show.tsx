@@ -1,12 +1,12 @@
 import { Link } from '@inertiajs/react';
 import { Printer } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
+import { customerName } from '@/components/admin/customers/helpers';
+import { formatCurrency, formatDateTime } from '@/components/admin/payments/helpers';
+import PaymentShell, { PaymentBackButton } from '@/components/admin/payments/payment-shell';
+import type { Receipt } from '@/components/admin/payments/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import PaymentShell, { PaymentBackButton } from '@/components/admin/payments/payment-shell';
-import { formatCurrency, formatDateTime } from '@/components/admin/payments/helpers';
-import { customerName } from '@/components/admin/customers/helpers';
-import type { Receipt } from '@/components/admin/payments/types';
 
 export default function Show({ receipt }: { receipt: Receipt }) {
   return (

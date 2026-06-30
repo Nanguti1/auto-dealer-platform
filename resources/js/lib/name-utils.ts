@@ -4,6 +4,7 @@ export function userName(user?: { name?: string; first_name?: string; last_name?
 
 export function customerName(customer?: { first_name?: string; last_name?: string; email?: string; customer_number?: string }): string {
   const name = [customer?.first_name, customer?.last_name].filter(Boolean).join(' ').trim();
+
   return name || customer?.email || customer?.customer_number || 'Unnamed customer';
 }
 

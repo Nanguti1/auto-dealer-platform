@@ -1,9 +1,9 @@
-import PublicLayout from '@/layouts/public/public-layout';
 import { Head } from '@inertiajs/react';
-import { FinanceCalculator } from '@/components/vehicles';
 import { H1, P } from '@/components/design-system/typography';
-import { Badge } from '@/components/ui/badge';
 import CTASection from '@/components/shared/cta-section';
+import { Badge } from '@/components/ui/badge';
+import { FinanceCalculator } from '@/components/vehicles';
+import PublicLayout from '@/layouts/public/public-layout';
 
 export default function FinanceCalculatorPage() {
     return (

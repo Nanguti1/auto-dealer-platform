@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import type { Auth } from '@/types';
-import { cn } from '@/lib/utils';
+import { Menu, X, Home, Car, DollarSign, FileText, Phone, User, LogOut } from 'lucide-react';
+import * as React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu, X, Home, Car, DollarSign, FileText, Phone, User, LogOut } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
+import type { Auth } from '@/types';
 
 interface MobileNavProps {
   className?: string;
@@ -16,7 +16,10 @@ export default function MobileNav({ className }: MobileNavProps) {
   const [open, setOpen] = React.useState(false);
 
   const getInitials = (name?: string) => {
-    if (!name) return 'U';
+    if (!name) {
+return 'U';
+}
+
     return name
       .split(' ')
       .map((n) => n[0])

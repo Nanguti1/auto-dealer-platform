@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import type { VehicleSpecificationGroup } from '@/types/vehicle';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
+import type { VehicleSpecificationGroup } from '@/types/vehicle';
 
 interface VehicleSpecsPanelProps {
     specifications: VehicleSpecificationGroup[];
@@ -11,7 +11,9 @@ interface VehicleSpecsPanelProps {
 }
 
 export default function VehicleSpecsPanel({ specifications, sticky = true, className }: VehicleSpecsPanelProps) {
-    if (specifications.length === 0) return null;
+    if (specifications.length === 0) {
+return null;
+}
 
     return (
         <div className={cn(sticky && 'lg:sticky lg:top-24', className)}>

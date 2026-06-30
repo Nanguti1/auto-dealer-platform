@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { ArrowLeft, Shield, Users, Lock } from 'lucide-react';
+import * as React from 'react';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -29,7 +29,9 @@ export default function Show({ role }: { role: Role }) {
     if (!acc[permission.module]) {
       acc[permission.module] = [];
     }
+
     acc[permission.module].push(permission);
+
     return acc;
   }, {} as Record<string, Permission[]>) || {};
 

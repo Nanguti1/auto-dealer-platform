@@ -1,14 +1,14 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Eye, Trash2, Download, Image as ImageIcon, File, Filter } from 'lucide-react';
-import ConfirmationDialog from '@/components/admin/confirmation-dialog';
+import * as React from 'react';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { MediaFile, CmsFilters, Paginated } from '@/components/admin/cms/types';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Card, CardContent } from '@/components/ui/card';
 
 export default function Index({ mediaFiles, filters = {} }: { mediaFiles: Paginated<MediaFile>; filters?: CmsFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
@@ -23,9 +23,13 @@ export default function Index({ mediaFiles, filters = {} }: { mediaFiles: Pagina
   };
 
   const formatFileSize = (bytes?: number) => {
-    if (!bytes) return '—';
+    if (!bytes) {
+return '—';
+}
+
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
+
     return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
   };
 
@@ -39,7 +43,9 @@ export default function Index({ mediaFiles, filters = {} }: { mediaFiles: Pagina
     >
       <div className="space-y-4">
         <div className="flex flex-col gap-3 rounded-xl border bg-card p-4 lg:flex-row lg:items-center lg:justify-between">
-          <form className="flex flex-1 gap-2" onSubmit={(e) => { e.preventDefault(); applyFilters(); }}>
+          <form className="flex flex-1 gap-2" onSubmit={(e) => {
+ e.preventDefault(); applyFilters(); 
+}}>
             <Input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}

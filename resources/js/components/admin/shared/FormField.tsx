@@ -1,9 +1,9 @@
 import * as React from 'react';
+import InputError from '@/components/input-error';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
 
 export type FieldType = 'text' | 'email' | 'number' | 'password' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time' | 'textarea' | 'select' | 'switch' | 'checkbox';
 

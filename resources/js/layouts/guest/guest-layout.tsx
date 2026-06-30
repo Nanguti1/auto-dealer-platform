@@ -18,6 +18,7 @@ export default function GuestLayout({
   description = defaultDescription,
 }: GuestLayoutProps) {
   const pageTitle = `${title} | Dealership`;
+
   return (
     <div className={cn('min-h-screen bg-background text-foreground antialiased', className)}>
       <Head title={title}>

@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface CTASectionProps {
   title: string;

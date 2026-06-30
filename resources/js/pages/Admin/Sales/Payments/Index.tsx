@@ -1,12 +1,13 @@
 import { Link, router } from '@inertiajs/react';
 import { Archive, Eye, Pencil, Receipt, RotateCcw } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
-import { Button } from '@/components/ui/button';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { formatCurrency, formatDateTime, customerNameFromPayment, vehicleName, userName } from '@/components/admin/payments/helpers';
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
-import { formatCurrency, formatDateTime, customerNameFromPayment, vehicleName, userName } from '@/components/admin/payments/helpers';
 import type { PaymentFilters, PaymentPagination, Payment } from '@/components/admin/payments/types';
+import { Button } from '@/components/ui/button';
 
 export default function Index({ payments, filters = {} }: { payments: PaymentPagination; filters?: PaymentFilters }) {
   const columns: Column<Payment>[] = [

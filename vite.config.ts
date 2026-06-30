@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react';
 import laravel from 'laravel-vite-plugin';
 import { bunny } from 'laravel-vite-plugin/fonts';
 import { defineConfig } from 'vite';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
     plugins: [
@@ -27,6 +28,15 @@ export default defineConfig({
         wayfinder({
             formVariants: true,
         }),
+        // Bundle analyzer plugin (only in analyze mode)
+        ...(process.env.ANALYZE === 'true' ? [
+            visualizer({
+                filename: 'bundle-analysis.html',
+                open: true,
+                gzipSize: true,
+                brotliSize: true,
+            }),
+        ] : []),
     ],
     build: {
         rollupOptions: {
@@ -53,6 +63,10 @@ export default defineConfig({
                         // Icons
                         if (id.includes('lucide-react')) {
                             return 'vendor-icons';
+                        }
+                        // Framer Motion
+                        if (id.includes('framer-motion')) {
+                            return 'vendor-motion';
                         }
                         // Other vendors
                         return 'vendor';
@@ -126,5 +140,11 @@ export default defineConfig({
             },
         },
         chunkSizeWarningLimit: 1000,
+        // Enable tree shaking
+        cssCodeSplit: true,
+        // Minify CSS
+        cssMinify: true,
+        // Source maps for production debugging
+        sourcemap: false,
     },
 });

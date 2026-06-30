@@ -1,15 +1,15 @@
-import * as React from 'react';
 import { router } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Search, X } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 interface SearchOverlayProps {
   open: boolean;
@@ -20,7 +20,10 @@ export default function SearchOverlay({ open, onOpenChange }: SearchOverlayProps
   const [query, setQuery] = React.useState('');
 
   const submit = (term = query) => {
-    if (!term.trim()) return;
+    if (!term.trim()) {
+return;
+}
+
     router.visit(`/search?q=${encodeURIComponent(term.trim())}`);
     onOpenChange(false);
   };
@@ -30,7 +33,9 @@ export default function SearchOverlay({ open, onOpenChange }: SearchOverlayProps
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle className="sr-only">Search</DialogTitle>
-          <form className="flex items-center gap-2" onSubmit={(event) => { event.preventDefault(); submit(); }}>
+          <form className="flex items-center gap-2" onSubmit={(event) => {
+ event.preventDefault(); submit(); 
+}}>
             <Search className="h-5 w-5 text-muted-foreground" />
             <Input
               placeholder="Search vehicles, brands, models..."

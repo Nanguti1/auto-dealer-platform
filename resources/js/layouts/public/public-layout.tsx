@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import StickyNav from '@/components/navigation/sticky-nav';
 import Footer from '@/components/navigation/footer';
+import StickyNav from '@/components/navigation/sticky-nav';
 import SeoHead from '@/components/seo-head';
+import { cn } from '@/lib/utils';
 
 interface PublicLayoutProps {
     children: React.ReactNode;
@@ -17,6 +17,7 @@ const defaultDescription = 'Explore premium vehicles, transparent financing, tra
 
 export default function PublicLayout({ children, title, description = defaultDescription, canonical, image = '/images/og-default.jpg', className }: PublicLayoutProps) {
     const pageTitle = title ? `${title} | Dealership` : 'Dealership';
+
     return (
         <div className={cn('min-h-screen bg-background text-foreground antialiased', className)}>
             <Head title={title}>

@@ -1,13 +1,13 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import { Bookmark, Trash2 } from 'lucide-react';
 import { EmptyState } from '@/components/design-system';
 import { H2 } from '@/components/design-system/typography';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { useSavedSearches } from '@/hooks/use-saved-searches';
-import { Bookmark, Trash2 } from 'lucide-react';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
 export default function SavedSearchesPage() {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };

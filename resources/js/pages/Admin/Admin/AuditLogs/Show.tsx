@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { ArrowLeft, User, Calendar, Globe, Monitor, FileText } from 'lucide-react';
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import auditLogs from '@/routes/admin/audit-logs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface AuditLogUser {
   id: number;
@@ -31,6 +31,7 @@ export default function Show({ log }: { log: AuditLog }) {
     if (value === null || value === undefined) {
       return <span className="text-muted-foreground">null</span>;
     }
+
     if (typeof value === 'object') {
       return (
         <pre className="bg-muted p-2 rounded text-xs overflow-x-auto">
@@ -38,9 +39,11 @@ export default function Show({ log }: { log: AuditLog }) {
         </pre>
       );
     }
+
     if (typeof value === 'boolean') {
       return <Badge variant={value ? 'default' : 'secondary'}>{value.toString()}</Badge>;
     }
+
     return <span>{String(value)}</span>;
   };
 

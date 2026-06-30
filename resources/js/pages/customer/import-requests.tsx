@@ -1,11 +1,11 @@
 import { Head, Link, usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import { H2 } from '@/components/design-system/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
-import { H2 } from '@/components/design-system/typography';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
 const imports = [
     { id: 'IM-3301', vehicle: 'Porsche 911 Carrera GTS', status: 'sourcing', updated: 'Mar 7, 2024', region: 'Germany', timeline: ['Request', 'Sourcing', 'Inspection'] },

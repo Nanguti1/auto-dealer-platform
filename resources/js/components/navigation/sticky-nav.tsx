@@ -1,9 +1,7 @@
-import * as React from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import type { Auth } from '@/types';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Menu, Search, Phone, Mail } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +11,8 @@ import {
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
+import type { Auth } from '@/types';
 import SearchOverlay from './search-overlay';
 
 interface StickyNavProps {
@@ -30,6 +30,7 @@ export default function StickyNav({ className }: StickyNavProps) {
       setIsScrolled(window.scrollY > 10);
     };
     window.addEventListener('scroll', handleScroll);
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 

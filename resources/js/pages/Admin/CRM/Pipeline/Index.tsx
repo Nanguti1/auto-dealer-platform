@@ -1,8 +1,8 @@
+import { Link } from '@inertiajs/react';
 import CrmShell from '@/components/admin/crm/crm-shell';
 import PipelineColumn from '@/components/admin/crm/pipeline-column';
 import type { CrmStage, LeadRecord } from '@/components/admin/crm/types';
 import { Button } from '@/components/ui/button';
-import { Link } from '@inertiajs/react';
 
 export default function Index({ stages = [], leads = [] }: { stages?: CrmStage[]; leads?: LeadRecord[] }) {
   const fallbackStages: CrmStage[] = stages.length ? stages : [{ id: 1, name: 'New', slug: 'new' }, { id: 2, name: 'Contacted', slug: 'contacted' }, { id: 3, name: 'Qualified', slug: 'qualified' }, { id: 4, name: 'Won', slug: 'won' }];

@@ -1,25 +1,25 @@
-import * as React from 'react';
 import { Head, Link, router } from '@inertiajs/react';
-import PublicLayout from '@/layouts/public/public-layout';
+import { GitCompareArrows, BookmarkPlus, Car, List, Grid3X3, RotateCcw } from 'lucide-react';
+import * as React from 'react';
+import { EmptyState } from '@/components/design-system';
+import { H1, P } from '@/components/design-system/typography';
 import VehicleCard from '@/components/shared/vehicle-card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Pagination } from '@/components/ui/pagination';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     VehicleSearchBar,
     VehicleFiltersPanel,
     ActiveFilterTags,
     VehicleLoadingGrid,
 } from '@/components/vehicles';
-import { H1, P } from '@/components/design-system/typography';
-import { EmptyState } from '@/components/design-system';
-import { Button } from '@/components/ui/button';
-import { Pagination } from '@/components/ui/pagination';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
-import { useWishlist } from '@/hooks/use-wishlist';
+import { filterVehicles, mockFilterOptions } from '@/data/mock-vehicles';
 import { useCompare } from '@/hooks/use-compare';
 import { useSavedSearches } from '@/hooks/use-saved-searches';
-import { filterVehicles, mockFilterOptions } from '@/data/mock-vehicles';
+import { useWishlist } from '@/hooks/use-wishlist';
+import PublicLayout from '@/layouts/public/public-layout';
 import type { FilterOptions, InventoryFilters, PaginatedVehicles, VehicleSummary } from '@/types/vehicle';
-import { GitCompareArrows, BookmarkPlus, Car, List, Grid3X3, RotateCcw } from 'lucide-react';
 
 interface InventoryIndexProps {
     vehicles?: PaginatedVehicles;
@@ -34,7 +34,10 @@ export default function InventoryIndex({
 }: InventoryIndexProps) {
     const [loading, setLoading] = React.useState(false);
     const [viewMode, setViewMode] = React.useState<'grid' | 'list'>(() => {
-        if (typeof window === 'undefined') return 'grid';
+        if (typeof window === 'undefined') {
+return 'grid';
+}
+
         return (localStorage.getItem('dealership:inventory-view') as 'grid' | 'list' | null) ?? 'grid';
     });
     const filters = serverFilters;
@@ -57,6 +60,7 @@ export default function InventoryIndex({
 
     const vehicles: VehicleSummary[] = React.useMemo(() => {
         const data = serverVehicles?.data ?? filterVehicles(filters as Record<string, string | number | undefined>);
+
         return data.map((v) => ({
             ...v,
             isWishlisted: v.isWishlisted ?? isWishlisted(v.id),

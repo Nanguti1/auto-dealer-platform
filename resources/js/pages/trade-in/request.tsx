@@ -1,12 +1,12 @@
-import PublicLayout from '@/layouts/public/public-layout';
 import { Head, Form } from '@inertiajs/react';
 import { H1, P } from '@/components/design-system/typography';
+import InputError from '@/components/input-error';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import InputError from '@/components/input-error';
+import PublicLayout from '@/layouts/public/public-layout';
 
 export default function TradeInRequestPage() {
     return (

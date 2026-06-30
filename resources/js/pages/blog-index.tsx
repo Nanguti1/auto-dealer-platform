@@ -1,10 +1,10 @@
 import { Head } from '@inertiajs/react';
-import PublicLayout from '@/layouts/public/public-layout';
-import BlogCard from '@/components/shared/blog-card';
 import { H1, H2, Lead } from '@/components/design-system/typography';
+import BlogCard from '@/components/shared/blog-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import PublicLayout from '@/layouts/public/public-layout';
 
 const posts = [
     {

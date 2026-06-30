@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 
 export interface LightboxImage {
@@ -21,12 +21,22 @@ export default function Lightbox({ images, open, index, onOpenChange, onIndexCha
     const image = images[index];
 
     React.useEffect(() => {
-        if (!open) return;
+        if (!open) {
+return;
+}
 
         const onKeyDown = (event: KeyboardEvent) => {
-            if (event.key === 'Escape') onOpenChange(false);
-            if (event.key === 'ArrowRight') onIndexChange?.((index + 1) % images.length);
-            if (event.key === 'ArrowLeft') onIndexChange?.((index - 1 + images.length) % images.length);
+            if (event.key === 'Escape') {
+onOpenChange(false);
+}
+
+            if (event.key === 'ArrowRight') {
+onIndexChange?.((index + 1) % images.length);
+}
+
+            if (event.key === 'ArrowLeft') {
+onIndexChange?.((index - 1 + images.length) % images.length);
+}
         };
 
         document.addEventListener('keydown', onKeyDown);
@@ -38,7 +48,9 @@ export default function Lightbox({ images, open, index, onOpenChange, onIndexCha
         };
     }, [images.length, index, onIndexChange, onOpenChange, open]);
 
-    if (!image) return null;
+    if (!image) {
+return null;
+}
 
     return (
         <AnimatePresence>

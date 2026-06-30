@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { router } from '@inertiajs/react';
 import { Download, Package, AlertTriangle, DollarSign, Car } from 'lucide-react';
+import * as React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import ReportsShell, { ReportsBackButton } from '@/components/admin/reports/reports-shell';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 interface InventoryData {
   status: string;

@@ -4,7 +4,10 @@ const STORAGE_KEY = 'dealership:compare';
 const MAX_COMPARE = 4;
 
 function readIds(): number[] {
-    if (typeof window === 'undefined') return [];
+    if (typeof window === 'undefined') {
+return [];
+}
+
     try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as number[];
     } catch {
@@ -19,6 +22,7 @@ function writeIds(ids: number[]): void {
 export function useCompare(initialIds: number[] = []) {
     const [ids, setIds] = React.useState<number[]>(() => {
         const stored = readIds();
+
         return stored.length > 0 ? stored : initialIds;
     });
 
@@ -27,11 +31,17 @@ export function useCompare(initialIds: number[] = []) {
             if (current.includes(vehicleId)) {
                 const next = current.filter((id) => id !== vehicleId);
                 writeIds(next);
+
                 return next;
             }
-            if (current.length >= MAX_COMPARE) return current;
+
+            if (current.length >= MAX_COMPARE) {
+return current;
+}
+
             const next = [...current, vehicleId];
             writeIds(next);
+
             return next;
         });
     }, []);
@@ -42,6 +52,7 @@ export function useCompare(initialIds: number[] = []) {
         setIds((current) => {
             const next = current.filter((id) => id !== vehicleId);
             writeIds(next);
+
             return next;
         });
     }, []);

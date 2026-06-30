@@ -1,16 +1,16 @@
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '@/layouts/guest/guest-layout';
-import StickyNav from '@/components/navigation/sticky-nav';
-import Footer from '@/components/navigation/footer';
+import { ChevronDown } from 'lucide-react';
+import { useState } from 'react';
 import { H1, H2, P, H3 } from '@/components/design-system/typography';
+import Footer from '@/components/navigation/footer';
+import StickyNav from '@/components/navigation/sticky-nav';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible';
-import { ChevronDown } from 'lucide-react';
-import { useState } from 'react';
+import GuestLayout from '@/layouts/guest/guest-layout';
 
 export default function FAQ() {
   const [openItem, setOpenItem] = useState<string | null>(null);

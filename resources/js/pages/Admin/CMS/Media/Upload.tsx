@@ -1,12 +1,12 @@
-import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import { Form } from '@inertiajs/react';
+import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import InputError from '@/components/input-error';
+import { ImageDropzone } from '@/components/shared/media-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ImageDropzone } from '@/components/shared/media-upload';
+import { Textarea } from '@/components/ui/textarea';
 
 export default function Create() {
   return (
@@ -23,6 +23,7 @@ export default function Create() {
               <ImageDropzone
                 onFilesSelected={(files) => {
                   const input = document.querySelector('input[name="file"]') as HTMLInputElement;
+
                   if (input && files.length > 0) {
                     const dataTransfer = new DataTransfer();
                     dataTransfer.items.add(files[0]);

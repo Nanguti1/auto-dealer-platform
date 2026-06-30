@@ -1,23 +1,24 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Copy, Eye, MoreHorizontal, Pencil, Star, Trash2 } from 'lucide-react';
+import * as React from 'react';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
-import InventoryShell from '@/components/admin/inventory/inventory-shell';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { formatCurrency, formatNumber, vehicleName } from '@/components/admin/inventory/helpers';
+import InventoryShell from '@/components/admin/inventory/inventory-shell';
 import type { AdminVehicle, Filters, Paginated } from '@/components/admin/inventory/types';
+import { LoadingState, EmptyVehicles, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { admin } from '@/routes/admin';
-import { LoadingState, EmptyVehicles, InlineError } from '@/components/admin/shared';
 
-export default function Index({ vehicles, filters = {} }: { vehicles: Paginated<AdminVehicle>; filters?: Filters }) {
+const Index = React.memo(function Index({ vehicles, filters = {} }: { vehicles: Paginated<AdminVehicle>; filters?: Filters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
 
-  const columns: Column<AdminVehicle>[] = [
+  const columns: Column<AdminVehicle>[] = React.useMemo(() => [
     {
       key: 'title',
       label: 'Vehicle',
@@ -46,9 +47,9 @@ export default function Index({ vehicles, filters = {} }: { vehicles: Paginated<
         </div>
       ),
     },
-  ];
+  ], []);
 
-  const handleDelete = () => {
+  const handleDelete = React.useCallback(() => {
     if (deleteId) {
       setIsLoading(true);
       router.delete(admin.vehicles.destroy(deleteId).url, {
@@ -62,7 +63,7 @@ export default function Index({ vehicles, filters = {} }: { vehicles: Paginated<
         },
       });
     }
-  };
+  }, [deleteId]);
 
   if (isLoading) {
     return (
@@ -169,4 +170,6 @@ export default function Index({ vehicles, filters = {} }: { vehicles: Paginated<
       />
     </>
   );
-}
+});
+
+export default Index;

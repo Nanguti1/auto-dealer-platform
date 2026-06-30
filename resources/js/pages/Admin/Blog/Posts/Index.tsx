@@ -1,14 +1,15 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Star, Trash2, MoreHorizontal } from 'lucide-react';
-import ConfirmationDialog from '@/components/admin/confirmation-dialog';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import * as React from 'react';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { BlogPost, CmsFilters, Paginated } from '@/components/admin/cms/types';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { compact } from '@/components/admin/inventory/helpers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { compact } from '@/components/admin/inventory/helpers';
 
 export default function Index({ blogPosts, filters = {} }: { blogPosts: Paginated<BlogPost>; filters?: CmsFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);

@@ -1,8 +1,9 @@
 import { Link, router } from '@inertiajs/react';
 import { Calendar, Car, DollarSign, Eye, Pencil, Trash2, User } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
-import ReservationShell from '@/components/admin/reservations/reservation-shell';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { customerName, formatCurrency, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
+import ReservationShell from '@/components/admin/reservations/reservation-shell';
 import type { ReservationFilters, ReservationPagination, ReservationRecord } from '@/components/admin/reservations/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -63,6 +64,7 @@ export default function Index({ reservations, filters = {} }: { reservations: Re
       sortable: true, 
       render: (reservation) => {
         const badge = statusBadge(reservation.status);
+
         return <Badge variant={badge.variant}>{badge.label}</Badge>;
       }
     },

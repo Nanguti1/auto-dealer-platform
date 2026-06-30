@@ -1,14 +1,14 @@
-import * as React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { admin as adminRoutes } from '@/routes/admin';
-import AdminLayout from '@/layouts/admin/admin-layout';
+import { ArrowRight, BarChart3, CheckCircle2, Clock, DollarSign, Layers, Users } from 'lucide-react';
+import * as React from 'react';
+import { LoadingSkeleton } from '@/components/admin/loading-skeleton';
 import PageHeader from '@/components/admin/page-header';
 import PageWrapper from '@/components/admin/page-wrapper';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { LoadingSkeleton } from '@/components/admin/loading-skeleton';
 import { EmptyState } from '@/components/admin/shared';
-import { ArrowRight, BarChart3, CheckCircle2, Clock, DollarSign, Layers, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import AdminLayout from '@/layouts/admin/admin-layout';
+import { admin as adminRoutes } from '@/routes/admin';
 
 // Lazy load chart components
 const AreaChartComponent = React.lazy(() => import('@/components/design-system/chart').then(m => ({ default: m.AreaChartComponent })));

@@ -1,11 +1,11 @@
 import { Link, router } from '@inertiajs/react';
 import { Archive, Pencil, Repeat } from 'lucide-react';
-import CustomerAvatar from '@/components/admin/customers/customer-avatar';
-import TimelineList from '@/components/admin/customers/timeline-list';
 import CrmShell, { CrmBackButton } from '@/components/admin/crm/crm-shell';
 import CrmStatusBadge from '@/components/admin/crm/crm-status-badge';
 import { assignedTo, formatDateTime, leadName, leadStageName } from '@/components/admin/crm/helpers';
 import type { LeadRecord } from '@/components/admin/crm/types';
+import CustomerAvatar from '@/components/admin/customers/customer-avatar';
+import TimelineList from '@/components/admin/customers/timeline-list';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

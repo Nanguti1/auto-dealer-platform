@@ -1,6 +1,6 @@
 import CustomerShell, { CustomerBackButton } from '@/components/admin/customers/customer-shell';
-import TimelineList from '@/components/admin/customers/timeline-list';
 import { customerName } from '@/components/admin/customers/helpers';
+import TimelineList from '@/components/admin/customers/timeline-list';
 import type { CustomerRecord, TimelineEvent } from '@/components/admin/customers/types';
 
 export default function Index({ customer, events = [] }: { customer?: CustomerRecord; events?: TimelineEvent[] }) {

@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
+import * as React from 'react';
+import Lightbox from '@/components/shared/lightbox';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { VehicleGalleryImage } from '@/types/vehicle';
-import { ChevronLeft, ChevronRight, Expand } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Lightbox from '@/components/shared/lightbox';
 
 interface VehicleGalleryProps {
     images: VehicleGalleryImage[];
@@ -22,7 +22,9 @@ export default function VehicleGallery({ images, className }: VehicleGalleryProp
         setActiveIndex((i) => (i + direction + sorted.length) % sorted.length);
     };
 
-    if (!active) return null;
+    if (!active) {
+return null;
+}
 
     return (
         <div className={cn('space-y-4', className)}>

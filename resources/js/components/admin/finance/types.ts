@@ -1,6 +1,6 @@
-import type { Paginated } from '@/components/admin/inventory/types';
-import type { CustomerDocument, CustomerRecord, TimelineEvent } from '@/components/admin/customers/types';
 import type { LeadRecord } from '@/components/admin/crm/types';
+import type { CustomerDocument, CustomerRecord, TimelineEvent } from '@/components/admin/customers/types';
+import type { Paginated } from '@/components/admin/inventory/types';
 import type { TradeInRequest } from '@/components/admin/trade-ins/types';
 
 export interface FinanceUser {

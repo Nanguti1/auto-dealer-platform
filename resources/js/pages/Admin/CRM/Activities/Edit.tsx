@@ -1,5 +1,5 @@
-import CrmShell, { CrmBackButton } from '@/components/admin/crm/crm-shell';
 import ActivityForm from '@/components/admin/crm/activity-form';
+import CrmShell, { CrmBackButton } from '@/components/admin/crm/crm-shell';
 import type { CrmActivity } from '@/components/admin/crm/types';
 
 export default function Edit({ activity }: { activity: CrmActivity }) {

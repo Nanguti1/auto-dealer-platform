@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { router } from '@inertiajs/react';
 import { Search } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 
 const actions = [
     { label: 'Browse Inventory', href: '/inventory' },
@@ -30,6 +30,7 @@ export default function CommandPalette({ open, onOpenChange }: CommandPalettePro
             }
         };
         window.addEventListener('keydown', onKeyDown);
+
         return () => window.removeEventListener('keydown', onKeyDown);
     }, [onOpenChange, open]);
 
@@ -43,9 +44,13 @@ export default function CommandPalette({ open, onOpenChange }: CommandPalettePro
                 </div>
                 <div className="space-y-2">
                     {filtered.map((action) => (
-                        <Button key={action.href} variant="ghost" className="w-full justify-start" onClick={() => { router.visit(action.href); onOpenChange(false); }}>{action.label}</Button>
+                        <Button key={action.href} variant="ghost" className="w-full justify-start" onClick={() => {
+ router.visit(action.href); onOpenChange(false); 
+}}>{action.label}</Button>
                     ))}
-                    {query && <Button variant="outline" className="w-full justify-start" onClick={() => { router.visit(`/search?q=${encodeURIComponent(query)}`); onOpenChange(false); }}>Search site for “{query}”</Button>}
+                    {query && <Button variant="outline" className="w-full justify-start" onClick={() => {
+ router.visit(`/search?q=${encodeURIComponent(query)}`); onOpenChange(false); 
+}}>Search site for “{query}”</Button>}
                 </div>
             </DialogContent>
         </Dialog>

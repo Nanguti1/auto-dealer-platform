@@ -6,7 +6,10 @@ import type { ReservationRecord } from './types';
 export { formatDate, formatDateTime, formatCurrency, formatNumber };
 
 export function vehicleName(reservation?: ReservationRecord): string {
-  if (!reservation?.vehicle) return 'No vehicle';
+  if (!reservation?.vehicle) {
+return 'No vehicle';
+}
+
   return inventoryVehicleName(reservation.vehicle as Parameters<typeof inventoryVehicleName>[0]);
 }
 
@@ -22,5 +25,6 @@ export function statusBadge(status: string): { label: string; variant: 'default'
     completed: { label: 'Completed', variant: 'default' },
     expired: { label: 'Expired', variant: 'outline' },
   };
+
   return statusMap[status] || { label: status, variant: 'outline' };
 }

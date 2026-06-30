@@ -1,13 +1,13 @@
 import { Head, Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
-import VehicleCard from '@/components/shared/vehicle-card';
+import { Clock } from 'lucide-react';
 import { EmptyState } from '@/components/design-system';
 import { H2 } from '@/components/design-system/typography';
+import VehicleCard from '@/components/shared/vehicle-card';
 import { Button } from '@/components/ui/button';
-import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 import { findVehicleById, toSummary } from '@/data/mock-vehicles';
-import { Clock } from 'lucide-react';
+import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
 export default function RecentlyViewedPage() {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };

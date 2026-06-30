@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { Form } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
 import { Save, X } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
 
 interface FormShellProps {
   action: string;

@@ -1,12 +1,12 @@
 import { Head } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import { Bell } from 'lucide-react';
 import { EmptyState } from '@/components/design-system';
 import { H2 } from '@/components/design-system/typography';
-import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 import type { CustomerNotification } from '@/types/vehicle';
-import { Bell } from 'lucide-react';
 
 interface NotificationsProps {
     notifications?: CustomerNotification[];

@@ -1,21 +1,22 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import * as React from 'react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import CustomerShell from '@/components/admin/customers/customer-shell';
 import { customerName, formatDate } from '@/components/admin/customers/helpers';
 import type { CustomerFilters, CustomerPagination, CustomerRecord } from '@/components/admin/customers/types';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyCustomers, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { admin } from '@/routes/admin';
-import { LoadingState, EmptyCustomers, InlineError } from '@/components/admin/shared';
 
-export default function Index({ customers, filters = {} }: { customers: CustomerPagination; filters?: CustomerFilters }) {
+const Index = React.memo(function Index({ customers, filters = {} }: { customers: CustomerPagination; filters?: CustomerFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
 
-  const columns: Column<CustomerRecord>[] = [
+  const columns: Column<CustomerRecord>[] = React.useMemo(() => [
     {
       key: 'customer',
       label: 'Customer',
@@ -38,7 +39,7 @@ export default function Index({ customers, filters = {} }: { customers: Customer
     { key: 'import_requests_count', label: 'Imports', sortable: true, render: (customer) => customer.import_requests_count ?? 0 },
     { key: 'status', label: 'Status', render: (customer) => <Badge>{customer.status ?? 'Active'}</Badge> },
     { key: 'last_activity_at', label: 'Last Activity', sortable: true, render: (customer) => formatDate(customer.last_activity_at ?? customer.updated_at as string) },
-  ];
+  ], []);
 
   if (isLoading) {
     return (
@@ -90,4 +91,6 @@ export default function Index({ customers, filters = {} }: { customers: Customer
       )}
     </CustomerShell>
   );
-}
+});
+
+export default Index;

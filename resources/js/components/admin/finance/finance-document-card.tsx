@@ -1,7 +1,7 @@
-import { Download, Eye, Trash2 } from 'lucide-react';
 import { Link, router } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
+import { Download, Eye, Trash2 } from 'lucide-react';
 import { formatDate, formatFileSize } from '@/components/admin/customers/helpers';
+import { Button } from '@/components/ui/button';
 import FinanceStatusBadge from './finance-status-badge';
 import { userName } from './helpers';
 import type { FinanceDocument } from './types';

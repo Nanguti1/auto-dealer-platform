@@ -1,10 +1,10 @@
 import { Head } from '@inertiajs/react';
-import GuestLayout from '@/layouts/guest/guest-layout';
-import StickyNav from '@/components/navigation/sticky-nav';
-import Footer from '@/components/navigation/footer';
-import { H1, H2, P } from '@/components/design-system/typography';
-import TestimonialCard from '@/components/shared/testimonial-card';
 import { Star } from 'lucide-react';
+import { H1, H2, P } from '@/components/design-system/typography';
+import Footer from '@/components/navigation/footer';
+import StickyNav from '@/components/navigation/sticky-nav';
+import TestimonialCard from '@/components/shared/testimonial-card';
+import GuestLayout from '@/layouts/guest/guest-layout';
 
 export default function Testimonials() {
   const testimonials = [

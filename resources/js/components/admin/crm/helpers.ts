@@ -1,5 +1,5 @@
-import type { LeadRecord } from './types';
 import { formatDateTime } from '@/lib/date-utils';
+import type { LeadRecord } from './types';
 
 export { formatDateTime };
 

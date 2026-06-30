@@ -64,6 +64,7 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
             multiple={false}
             onFilesSelected={(files) => {
               const input = document.querySelector('input[name="banner"]') as HTMLInputElement | null;
+
               if (input && files[0]) {
                 const transfer = new DataTransfer();
                 transfer.items.add(files[0]);

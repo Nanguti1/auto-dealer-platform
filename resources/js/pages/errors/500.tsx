@@ -1,7 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
 import { Home, RefreshCw } from 'lucide-react';
 import { H1, P } from '@/components/design-system/typography';
+import { Button } from '@/components/ui/button';
 
 export default function ServerError() {
   return (

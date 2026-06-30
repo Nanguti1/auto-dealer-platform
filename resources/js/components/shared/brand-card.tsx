@@ -1,7 +1,7 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface BrandCardProps {
   brand: {

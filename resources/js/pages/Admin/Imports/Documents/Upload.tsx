@@ -1,11 +1,12 @@
-import * as React from 'react';
 import { Form } from '@inertiajs/react';
 import { UploadCloud } from 'lucide-react';
-import InputError from '@/components/input-error';
-import ImportShell, { ImportBackButton } from '@/components/admin/imports/import-shell';
+import * as React from 'react';
 import { importVehicleName } from '@/components/admin/imports/helpers';
+import ImportShell, { ImportBackButton } from '@/components/admin/imports/import-shell';
 import type { ImportRequest } from '@/components/admin/imports/types';
-import { ImageDropzone, MediaUploadItem } from '@/components/shared/media-upload';
+import InputError from '@/components/input-error';
+import type { MediaUploadItem } from '@/components/shared/media-upload';
+import { ImageDropzone } from '@/components/shared/media-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

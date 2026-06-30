@@ -1,13 +1,13 @@
 import { Link } from '@inertiajs/react';
 import { FileText, Printer } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { customerName } from '@/components/admin/customers/helpers';
+import { formatCurrency, formatDateTime, vehicleName } from '@/components/admin/payments/helpers';
 import PaymentShell, { PaymentBackButton } from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
-import { formatCurrency, formatDateTime, vehicleName } from '@/components/admin/payments/helpers';
-import { customerName } from '@/components/admin/customers/helpers';
 import type { Invoice } from '@/components/admin/payments/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Show({ invoice }: { invoice: Invoice }) {
   const outstandingBalance = (invoice.amount ?? 0) - (invoice.paid_amount ?? 0);

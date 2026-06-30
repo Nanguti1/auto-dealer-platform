@@ -2,12 +2,12 @@ import { Link } from '@inertiajs/react';
 import { Eye, MapPin, Ship } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import TimelineList from '@/components/admin/customers/timeline-list';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatDateTime, importVehicleName, requesterName } from '@/components/admin/imports/helpers';
 import ImportShell, { ImportBackButton } from '@/components/admin/imports/import-shell';
 import ImportStatusBadge from '@/components/admin/imports/import-status-badge';
-import { formatDateTime, importVehicleName, requesterName } from '@/components/admin/imports/helpers';
 import type { ImportRequest } from '@/components/admin/imports/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Show({ vehicleImport }: { vehicleImport: ImportRequest }) {
   const shipment = vehicleImport.shipment ?? vehicleImport.request_data?.shipment;

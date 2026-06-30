@@ -1,5 +1,5 @@
-import { vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
 import { customerName } from '@/components/admin/customers/helpers';
+import { vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
 import { formatDate, formatDateTime } from '@/lib/date-utils';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { Payment, PaymentUser, PaymentVehicle } from './types';

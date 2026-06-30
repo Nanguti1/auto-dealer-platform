@@ -1,10 +1,20 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Eye, Download, Filter, Search, X } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import * as React from 'react';
+import type { Paginated } from '@/components/admin/cms/types';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { LoadingState, EmptyState } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -14,15 +24,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import type { Paginated } from '@/components/admin/cms/types';
 import auditLogs from '@/routes/admin/audit-logs';
 
 interface AuditLog {
@@ -75,7 +76,9 @@ export default function Index({
   const handleExport = () => {
     const url = new URL(window.location.origin + auditLogs.export.url());
     Object.entries(localFilters).forEach(([key, value]) => {
-      if (value) url.searchParams.set(key, value);
+      if (value) {
+url.searchParams.set(key, value);
+}
     });
     window.location.href = url.toString();
   };

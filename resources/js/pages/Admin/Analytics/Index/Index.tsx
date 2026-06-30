@@ -1,11 +1,12 @@
 import { Link } from '@inertiajs/react';
 import { Eye } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
 import AnalyticsShell from '@/components/admin/analytics/analytics-shell';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
+import type { Filters, Paginated } from '@/components/admin/inventory/types';
 import { formatDate, previewValue } from '@/components/admin/settings/helpers';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { Filters, Paginated } from '@/components/admin/inventory/types';
 
 interface AnalyticsData {
   id: number;

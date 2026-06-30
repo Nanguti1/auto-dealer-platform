@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { Eye, Pencil, Search, Globe, Share2 } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import * as React from 'react';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { SeoSettings, Paginated } from '@/components/admin/cms/types';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 

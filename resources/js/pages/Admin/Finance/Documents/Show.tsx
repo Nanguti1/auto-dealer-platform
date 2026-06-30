@@ -1,8 +1,8 @@
+import { formatDate, formatFileSize } from '@/components/admin/customers/helpers';
 import FinanceDocumentCard from '@/components/admin/finance/finance-document-card';
 import FinanceShell, { FinanceBackButton } from '@/components/admin/finance/finance-shell';
 import FinanceStatusBadge from '@/components/admin/finance/finance-status-badge';
 import { applicantName, userName } from '@/components/admin/finance/helpers';
-import { formatDate, formatFileSize } from '@/components/admin/customers/helpers';
 import type { FinanceApplication, FinanceDocument } from '@/components/admin/finance/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 

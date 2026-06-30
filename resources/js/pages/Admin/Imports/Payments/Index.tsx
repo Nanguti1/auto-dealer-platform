@@ -1,12 +1,13 @@
 import { Link } from '@inertiajs/react';
 import { Eye, DollarSign } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
-import { Button } from '@/components/ui/button';
+import { formatCurrency, formatDateTime, importVehicleName, requesterName } from '@/components/admin/imports/helpers';
 import ImportShell from '@/components/admin/imports/import-shell';
 import ImportStatusBadge from '@/components/admin/imports/import-status-badge';
-import { formatCurrency, formatDateTime, importVehicleName, requesterName } from '@/components/admin/imports/helpers';
 import type { ImportFilters, ImportPagination, ImportRequest } from '@/components/admin/imports/types';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { Button } from '@/components/ui/button';
 
 export default function Index({ imports, filters = {} }: { imports: ImportPagination; filters?: ImportFilters }) {
   const columns: Column<ImportRequest>[] = [

@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { Pencil, Calendar, ChevronDown, ChevronUp, FolderOpen } from 'lucide-react';
+import * as React from 'react';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { Faq } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';

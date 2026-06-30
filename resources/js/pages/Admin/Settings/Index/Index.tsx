@@ -1,10 +1,11 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Pencil } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import * as React from 'react';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { formatDate, previewValue } from '@/components/admin/settings/helpers';
 import SettingShell from '@/components/admin/settings/setting-shell';
 import SettingStatusBadge from '@/components/admin/settings/setting-status-badge';
-import { formatDate, previewValue } from '@/components/admin/settings/helpers';
 import type { AdminSetting, AdminSettingsPagination, SettingsFilters } from '@/components/admin/settings/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

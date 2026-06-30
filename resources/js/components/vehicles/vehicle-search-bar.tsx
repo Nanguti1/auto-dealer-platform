@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { router } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
+import * as React from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
 
 interface VehicleSearchBarProps {
     defaultValue?: string;
@@ -22,10 +22,13 @@ export default function VehicleSearchBar({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+
         if (onSearch) {
             onSearch(query);
+
             return;
         }
+
         router.get('/inventory', { search: query || undefined }, { preserveState: true });
     };
 

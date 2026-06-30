@@ -1,8 +1,8 @@
+import { Play } from 'lucide-react';
 import * as React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import type { VehicleVideo } from '@/types/vehicle';
-import { Play } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
 
 interface VehicleVideoSectionProps {
     videos: VehicleVideo[];
@@ -10,14 +10,19 @@ interface VehicleVideoSectionProps {
 }
 
 function getEmbedUrl(url: string): string {
-    if (url.includes('youtube.com/embed') || url.includes('youtu.be')) return url;
+    if (url.includes('youtube.com/embed') || url.includes('youtu.be')) {
+return url;
+}
+
     return url;
 }
 
 export default function VehicleVideoSection({ videos, className }: VehicleVideoSectionProps) {
     const [activeId, setActiveId] = React.useState(videos[0]?.id);
 
-    if (videos.length === 0) return null;
+    if (videos.length === 0) {
+return null;
+}
 
     const active = videos.find((v) => v.id === activeId) ?? videos[0];
 

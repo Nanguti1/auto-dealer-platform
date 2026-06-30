@@ -1,1 +1,3 @@
-import InventoryShell, { BackButton } from '@/components/admin/inventory/inventory-shell'; import { GalleryForm } from '@/components/admin/inventory/simple-resource-form'; import { admin } from '@/routes/admin'; export default function Create() { return <InventoryShell title="Upload Gallery Image" actions={<BackButton href={admin.vehicleGalleries.index().url} />}><GalleryForm action={admin.vehicleGalleries.store.form().action} /></InventoryShell>; }
+import InventoryShell, { BackButton } from '@/components/admin/inventory/inventory-shell'; import { GalleryForm } from '@/components/admin/inventory/simple-resource-form'; import { admin } from '@/routes/admin'; export default function Create() {
+ return <InventoryShell title="Upload Gallery Image" actions={<BackButton href={admin.vehicleGalleries.index().url} />}><GalleryForm action={admin.vehicleGalleries.store.form().action} /></InventoryShell>; 
+}

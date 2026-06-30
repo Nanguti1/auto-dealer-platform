@@ -1,8 +1,8 @@
 import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Download, Trash2, Calendar, File, Image as ImageIcon, Copy } from 'lucide-react';
 import CmsShell from '@/components/admin/cms/cms-shell';
-import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import type { MediaFile } from '@/components/admin/cms/types';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,9 +11,13 @@ export default function Show({ mediaFile }: { mediaFile: MediaFile }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
 
   const formatFileSize = (bytes?: number) => {
-    if (!bytes) return '—';
+    if (!bytes) {
+return '—';
+}
+
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
+
     return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
   };
 

@@ -1,7 +1,7 @@
 import { Printer } from 'lucide-react';
 import FinanceShell, { FinanceBackButton } from '@/components/admin/finance/finance-shell';
-import PaymentSchedule from '@/components/admin/finance/payment-schedule';
 import { applicantName } from '@/components/admin/finance/helpers';
+import PaymentSchedule from '@/components/admin/finance/payment-schedule';
 import type { FinanceApplication, PaymentInstallment } from '@/components/admin/finance/types';
 import { Button } from '@/components/ui/button';
 

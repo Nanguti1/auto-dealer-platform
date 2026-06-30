@@ -1,11 +1,12 @@
-import * as React from 'react';
 import { Form } from '@inertiajs/react';
 import { UploadCloud } from 'lucide-react';
-import InputError from '@/components/input-error';
+import * as React from 'react';
 import FinanceShell, { FinanceBackButton } from '@/components/admin/finance/finance-shell';
 import { applicantName } from '@/components/admin/finance/helpers';
 import type { FinanceApplication } from '@/components/admin/finance/types';
-import { ImageDropzone, MediaUploadItem } from '@/components/shared/media-upload';
+import InputError from '@/components/input-error';
+import type { MediaUploadItem } from '@/components/shared/media-upload';
+import { ImageDropzone } from '@/components/shared/media-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';

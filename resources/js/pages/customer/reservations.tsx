@@ -1,14 +1,14 @@
 import { Head, Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import { CalendarCheck } from 'lucide-react';
 import { EmptyState } from '@/components/design-system';
 import { H2 } from '@/components/design-system/typography';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import type { CustomerReservation } from '@/types/vehicle';
 import { toSummary, mockVehicles } from '@/data/mock-vehicles';
-import { CalendarCheck } from 'lucide-react';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import type { CustomerReservation } from '@/types/vehicle';
 
 interface ReservationsProps {
     reservations?: CustomerReservation[];

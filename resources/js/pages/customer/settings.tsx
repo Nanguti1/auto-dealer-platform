@@ -1,10 +1,10 @@
 import { Head, Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
-import { H2, P } from '@/components/design-system/typography';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Bell, Bookmark, Shield, Palette } from 'lucide-react';
+import { H2, P } from '@/components/design-system/typography';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
 const settingsLinks = [
     { title: 'Notifications', description: 'Manage email and push notification preferences', href: '/customer/notifications', icon: Bell },

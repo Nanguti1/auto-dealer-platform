@@ -1,7 +1,4 @@
-import * as React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { 
   LayoutDashboard, 
   Car, 
@@ -13,6 +10,11 @@ import {
   ChevronLeft,
   Bell
 } from 'lucide-react';
+import * as React from 'react';
+import CommandPalette from '@/components/navigation/command-palette';
+import NotificationDropdown from '@/components/navigation/notification-dropdown';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,10 +23,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
-import NotificationDropdown from '@/components/navigation/notification-dropdown';
-import CommandPalette from '@/components/navigation/command-palette';
+import { cn } from '@/lib/utils';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -47,7 +47,10 @@ export default function DashboardLayout({
   const [commandOpen, setCommandOpen] = React.useState(false);
 
   const getInitials = (name?: string) => {
-    if (!name) return 'U';
+    if (!name) {
+return 'U';
+}
+
     return name
       .split(' ')
       .map((n) => n[0])

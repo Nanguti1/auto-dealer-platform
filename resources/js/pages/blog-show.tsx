@@ -1,10 +1,10 @@
 import { Head, Link } from '@inertiajs/react';
-import PublicLayout from '@/layouts/public/public-layout';
-import BlogCard from '@/components/shared/blog-card';
+import { Calendar, Clock, ArrowLeft } from 'lucide-react';
 import { H1, H2, Lead, P } from '@/components/design-system/typography';
+import BlogCard from '@/components/shared/blog-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Calendar, Clock, ArrowLeft } from 'lucide-react';
+import PublicLayout from '@/layouts/public/public-layout';
 
 const relatedPosts = [
     {

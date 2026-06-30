@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { GripVertical, ImagePlus, Trash2, UploadCloud } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -23,7 +23,10 @@ function ImageDropzone({ onFilesSelected, className, multiple = true, accept = '
 
     const handleFiles = (fileList: FileList | null) => {
         const files = Array.from(fileList ?? []).filter((file) => file.type.startsWith('image/'));
-        if (files.length > 0) onFilesSelected(files);
+
+        if (files.length > 0) {
+onFilesSelected(files);
+}
     };
 
     return (
@@ -32,7 +35,9 @@ function ImageDropzone({ onFilesSelected, className, multiple = true, accept = '
             tabIndex={0}
             onClick={() => inputRef.current?.click()}
             onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') inputRef.current?.click();
+                if (event.key === 'Enter' || event.key === ' ') {
+inputRef.current?.click();
+}
             }}
             onDragOver={(event) => {
                 event.preventDefault();
@@ -72,7 +77,11 @@ function ImageSortableGrid({ items, onChange, className }: ImageSortableGridProp
     const move = (index: number, direction: -1 | 1) => {
         const next = [...items];
         const target = index + direction;
-        if (target < 0 || target >= next.length) return;
+
+        if (target < 0 || target >= next.length) {
+return;
+}
+
         [next[index], next[target]] = [next[target], next[index]];
         onChange(next);
     };

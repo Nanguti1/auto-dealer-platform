@@ -1,10 +1,10 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { BarChart3, TrendingUp, Users, DollarSign, FileText, Download, Star, Trash2 } from 'lucide-react';
+import * as React from 'react';
 import ReportsShell from '@/components/admin/reports/reports-shell';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 
 interface SummaryData {
   totalSales: number;

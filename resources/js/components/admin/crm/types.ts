@@ -1,5 +1,5 @@
-import type { Paginated } from '@/components/admin/inventory/types';
 import type { CustomerRecord, TimelineEvent } from '@/components/admin/customers/types';
+import type { Paginated } from '@/components/admin/inventory/types';
 
 export interface LeadRecord {
   id: number;

@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Pencil, Trash2 } from 'lucide-react';
+import * as React from 'react';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import CustomerShell from '@/components/admin/customers/customer-shell';
 import { formatDate } from '@/components/admin/customers/helpers';

@@ -4,7 +4,10 @@ const STORAGE_KEY = 'dealership:recently-viewed';
 const MAX_ITEMS = 12;
 
 function readIds(): number[] {
-    if (typeof window === 'undefined') return [];
+    if (typeof window === 'undefined') {
+return [];
+}
+
     try {
         return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? '[]') as number[];
     } catch {
@@ -19,6 +22,7 @@ function writeIds(ids: number[]): void {
 export function useRecentlyViewed(initialIds: number[] = []) {
     const [ids, setIds] = React.useState<number[]>(() => {
         const stored = readIds();
+
         return stored.length > 0 ? stored : initialIds;
     });
 
@@ -26,6 +30,7 @@ export function useRecentlyViewed(initialIds: number[] = []) {
         setIds((current) => {
             const next = [vehicleId, ...current.filter((id) => id !== vehicleId)].slice(0, MAX_ITEMS);
             writeIds(next);
+
             return next;
         });
     }, []);

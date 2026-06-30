@@ -1,7 +1,15 @@
-import * as React from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
-import PublicLayout from '@/layouts/public/public-layout';
+import { Calendar, Gauge, Fuel, ArrowLeft, Share2, Phone, CheckCircle2, TrendingDown } from 'lucide-react';
+import * as React from 'react';
+import VehicleCard from '@/components/shared/vehicle-card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import {
     VehicleGallery,
     VehicleVideoSection,
@@ -12,20 +20,12 @@ import {
     WishlistButton,
     CompareButton,
 } from '@/components/vehicles';
-import VehicleCard from '@/components/shared/vehicle-card';
-import { Badge } from '@/components/ui/badge';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { useWishlist } from '@/hooks/use-wishlist';
+import { findVehicleBySlug, mockVehicles, toSummary } from '@/data/mock-vehicles';
 import { useCompare } from '@/hooks/use-compare';
 import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
-import { findVehicleBySlug, mockVehicles, toSummary } from '@/data/mock-vehicles';
+import { useWishlist } from '@/hooks/use-wishlist';
+import PublicLayout from '@/layouts/public/public-layout';
 import type { VehicleDetail } from '@/types/vehicle';
-import { Calendar, Gauge, Fuel, ArrowLeft, Share2, Phone, CheckCircle2, TrendingDown } from 'lucide-react';
 
 interface InventoryShowProps {
     vehicle?: VehicleDetail;
@@ -54,7 +54,10 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
     const formatMileage = (mileage: number) => new Intl.NumberFormat('en-US').format(mileage);
 
     const persistLead = (type: string) => {
-        if (typeof window === 'undefined') return;
+        if (typeof window === 'undefined') {
+return;
+}
+
         const key = 'dealership:vehicle-leads';
         const current = JSON.parse(localStorage.getItem(key) ?? '[]') as Array<Record<string, unknown>>;
         localStorage.setItem(key, JSON.stringify([{ type, vehicleId: vehicle.id, vehicleName: vehicle.name, createdAt: new Date().toISOString() }, ...current]));
@@ -62,10 +65,13 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
 
     const shareVehicle = async () => {
         const shareUrl = typeof window !== 'undefined' ? window.location.href : `/inventory/${vehicle.slug}`;
+
         if (typeof navigator !== 'undefined' && 'share' in navigator) {
             await navigator.share({ title: vehicle.name, url: shareUrl });
+
             return;
         }
+
         await navigator.clipboard?.writeText(shareUrl);
         setShareCopied(true);
         window.setTimeout(() => setShareCopied(false), 2000);
@@ -237,7 +243,9 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
                                             <DialogTrigger asChild><Button className="w-full" size="lg">Reserve Vehicle</Button></DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader><DialogTitle>Reserve {vehicle.name}</DialogTitle></DialogHeader>
-                                                <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); persistLead('reservation'); }}>
+                                                <form className="space-y-4" onSubmit={(event) => {
+ event.preventDefault(); persistLead('reservation'); 
+}}>
                                                     <div className="grid gap-2"><Label htmlFor="reserve-name">Name</Label><Input id="reserve-name" required /></div>
                                                     <div className="grid gap-2"><Label htmlFor="reserve-email">Email</Label><Input id="reserve-email" type="email" required /></div>
                                                     <div className="rounded-lg bg-muted p-3 text-sm text-muted-foreground">A specialist will confirm availability and deposit details.</div>
@@ -249,7 +257,9 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
                                             <DialogTrigger asChild><Button className="w-full" size="lg" variant="outline">Book Test Drive</Button></DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader><DialogTitle>Book a private test drive</DialogTitle></DialogHeader>
-                                                <form className="space-y-4" onSubmit={(event) => { event.preventDefault(); persistLead('test-drive'); }}>
+                                                <form className="space-y-4" onSubmit={(event) => {
+ event.preventDefault(); persistLead('test-drive'); 
+}}>
                                                     <div className="grid gap-2"><Label htmlFor="drive-date">Preferred date</Label><Input id="drive-date" type="date" required /></div>
                                                     <div className="grid gap-2"><Label htmlFor="drive-notes">Notes</Label><Textarea id="drive-notes" placeholder="Preferred time, questions, or trade-in details" /></div>
                                                     <Button type="submit" className="w-full">Request Test Drive</Button>

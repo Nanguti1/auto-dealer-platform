@@ -1,13 +1,13 @@
 import { Head } from '@inertiajs/react';
-import GuestLayout from '@/layouts/guest/guest-layout';
-import StickyNav from '@/components/navigation/sticky-nav';
-import Footer from '@/components/navigation/footer';
+import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { H1, H2, P } from '@/components/design-system/typography';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import Footer from '@/components/navigation/footer';
+import StickyNav from '@/components/navigation/sticky-nav';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import GuestLayout from '@/layouts/guest/guest-layout';
 
 export default function Contact() {
   return (

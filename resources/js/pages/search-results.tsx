@@ -1,14 +1,14 @@
 import { Head, Link } from '@inertiajs/react';
-import PublicLayout from '@/layouts/public/public-layout';
-import VehicleCard from '@/components/shared/vehicle-card';
-import BlogCard from '@/components/shared/blog-card';
+import { Search } from 'lucide-react';
 import { EmptyState } from '@/components/design-system/empty-state';
 import { H1, H2, Lead } from '@/components/design-system/typography';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import BlogCard from '@/components/shared/blog-card';
+import VehicleCard from '@/components/shared/vehicle-card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { mockVehicles, toSummary } from '@/data/mock-vehicles';
-import { Search } from 'lucide-react';
+import PublicLayout from '@/layouts/public/public-layout';
 
 const articles = [
     {

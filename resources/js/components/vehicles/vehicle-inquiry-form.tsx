@@ -1,11 +1,11 @@
-import * as React from 'react';
 import { Form } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import InputError from '@/components/input-error';
+import { cn } from '@/lib/utils';
 
 interface VehicleInquiryFormProps {
     vehicleId?: number;

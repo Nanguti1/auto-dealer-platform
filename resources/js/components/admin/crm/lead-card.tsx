@@ -3,8 +3,8 @@ import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { assignedTo, formatDateTime, leadName } from './helpers';
 import CrmStatusBadge from './crm-status-badge';
+import { assignedTo, formatDateTime, leadName } from './helpers';
 import type { LeadRecord } from './types';
 
 export default function LeadCard({ lead }: { lead: LeadRecord }) {

@@ -1,6 +1,6 @@
+import { formatCurrency } from '@/components/admin/payments/helpers';
 import PaymentForm from '@/components/admin/payments/payment-form';
 import PaymentShell, { PaymentBackButton } from '@/components/admin/payments/payment-shell';
-import { formatCurrency } from '@/components/admin/payments/helpers';
 import type { Payment } from '@/components/admin/payments/types';
 
 export default function Edit({ payment }: { payment: Payment }) {

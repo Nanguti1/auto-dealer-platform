@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { ChevronDown, Columns3, Download, Search, Upload } from 'lucide-react';
+import * as React from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/design-system/table';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
-import { Badge } from '@/components/ui/badge';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/design-system/table';
 import { compact } from './helpers';
 import type { Filters, Paginated } from './types';
 
@@ -32,7 +32,7 @@ interface Props<T extends { id: number }> {
   filterSlot?: React.ReactNode;
 }
 
-export default function AdminDataTable<T extends { id: number }>({
+const AdminDataTable = React.memo(function AdminDataTable<T extends { id: number }>({
   rows,
   filters = {},
   columns,
@@ -49,22 +49,25 @@ export default function AdminDataTable<T extends { id: number }>({
     () => Object.fromEntries(columns.map((c) => [c.key, !c.hidden]))
   );
 
-  const apply = (next: Filters) =>
+  const apply = React.useCallback((next: Filters) =>
     router.get(baseUrl, compact({ ...filters, ...next, page: undefined }), {
       preserveState: true,
       preserveScroll: true,
-    });
+    }), [baseUrl, filters]);
 
-  const toggleAll = (checked: boolean) =>
-    setSelected(checked ? rows.data.map((row) => row.id) : []);
+  const toggleAll = React.useCallback((checked: boolean) =>
+    setSelected(checked ? rows.data.map((row) => row.id) : []), [rows.data]);
 
-  const visibleColumns = columns.filter((column) => visible[column.key]);
+  const visibleColumns = React.useMemo(() =>
+    columns.filter((column) => visible[column.key]), [columns, visible]);
 
   return (
     <div className="space-y-4">
       {/* Search and Actions */}
       <div className="flex flex-col gap-3 rounded-xl border bg-card p-3 lg:flex-row lg:items-center lg:justify-between">
-        <form className="flex flex-1 gap-2" onSubmit={(event) => { event.preventDefault(); apply({ search: query }); }}>
+        <form className="flex flex-1 gap-2" onSubmit={(event) => {
+ event.preventDefault(); apply({ search: query }); 
+}}>
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
             <Input
@@ -208,4 +211,6 @@ export default function AdminDataTable<T extends { id: number }>({
       />
     </div>
   );
-}
+}) as <T extends { id: number }>(props: Props<T>) => React.JSX.Element;
+
+export default AdminDataTable;

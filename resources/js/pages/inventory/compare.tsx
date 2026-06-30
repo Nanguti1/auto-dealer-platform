@@ -1,14 +1,14 @@
-import * as React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import PublicLayout from '@/layouts/public/public-layout';
-import { VehicleComparisonTable } from '@/components/vehicles';
+import { GitCompareArrows, ArrowLeft } from 'lucide-react';
+import * as React from 'react';
 import { EmptyState } from '@/components/design-system';
 import { H1, P } from '@/components/design-system/typography';
 import { Button } from '@/components/ui/button';
-import { useCompare } from '@/hooks/use-compare';
+import { VehicleComparisonTable } from '@/components/vehicles';
 import { findVehicleById, mockVehicles } from '@/data/mock-vehicles';
+import { useCompare } from '@/hooks/use-compare';
+import PublicLayout from '@/layouts/public/public-layout';
 import type { VehicleDetail } from '@/types/vehicle';
-import { GitCompareArrows, ArrowLeft } from 'lucide-react';
 
 interface ComparePageProps {
     vehicles?: VehicleDetail[];
@@ -18,7 +18,10 @@ export default function ComparePage({ vehicles: serverVehicles }: ComparePagePro
     const { ids, remove, clear } = useCompare();
 
     const vehicles = React.useMemo(() => {
-        if (serverVehicles?.length) return serverVehicles;
+        if (serverVehicles?.length) {
+return serverVehicles;
+}
+
         return ids.map((id) => findVehicleById(id)).filter(Boolean) as VehicleDetail[];
     }, [serverVehicles, ids]);
 

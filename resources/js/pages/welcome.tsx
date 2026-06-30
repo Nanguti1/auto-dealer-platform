@@ -1,21 +1,4 @@
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '@/layouts/guest/guest-layout';
-import StickyNav from '@/components/navigation/sticky-nav';
-import Footer from '@/components/navigation/footer';
-import HeroSection from '@/components/shared/hero-section';
-import { H1, H2, P, H3 } from '@/components/design-system/typography';
-import VehicleCard from '@/components/shared/vehicle-card';
-import BrandCard from '@/components/shared/brand-card';
-import TestimonialCard from '@/components/shared/testimonial-card';
-import CTASection from '@/components/shared/cta-section';
-import StatisticCard from '@/components/shared/statistic-card';
-import PartnerCard from '@/components/shared/partner-card';
-import BlogCard from '@/components/shared/blog-card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { 
   Car, 
   Search, 
@@ -30,6 +13,23 @@ import {
   ArrowRight,
   Star
 } from 'lucide-react';
+import { H1, H2, P, H3 } from '@/components/design-system/typography';
+import Footer from '@/components/navigation/footer';
+import StickyNav from '@/components/navigation/sticky-nav';
+import BlogCard from '@/components/shared/blog-card';
+import BrandCard from '@/components/shared/brand-card';
+import CTASection from '@/components/shared/cta-section';
+import HeroSection from '@/components/shared/hero-section';
+import StatisticCard from '@/components/shared/statistic-card';
+import TestimonialCard from '@/components/shared/testimonial-card';
+import VehicleCard from '@/components/shared/vehicle-card';
+import PartnerCard from '@/components/shared/partner-card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import GuestLayout from '@/layouts/guest/guest-layout';
 
 export default function Welcome() {
   // Mock data - in production, this would come from the backend

@@ -2,16 +2,17 @@ import { Link } from '@inertiajs/react';
 import { Pencil } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import TimelineList from '@/components/admin/customers/timeline-list';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { desiredVehicle, formatCurrency, formatDateTime, formatNumber, imageUrl, requesterName, tradeInVehicleName, vehicleName } from '@/components/admin/trade-ins/helpers';
 import TradeInShell, { TradeInBackButton } from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInStatusBadge from '@/components/admin/trade-ins/trade-in-status-badge';
-import ValuationSummary from '@/components/admin/trade-ins/valuation-summary';
-import { desiredVehicle, formatCurrency, formatDateTime, formatNumber, imageUrl, requesterName, tradeInVehicleName, vehicleName } from '@/components/admin/trade-ins/helpers';
 import type { TradeInRequest } from '@/components/admin/trade-ins/types';
+import ValuationSummary from '@/components/admin/trade-ins/valuation-summary';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Show({ tradeInRequest }: { tradeInRequest: TradeInRequest }) {
   const photos = tradeInRequest.photos ?? tradeInRequest.images ?? [];
+
   return <TradeInShell title={tradeInVehicleName(tradeInRequest)} description={`Request #${tradeInRequest.id} · Updated ${formatDateTime(tradeInRequest.updated_at)}`} actions={<><TradeInBackButton /><Button asChild><Link href={`/admin/trade-ins/${tradeInRequest.id}/edit`}><Pencil className="mr-2 size-4" />Edit</Link></Button></>}>
     <div className="grid gap-4 lg:grid-cols-3">
       <Card className="lg:col-span-2"><CardHeader><CardTitle>Customer overview</CardTitle></CardHeader><CardContent className="flex flex-col gap-6 md:flex-row">{tradeInRequest.customer ? <CustomerAvatar customer={tradeInRequest.customer} /> : null}<div className="grid flex-1 gap-4 sm:grid-cols-2"><div><p className="text-sm text-muted-foreground">Customer</p><p>{requesterName(tradeInRequest)}</p></div><div><p className="text-sm text-muted-foreground">Email</p><p>{tradeInRequest.customer?.email ?? tradeInRequest.user?.email ?? '—'}</p></div><div><p className="text-sm text-muted-foreground">Phone</p><p>{tradeInRequest.customer?.phone ?? tradeInRequest.user?.phone ?? '—'}</p></div><div><p className="text-sm text-muted-foreground">Approval status</p><TradeInStatusBadge status={tradeInRequest.status} /></div></div></CardContent></Card>

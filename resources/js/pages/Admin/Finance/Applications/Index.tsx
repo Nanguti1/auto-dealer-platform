@@ -1,11 +1,12 @@
 import { Link, router } from '@inertiajs/react';
 import { Archive, CheckCircle2, Eye, Pencil, XCircle } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import FinanceShell from '@/components/admin/finance/finance-shell';
 import FinanceStatusBadge from '@/components/admin/finance/finance-status-badge';
 import { applicantName, deposit, formatCurrency, formatDateTime, monthlyPayment, officerName, term, vehicleName } from '@/components/admin/finance/helpers';
 import type { FinanceApplication, FinanceApplicationPagination, FinanceFilters } from '@/components/admin/finance/types';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ financeApplications, filters = {} }: { financeApplications: FinanceApplicationPagination; filters?: FinanceFilters }) {

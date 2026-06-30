@@ -1,6 +1,6 @@
 import CrmShell, { CrmBackButton } from '@/components/admin/crm/crm-shell';
-import LeadForm from '@/components/admin/crm/lead-form';
 import { leadName } from '@/components/admin/crm/helpers';
+import LeadForm from '@/components/admin/crm/lead-form';
 import type { LeadRecord } from '@/components/admin/crm/types';
 import { admin } from '@/routes/admin';
 

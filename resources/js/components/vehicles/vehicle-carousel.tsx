@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import * as React from 'react';
 import VehicleCard from '@/components/shared/vehicle-card';
 import { Button } from '@/components/ui/button';
 import type { VehicleSummary } from '@/types/vehicle';
@@ -16,7 +16,9 @@ export default function VehicleCarousel({ vehicles, title = 'Featured vehicles' 
         scrollerRef.current?.scrollBy({ left: direction * 360, behavior: 'smooth' });
     };
 
-    if (vehicles.length === 0) return null;
+    if (vehicles.length === 0) {
+return null;
+}
 
     return (
         <section aria-label={title} className="space-y-4">

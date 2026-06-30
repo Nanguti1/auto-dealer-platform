@@ -1,8 +1,8 @@
+import { Link } from '@inertiajs/react';
+import { Check, Minus, X } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { VehicleDetail } from '@/types/vehicle';
-import { Link } from '@inertiajs/react';
-import { Button } from '@/components/ui/button';
-import { Check, Minus, X } from 'lucide-react';
 
 interface VehicleComparisonTableProps {
     vehicles: VehicleDetail[];
@@ -41,7 +41,9 @@ const rows: Row[] = [
 ];
 
 export default function VehicleComparisonTable({ vehicles, onRemove, className }: VehicleComparisonTableProps) {
-    if (vehicles.length === 0) return null;
+    if (vehicles.length === 0) {
+return null;
+}
 
     return (
         <div className={cn('overflow-x-auto rounded-xl border', className)}>
@@ -84,6 +86,7 @@ export default function VehicleComparisonTable({ vehicles, onRemove, className }
                             </td>
                             {vehicles.map((vehicle) => {
                                 const value = row.getValue(vehicle);
+
                                 return (
                                     <td
                                         key={vehicle.id}

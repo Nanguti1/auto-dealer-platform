@@ -1,6 +1,6 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { ArrowLeft, MapPin, Mail, Phone, Building2, Users, Car, BadgeCheck, XCircle } from 'lucide-react';
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

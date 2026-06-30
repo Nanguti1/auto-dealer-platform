@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
-import AdminLayout from '@/layouts/admin/admin-layout';
+import * as React from 'react';
 import PageHeader from '@/components/admin/page-header';
 import PageWrapper from '@/components/admin/page-wrapper';
 import { Button } from '@/components/ui/button';
+import AdminLayout from '@/layouts/admin/admin-layout';
 import type { BreadcrumbItem } from '@/types/navigation';
 
 interface ModuleShellProps {

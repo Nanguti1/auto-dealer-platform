@@ -1,10 +1,11 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MoreHorizontal, Image as ImageIcon } from 'lucide-react';
-import ConfirmationDialog from '@/components/admin/confirmation-dialog';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import * as React from 'react';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { HeroSlider, CmsFilters, Paginated } from '@/components/admin/cms/types';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';

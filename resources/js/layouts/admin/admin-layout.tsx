@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import {
   Car,
@@ -34,8 +33,11 @@ import {
   Home,
   MessageSquare,
 } from 'lucide-react';
-import { admin as adminRoutes } from '@/routes/admin';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
+import { ErrorBoundary, LoadingState, PerformanceMonitor } from '@/components/admin/shared';
+import { AppearanceToggleTab } from '@/components/appearance-tabs';
+import { Breadcrumbs } from '@/components/breadcrumbs';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -45,10 +47,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Breadcrumbs } from '@/components/breadcrumbs';
-import { AppearanceToggleTab } from '@/components/appearance-tabs';
-import { ErrorBoundary, LoadingState } from '@/components/admin/shared';
+import { usePerformanceTiming } from '@/hooks/usePerformanceTiming';
+import { cn } from '@/lib/utils';
+import { admin as adminRoutes } from '@/routes/admin';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types/navigation';
 
 // Lazy load heavy navigation components
@@ -88,9 +89,13 @@ export default function AdminLayout({
   const sidebarRef = React.useRef<HTMLElement>(null);
   const menuButtonRef = React.useRef<HTMLButtonElement>(null);
 
+  // Track performance timing
+  const { metrics } = usePerformanceTiming();
+
   React.useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
+
       if (window.innerWidth < 768) {
         setSidebarOpen(false);
       }
@@ -98,6 +103,7 @@ export default function AdminLayout({
 
     checkMobile();
     window.addEventListener('resize', checkMobile);
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
@@ -119,7 +125,10 @@ export default function AdminLayout({
   };
 
   const getInitials = (name?: string) => {
-    if (!name) return 'A';
+    if (!name) {
+return 'A';
+}
+
     return name
       .split(' ')
       .map((n) => n[0])
@@ -460,6 +469,9 @@ export default function AdminLayout({
         <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
         <SearchOverlay open={searchOpen} onOpenChange={setSearchOpen} />
       </React.Suspense>
+
+      {/* Performance Monitor (development only) */}
+      <PerformanceMonitor />
     </div>
   );
 }

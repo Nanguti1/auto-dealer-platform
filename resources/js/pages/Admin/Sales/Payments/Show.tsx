@@ -2,12 +2,12 @@ import { Link, router } from '@inertiajs/react';
 import { Pencil, Receipt, RotateCcw } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import TimelineList from '@/components/admin/customers/timeline-list';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency, formatDateTime, customerNameFromPayment, vehicleName, userName } from '@/components/admin/payments/helpers';
 import PaymentShell, { PaymentBackButton } from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
-import { formatCurrency, formatDateTime, customerNameFromPayment, vehicleName, userName } from '@/components/admin/payments/helpers';
 import type { Payment } from '@/components/admin/payments/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Show({ payment }: { payment: Payment }) {
   const timeline = payment.timeline ?? [];

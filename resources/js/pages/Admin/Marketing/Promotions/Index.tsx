@@ -1,8 +1,9 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Eye, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import * as React from 'react';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import MarketingShell from '@/components/admin/marketing/marketing-shell';
 import MarketingStatusBadge from '@/components/admin/marketing/marketing-status-badge';
 import type { MarketingFilters, Promotion, PromotionPagination } from '@/components/admin/marketing/types';
@@ -19,6 +20,9 @@ export default function Index({ promotions, filters = {} }: { promotions: Promot
     { key: 'is_active', label: 'Status', render: (promotion) => <MarketingStatusBadge status={promotion.status} active={promotion.is_active} /> },
     { key: 'visibility', label: 'Visibility', render: (promotion) => promotion.visibility ?? String(promotion.rules?.visibility ?? 'public') },
   ];
+
   return <MarketingShell title="Promotions" description="Manage marketing campaigns, discounts, featured vehicles, visibility, and campaign windows." actions={<Button asChild><Link href="/admin/promotions/create">Create Promotion</Link></Button>}><AdminDataTable rows={promotions} filters={filters} columns={columns} baseUrl="/admin/promotions" createUrl="/admin/promotions/create" createLabel="Create Promotion" rowActions={(promotion) => <><DropdownMenu><DropdownMenuTrigger asChild><Button variant="ghost" size="icon"><MoreHorizontal className="size-4" /></Button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem asChild><Link href={`/admin/promotions/${promotion.id}`}><Eye className="mr-2 size-4" />View</Link></DropdownMenuItem><DropdownMenuItem asChild><Link href={`/admin/promotions/${promotion.id}/edit`}><Pencil className="mr-2 size-4" />Edit</Link></DropdownMenuItem><DropdownMenuItem onClick={() => setDeleteId(promotion.id)}><Trash2 className="mr-2 size-4" />Delete</DropdownMenuItem></DropdownMenuContent></DropdownMenu><ConfirmationDialog open={deleteId === promotion.id} onOpenChange={(open) => !open && setDeleteId(null)} title="Delete promotion?" description="This will remove the promotion from marketing campaigns." trigger={<span />} confirmLabel="Delete" onConfirm={() => router.delete(`/admin/promotions/${promotion.id}`, { onFinish: () => setDeleteId(null) })} /></>} /></MarketingShell>;
 }
-function formatDate(value?: string): string { return value ? new Date(value).toLocaleDateString() : '—'; }
+function formatDate(value?: string): string {
+ return value ? new Date(value).toLocaleDateString() : '—'; 
+}

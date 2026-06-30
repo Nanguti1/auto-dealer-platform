@@ -256,6 +256,7 @@ export const mockFilterOptions: FilterOptions = {
 
 export function toSummary(vehicle: VehicleDetail): VehicleSummary {
     const { galleries, videos, specifications, features, description, stockNumber, vin, msrp, color, interiorColor, driveType, engineType, trim, listedAt, has360, ...summary } = vehicle;
+
     return summary;
 }
 
@@ -301,9 +302,18 @@ export function filterVehicles(filters: Record<string, string | number | undefin
     }
 
     const sort = filters.sort ?? 'newest';
-    if (sort === 'price_asc') results.sort((a, b) => a.price - b.price);
-    if (sort === 'price_desc') results.sort((a, b) => b.price - a.price);
-    if (sort === 'mileage_asc') results.sort((a, b) => a.mileage - b.mileage);
+
+    if (sort === 'price_asc') {
+results.sort((a, b) => a.price - b.price);
+}
+
+    if (sort === 'price_desc') {
+results.sort((a, b) => b.price - a.price);
+}
+
+    if (sort === 'mileage_asc') {
+results.sort((a, b) => a.mileage - b.mileage);
+}
 
     return results;
 }

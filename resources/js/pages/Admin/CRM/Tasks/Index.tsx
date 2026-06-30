@@ -1,12 +1,13 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { CheckCircle2, Pencil, Trash2 } from 'lucide-react';
+import * as React from 'react';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
 import CrmShell from '@/components/admin/crm/crm-shell';
 import CrmStatusBadge from '@/components/admin/crm/crm-status-badge';
 import { formatDateTime, leadName } from '@/components/admin/crm/helpers';
 import type { CrmFilters, CrmTask } from '@/components/admin/crm/types';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import type { Paginated } from '@/components/admin/inventory/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

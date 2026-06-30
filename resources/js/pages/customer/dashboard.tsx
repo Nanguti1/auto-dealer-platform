@@ -1,16 +1,16 @@
-import * as React from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import { Car, Heart, GitCompareArrows, Clock, Bell, Calendar, FileText } from 'lucide-react';
+import * as React from 'react';
 import { H2, P } from '@/components/design-system/typography';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import VehicleCard from '@/components/shared/vehicle-card';
-import { useWishlist } from '@/hooks/use-wishlist';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { findVehicleById, toSummary } from '@/data/mock-vehicles';
 import { useCompare } from '@/hooks/use-compare';
 import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
-import { findVehicleById, toSummary } from '@/data/mock-vehicles';
+import { useWishlist } from '@/hooks/use-wishlist';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 import type { CustomerNotification, CustomerReservation, CustomerBooking } from '@/types/vehicle';
-import { Car, Heart, GitCompareArrows, Clock, Bell, Calendar, FileText } from 'lucide-react';
 
 interface DashboardProps {
     reservations?: CustomerReservation[];

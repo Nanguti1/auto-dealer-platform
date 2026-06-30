@@ -1,16 +1,17 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Archive, Eye, Pencil, Repeat } from 'lucide-react';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
-import CustomerAvatar from '@/components/admin/customers/customer-avatar';
+import * as React from 'react';
 import CrmShell from '@/components/admin/crm/crm-shell';
 import CrmStatusBadge from '@/components/admin/crm/crm-status-badge';
 import { assignedTo, formatDateTime, leadName } from '@/components/admin/crm/helpers';
 import type { CrmFilters, LeadPagination, LeadRecord } from '@/components/admin/crm/types';
+import CustomerAvatar from '@/components/admin/customers/customer-avatar';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyLeads, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { admin } from '@/routes/admin';
-import { LoadingState, EmptyLeads, InlineError } from '@/components/admin/shared';
 
 export default function Index({ leads, filters = {} }: { leads: LeadPagination; filters?: CrmFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);

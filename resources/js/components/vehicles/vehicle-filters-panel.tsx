@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { router } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
-import type { FilterOptions, InventoryFilters } from '@/types/vehicle';
+import { SlidersHorizontal, X } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
-import { SlidersHorizontal, X } from 'lucide-react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
+import type { FilterOptions, InventoryFilters } from '@/types/vehicle';
 
 interface VehicleFiltersPanelProps {
     filters: InventoryFilters;
@@ -154,8 +154,10 @@ export default function VehicleFiltersPanel({ filters, options, onApply, classNa
     const apply = (next: InventoryFilters) => {
         if (onApply) {
             onApply(next);
+
             return;
         }
+
         router.get('/inventory', next as Record<string, string | number>, { preserveState: true, preserveScroll: true });
     };
 
@@ -217,7 +219,9 @@ export function ActiveFilterTags({
         ([key, val]) => val !== undefined && val !== '' && key !== 'sort',
     );
 
-    if (tags.length === 0) return null;
+    if (tags.length === 0) {
+return null;
+}
 
     return (
         <div className={cn('flex flex-wrap gap-2', className)}>

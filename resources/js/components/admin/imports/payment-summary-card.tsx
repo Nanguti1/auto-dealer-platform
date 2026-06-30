@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import ImportStatusBadge from './import-status-badge';
 import { formatCurrency, formatDateTime } from './helpers';
+import ImportStatusBadge from './import-status-badge';
 import type { ImportPayment } from './types';
 
 export default function PaymentSummaryCard({ payment }: { payment: ImportPayment }) {

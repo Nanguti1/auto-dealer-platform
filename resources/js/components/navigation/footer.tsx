@@ -1,9 +1,9 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, Clock } from 'lucide-react';
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Facebook, Twitter, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FooterProps {
   className?: string;

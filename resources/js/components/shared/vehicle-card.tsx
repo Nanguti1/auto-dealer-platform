@@ -1,13 +1,13 @@
-import * as React from 'react';
 import { Link } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { cn } from '@/lib/utils';
-import { Card, CardContent, CardFooter } from '@/components/ui/card';
+import { Fuel, Gauge, Calendar, Users, ArrowRight } from 'lucide-react';
+import * as React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Fuel, Gauge, Calendar, Users, ArrowRight } from 'lucide-react';
-import WishlistButton from '@/components/vehicles/wishlist-button';
+import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import CompareButton from '@/components/vehicles/compare-button';
+import WishlistButton from '@/components/vehicles/wishlist-button';
+import { cn } from '@/lib/utils';
 import type { VehicleSummary } from '@/types/vehicle';
 
 interface VehicleCardProps {

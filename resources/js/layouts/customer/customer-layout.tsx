@@ -1,8 +1,8 @@
-import * as React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { User, Settings, LogOut, Menu } from 'lucide-react';
+import * as React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 interface CustomerLayoutProps {
   children: React.ReactNode;
@@ -31,7 +31,10 @@ export default function CustomerLayout({
   user,
 }: CustomerLayoutProps) {
   const getInitials = (name?: string) => {
-    if (!name) return 'U';
+    if (!name) {
+return 'U';
+}
+
     return name
       .split(' ')
       .map((n) => n[0])

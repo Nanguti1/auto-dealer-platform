@@ -7,3 +7,4 @@ export { default as ErrorBoundary } from './ErrorBoundary';
 export { default as InlineError } from './ErrorBoundary';
 export { default as ModuleShell } from './ModuleShell';
 export { default as StatusBadge } from './StatusBadge';
+export { default as PerformanceMonitor } from './PerformanceMonitor';

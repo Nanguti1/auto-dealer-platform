@@ -1,13 +1,14 @@
-import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MapPin, Building2, MoreHorizontal } from 'lucide-react';
+import * as React from 'react';
+import type { Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
-import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
+import AdminDataTable from '@/components/admin/inventory/admin-data-table';
+import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { LoadingState, EmptyState } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import type { Paginated } from '@/components/admin/cms/types';
 import branches from '@/routes/admin/branches';
 
 interface Branch {

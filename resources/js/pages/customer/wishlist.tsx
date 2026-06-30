@@ -1,13 +1,13 @@
 import { Head, Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
-import VehicleCard from '@/components/shared/vehicle-card';
+import { Heart } from 'lucide-react';
 import { EmptyState } from '@/components/design-system';
 import { H2 } from '@/components/design-system/typography';
+import VehicleCard from '@/components/shared/vehicle-card';
 import { Button } from '@/components/ui/button';
-import { useWishlist } from '@/hooks/use-wishlist';
 import { findVehicleById, toSummary } from '@/data/mock-vehicles';
-import { Heart } from 'lucide-react';
+import { useWishlist } from '@/hooks/use-wishlist';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
 export default function WishlistPage() {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };

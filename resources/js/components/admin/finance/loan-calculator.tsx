@@ -6,9 +6,15 @@ import { Separator } from '@/components/ui/separator';
 import { formatCurrency } from './helpers';
 
 function calculatePayment(loanAmount: number, annualRate: number, months: number): number {
-  if (months <= 0) return 0;
+  if (months <= 0) {
+return 0;
+}
+
   const monthlyRate = annualRate / 100 / 12;
-  if (monthlyRate === 0) return loanAmount / months;
+
+  if (monthlyRate === 0) {
+return loanAmount / months;
+}
 
   return (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
 }

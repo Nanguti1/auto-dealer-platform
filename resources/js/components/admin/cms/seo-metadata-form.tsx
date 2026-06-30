@@ -77,6 +77,7 @@ export default function SeoMetadataForm({ seoSettings, action, method = 'post' }
           <ImageDropzone
             onFilesSelected={(files) => {
               const input = document.querySelector('input[name="og_image"]') as HTMLInputElement;
+
               if (input && files.length > 0) {
                 const dataTransfer = new DataTransfer();
                 dataTransfer.items.add(files[0]);

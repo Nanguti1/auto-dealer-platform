@@ -1,12 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
 import { Form, usePage } from '@inertiajs/react';
-import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 import { H2 } from '@/components/design-system/typography';
+import InputError from '@/components/input-error';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import InputError from '@/components/input-error';
+import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
 export default function CustomerProfilePage() {
     const { auth } = usePage().props as {
