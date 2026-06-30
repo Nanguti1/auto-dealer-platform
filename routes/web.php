@@ -1,8 +1,15 @@
 <?php
 
 use App\Http\Controllers\Admin\Analytics\AnalyticsController;
+use App\Http\Controllers\Admin\Blog\BlogCategoryController;
 use App\Http\Controllers\Admin\Blog\BlogPostController;
+use App\Http\Controllers\Admin\Blog\BlogTagController;
 use App\Http\Controllers\Admin\CMS\CmsPageController;
+use App\Http\Controllers\Admin\CMS\FaqController;
+use App\Http\Controllers\Admin\CMS\HeroSliderController;
+use App\Http\Controllers\Admin\CMS\HomePageSectionController;
+use App\Http\Controllers\Admin\CMS\MediaController;
+use App\Http\Controllers\Admin\CMS\SeoMetadataController;
 use App\Http\Controllers\Admin\CRM\LeadController;
 use App\Http\Controllers\Admin\Customers\CustomerController;
 use App\Http\Controllers\Admin\Dashboard\DashboardController;
@@ -73,10 +80,17 @@ Route::middleware(['auth', 'verified'])
         Route::resource('reservations', ReservationController::class);
         Route::resource('imports', ImportController::class);
         Route::resource('payments', PaymentController::class);
+        Route::resource('blog-categories', BlogCategoryController::class);
+        Route::resource('blog-tags', BlogTagController::class);
         Route::resource('blog-posts', BlogPostController::class);
         Route::resource('reviews', ReviewController::class);
         Route::resource('promotions', PromotionController::class);
         Route::resource('cms-pages', CmsPageController::class);
+        Route::resource('faqs', FaqController::class);
+        Route::resource('hero-sliders', HeroSliderController::class);
+        Route::resource('home-page-sections', HomePageSectionController::class);
+        Route::resource('media', MediaController::class);
+        Route::resource('seo-metadata', SeoMetadataController::class);
         Route::resource('analytics', AnalyticsController::class)->only(['index', 'show']);
         Route::resource('settings', SettingController::class)->except(['show']);
     });

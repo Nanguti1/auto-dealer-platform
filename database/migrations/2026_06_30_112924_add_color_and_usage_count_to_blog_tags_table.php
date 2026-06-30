@@ -1,0 +1,31 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('blog_tags', function (Blueprint $table) {
+            $table->string('color')->nullable()->after('slug');
+            $table->integer('usage_count')->default(0)->after('color');
+            $table->softDeletes();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('blog_tags', function (Blueprint $table) {
+            $table->dropColumn(['color', 'usage_count']);
+            $table->dropSoftDeletes();
+        });
+    }
+};
