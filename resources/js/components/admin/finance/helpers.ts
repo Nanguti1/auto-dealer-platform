@@ -13,7 +13,7 @@ export function formatDateTime(value?: string): string {
 }
 
 export function userName(user?: FinanceUser): string {
-  return user?.name ?? [user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.email || 'Unassigned';
+  return user?.name ?? ([user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.email || 'Unassigned');
 }
 
 export function applicantName(application: FinanceApplication): string {
