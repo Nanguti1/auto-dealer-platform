@@ -1,16 +1,10 @@
 import { customerName } from '@/components/admin/customers/helpers';
-import { formatCurrency, formatNumber, vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
+import { vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
+import { formatDate, formatDateTime } from '@/lib/date-utils';
+import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { FinanceApplication, FinanceUser, FinanceVehicle, PaymentInstallment } from './types';
 
-export { formatCurrency, formatNumber };
-
-export function formatDate(value?: string): string {
-  return value ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(value)) : '—';
-}
-
-export function formatDateTime(value?: string): string {
-  return value ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
-}
+export { formatDate, formatDateTime, formatCurrency, formatNumber };
 
 export function userName(user?: FinanceUser): string {
   return user?.name ?? ([user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.email || 'Unassigned');

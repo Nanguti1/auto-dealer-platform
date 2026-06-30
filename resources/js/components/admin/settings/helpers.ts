@@ -1,6 +1,6 @@
-export function formatDate(value?: string | null): string {
-  return value ? new Date(value).toLocaleString() : '—';
-}
+import { formatDate } from '@/lib/date-utils';
+
+export { formatDate };
 
 export function previewValue(value: unknown, maxLength = 90): string {
   if (value === null || value === undefined || value === '') {

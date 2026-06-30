@@ -1,15 +1,9 @@
-import { formatCurrency, formatNumber, vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
+import { vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
+import { formatDate, formatDateTime } from '@/lib/date-utils';
+import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { ReservationRecord } from './types';
 
-export { formatCurrency, formatNumber };
-
-export function formatDate(value?: string): string {
-  return value ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(value)) : '—';
-}
-
-export function formatDateTime(value?: string): string {
-  return value ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
-}
+export { formatDate, formatDateTime, formatCurrency, formatNumber };
 
 export function vehicleName(reservation?: ReservationRecord): string {
   if (!reservation?.vehicle) return 'No vehicle';

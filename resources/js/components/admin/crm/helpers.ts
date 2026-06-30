@@ -1,4 +1,7 @@
 import type { LeadRecord } from './types';
+import { formatDateTime } from '@/lib/date-utils';
+
+export { formatDateTime };
 
 export function leadName(lead: LeadRecord): string {
   return [lead.first_name, lead.last_name].filter(Boolean).join(' ').trim() || lead.email || `Lead #${lead.id}`;
@@ -14,8 +17,4 @@ export function leadStageName(lead: LeadRecord): string {
 
 export function assignedTo(lead: LeadRecord): string {
   return lead.assigned_user?.name ?? lead.assignedUser?.name ?? 'Unassigned';
-}
-
-export function formatDateTime(value?: string): string {
-  return value ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(value)) : '—';
 }
