@@ -22,6 +22,8 @@ use App\Http\Controllers\Admin\Financing\FinanceController;
 use App\Http\Controllers\Admin\Financing\FinanceDocumentController;
 use App\Http\Controllers\Admin\Imports\ImportController;
 use App\Http\Controllers\Admin\Imports\ImportDocumentController;
+use App\Http\Controllers\Admin\Imports\ImportPaymentController;
+use App\Http\Controllers\Admin\Imports\ShipmentController;
 use App\Http\Controllers\Admin\Inventory\VehicleController;
 use App\Http\Controllers\Admin\Payments\PaymentController;
 use App\Http\Controllers\Admin\Promotions\PromotionController;
@@ -31,7 +33,10 @@ use App\Http\Controllers\Admin\Sales\InvoiceController;
 use App\Http\Controllers\Admin\Sales\ReceiptController;
 use App\Http\Controllers\Admin\Sales\RefundController;
 use App\Http\Controllers\Admin\Settings\SettingController;
+use App\Http\Controllers\Admin\TradeIns\InspectionController;
+use App\Http\Controllers\Admin\TradeIns\OfferController;
 use App\Http\Controllers\Admin\TradeIns\TradeInController;
+use App\Http\Controllers\Admin\TradeIns\ValuationController;
 use App\Http\Controllers\Admin\Users\PermissionController;
 use App\Http\Controllers\Admin\Users\RoleController;
 use App\Http\Controllers\Admin\Users\UserController;
@@ -97,6 +102,12 @@ Route::middleware(['auth', 'verified'])
         Route::get('pipeline', [PipelineController::class, 'index'])->name('pipeline.index');
         Route::patch('leads/{lead}/stage', [PipelineController::class, 'updateStage'])->name('leads.update-stage');
         Route::resource('trade-ins', TradeInController::class);
+        Route::resource('inspections', InspectionController::class);
+        Route::patch('inspections/{inspection}/complete', [InspectionController::class, 'complete'])->name('inspections.complete');
+        Route::resource('offers', OfferController::class);
+        Route::patch('offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
+        Route::patch('offers/{offer}/reject', [OfferController::class, 'reject'])->name('offers.reject');
+        Route::resource('valuations', ValuationController::class);
         Route::resource('finance-applications', FinanceController::class);
         Route::prefix('finance-applications/{financeApplication}')->group(function (): void {
             Route::resource('documents', FinanceDocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
@@ -106,6 +117,11 @@ Route::middleware(['auth', 'verified'])
         Route::prefix('imports/{vehicleImport}')->group(function (): void {
             Route::resource('documents', ImportDocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
         });
+        Route::resource('shipments', ShipmentController::class);
+        Route::patch('shipments/{shipment}/update-tracking', [ShipmentController::class, 'updateTracking'])->name('shipments.update-tracking');
+        Route::patch('shipments/{shipment}/mark-as-delivered', [ShipmentController::class, 'markAsDelivered'])->name('shipments.mark-as-delivered');
+        Route::resource('import-payments', ImportPaymentController::class);
+        Route::patch('import-payments/{importPayment}/mark-as-paid', [ImportPaymentController::class, 'markAsPaid'])->name('import-payments.mark-as-paid');
         Route::resource('payments', PaymentController::class);
         Route::resource('invoices', InvoiceController::class);
         Route::resource('receipts', ReceiptController::class);
