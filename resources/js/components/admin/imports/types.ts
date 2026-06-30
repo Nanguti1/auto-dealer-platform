@@ -1,0 +1,16 @@
+import type { Paginated } from '@/components/admin/inventory/types';
+import type { CustomerRecord, TimelineEvent } from '@/components/admin/customers/types';
+import type { LeadRecord } from '@/components/admin/crm/types';
+
+export interface ImportVehicle { id?: number; title?: string; stock_number?: string; vin?: string; year?: number; make?: string | { name?: string }; model?: string | { name?: string }; mileage?: number; sale_price?: string | number; image_url?: string; [key: string]: unknown }
+export interface ImportUser { id?: number; name?: string; email?: string; phone?: string; first_name?: string; last_name?: string; avatar_url?: string }
+export interface ImportSupplier { id?: number; name?: string; company_name?: string; email?: string; phone?: string; country?: string; address?: string; [key: string]: unknown }
+export interface ImportShipment { id?: number; shipment_reference?: string; container_number?: string; shipping_line?: string; vessel?: string; current_location?: string; status?: string; estimated_arrival?: string; port_of_loading?: string; destination_port?: string; tracking_events?: TimelineEvent[]; customs_status?: string; [key: string]: unknown }
+export interface ImportDocument { id: number; import_request_id?: number; document_type?: string; title?: string; file_name?: string; file_path?: string; url?: string; file_size?: number; mime_type?: string; approval_status?: string; uploaded_at?: string; created_at?: string; updated_at?: string; [key: string]: unknown }
+export interface ImportPayment { id?: number; import_request_id?: number; payment_type?: string; amount?: string | number; status?: string; payment_date?: string; method?: string; reference?: string; notes?: string; created_at?: string; updated_at?: string; [key: string]: unknown }
+export interface ImportRequest { id: number; user_id?: number; supplier_id?: number; vehicle_id?: number; reference_number?: string; origin_country?: string; destination_port?: string; estimated_cost?: string | number; status?: string; request_data?: Record<string, unknown>; customer?: CustomerRecord; user?: ImportUser; supplier?: ImportSupplier; vehicle?: ImportVehicle; shipment?: ImportShipment; documents?: ImportDocument[]; payments?: ImportPayment[]; timeline?: TimelineEvent[]; notes?: Array<{ id: number; title?: string; body?: string; note?: string }>; lead?: LeadRecord; finance_application?: { id: number; status?: string; amount?: string | number }; trade_in?: { id: number; status?: string }; assigned_user?: ImportUser; assignedUser?: ImportUser; estimated_arrival?: string; payment_status?: string; current_stage?: string; shipping_method?: string; port_of_loading?: string; created_at?: string; updated_at?: string; [key: string]: unknown }
+export type ImportPagination = Paginated<ImportRequest>;
+export type ImportFilters = Record<string, string | number | boolean | undefined>;
+export type ShipmentPagination = Paginated<ImportShipment>;
+export type DocumentPagination = Paginated<ImportDocument>;
+export type PaymentPagination = Paginated<ImportPayment>;
