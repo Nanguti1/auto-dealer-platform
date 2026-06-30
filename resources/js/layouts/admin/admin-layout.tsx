@@ -48,7 +48,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { AppearanceToggleTab } from '@/components/appearance-tabs';
-import { PageLoading } from '@/components/admin/loading-skeleton';
+import { ErrorBoundary, LoadingState } from '@/components/admin/shared';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types/navigation';
 
 // Lazy load heavy navigation components
@@ -409,9 +409,11 @@ export default function AdminLayout({
           {/* Page Content */}
           <main className="flex-1 overflow-y-auto p-6">
             <div className="mx-auto w-full max-w-[1600px] space-y-6">
-              <React.Suspense fallback={<PageLoading />}>
-                {children}
-              </React.Suspense>
+              <ErrorBoundary>
+                <React.Suspense fallback={<LoadingState message="Loading page..." />}>
+                  {children}
+                </React.Suspense>
+              </ErrorBoundary>
             </div>
           </main>
         </div>

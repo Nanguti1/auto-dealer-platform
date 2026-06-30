@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { Archive, Eye, Pencil, Repeat } from 'lucide-react';
 import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
@@ -9,8 +10,12 @@ import type { CrmFilters, LeadPagination, LeadRecord } from '@/components/admin/
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { admin } from '@/routes/admin';
+import { LoadingState, EmptyLeads, InlineError } from '@/components/admin/shared';
 
 export default function Index({ leads, filters = {} }: { leads: LeadPagination; filters?: CrmFilters }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
+
   const columns: Column<LeadRecord>[] = [
     { key: 'lead', label: 'Lead', sortable: true, render: (lead) => <div className="flex items-center gap-3"><CustomerAvatar customer={lead.customer ?? { id: lead.id, first_name: lead.first_name, last_name: lead.last_name, email: lead.email }} /><div><Link href={admin.leads.show(lead.id).url} className="font-medium hover:underline">{leadName(lead)}</Link><p className="text-xs text-muted-foreground">{lead.email ?? lead.phone ?? 'No contact'}</p></div></div> },
     { key: 'status', label: 'Status', sortable: true, render: (lead) => <CrmStatusBadge status={lead.status} /> },
@@ -23,9 +28,35 @@ export default function Index({ leads, filters = {} }: { leads: LeadPagination; 
     { key: 'last_activity_at', label: 'Last activity', sortable: true, render: (lead) => formatDateTime(lead.last_activity_at ?? lead.last_contacted_at) },
   ];
 
+  if (isLoading) {
+    return (
+      <CrmShell title="Leads" description="Manage sales opportunities, ownership, activity, conversion, and pipeline health." actions={<Button asChild><Link href={admin.leads.create().url}>Create Lead</Link></Button>}>
+        <LoadingState message="Loading leads..." variant="full-page" />
+      </CrmShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CrmShell title="Leads" description="Manage sales opportunities, ownership, activity, conversion, and pipeline health." actions={<Button asChild><Link href={admin.leads.create().url}>Create Lead</Link></Button>}>
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(admin.leads.index().url);
+          }}
+        />
+      </CrmShell>
+    );
+  }
+
   return (
     <CrmShell title="Leads" description="Manage sales opportunities, ownership, activity, conversion, and pipeline health." actions={<Button asChild><Link href={admin.leads.create().url}>Create Lead</Link></Button>}>
-      <AdminDataTable rows={leads} filters={filters} columns={columns} baseUrl={admin.leads.index().url} createUrl={admin.leads.create().url} createLabel="Create Lead" rowActions={(lead) => <div className="flex justify-end gap-1"><Button variant="ghost" size="icon" asChild><Link href={admin.leads.show(lead.id).url}><Eye className="size-4" /></Link></Button><Button variant="ghost" size="icon" asChild><Link href={admin.leads.edit(lead.id).url}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon" onClick={() => router.post(`/admin/leads/${lead.id}/convert`)}><Repeat className="size-4" /></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/leads/${lead.id}/archive`)}><Archive className="size-4" /></Button></div>} />
+      {leads.data.length === 0 ? (
+        <EmptyLeads onCreate={() => router.visit(admin.leads.create().url)} />
+      ) : (
+        <AdminDataTable rows={leads} filters={filters} columns={columns} baseUrl={admin.leads.index().url} createUrl={admin.leads.create().url} createLabel="Create Lead" rowActions={(lead) => <div className="flex justify-end gap-1"><Button variant="ghost" size="icon" asChild><Link href={admin.leads.show(lead.id).url}><Eye className="size-4" /></Link></Button><Button variant="ghost" size="icon" asChild><Link href={admin.leads.edit(lead.id).url}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon" onClick={() => router.post(`/admin/leads/${lead.id}/convert`)}><Repeat className="size-4" /></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/leads/${lead.id}/archive`)}><Archive className="size-4" /></Button></div>} />
+      )}
     </CrmShell>
   );
 }

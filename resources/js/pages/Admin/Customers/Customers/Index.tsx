@@ -1,4 +1,5 @@
-import { Link } from '@inertiajs/react';
+import * as React from 'react';
+import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil } from 'lucide-react';
 import AdminDataTable, { type Column } from '@/components/admin/inventory/admin-data-table';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
@@ -8,8 +9,12 @@ import type { CustomerFilters, CustomerPagination, CustomerRecord } from '@/comp
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { admin } from '@/routes/admin';
+import { LoadingState, EmptyCustomers, InlineError } from '@/components/admin/shared';
 
 export default function Index({ customers, filters = {} }: { customers: CustomerPagination; filters?: CustomerFilters }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
+
   const columns: Column<CustomerRecord>[] = [
     {
       key: 'customer',
@@ -35,20 +40,46 @@ export default function Index({ customers, filters = {} }: { customers: Customer
     { key: 'last_activity_at', label: 'Last Activity', sortable: true, render: (customer) => formatDate(customer.last_activity_at ?? customer.updated_at as string) },
   ];
 
+  if (isLoading) {
+    return (
+      <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity.">
+        <LoadingState message="Loading customers..." variant="full-page" />
+      </CustomerShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity.">
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(admin.customers.index().url);
+          }}
+        />
+      </CustomerShell>
+    );
+  }
+
   return (
     <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity.">
-      <AdminDataTable
-        rows={customers}
-        filters={filters}
-        columns={columns}
-        baseUrl={admin.customers.index().url}
-        rowActions={(customer) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={admin.customers.show(customer.id).url}><Eye className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={admin.customers.edit(customer.id).url}><Pencil className="size-4" /></Link></Button>
-          </div>
-        )}
-      />
+      {customers.data.length === 0 ? (
+        <EmptyCustomers onCreate={() => router.visit(admin.customers.create().url)} />
+      ) : (
+        <AdminDataTable
+          rows={customers}
+          filters={filters}
+          columns={columns}
+          baseUrl={admin.customers.index().url}
+          rowActions={(customer) => (
+            <div className="flex justify-end gap-1">
+              <Button variant="ghost" size="icon" asChild><Link href={admin.customers.show(customer.id).url}><Eye className="size-4" /></Link></Button>
+              <Button variant="ghost" size="icon" asChild><Link href={admin.customers.edit(customer.id).url}><Pencil className="size-4" /></Link></Button>
+            </div>
+          )}
+        />
+      )}
     </CustomerShell>
   );
 }

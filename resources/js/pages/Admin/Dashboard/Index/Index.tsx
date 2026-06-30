@@ -7,6 +7,7 @@ import PageWrapper from '@/components/admin/page-wrapper';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LoadingSkeleton } from '@/components/admin/loading-skeleton';
+import { EmptyState } from '@/components/admin/shared';
 import { ArrowRight, BarChart3, CheckCircle2, Clock, DollarSign, Layers, Users } from 'lucide-react';
 
 // Lazy load chart components
@@ -46,7 +47,6 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ summary, recentActivity }: AdminDashboardProps) {
-
   const statItems = [
     {
       icon: Layers,
@@ -206,7 +206,12 @@ export default function AdminDashboard({ summary, recentActivity }: AdminDashboa
             </CardHeader>
             <CardContent className="space-y-3">
               {recentActivity.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No recent activity recorded.</p>
+                <EmptyState
+                  icon={<Clock className="h-8 w-8" />}
+                  title="No recent activity"
+                  description="No recent activity has been recorded yet."
+                  className="min-h-[200px] py-4"
+                />
               ) : (
                 recentActivity.map((item) => (
                   <div key={item.id} className="rounded-3xl border border-border bg-background px-4 py-4">
