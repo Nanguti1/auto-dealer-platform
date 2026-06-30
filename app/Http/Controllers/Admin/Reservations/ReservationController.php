@@ -16,15 +16,13 @@ use Inertia\Response;
 
 class ReservationController extends Controller
 {
-    public function __construct(private readonly ReservationService $service)
-    {
-    }
+    public function __construct(private readonly ReservationService $service) {}
 
     public function index(Request $request): Response
     {
         $this->authorize('viewAny', VehicleReservation::class);
 
-        return Inertia::render('Admin/Sales/Reservations/Index', [
+        return Inertia::render('Admin/Reservations/Index', [
             'reservations' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -34,7 +32,7 @@ class ReservationController extends Controller
     {
         $this->authorize('create', VehicleReservation::class);
 
-        return Inertia::render('Admin/Sales/Reservations/Create');
+        return Inertia::render('Admin/Reservations/Create');
     }
 
     public function store(StoreReservationRequest $request): RedirectResponse
@@ -48,7 +46,7 @@ class ReservationController extends Controller
     {
         $this->authorize('view', $vehicleReservation);
 
-        return Inertia::render('Admin/Sales/Reservations/Show', [
+        return Inertia::render('Admin/Reservations/Show', [
             'vehicleReservation' => $vehicleReservation,
         ]);
     }
@@ -57,7 +55,7 @@ class ReservationController extends Controller
     {
         $this->authorize('update', $vehicleReservation);
 
-        return Inertia::render('Admin/Sales/Reservations/Edit', [
+        return Inertia::render('Admin/Reservations/Edit', [
             'vehicleReservation' => $vehicleReservation,
         ]);
     }
