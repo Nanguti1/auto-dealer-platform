@@ -26,6 +26,8 @@ class DashboardController extends Controller
 
         return Inertia::render('Admin/Dashboard/Index/Index', [
             'dashboard' => $this->service->paginate($request->query()),
+            'summary' => $this->service->summary(),
+            'recentActivity' => $this->service->recentActivity(),
             'filters' => $request->query(),
         ]);
     }

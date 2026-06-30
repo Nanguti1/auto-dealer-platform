@@ -3,6 +3,7 @@ import GuestLayout from '@/layouts/guest/guest-layout';
 import StickyNav from '@/components/navigation/sticky-nav';
 import Footer from '@/components/navigation/footer';
 import { H1, H2, P, H3 } from '@/components/design-system/typography';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Collapsible,
   CollapsibleContent,
