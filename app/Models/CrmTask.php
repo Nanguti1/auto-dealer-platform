@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class CrmFollowUp extends Model
+class CrmTask extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['lead_id', 'assigned_user_id', 'type', 'due_at', 'completed_at', 'status', 'notes'];
+    protected $fillable = ['lead_id', 'assigned_user_id', 'title', 'description', 'status', 'priority', 'due_at', 'completed_at'];
 
     protected function casts(): array
     {
