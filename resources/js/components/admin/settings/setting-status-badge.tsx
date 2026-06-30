@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge';
+import StatusBadge from '@/components/admin/shared/StatusBadge';
 
 export default function SettingStatusBadge({ isPublic }: { isPublic?: boolean | null }) {
-  return <Badge variant={isPublic ? 'default' : 'secondary'}>{isPublic ? 'Public' : 'Private'}</Badge>;
+  return <StatusBadge status={isPublic} />;
 }

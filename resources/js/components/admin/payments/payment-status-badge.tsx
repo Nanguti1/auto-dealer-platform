@@ -1,3 +1,5 @@
-import { Badge } from '@/components/ui/badge';
-const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = { completed: 'default', paid: 'default', successful: 'default', processed: 'default', pending: 'secondary', draft: 'secondary', failed: 'destructive', cancelled: 'destructive', refunded: 'destructive', rejected: 'destructive', expired: 'destructive', archived: 'outline' };
-export default function PaymentStatusBadge({ status }: { status?: string }) { const value = status ?? 'pending'; return <Badge variant={variants[value.toLowerCase()] ?? 'outline'} className="capitalize">{value.replaceAll('_', ' ')}</Badge>; }
+import StatusBadge from '@/components/admin/shared/StatusBadge';
+
+export default function PaymentStatusBadge({ status }: { status?: string }) {
+  return <StatusBadge status={status} />;
+}
