@@ -252,3 +252,282 @@ After implementing error boundaries and loading states:
 - For delete operations, use ConfirmationDialog with loading state
 - Lazy-loaded chart components should use React.Suspense with LoadingSkeleton
 - The AdminLayout already provides top-level error boundary protection
+
+---
+
+# Accessibility Implementation Guide
+
+## Overview
+All admin components should follow WCAG 2.1 AA standards for accessibility, ensuring keyboard navigation, screen reader support, and proper ARIA attributes.
+
+## Core Accessibility Principles
+
+### 1. Keyboard Navigation
+- All interactive elements must be keyboard accessible
+- Use logical tab order (natural DOM order)
+- Provide visible focus indicators
+- Support standard keyboard shortcuts (Escape, Enter, Space)
+
+### 2. ARIA Labels and Attributes
+- Add descriptive `aria-label` to icon-only buttons
+- Use `aria-hidden="true"` for decorative icons
+- Implement `aria-expanded` for expandable content
+- Use `aria-live` for dynamic content updates
+- Add `role` attributes where semantic HTML isn't sufficient
+
+### 3. Screen Reader Support
+- Ensure proper heading hierarchy (h1-h6)
+- Provide alt text for images
+- Use semantic HTML elements
+- Add descriptive text for icon buttons
+
+### 4. Focus Management
+- Manage focus for modal dialogs
+- Return focus after closing modals/menus
+- Implement focus traps for mobile menus
+- Use `tabIndex={-1}` for non-interactive elements
+
+## Implementation Patterns
+
+### Icon-Only Buttons
+```tsx
+// ❌ Bad - no accessibility
+<Button onClick={action}>
+  <Search className="h-5 w-5" />
+</Button>
+
+// ✅ Good - with aria-label
+<Button onClick={action} aria-label="Search">
+  <Search className="h-5 w-5" aria-hidden="true" />
+</Button>
+```
+
+### Dropdown Menus
+```tsx
+<DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button aria-label="Open menu">
+      <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent>
+    <DropdownMenuItem asChild>
+      <Link href="/edit" aria-label="Edit item">
+        <Pencil className="mr-2 h-4 w-4" aria-hidden="true" />
+        Edit
+      </Link>
+    </DropdownMenuItem>
+  </DropdownMenuContent>
+</DropdownMenu>
+```
+
+### Tables
+```tsx
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>
+        <Checkbox aria-label="Select all rows" />
+      </TableHead>
+      <TableHead>
+        {sortable ? (
+          <button aria-label={`Sort by ${columnLabel}`}>
+            {columnLabel}
+          </button>
+        ) : (
+          columnLabel
+        )}
+      </TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {rows.map((row) => (
+      <TableRow key={row.id}>
+        <TableCell>
+          <Checkbox aria-label={`Select row ${row.id}`} />
+        </TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
+```
+
+### Loading States
+```tsx
+<div role="status" aria-live="polite" aria-label="Loading data">
+  <Loader2 className="animate-spin" aria-hidden="true" />
+  <span>Loading...</span>
+</div>
+```
+
+### Error Messages
+```tsx
+<div role="alert" aria-live="assertive">
+  <AlertCircle className="text-destructive" aria-hidden="true" />
+  <p>Error message here</p>
+  <Button onClick={retry} aria-label="Retry operation">
+    <RefreshCw className="mr-2" aria-hidden="true" />
+    Retry
+  </Button>
+</div>
+```
+
+### Expandable Content
+```tsx
+<button
+  aria-expanded={isOpen}
+  aria-controls="content-id"
+  onClick={toggle}
+>
+  {isOpen ? 'Collapse' : 'Expand'}
+  <ChevronDown className="ml-2" aria-hidden="true" />
+</button>
+<div id="content-id" role="region">
+  {isOpen && <Content />}
+</div>
+```
+
+### Navigation
+```tsx
+<nav aria-label="Main navigation">
+  <ul>
+    <li>
+      <Link href="/dashboard" aria-label="Go to Dashboard">
+        <LayoutDashboard className="mr-2" aria-hidden="true" />
+        Dashboard
+      </Link>
+    </li>
+  </ul>
+</nav>
+```
+
+## Skip-to-Content Link
+
+The AdminLayout includes a skip-to-content link for keyboard users:
+
+```tsx
+<a
+  href="#main-content"
+  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:font-medium"
+>
+  Skip to main content
+</a>
+
+<main id="main-content" tabIndex={-1}>
+  {/* Main content */}
+</main>
+```
+
+## Focus Management Patterns
+
+### Mobile Menu Focus
+```tsx
+const sidebarRef = useRef<HTMLElement>(null);
+const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+useEffect(() => {
+  if (isMobile && sidebarOpen && sidebarRef.current) {
+    const firstFocusable = sidebarRef.current.querySelector('button, a, input');
+    firstFocusable?.focus();
+  } else if (isMobile && !sidebarOpen && menuButtonRef.current) {
+    menuButtonRef.current.focus();
+  }
+}, [sidebarOpen, isMobile]);
+```
+
+### Escape Key Handler
+```tsx
+const handleKeyDown = (event: React.KeyboardEvent) => {
+  if (event.key === 'Escape') {
+    closeMenu();
+  }
+};
+
+<div onKeyDown={handleKeyDown}>
+  {/* Menu content */}
+</div>
+```
+
+## Color Contrast Guidelines
+
+- Text must have minimum 4.5:1 contrast ratio for normal text
+- Large text (18pt+) must have minimum 3:1 contrast ratio
+- Interactive elements must have minimum 3:1 contrast ratio
+- Avoid using color alone to convey information
+
+## Testing Checklist
+
+### Keyboard Navigation
+- [ ] Can navigate entire interface using Tab key
+- [ ] All interactive elements receive visible focus
+- [ ] Escape key closes modals/menus
+- [ ] Enter/Space activate buttons
+- [ ] Arrow keys work in dropdowns
+- [ ] Tab order is logical
+
+### Screen Reader
+- [ ] All images have alt text
+- [ ] Icon buttons have aria-label
+- [ ] Form fields have associated labels
+- [ ] Dynamic content announcements work
+- [ ] Heading hierarchy is correct
+- [ ] Links are descriptive
+
+### Focus Management
+- [ ] Focus moves to modal when opened
+- [ ] Focus returns to trigger when closed
+- [ ] Focus is trapped in modals
+- [ ] Skip-to-content link works
+- [ ] Mobile menu focus management works
+
+### Visual Accessibility
+- [ ] Color contrast meets WCAG AA
+- [ ] Text is resizable (up to 200%)
+- [ ] No seizure-inducing content
+- [ ] Sufficient spacing between elements
+- [ ] Clear visual hierarchy
+
+## ARIA Live Regions
+
+Use `aria-live` for dynamic content that should be announced:
+
+```tsx
+// For error messages
+<div role="alert" aria-live="assertive">
+  Error: Something went wrong
+</div>
+
+// For loading states
+<div role="status" aria-live="polite">
+  Loading...
+</div>
+
+// For success messages
+<div role="status" aria-live="polite">
+  Successfully saved
+</div>
+```
+
+## Form Accessibility
+
+```tsx
+<form>
+  <label htmlFor="email">Email address</label>
+  <Input
+    id="email"
+    type="email"
+    aria-describedby="email-hint"
+    required
+  />
+  <p id="email-hint" className="text-sm text-muted-foreground">
+    We'll never share your email with anyone else.
+  </p>
+</form>
+```
+
+## Additional Resources
+
+- [WCAG 2.1 Guidelines](https://www.w3.org/WAI/WCAG21/quickref/)
+- [ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)
+- [WebAIM Accessibility Checklist](https://webaim.org/standards/wcag/checklist)
+- [React Accessibility Guide](https://react.dev/learn/accessibility)

@@ -55,7 +55,34 @@ export default function Index({ leads, filters = {} }: { leads: LeadPagination; 
       {leads.data.length === 0 ? (
         <EmptyLeads onCreate={() => router.visit(admin.leads.create().url)} />
       ) : (
-        <AdminDataTable rows={leads} filters={filters} columns={columns} baseUrl={admin.leads.index().url} createUrl={admin.leads.create().url} createLabel="Create Lead" rowActions={(lead) => <div className="flex justify-end gap-1"><Button variant="ghost" size="icon" asChild><Link href={admin.leads.show(lead.id).url}><Eye className="size-4" /></Link></Button><Button variant="ghost" size="icon" asChild><Link href={admin.leads.edit(lead.id).url}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon" onClick={() => router.post(`/admin/leads/${lead.id}/convert`)}><Repeat className="size-4" /></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/leads/${lead.id}/archive`)}><Archive className="size-4" /></Button></div>} />
+        <AdminDataTable
+          rows={leads}
+          filters={filters}
+          columns={columns}
+          baseUrl={admin.leads.index().url}
+          createUrl={admin.leads.create().url}
+          createLabel="Create Lead"
+          rowActions={(lead) => (
+            <div className="flex justify-end gap-1">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={admin.leads.show(lead.id).url} aria-label={`View lead ${lead.id}`}>
+                  <Eye className="size-4" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={admin.leads.edit(lead.id).url} aria-label={`Edit lead ${lead.id}`}>
+                  <Pencil className="size-4" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => router.post(`/admin/leads/${lead.id}/convert`)} aria-label={`Convert lead ${lead.id}`}>
+                <Repeat className="size-4" aria-hidden="true" />
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/leads/${lead.id}/archive`)} aria-label={`Archive lead ${lead.id}`}>
+                <Archive className="size-4" aria-hidden="true" />
+              </Button>
+            </div>
+          )}
+        />
       )}
     </CrmShell>
   );

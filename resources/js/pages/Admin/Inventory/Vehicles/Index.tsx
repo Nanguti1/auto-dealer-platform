@@ -111,20 +111,20 @@ export default function Index({ vehicles, filters = {} }: { vehicles: Paginated<
               <>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="size-4" />
+                    <Button variant="ghost" size="icon" aria-label={`More options for vehicle ${vehicle.id}`}>
+                      <MoreHorizontal className="size-4" aria-hidden="true" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem asChild>
                       <Link href={admin.vehicles.show(vehicle.id).url}>
-                        <Eye className="mr-2 size-4" />
+                        <Eye className="mr-2 size-4" aria-hidden="true" />
                         View
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href={admin.vehicles.edit(vehicle.id).url}>
-                        <Pencil className="mr-2 size-4" />
+                        <Pencil className="mr-2 size-4" aria-hidden="true" />
                         Edit
                       </Link>
                     </DropdownMenuItem>
@@ -137,18 +137,18 @@ export default function Index({ vehicles, filters = {} }: { vehicles: Paginated<
                         )
                       }
                     >
-                      <Star className="mr-2 size-4" />
+                      <Star className="mr-2 size-4" aria-hidden="true" />
                       {vehicle.is_featured ? 'Unfeature' : 'Feature'}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigator.clipboard.writeText(window.location.href)}>
-                      <Copy className="mr-2 size-4" />
+                      <Copy className="mr-2 size-4" aria-hidden="true" />
                       Copy link
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => setDeleteId(vehicle.id)}
                     >
-                      <Trash2 className="mr-2 size-4" />
+                      <Trash2 className="mr-2 size-4" aria-hidden="true" />
                       Delete
                     </DropdownMenuItem>
                   </DropdownMenuContent>

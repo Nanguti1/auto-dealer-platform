@@ -134,11 +134,11 @@ export default function AdminDashboard({ summary, recentActivity }: AdminDashboa
         {statItems.map((item) => (
           <Card key={item.label} className="bg-card border border-border p-6 shadow-sm">
             <CardContent className="space-y-4">
-              <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <div className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary" aria-hidden="true">
                 <item.icon className="h-6 w-6" />
               </div>
               <div>
-                <p className="text-3xl font-semibold">{item.value}</p>
+                <p className="text-3xl font-semibold" aria-label={`${item.label}: ${item.value}`}>{item.value}</p>
                 <p className="text-sm text-muted-foreground">{item.label}</p>
               </div>
               <p className="text-sm text-muted-foreground">{item.description}</p>

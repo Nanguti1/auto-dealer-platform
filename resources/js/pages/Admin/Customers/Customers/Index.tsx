@@ -74,8 +74,16 @@ export default function Index({ customers, filters = {} }: { customers: Customer
           baseUrl={admin.customers.index().url}
           rowActions={(customer) => (
             <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild><Link href={admin.customers.show(customer.id).url}><Eye className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" asChild><Link href={admin.customers.edit(customer.id).url}><Pencil className="size-4" /></Link></Button>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={admin.customers.show(customer.id).url} aria-label={`View customer ${customer.id}`}>
+                  <Eye className="size-4" aria-hidden="true" />
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={admin.customers.edit(customer.id).url} aria-label={`Edit customer ${customer.id}`}>
+                  <Pencil className="size-4" aria-hidden="true" />
+                </Link>
+              </Button>
             </div>
           )}
         />

@@ -124,16 +124,16 @@ export function InlineError({ error, onRetry, className }: InlineErrorProps) {
   const errorMessage = typeof error === 'string' ? error : error?.message || 'An error occurred';
 
   return (
-    <div className={cn('flex flex-col items-center justify-center min-h-[200px] p-6', className)}>
+    <div className={cn('flex flex-col items-center justify-center min-h-[200px] p-6', className)} role="alert" aria-live="assertive">
       <div className="text-center space-y-4">
-        <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
+        <AlertCircle className="h-12 w-12 text-destructive mx-auto" aria-hidden="true" />
         <div>
           <p className="font-medium text-destructive">Error</p>
           <p className="text-sm text-muted-foreground mt-1">{errorMessage}</p>
         </div>
         {onRetry && (
-          <Button onClick={onRetry} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />
+          <Button onClick={onRetry} variant="outline" size="sm" aria-label="Retry the operation">
+            <RefreshCw className="h-4 w-4 mr-2" aria-hidden="true" />
             Retry
           </Button>
         )}
