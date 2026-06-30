@@ -1,0 +1,16 @@
+import { Link, router } from '@inertiajs/react';
+import { Pencil, Trash2 } from 'lucide-react';
+import * as React from 'react';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
+import MarketingShell, { MarketingBackButton } from '@/components/admin/marketing/marketing-shell';
+import MarketingStatusBadge from '@/components/admin/marketing/marketing-status-badge';
+import type { Review } from '@/components/admin/marketing/types';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+export default function Show({ review }: { review: Review }) {
+  const [confirming, setConfirming] = React.useState(false);
+  return <MarketingShell title={review.title ?? `Review #${review.id}`} description="Customer review moderation details." actions={<><MarketingBackButton href="/admin/reviews" /><Button asChild><Link href={`/admin/reviews/${review.id}/edit`}><Pencil className="mr-2 size-4" />Edit</Link></Button><Button variant="destructive" onClick={() => setConfirming(true)}><Trash2 className="mr-2 size-4" />Delete</Button></>}><div className="grid gap-4 lg:grid-cols-3"><Card className="lg:col-span-2"><CardHeader><CardTitle>Review</CardTitle></CardHeader><CardContent className="space-y-4"><div className="text-2xl text-amber-500">{'★'.repeat(review.rating ?? 0).padEnd(5, '☆')}</div><blockquote className="rounded-xl border bg-muted/30 p-4 text-lg">{review.body ?? review.review ?? 'No review text provided.'}</blockquote>{review.reply ? <div className="rounded-xl border p-4"><p className="mb-2 text-sm font-medium">Reply</p><p className="text-sm text-muted-foreground">{review.reply}</p></div> : null}</CardContent></Card><div className="space-y-4"><Card><CardHeader><CardTitle>Moderation</CardTitle></CardHeader><CardContent className="space-y-3"><div className="flex gap-2"><MarketingStatusBadge status={review.status ?? (review.approved_at ? 'approved' : 'pending')} /><MarketingStatusBadge status={review.is_published ? 'published' : 'draft'} />{review.is_featured ? <MarketingStatusBadge status="featured" /> : null}</div><Detail label="Approved at" value={formatDate(review.approved_at ?? undefined)} /><Detail label="Created" value={formatDate(review.created_at)} /></CardContent></Card><Card><CardHeader><CardTitle>Customer & vehicle</CardTitle></CardHeader><CardContent className="space-y-3"><Detail label="Customer" value={review.customer?.name ?? review.user?.name ?? '—'} /><Detail label="Email" value={review.customer?.email ?? review.user?.email ?? '—'} /><Detail label="Vehicle" value={review.vehicle?.title ?? review.vehicle?.stock_number ?? String(review.vehicle_id ?? '—')} /></CardContent></Card></div></div><ConfirmationDialog open={confirming} onOpenChange={setConfirming} title="Delete review?" description="This will remove the customer review." trigger={<span />} confirmLabel="Delete" onConfirm={() => router.delete(`/admin/reviews/${review.id}`)} /></MarketingShell>;
+}
+function Detail({ label, value }: { label: string; value?: string | null }) { return <div><span className="text-sm text-muted-foreground">{label}</span><p className="text-sm font-medium">{value ?? '—'}</p></div>; }
+function formatDate(value?: string): string { return value ? new Date(value).toLocaleString() : '—'; }
