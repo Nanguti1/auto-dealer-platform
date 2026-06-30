@@ -1,9 +1,4 @@
-import * as React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminLayout from '@/layouts/admin/admin-layout';
-import PageWrapper from '@/components/admin/page-wrapper';
-import PageHeader from '@/components/admin/page-header';
-import { Button } from '@/components/ui/button';
+import ModuleShell, { ModuleBackButton } from '@/components/admin/shared/ModuleShell';
 import type { BreadcrumbItem } from '@/types/navigation';
 
 interface CrmShellProps {
@@ -16,15 +11,19 @@ interface CrmShellProps {
 
 export default function CrmShell({ title, description, actions, children, breadcrumbs = [] }: CrmShellProps) {
   return (
-    <AdminLayout title={title} breadcrumbs={[{ title: 'Admin', href: '/admin/dashboard' }, { title: 'CRM', href: '/admin/leads' }, ...breadcrumbs]}>
-      <PageWrapper>
-        <PageHeader title={title} description={description} actions={actions} />
-        {children}
-      </PageWrapper>
-    </AdminLayout>
+    <ModuleShell
+      moduleName="CRM"
+      moduleBaseHref="/admin/leads"
+      title={title}
+      description={description}
+      actions={actions}
+      breadcrumbs={breadcrumbs}
+    >
+      {children}
+    </ModuleShell>
   );
 }
 
 export function CrmBackButton({ href = '/admin/leads' }: { href?: string }) {
-  return <Button variant="outline" asChild><Link href={href}>Back</Link></Button>;
+  return <ModuleBackButton href={href} />;
 }

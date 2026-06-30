@@ -1,9 +1,4 @@
-import * as React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminLayout from '@/layouts/admin/admin-layout';
-import PageHeader from '@/components/admin/page-header';
-import PageWrapper from '@/components/admin/page-wrapper';
-import { Button } from '@/components/ui/button';
+import ModuleShell, { ModuleBackButton } from '@/components/admin/shared/ModuleShell';
 import type { BreadcrumbItem } from '@/types/navigation';
 
 interface ReservationShellProps {
@@ -16,15 +11,19 @@ interface ReservationShellProps {
 
 export default function ReservationShell({ title, description, actions, children, breadcrumbs = [] }: ReservationShellProps) {
   return (
-    <AdminLayout title={title} breadcrumbs={[{ title: 'Admin', href: '/admin/dashboard' }, { title: 'Reservations', href: '/admin/reservations' }, ...breadcrumbs]}>
-      <PageWrapper>
-        <PageHeader title={title} description={description} actions={actions} />
-        {children}
-      </PageWrapper>
-    </AdminLayout>
+    <ModuleShell
+      moduleName="Reservations"
+      moduleBaseHref="/admin/reservations"
+      title={title}
+      description={description}
+      actions={actions}
+      breadcrumbs={breadcrumbs}
+    >
+      {children}
+    </ModuleShell>
   );
 }
 
 export function ReservationBackButton({ href = '/admin/reservations' }: { href?: string }) {
-  return <Button variant="outline" asChild><Link href={href}>Back</Link></Button>;
+  return <ModuleBackButton href={href} />;
 }

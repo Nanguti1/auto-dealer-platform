@@ -1,9 +1,4 @@
-import * as React from 'react';
-import { Link } from '@inertiajs/react';
-import AdminLayout from '@/layouts/admin/admin-layout';
-import PageHeader from '@/components/admin/page-header';
-import PageWrapper from '@/components/admin/page-wrapper';
-import { Button } from '@/components/ui/button';
+import ModuleShell, { ModuleBackButton } from '@/components/admin/shared/ModuleShell';
 import type { BreadcrumbItem } from '@/types/navigation';
 
 interface ImportShellProps {
@@ -16,15 +11,19 @@ interface ImportShellProps {
 
 export default function ImportShell({ title, description, actions, children, breadcrumbs = [] }: ImportShellProps) {
   return (
-    <AdminLayout title={title} breadcrumbs={[{ title: 'Admin', href: '/admin/dashboard' }, { title: 'Imports', href: '/admin/imports' }, ...breadcrumbs]}>
-      <PageWrapper>
-        <PageHeader title={title} description={description} actions={actions} />
-        {children}
-      </PageWrapper>
-    </AdminLayout>
+    <ModuleShell
+      moduleName="Imports"
+      moduleBaseHref="/admin/imports"
+      title={title}
+      description={description}
+      actions={actions}
+      breadcrumbs={breadcrumbs}
+    >
+      {children}
+    </ModuleShell>
   );
 }
 
 export function ImportBackButton({ href = '/admin/imports' }: { href?: string }) {
-  return <Button variant="outline" asChild><Link href={href}>Back</Link></Button>;
+  return <ModuleBackButton href={href} />;
 }
