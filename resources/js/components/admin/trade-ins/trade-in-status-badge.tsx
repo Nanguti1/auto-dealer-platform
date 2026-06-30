@@ -1,0 +1,3 @@
+import { Badge } from '@/components/ui/badge';
+const variants: Record<string, 'default' | 'secondary' | 'destructive' | 'outline'> = { approved: 'default', accepted: 'default', completed: 'default', pending: 'secondary', draft: 'secondary', inspecting: 'secondary', inspection: 'secondary', rejected: 'destructive', expired: 'destructive', archived: 'outline' };
+export default function TradeInStatusBadge({ status }: { status?: string }) { const value = status ?? 'pending'; return <Badge variant={variants[value.toLowerCase()] ?? 'outline'} className="capitalize">{value.replaceAll('_', ' ')}</Badge>; }

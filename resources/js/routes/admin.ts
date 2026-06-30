@@ -18,5 +18,9 @@ export const admin = {
   vehicleFeatures: resource('/admin/vehicle-features'),
   customers: resource('/admin/customers'),
   leads: resource('/admin/leads'),
+  financeApplications: resource('/admin/finance-applications'),
+  financeDocuments: resource('/admin/finance-documents'),
+  tradeIns: resource('/admin/trade-ins'),
+  tradeInOffers: resource('/admin/trade-in-offers'),
   settings: resource('/admin/settings'),
 };
