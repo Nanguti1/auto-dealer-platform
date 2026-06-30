@@ -6,7 +6,7 @@ import { H1, H2, P } from '@/components/design-system/typography';
 
 export default function Terms() {
   return (
-    <GuestLayout>
+    <GuestLayout title="Terms of Service" description="Review the terms governing Dealership website usage, vehicle inquiries, reservations, and customer services.">
       <Head title="Terms of Service" />
       <StickyNav />
       

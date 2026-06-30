@@ -213,7 +213,7 @@ export default function Welcome() {
   ];
 
   return (
-    <GuestLayout>
+    <GuestLayout title="Home" description="Shop premium vehicles with luxury browsing, search, finance, trade-in, import, and customer ownership tools.">
       <Head title="Home" />
       <StickyNav />
       

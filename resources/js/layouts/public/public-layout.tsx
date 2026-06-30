@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Head } from '@inertiajs/react';
 import { cn } from '@/lib/utils';
 import StickyNav from '@/components/navigation/sticky-nav';
 import Footer from '@/components/navigation/footer';
+import SeoHead from '@/components/seo-head';
 
 interface PublicLayoutProps {
     children: React.ReactNode;

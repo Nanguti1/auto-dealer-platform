@@ -87,7 +87,7 @@ export default function InventoryIndex({
     const resetFilters = () => applyFilters({ sort: filters.sort });
 
     return (
-        <PublicLayout title="Inventory">
+        <PublicLayout title="Inventory" description="Browse premium new, pre-owned, certified, electric, luxury, and performance vehicles with smart filters, wishlist, and compare tools.">
             <Head title="Vehicle Inventory" />
 
             {/* Hero */}

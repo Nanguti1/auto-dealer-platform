@@ -11,7 +11,7 @@ import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 
 export default function DealerContactPage() {
     return (
-        <PublicLayout title="Contact Dealer">
+        <PublicLayout title="Contact Dealer" description="Contact the dealer team about a vehicle, appointment, reservation, financing question, or next step.">
             <Head title="Contact Dealer" />
 
             <section className="border-b bg-gradient-to-b from-muted/50 to-background py-12 md:py-16">
