@@ -17,5 +17,6 @@ export const admin = {
   vehicleGalleries: resource('/admin/vehicle-galleries'),
   vehicleFeatures: resource('/admin/vehicle-features'),
   customers: resource('/admin/customers'),
+  leads: resource('/admin/leads'),
   settings: resource('/admin/settings'),
 };
