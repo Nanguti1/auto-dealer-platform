@@ -1,7 +1,7 @@
 import TradeInShell, { TradeInBackButton } from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInForm from '@/components/admin/trade-ins/trade-in-form';
 import type { TradeInRequest } from '@/components/admin/trade-ins/types';
-import { tradeInVehicleName } from '@/components/admin/trade-in/helpers';
+import { tradeInVehicleName } from '@/components/admin/trade-ins/helpers';
 import { admin } from '@/routes/admin';
 
 export default function Edit({ tradeInRequest }: { tradeInRequest: TradeInRequest }) {

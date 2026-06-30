@@ -6,8 +6,12 @@ import PageHeader from '@/components/admin/page-header';
 import PageWrapper from '@/components/admin/page-wrapper';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { AreaChartComponent, PieChartComponent } from '@/components/design-system/chart';
+import { LoadingSkeleton } from '@/components/admin/loading-skeleton';
 import { ArrowRight, BarChart3, CheckCircle2, Clock, DollarSign, Layers, Users } from 'lucide-react';
+
+// Lazy load chart components
+const AreaChartComponent = React.lazy(() => import('@/components/design-system/chart').then(m => ({ default: m.AreaChartComponent })));
+const PieChartComponent = React.lazy(() => import('@/components/design-system/chart').then(m => ({ default: m.PieChartComponent })));
 
 interface SummaryMetrics {
   totalVehicles: number;
@@ -156,7 +160,9 @@ export default function AdminDashboard({ summary, recentActivity }: AdminDashboa
               </div>
             </CardHeader>
             <CardContent>
-              <AreaChartComponent data={charts.sales} height={260} />
+              <React.Suspense fallback={<LoadingSkeleton variant="chart" />}>
+                <AreaChartComponent data={charts.sales} height={260} />
+              </React.Suspense>
             </CardContent>
           </Card>
 
@@ -166,7 +172,9 @@ export default function AdminDashboard({ summary, recentActivity }: AdminDashboa
                 <CardTitle>Inventory distribution</CardTitle>
               </CardHeader>
               <CardContent>
-                <PieChartComponent data={charts.distribution} height={240} />
+                <React.Suspense fallback={<LoadingSkeleton variant="chart" />}>
+                  <PieChartComponent data={charts.distribution} height={240} />
+                </React.Suspense>
               </CardContent>
             </Card>
 

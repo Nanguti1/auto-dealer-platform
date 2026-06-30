@@ -48,10 +48,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { AppearanceToggleTab } from '@/components/appearance-tabs';
-import CommandPalette from '@/components/navigation/command-palette';
-import NotificationDropdown from '@/components/navigation/notification-dropdown';
-import SearchOverlay from '@/components/navigation/search-overlay';
+import { PageLoading } from '@/components/admin/loading-skeleton';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types/navigation';
+
+// Lazy load heavy navigation components
+const CommandPalette = React.lazy(() => import('@/components/navigation/command-palette'));
+const NotificationDropdown = React.lazy(() => import('@/components/navigation/notification-dropdown'));
+const SearchOverlay = React.lazy(() => import('@/components/navigation/search-overlay'));
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -360,7 +363,9 @@ export default function AdminLayout({
                 <Search className="h-5 w-5" />
               </Button>
 
-              <NotificationDropdown />
+              <React.Suspense fallback={<div className="h-8 w-8 rounded-full bg-muted" />}>
+                <NotificationDropdown />
+              </React.Suspense>
 
               <AppearanceToggleTab />
 
@@ -404,14 +409,18 @@ export default function AdminLayout({
           {/* Page Content */}
           <main className="flex-1 overflow-y-auto p-6">
             <div className="mx-auto w-full max-w-[1600px] space-y-6">
-              {children}
+              <React.Suspense fallback={<PageLoading />}>
+                {children}
+              </React.Suspense>
             </div>
           </main>
         </div>
       </div>
 
-      <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
-      <SearchOverlay open={searchOpen} onOpenChange={setSearchOpen} />
+      <React.Suspense fallback={null}>
+        <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
+        <SearchOverlay open={searchOpen} onOpenChange={setSearchOpen} />
+      </React.Suspense>
     </div>
   );
 }
