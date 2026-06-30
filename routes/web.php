@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\Analytics\AnalyticsController;
 use App\Http\Controllers\Admin\Blog\BlogCategoryController;
 use App\Http\Controllers\Admin\Blog\BlogPostController;
 use App\Http\Controllers\Admin\Blog\BlogTagController;
+use App\Http\Controllers\Admin\Branches\BranchController;
 use App\Http\Controllers\Admin\CMS\CmsPageController;
 use App\Http\Controllers\Admin\CMS\FaqController;
 use App\Http\Controllers\Admin\CMS\HeroSliderController;
@@ -86,6 +87,7 @@ Route::middleware(['auth', 'verified'])
     ->as('admin.')
     ->group(function (): void {
         Route::resource('dashboard', DashboardController::class)->only(['index']);
+        Route::resource('branches', BranchController::class);
         Route::resource('vehicles', VehicleController::class);
         Route::patch('vehicles/{vehicle}/feature', [VehicleController::class, 'feature'])->name('vehicles.feature');
         Route::patch('vehicles/{vehicle}/unfeature', [VehicleController::class, 'unfeature'])->name('vehicles.unfeature');

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BranchFactory extends Factory
@@ -9,7 +10,7 @@ class BranchFactory extends Factory
     public function definition(): array
     {
         return [
-            'company_id' => null,
+            'company_id' => Company::factory(),
             'name' => fake()->company(),
             'slug' => fake()->slug(),
             'code' => fake()->bothify('???'),

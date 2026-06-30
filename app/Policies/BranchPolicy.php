@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Policies;
+
+use App\Models\Branch;
+use App\Models\User;
+
+class BranchPolicy
+{
+    public function viewAny(User $user): bool
+    {
+        return $user !== null;
+    }
+
+    public function view(User $user, Branch $branch): bool
+    {
+        return $user !== null;
+    }
+
+    public function create(User $user): bool
+    {
+        return $user !== null;
+    }
+
+    public function update(User $user, Branch $branch): bool
+    {
+        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+    }
+
+    public function delete(User $user, Branch $branch): bool
+    {
+        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+    }
+}
