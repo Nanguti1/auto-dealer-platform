@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Refund extends Model
 {
-    use HasFactory;
+    use BranchAware, HasFactory;
 
     protected $fillable = ['user_id', 'payment_id', 'invoice_id', 'refund_number', 'amount', 'currency', 'reason', 'status', 'processed_at'];
 

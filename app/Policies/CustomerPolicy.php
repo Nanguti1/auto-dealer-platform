@@ -9,17 +9,17 @@ use App\Models\User;
 
 class CustomerPolicy
 {
-    public function viewAny(User $user,): bool
+    public function viewAny(User $user): bool
     {
         return $user !== null;
     }
 
     public function view(User $user, Customer $model): bool
     {
-        return $user !== null;
+        return $user !== null && $model->isAccessibleThrough($user, 'user');
     }
 
-    public function create(User $user,): bool
+    public function create(User $user): bool
     {
         return $user !== null;
     }
@@ -68,5 +68,4 @@ class CustomerPolicy
     {
         return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
-
 }

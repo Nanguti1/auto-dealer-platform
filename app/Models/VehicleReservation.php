@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VehicleReservation extends Model
 {
-    use HasFactory;
+    use BranchAware, HasFactory;
 
     protected $fillable = ['vehicle_id', 'user_id', 'deposit_amount', 'status', 'expires_at'];
 

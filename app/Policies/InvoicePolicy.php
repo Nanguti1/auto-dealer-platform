@@ -16,7 +16,7 @@ class InvoicePolicy
 
     public function view(User $user, Invoice $model): bool
     {
-        return $user !== null;
+        return $user !== null && $model->isAccessibleThrough($user, 'vehicle');
     }
 
     public function create(User $user): bool
@@ -26,21 +26,21 @@ class InvoicePolicy
 
     public function update(User $user, Invoice $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function delete(User $user, Invoice $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function restore(User $user, Invoice $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function forceDelete(User $user, Invoice $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 }

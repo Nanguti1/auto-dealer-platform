@@ -16,56 +16,56 @@ class VehiclePolicy
 
     public function view(User $user, Vehicle $model): bool
     {
-        return $user !== null;
+        return $user !== null && $model->isAccessibleBy($user);
     }
 
     public function create(User $user): bool
     {
-        return $user !== null;
+        return $user !== null && $user->branch_id !== null;
     }
 
     public function update(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function delete(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function restore(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function forceDelete(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function feature(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function publish(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function approve(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function reject(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function assign(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleBy($user) && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 }

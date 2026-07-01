@@ -24,23 +24,27 @@ class DashboardService
 
     public function summary(): array
     {
+        $user = auth()->user();
+
         return [
-            'totalVehicles' => Vehicle::query()->count(),
-            'availableVehicles' => Vehicle::query()->whereNull('sold_at')->count(),
-            'reservedVehicles' => VehicleReservation::query()->count(),
-            'soldVehicles' => Vehicle::query()->whereNotNull('sold_at')->count(),
-            'customers' => Customer::query()->count(),
-            'leads' => Lead::query()->count(),
-            'reservations' => VehicleReservation::query()->count(),
-            'financeApplications' => FinanceApplication::query()->count(),
-            'tradeIns' => TradeInRequest::query()->count(),
-            'imports' => VehicleImport::query()->count(),
+            'totalVehicles' => Vehicle::forBranch($user)->count(),
+            'availableVehicles' => Vehicle::forBranch($user)->whereNull('sold_at')->count(),
+            'reservedVehicles' => VehicleReservation::forBranchThrough($user, 'vehicle')->count(),
+            'soldVehicles' => Vehicle::forBranch($user)->whereNotNull('sold_at')->count(),
+            'customers' => Customer::forBranchThrough($user, 'user')->count(),
+            'leads' => Lead::forBranchThrough($user, 'vehicle')->count(),
+            'reservations' => VehicleReservation::forBranchThrough($user, 'vehicle')->count(),
+            'financeApplications' => FinanceApplication::forBranchThrough($user, 'vehicle')->count(),
+            'tradeIns' => TradeInRequest::forBranchThrough($user, 'vehicle')->count(),
+            'imports' => VehicleImport::forBranchThrough($user, 'vehicle')->count(),
         ];
     }
 
     public function recentActivity(int $limit = 4): array
     {
-        $leadActivities = Lead::query()
+        $user = auth()->user();
+
+        $leadActivities = Lead::forBranchThrough($user, 'vehicle')
             ->latest()
             ->limit($limit)
             ->get()
@@ -54,7 +58,7 @@ class DashboardService
                 ];
             });
 
-        $reservationActivities = VehicleReservation::query()
+        $reservationActivities = VehicleReservation::forBranchThrough($user, 'vehicle')
             ->latest()
             ->limit($limit)
             ->get()

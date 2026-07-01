@@ -16,7 +16,7 @@ class RefundPolicy
 
     public function view(User $user, Refund $model): bool
     {
-        return $user !== null;
+        return $user !== null && $model->isAccessibleThrough($user, 'payment');
     }
 
     public function create(User $user): bool
@@ -26,21 +26,21 @@ class RefundPolicy
 
     public function update(User $user, Refund $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'payment') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function delete(User $user, Refund $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'payment') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function restore(User $user, Refund $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'payment') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function forceDelete(User $user, Refund $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'payment') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 }

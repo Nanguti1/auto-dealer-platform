@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use HasFactory, SoftDeletes;
+    use BranchAware, HasFactory, SoftDeletes;
 
     protected $fillable = ['user_id', 'customer_number', 'first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'preferences'];
 
@@ -34,5 +36,10 @@ class Customer extends Model
     public function notes(): HasMany
     {
         return $this->hasMany(CustomerNote::class, 'customer_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

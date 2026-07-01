@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TradeInRequest extends Model
 {
-    use HasFactory, SoftDeletes;
+    use BranchAware, HasFactory, SoftDeletes;
 
     protected $fillable = ['user_id', 'vehicle_id', 'make', 'model', 'year', 'vin', 'mileage', 'estimated_value', 'offered_value', 'status', 'condition_report'];
 

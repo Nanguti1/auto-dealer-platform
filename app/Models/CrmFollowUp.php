@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class CrmFollowUp extends Model
 {
-    use HasFactory;
+    use BranchAware, HasFactory;
 
     protected $fillable = ['lead_id', 'assigned_user_id', 'type', 'due_at', 'completed_at', 'status', 'notes'];
 

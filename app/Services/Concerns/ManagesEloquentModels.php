@@ -4,6 +4,30 @@ declare(strict_types=1);
 
 namespace App\Services\Concerns;
 
+use App\Models\CrmFollowUp;
+use App\Models\CrmNote;
+use App\Models\CrmTask;
+use App\Models\Customer;
+use App\Models\CustomerDocument;
+use App\Models\CustomerNote;
+use App\Models\FinanceApplication;
+use App\Models\FinanceDocument;
+use App\Models\ImportDocument;
+use App\Models\ImportPayment;
+use App\Models\ImportShipment;
+use App\Models\Invoice;
+use App\Models\Lead;
+use App\Models\Payment;
+use App\Models\Receipt;
+use App\Models\Refund;
+use App\Models\Review;
+use App\Models\TestDriveBooking;
+use App\Models\TradeInRequest;
+use App\Models\VehicleEnquiry;
+use App\Models\VehicleGallery;
+use App\Models\VehicleImport;
+use App\Models\VehicleReservation;
+use App\Models\VehicleSpecification;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model as EloquentModel;
@@ -77,9 +101,27 @@ trait ManagesEloquentModels
         /** @var Builder $query */
         $query = $this->modelClass()::query()->latest();
 
+        // Apply branch filtering if the model uses BranchAware trait
+        $model = new ($this->modelClass());
+        $user = auth()->user();
+
+        if ($user !== null) {
+            // Check if model has branch_id field
+            if (in_array('branch_id', $model->getFillable(), true) && method_exists($model, 'scopeForBranch')) {
+                $query->forBranch($user);
+            }
+            // Check if model has relationship to branch-aware model
+            elseif (method_exists($model, 'scopeForBranchThrough')) {
+                // Determine the relationship to use based on the model
+                $relationship = $this->getBranchRelationship($model);
+                if ($relationship !== null) {
+                    $query->forBranchThrough($user, $relationship);
+                }
+            }
+        }
+
         $search = Arr::get($filters, 'search');
 
-        $model = new ($this->modelClass());
         $searchableColumns = array_values(array_intersect(
             ['name', 'title', 'email', 'stock_number', 'vin', 'status'],
             $model->getFillable(),
@@ -98,5 +140,41 @@ trait ManagesEloquentModels
         }
 
         return $query;
+    }
+
+    /**
+     * Determine the relationship to use for branch filtering.
+     */
+    protected function getBranchRelationship(EloquentModel $model): ?string
+    {
+        // Map model classes to their branch relationships
+        $relationships = [
+            Lead::class => 'vehicle',
+            FinanceApplication::class => 'vehicle',
+            VehicleReservation::class => 'vehicle',
+            VehicleImport::class => 'vehicle',
+            VehicleGallery::class => 'vehicle',
+            VehicleSpecification::class => 'vehicle',
+            TestDriveBooking::class => 'vehicle',
+            VehicleEnquiry::class => 'vehicle',
+            TradeInRequest::class => 'vehicle',
+            Review::class => 'vehicle',
+            Payment::class => 'vehicle',
+            Invoice::class => 'vehicle',
+            Receipt::class => 'payment',
+            Refund::class => 'payment',
+            FinanceDocument::class => 'financeApplication',
+            ImportDocument::class => 'vehicleImport',
+            ImportShipment::class => 'vehicleImport',
+            ImportPayment::class => 'vehicleImport',
+            CrmTask::class => 'lead',
+            CrmNote::class => 'lead',
+            CrmFollowUp::class => 'lead',
+            CustomerDocument::class => 'customer.user',
+            CustomerNote::class => 'customer.user',
+            Customer::class => 'user',
+        ];
+
+        return $relationships[$model::class] ?? null;
     }
 }

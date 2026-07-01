@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Vehicle extends Model
 {
-    use HasFactory, SoftDeletes;
+    use BranchAware, HasFactory, SoftDeletes;
 
     protected $fillable = ['branch_id', 'vehicle_category_id', 'make_id', 'model_id', 'trim_level_id', 'body_type_id', 'fuel_type_id', 'transmission_type_id', 'drive_type_id', 'engine_type_id', 'color_id', 'interior_color_id', 'vehicle_condition_id', 'vehicle_status_id', 'inventory_status_id', 'assigned_user_id', 'stock_number', 'vin', 'year', 'title', 'slug', 'mileage', 'cost_price', 'sale_price', 'msrp', 'is_featured', 'is_certified', 'acquired_at', 'listed_at', 'sold_at', 'description', 'metadata'];
 
@@ -105,5 +106,10 @@ class Vehicle extends Model
     public function specifications(): HasMany
     {
         return $this->hasMany(VehicleSpecification::class);
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class);
     }
 }

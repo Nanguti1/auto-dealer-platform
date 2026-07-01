@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model
 {
-    use HasFactory, SoftDeletes;
+    use BranchAware, HasFactory, SoftDeletes;
 
     protected $fillable = ['crm_stage_id', 'assigned_user_id', 'vehicle_id', 'source', 'status', 'first_name', 'last_name', 'email', 'phone', 'budget', 'last_contacted_at'];
 

@@ -9,6 +9,7 @@ use App\Models\FinanceApplication;
 use App\Models\Lead;
 use App\Models\Payment;
 use App\Models\Report;
+use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,8 +22,10 @@ class ReportController extends Controller
     {
         $this->authorize('viewAny', Report::class);
 
+        $user = $request->user();
+
         $savedReports = Report::with('user')
-            ->when($request->user(), fn ($query) => $query->where('user_id', $request->user()->id)->orWhereNull('user_id'))
+            ->when($user, fn ($query) => $query->where('user_id', $user->id)->orWhereNull('user_id'))
             ->orderBy('is_favorite', 'desc')
             ->orderBy('created_at', 'desc')
             ->get();
@@ -30,12 +33,12 @@ class ReportController extends Controller
         return Inertia::render('Admin/Reports/Index', [
             'savedReports' => $savedReports,
             'summary' => [
-                'totalSales' => $this->getTotalSales($request),
-                'totalRevenue' => $this->getTotalRevenue($request),
-                'totalVehicles' => Vehicle::count(),
-                'totalLeads' => Lead::count(),
-                'conversionRate' => $this->getConversionRate($request),
-                'avgFinanceAmount' => $this->getAvgFinanceAmount($request),
+                'totalSales' => $this->getTotalSales($request, $user),
+                'totalRevenue' => $this->getTotalRevenue($request, $user),
+                'totalVehicles' => Vehicle::forBranch($user)->count(),
+                'totalLeads' => Lead::forBranchThrough($user, 'vehicle')->count(),
+                'conversionRate' => $this->getConversionRate($request, $user),
+                'avgFinanceAmount' => $this->getAvgFinanceAmount($request, $user),
             ],
         ]);
     }
@@ -44,10 +47,12 @@ class ReportController extends Controller
     {
         $this->authorize('viewAny', Report::class);
 
+        $user = $request->user();
         $startDate = $request->query('start_date', now()->subDays(30)->toDateString());
         $endDate = $request->query('end_date', now()->toDateString());
 
-        $salesData = Payment::whereBetween('created_at', [$startDate, $endDate])
+        $salesData = Payment::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as count'),
@@ -57,7 +62,8 @@ class ReportController extends Controller
             ->orderBy('date')
             ->get();
 
-        $salesByMake = Vehicle::whereHas('payments', fn ($query) => $query->whereBetween('created_at', [$startDate, $endDate]))
+        $salesByMake = Vehicle::forBranch($user)
+            ->whereHas('payments', fn ($query) => $query->whereBetween('created_at', [$startDate, $endDate]))
             ->with('make')
             ->select('make_id', DB::raw('COUNT(*) as count'))
             ->groupBy('make_id')
@@ -77,25 +83,31 @@ class ReportController extends Controller
     {
         $this->authorize('viewAny', Report::class);
 
-        $inventoryData = Vehicle::select(
-            'status',
-            DB::raw('COUNT(*) as count'),
-            DB::raw('AVG(price) as avg_price')
-        )
+        $user = $request->user();
+
+        $inventoryData = Vehicle::forBranch($user)
+            ->select(
+                'status',
+                DB::raw('COUNT(*) as count'),
+                DB::raw('AVG(price) as avg_price')
+            )
             ->groupBy('status')
             ->get();
 
-        $inventoryByMake = Vehicle::with('make')
+        $inventoryByMake = Vehicle::forBranch($user)
+            ->with('make')
             ->select('make_id', DB::raw('COUNT(*) as count'))
             ->groupBy('make_id')
             ->get();
 
-        $inventoryByBodyType = Vehicle::with('bodyType')
+        $inventoryByBodyType = Vehicle::forBranch($user)
+            ->with('bodyType')
             ->select('body_type_id', DB::raw('COUNT(*) as count'))
             ->groupBy('body_type_id')
             ->get();
 
-        $agedInventory = Vehicle::where('created_at', '<', now()->subDays(90))
+        $agedInventory = Vehicle::forBranch($user)
+            ->where('created_at', '<', now()->subDays(90))
             ->count();
 
         return Inertia::render('Admin/Reports/InventoryReport', [
@@ -110,20 +122,24 @@ class ReportController extends Controller
     {
         $this->authorize('viewAny', Report::class);
 
+        $user = $request->user();
         $startDate = $request->query('start_date', now()->subDays(30)->toDateString());
         $endDate = $request->query('end_date', now()->toDateString());
 
-        $leadsByStage = Lead::with('crmStage')
+        $leadsByStage = Lead::forBranchThrough($user, 'vehicle')
+            ->with('crmStage')
             ->select('crm_stage_id', DB::raw('COUNT(*) as count'))
             ->groupBy('crm_stage_id')
             ->get();
 
-        $leadsBySource = Lead::select('source', DB::raw('COUNT(*) as count'))
+        $leadsBySource = Lead::forBranchThrough($user, 'vehicle')
+            ->select('source', DB::raw('COUNT(*) as count'))
             ->whereNotNull('source')
             ->groupBy('source')
             ->get();
 
-        $conversionData = Lead::whereBetween('created_at', [$startDate, $endDate])
+        $conversionData = Lead::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as total'),
@@ -148,10 +164,12 @@ class ReportController extends Controller
     {
         $this->authorize('viewAny', Report::class);
 
+        $user = $request->user();
         $startDate = $request->query('start_date', now()->subDays(30)->toDateString());
         $endDate = $request->query('end_date', now()->toDateString());
 
-        $financeData = FinanceApplication::whereBetween('created_at', [$startDate, $endDate])
+        $financeData = FinanceApplication::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [$startDate, $endDate])
             ->select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('COUNT(*) as count'),
@@ -162,11 +180,13 @@ class ReportController extends Controller
             ->orderBy('date')
             ->get();
 
-        $financeByStatus = FinanceApplication::select('status', DB::raw('COUNT(*) as count'))
+        $financeByStatus = FinanceApplication::forBranchThrough($user, 'vehicle')
+            ->select('status', DB::raw('COUNT(*) as count'))
             ->groupBy('status')
             ->get();
 
-        $financeByLender = FinanceApplication::with('lender')
+        $financeByLender = FinanceApplication::forBranchThrough($user, 'vehicle')
+            ->with('lender')
             ->select('lender_id', DB::raw('COUNT(*) as count'))
             ->groupBy('lender_id')
             ->get();
@@ -232,52 +252,59 @@ class ReportController extends Controller
             ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
     }
 
-    private function getTotalSales(Request $request): int
+    private function getTotalSales(Request $request, ?User $user = null): int
     {
-        return Payment::whereBetween('created_at', [
-            $request->query('start_date', now()->subDays(30)),
-            $request->query('end_date', now()),
-        ])->count();
+        return Payment::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [
+                $request->query('start_date', now()->subDays(30)),
+                $request->query('end_date', now()),
+            ])->count();
     }
 
-    private function getTotalRevenue(Request $request): float
+    private function getTotalRevenue(Request $request, ?User $user = null): float
     {
-        return (float) Payment::whereBetween('created_at', [
-            $request->query('start_date', now()->subDays(30)),
-            $request->query('end_date', now()),
-        ])->sum('amount');
+        return (float) Payment::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [
+                $request->query('start_date', now()->subDays(30)),
+                $request->query('end_date', now()),
+            ])->sum('amount');
     }
 
-    private function getConversionRate(Request $request): float
+    private function getConversionRate(Request $request, ?User $user = null): float
     {
-        $totalLeads = Lead::whereBetween('created_at', [
-            $request->query('start_date', now()->subDays(30)),
-            $request->query('end_date', now()),
-        ])->count();
+        $totalLeads = Lead::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [
+                $request->query('start_date', now()->subDays(30)),
+                $request->query('end_date', now()),
+            ])->count();
 
         if ($totalLeads === 0) {
             return 0.0;
         }
 
-        $convertedLeads = Lead::whereBetween('created_at', [
-            $request->query('start_date', now()->subDays(30)),
-            $request->query('end_date', now()),
-        ])->where('status', 'converted')->count();
+        $convertedLeads = Lead::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [
+                $request->query('start_date', now()->subDays(30)),
+                $request->query('end_date', now()),
+            ])->where('status', 'converted')->count();
 
         return ($convertedLeads / $totalLeads) * 100;
     }
 
-    private function getAvgFinanceAmount(Request $request): float
+    private function getAvgFinanceAmount(Request $request, ?User $user = null): float
     {
-        return (float) FinanceApplication::whereBetween('created_at', [
-            $request->query('start_date', now()->subDays(30)),
-            $request->query('end_date', now()),
-        ])->where('status', 'approved')->avg('approved_amount') ?? 0;
+        return (float) FinanceApplication::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [
+                $request->query('start_date', now()->subDays(30)),
+                $request->query('end_date', now()),
+            ])->where('status', 'approved')->avg('approved_amount') ?? 0;
     }
 
     private function getSalesExportData(Request $request): string
     {
-        $payments = Payment::with(['vehicle', 'customer'])
+        $user = $request->user();
+        $payments = Payment::forBranchThrough($user, 'vehicle')
+            ->with(['vehicle', 'customer'])
             ->whereBetween('created_at', [
                 $request->query('start_date', now()->subDays(30)),
                 $request->query('end_date', now()),
@@ -294,9 +321,12 @@ class ReportController extends Controller
         return $csv;
     }
 
-    private function getInventoryExportData(): string
+    private function getInventoryExportData(Request $request): string
     {
-        $vehicles = Vehicle::with(['make', 'model', 'status'])->get();
+        $user = $request->user();
+        $vehicles = Vehicle::forBranch($user)
+            ->with(['make', 'model', 'status'])
+            ->get();
 
         $csv = "VIN,Make,Model,Year,Price,Status,Days in Stock\n";
         foreach ($vehicles as $vehicle) {
@@ -311,7 +341,9 @@ class ReportController extends Controller
 
     private function getLeadsExportData(Request $request): string
     {
-        $leads = Lead::with(['crmStage'])
+        $user = $request->user();
+        $leads = Lead::forBranchThrough($user, 'vehicle')
+            ->with(['crmStage'])
             ->whereBetween('created_at', [
                 $request->query('start_date', now()->subDays(30)),
                 $request->query('end_date', now()),
@@ -330,7 +362,9 @@ class ReportController extends Controller
 
     private function getFinanceExportData(Request $request): string
     {
-        $applications = FinanceApplication::with(['lender'])
+        $user = $request->user();
+        $applications = FinanceApplication::forBranchThrough($user, 'vehicle')
+            ->with(['lender'])
             ->whereBetween('created_at', [
                 $request->query('start_date', now()->subDays(30)),
                 $request->query('end_date', now()),

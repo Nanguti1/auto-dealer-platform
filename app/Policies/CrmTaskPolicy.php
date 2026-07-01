@@ -16,31 +16,31 @@ class CrmTaskPolicy
 
     public function view(User $user, CrmTask $model): bool
     {
-        return $user !== null;
+        return $user !== null && $model->isAccessibleThrough($user, 'lead');
     }
 
     public function create(User $user): bool
     {
-        return $user !== null;
+        return $user !== null && $user->branch_id !== null;
     }
 
     public function update(User $user, CrmTask $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function delete(User $user, CrmTask $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function restore(User $user, CrmTask $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function forceDelete(User $user, CrmTask $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 }
