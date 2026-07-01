@@ -3,16 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\Permission\Models\Permission as SpatiePermission;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Permission extends SpatiePermission
+class Permission extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'display_name', 'module', 'description', 'guard_name'];
+    protected $fillable = ['name', 'display_name', 'module', 'description'];
 
     public function scopeRecent($query)
     {
         return $query->latest();
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'permission_role');
     }
 }

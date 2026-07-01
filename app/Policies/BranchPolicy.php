@@ -26,11 +26,11 @@ class BranchPolicy
 
     public function update(User $user, Branch $branch): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function delete(User $user, Branch $branch): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 }

@@ -14,7 +14,7 @@ class AuditLogPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('admin');
+        return $user !== null && $user->role?->name === 'admin';
     }
 
     /**
@@ -22,6 +22,6 @@ class AuditLogPolicy
      */
     public function view(User $user, AuditLog $auditLog): bool
     {
-        return $user->hasRole('admin');
+        return $user !== null && $user->role?->name === 'admin';
     }
 }

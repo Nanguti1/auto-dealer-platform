@@ -26,46 +26,46 @@ class VehiclePolicy
 
     public function update(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function delete(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function restore(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function forceDelete(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function feature(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function publish(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function approve(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function reject(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 
     public function assign(User $user, Vehicle $model): bool
     {
-        return $user !== null && ($user->hasRole('admin') || $user->hasRole('manager'));
+        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
 }
