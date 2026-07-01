@@ -224,7 +224,7 @@ Apply this pattern to the following remaining admin pages:
 
 ### Marketing Module
 - `resources/js/pages/Admin/Marketing/Promotions/Index.tsx`
-- `resources/js/pages/Admin/Reviews/Reviews/Index.tsx`
+- `resources/js/pages/Admin/Reviews/Index.tsx`
 
 ### Reservations Module
 - `resources/js/pages/Admin/Reservations/Index.tsx`

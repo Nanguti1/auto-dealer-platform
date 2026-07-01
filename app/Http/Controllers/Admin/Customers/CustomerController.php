@@ -24,7 +24,7 @@ class CustomerController extends Controller
     {
         $this->authorize('viewAny', Customer::class);
 
-        return Inertia::render('Admin/Customers/Customers/Index', [
+        return Inertia::render('Admin/Customers/Index', [
             'customers' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -34,7 +34,7 @@ class CustomerController extends Controller
     {
         $this->authorize('create', Customer::class);
 
-        return Inertia::render('Admin/Customers/Customers/Create');
+        return Inertia::render('Admin/Customers/Create');
     }
 
     public function store(StoreCustomerRequest $request): RedirectResponse
@@ -48,7 +48,7 @@ class CustomerController extends Controller
     {
         $this->authorize('view', $customer);
 
-        return Inertia::render('Admin/Customers/Customers/Show', [
+        return Inertia::render('Admin/Customers/Show', [
             'customer' => $customer,
         ]);
     }
@@ -57,7 +57,7 @@ class CustomerController extends Controller
     {
         $this->authorize('update', $customer);
 
-        return Inertia::render('Admin/Customers/Customers/Edit', [
+        return Inertia::render('Admin/Customers/Edit', [
             'customer' => $customer,
         ]);
     }

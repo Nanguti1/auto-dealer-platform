@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        return Inertia::render('Admin/Users/Users/Index', [
+        return Inertia::render('Admin/Users/Index', [
             'users' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -34,7 +34,7 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        return Inertia::render('Admin/Users/Users/Create', [
+        return Inertia::render('Admin/Users/Create', [
             'roles' => Role::all(),
             'branches' => Branch::all(),
         ]);
@@ -51,7 +51,7 @@ class UserController extends Controller
     {
         $this->authorize('view', $user);
 
-        return Inertia::render('Admin/Users/Users/Show', [
+        return Inertia::render('Admin/Users/Show', [
             'user' => $user->load('roles', 'permissions', 'branch'),
         ]);
     }
@@ -60,7 +60,7 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        return Inertia::render('Admin/Users/Users/Edit', [
+        return Inertia::render('Admin/Users/Edit', [
             'user' => $user->load('roles', 'permissions', 'branch'),
             'roles' => Role::all(),
             'branches' => Branch::all(),

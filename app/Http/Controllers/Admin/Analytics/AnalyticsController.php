@@ -24,7 +24,7 @@ class AnalyticsController extends Controller
     {
         $this->authorize('viewAny', AnalyticsData::class);
 
-        return Inertia::render('Admin/Analytics/Index/Index', [
+        return Inertia::render('Admin/Analytics/Index', [
             'analytics' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -34,7 +34,7 @@ class AnalyticsController extends Controller
     {
         $this->authorize('create', AnalyticsData::class);
 
-        return Inertia::render('Admin/Analytics/Index/Create');
+        return Inertia::render('Admin/Analytics/Create');
     }
 
     public function store(StoreAnalyticsDataRequest $request): RedirectResponse
@@ -48,7 +48,7 @@ class AnalyticsController extends Controller
     {
         $this->authorize('view', $analyticsData);
 
-        return Inertia::render('Admin/Analytics/Index/Show', [
+        return Inertia::render('Admin/Analytics/Show', [
             'analyticsData' => $analyticsData,
         ]);
     }
@@ -57,7 +57,7 @@ class AnalyticsController extends Controller
     {
         $this->authorize('update', $analyticsData);
 
-        return Inertia::render('Admin/Analytics/Index/Edit', [
+        return Inertia::render('Admin/Analytics/Edit', [
             'analyticsData' => $analyticsData,
         ]);
     }

@@ -24,7 +24,7 @@ class ReviewController extends Controller
     {
         $this->authorize('viewAny', Review::class);
 
-        return Inertia::render('Admin/Reviews/Reviews/Index', [
+        return Inertia::render('Admin/Reviews/Index', [
             'reviews' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -34,7 +34,7 @@ class ReviewController extends Controller
     {
         $this->authorize('create', Review::class);
 
-        return Inertia::render('Admin/Reviews/Reviews/Create');
+        return Inertia::render('Admin/Reviews/Create');
     }
 
     public function store(StoreReviewRequest $request): RedirectResponse
@@ -48,7 +48,7 @@ class ReviewController extends Controller
     {
         $this->authorize('view', $review);
 
-        return Inertia::render('Admin/Reviews/Reviews/Show', [
+        return Inertia::render('Admin/Reviews/Show', [
             'review' => $review,
         ]);
     }
@@ -57,7 +57,7 @@ class ReviewController extends Controller
     {
         $this->authorize('update', $review);
 
-        return Inertia::render('Admin/Reviews/Reviews/Edit', [
+        return Inertia::render('Admin/Reviews/Edit', [
             'review' => $review,
         ]);
     }

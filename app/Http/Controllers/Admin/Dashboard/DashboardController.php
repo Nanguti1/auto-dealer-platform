@@ -24,7 +24,7 @@ class DashboardController extends Controller
     {
         $this->authorize('viewAny', Vehicle::class);
 
-        return Inertia::render('Admin/Dashboard/Index/Index', [
+        return Inertia::render('Admin/Dashboard/Index', [
             'dashboard' => $this->service->paginate($request->query()),
             'summary' => $this->service->summary(),
             'recentActivity' => $this->service->recentActivity(),
@@ -36,7 +36,7 @@ class DashboardController extends Controller
     {
         $this->authorize('create', Vehicle::class);
 
-        return Inertia::render('Admin/Dashboard/Index/Create');
+        return Inertia::render('Admin/Dashboard/Create');
     }
 
     public function store(StoreDashboardWidgetRequest $request): RedirectResponse
@@ -50,7 +50,7 @@ class DashboardController extends Controller
     {
         $this->authorize('view', $vehicle);
 
-        return Inertia::render('Admin/Dashboard/Index/Show', [
+        return Inertia::render('Admin/Dashboard/Show', [
             'vehicle' => $vehicle,
         ]);
     }
@@ -59,7 +59,7 @@ class DashboardController extends Controller
     {
         $this->authorize('update', $vehicle);
 
-        return Inertia::render('Admin/Dashboard/Index/Edit', [
+        return Inertia::render('Admin/Dashboard/Edit', [
             'vehicle' => $vehicle,
         ]);
     }
