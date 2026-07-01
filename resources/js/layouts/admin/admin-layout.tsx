@@ -35,7 +35,7 @@ import {
 } from 'lucide-react';
 import * as React from 'react';
 import { ErrorBoundary, LoadingState, PerformanceMonitor } from '@/components/admin/shared';
-import { AppearanceToggleTab } from '@/components/appearance-tabs';
+import AppearanceToggleTab from '@/components/appearance-tabs';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -49,7 +49,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { usePerformanceTiming } from '@/hooks/usePerformanceTiming';
 import { cn } from '@/lib/utils';
-import { admin as adminRoutes } from '@/routes/admin';
+import adminRoutes from '@/routes/admin';
 import type { BreadcrumbItem as BreadcrumbItemType } from '@/types/navigation';
 
 // Lazy load heavy navigation components
