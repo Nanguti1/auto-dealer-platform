@@ -4,13 +4,20 @@ import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import adminRoutes from '@/routes/admin';
 
 const actions = [
-    { label: 'Browse Inventory', href: '/inventory' },
-    { label: 'Saved Searches', href: '/customer/saved-searches' },
-    { label: 'Finance Calculator', href: '/finance/calculator' },
-    { label: 'Trade-In Request', href: '/trade-in/request' },
-    { label: 'Import Request', href: '/import/request' },
+    { label: 'Dashboard', href: adminRoutes.dashboard.index().url },
+    { label: 'Vehicles', href: adminRoutes.vehicles.index().url },
+    { label: 'Customers', href: adminRoutes.customers.index().url },
+    { label: 'Leads', href: adminRoutes.leads.index().url },
+    { label: 'Reservations', href: adminRoutes.reservations.index().url },
+    { label: 'Finance Applications', href: adminRoutes.financeApplications.index().url },
+    { label: 'Blog Posts', href: adminRoutes.blogPosts.index().url },
+    { label: 'CMS Pages', href: adminRoutes.cmsPages.index().url },
+    { label: 'Analytics', href: adminRoutes.analytics.index().url },
+    { label: 'Reports', href: adminRoutes.reports.index().url },
+    { label: 'Settings', href: adminRoutes.settings.index().url },
 ];
 
 interface CommandPaletteProps {

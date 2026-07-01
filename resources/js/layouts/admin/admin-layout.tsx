@@ -32,6 +32,15 @@ import {
   Shield,
   Home,
   MessageSquare,
+  Building2,
+  FileCheck,
+  ClipboardList,
+  Truck,
+  Wrench,
+  CheckCircle,
+  UserCheck,
+  Receipt,
+  FileClock,
 } from 'lucide-react';
 import * as React from 'react';
 import { ErrorBoundary, LoadingState, PerformanceMonitor } from '@/components/admin/shared';
@@ -83,8 +92,10 @@ export default function AdminLayout({
   const [expandedGroups, setExpandedGroups] = React.useState<Record<string, boolean>>({
     main: true,
     sales: false,
+    crm: false,
     content: false,
     operations: false,
+    admin: false,
   });
   const sidebarRef = React.useRef<HTMLElement>(null);
   const menuButtonRef = React.useRef<HTMLButtonElement>(null);
@@ -157,6 +168,7 @@ return 'A';
           ],
         },
         { name: 'Customers', href: adminRoutes.customers.index().url, icon: Users },
+        { name: 'Branches', href: adminRoutes.branches.index().url, icon: Building2 },
         { name: 'Settings', href: adminRoutes.settings.index().url, icon: Settings },
       ],
     },
@@ -169,6 +181,15 @@ return 'A';
         { name: 'Finance', href: adminRoutes.financeApplications.index().url, icon: DollarSign },
         { name: 'Reservations', href: adminRoutes.reservations.index().url, icon: Calendar },
         { name: 'Payments', href: adminRoutes.payments.index().url, icon: CreditCard },
+      ],
+    },
+    {
+      id: 'crm',
+      label: 'CRM',
+      items: [
+        { name: 'Activities', href: adminRoutes.activities.index().url, icon: ClipboardList },
+        { name: 'Tasks', href: adminRoutes.tasks.index().url, icon: CheckCircle },
+        { name: 'Pipeline', href: adminRoutes.pipeline.index().url, icon: Columns3 },
       ],
     },
     {
@@ -210,8 +231,52 @@ return 'A';
       id: 'operations',
       label: 'Operations',
       items: [
-        { name: 'Imports', href: adminRoutes.imports.index().url, icon: Download },
+        {
+          name: 'Imports',
+          icon: Download,
+          children: [
+            { name: 'Requests', href: adminRoutes.imports.index().url, icon: FileCheck },
+            { name: 'Shipments', href: adminRoutes.shipments.index().url, icon: Truck },
+            { name: 'Documents', href: adminRoutes.importDocuments.index().url, icon: FileText },
+            { name: 'Payments', href: adminRoutes.importPayments.index().url, icon: CreditCard },
+          ],
+        },
+        {
+          name: 'Trade-Ins Workflow',
+          icon: Wrench,
+          children: [
+            { name: 'Inspections', href: adminRoutes.inspections.index().url, icon: CheckCircle },
+            { name: 'Valuations', href: adminRoutes.valuations.index().url, icon: DollarSign },
+            { name: 'Offers', href: adminRoutes.offers.index().url, icon: FileCheck },
+          ],
+        },
         { name: 'Analytics', href: adminRoutes.analytics.index().url, icon: BarChart3 },
+      ],
+    },
+    {
+      id: 'admin',
+      label: 'Admin',
+      items: [
+        {
+          name: 'Users',
+          icon: UserCheck,
+          children: [
+            { name: 'Users', href: adminRoutes.users.index().url, icon: Users },
+            { name: 'Roles', href: adminRoutes.roles.index().url, icon: Shield },
+            { name: 'Permissions', href: adminRoutes.permissions.index().url, icon: FileCheck },
+          ],
+        },
+        {
+          name: 'Financial',
+          icon: Receipt,
+          children: [
+            { name: 'Invoices', href: adminRoutes.invoices.index().url, icon: FileText },
+            { name: 'Receipts', href: adminRoutes.receipts.index().url, icon: Receipt },
+            { name: 'Refunds', href: adminRoutes.refunds.index().url, icon: FileClock },
+          ],
+        },
+        { name: 'Reports', href: adminRoutes.reports.index().url, icon: BarChart3 },
+        { name: 'Audit Logs', href: adminRoutes.auditLogs.index().url, icon: FileClock },
       ],
     },
   ];

@@ -109,6 +109,18 @@ export default function AdminDashboard({ summary, recentActivity }: AdminDashboa
       label: 'Open reservations',
       href: adminRoutes.reservations.index().url,
     },
+    {
+      label: 'View finance applications',
+      href: adminRoutes.financeApplications.index().url,
+    },
+    {
+      label: 'Manage customers',
+      href: adminRoutes.customers.index().url,
+    },
+    {
+      label: 'View analytics',
+      href: adminRoutes.analytics.index().url,
+    },
   ];
 
   return (
