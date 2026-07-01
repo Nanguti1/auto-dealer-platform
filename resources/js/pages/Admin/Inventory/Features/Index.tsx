@@ -8,7 +8,7 @@ import InventoryShell from '@/components/admin/inventory/inventory-shell';
 import type { AdminFeature, Filters, Paginated } from '@/components/admin/inventory/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 export default function Index({ vehicleFeatures, filters = {} }: { vehicleFeatures: Paginated<AdminFeature>; filters?: Filters }) {
  const [deleteId, setDeleteId] = React.useState<number | null>(null); const columns: Column<AdminFeature>[] = [{ key: 'name', label: 'Feature', sortable: true, render: (f) => <div className="font-medium">{f.name ?? f.title ?? 'Untitled'}</div> }, { key: 'category', label: 'Category', sortable: true, render: (f) => f.category ?? 'General' }, { key: 'slug', label: 'Slug', render: (f) => f.slug ?? '—' }, { key: 'status', label: 'Status', render: (f) => <Badge variant={f.is_active === false ? 'secondary' : 'default'}>{f.is_active === false ? 'Inactive' : 'Active'}</Badge> }, { key: 'assignments', label: 'Assignments', render: (f) => String(f.assignments_count ?? f.vehicles_count ?? 0) }];
 

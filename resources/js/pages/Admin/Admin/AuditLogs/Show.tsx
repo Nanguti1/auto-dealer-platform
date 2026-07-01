@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import auditLogs from '@/routes/admin/audit-logs';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface AuditLogUser {
   id: number;
@@ -175,7 +174,7 @@ export default function Show({ log }: { log: AuditLog }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-[400px] pr-4">{renderChanges()}</ScrollArea>
+          <div className="h-[400px] overflow-y-auto pr-4">{renderChanges()}</div>
         </CardContent>
       </Card>
     </div>

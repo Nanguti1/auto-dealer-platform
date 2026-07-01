@@ -7,7 +7,7 @@ import ReservationShell from '@/components/admin/reservations/reservation-shell'
 import type { ReservationFilters, ReservationPagination, ReservationRecord } from '@/components/admin/reservations/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Index({ reservations, filters = {} }: { reservations: ReservationPagination; filters?: ReservationFilters }) {
   const columns: Column<ReservationRecord>[] = [

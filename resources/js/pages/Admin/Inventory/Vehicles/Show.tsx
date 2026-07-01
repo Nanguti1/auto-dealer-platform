@@ -6,7 +6,7 @@ import type { AdminVehicle } from '@/components/admin/inventory/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 export default function Show({ vehicle }: { vehicle: AdminVehicle }) {
  const panels = ['Gallery','Specifications','Features','History','Price history','Status timeline','Related reservations','Related finance applications','Related trade-ins'];
 

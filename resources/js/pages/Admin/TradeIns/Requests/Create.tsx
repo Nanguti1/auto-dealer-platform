@@ -1,7 +1,7 @@
 import TradeInForm from '@/components/admin/trade-ins/trade-in-form';
 import TradeInShell, { TradeInBackButton } from '@/components/admin/trade-ins/trade-in-shell';
 import type { TradeInRequest } from '@/components/admin/trade-ins/types';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Create() {
   const emptyTradeIn: TradeInRequest = {

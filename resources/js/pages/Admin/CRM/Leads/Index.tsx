@@ -11,7 +11,7 @@ import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import { LoadingState, EmptyLeads, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Index({ leads, filters = {} }: { leads: LeadPagination; filters?: CrmFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);

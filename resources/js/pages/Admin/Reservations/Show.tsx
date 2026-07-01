@@ -6,7 +6,7 @@ import type { ReservationRecord } from '@/components/admin/reservations/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Show({ vehicleReservation }: { vehicleReservation: ReservationRecord }) {
   const reservation = vehicleReservation;

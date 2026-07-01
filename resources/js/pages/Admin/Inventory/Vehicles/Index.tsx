@@ -11,7 +11,7 @@ import { LoadingState, EmptyVehicles, InlineError } from '@/components/admin/sha
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 const Index = React.memo(function Index({ vehicles, filters = {} }: { vehicles: Paginated<AdminVehicle>; filters?: Filters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);

@@ -1,6 +1,6 @@
 import ReservationForm from '@/components/admin/reservations/reservation-form';
 import ReservationShell, { ReservationBackButton } from '@/components/admin/reservations/reservation-shell';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Create() {
   return (

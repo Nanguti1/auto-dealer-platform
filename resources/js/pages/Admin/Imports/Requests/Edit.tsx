@@ -2,7 +2,7 @@ import { importVehicleName } from '@/components/admin/imports/helpers';
 import ImportForm from '@/components/admin/imports/import-form';
 import ImportShell, { ImportBackButton } from '@/components/admin/imports/import-shell';
 import type { ImportRequest } from '@/components/admin/imports/types';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Edit({ vehicleImport }: { vehicleImport: ImportRequest }) {
   return (

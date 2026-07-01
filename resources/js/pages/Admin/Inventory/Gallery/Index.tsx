@@ -9,7 +9,7 @@ import InventoryShell from '@/components/admin/inventory/inventory-shell';
 import type { AdminGallery, Filters, Paginated } from '@/components/admin/inventory/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 export default function Index({ vehicleGalleries, filters = {} }: { vehicleGalleries: Paginated<AdminGallery>; filters?: Filters }) {
  const [deleteId, setDeleteId] = React.useState<number | null>(null); const columns: Column<AdminGallery>[] = [{ key: 'image', label: 'Image', render: (g) => <img src={imageUrl(g.path)} alt={g.alt_text ?? ''} className="h-16 w-24 rounded-md object-cover" /> }, { key: 'vehicle', label: 'Vehicle', render: (g) => vehicleName(g.vehicle) }, { key: 'alt_text', label: 'Alt text', render: (g) => g.alt_text ?? '—' }, { key: 'sort_order', label: 'Sort', sortable: true, render: (g) => g.sort_order ?? 0 }, { key: 'is_primary', label: 'Status', render: (g) => g.is_primary ? <Badge>Primary</Badge> : <Badge variant="secondary">Gallery</Badge> }];
 

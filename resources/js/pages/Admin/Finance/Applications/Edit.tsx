@@ -2,7 +2,7 @@ import FinanceForm from '@/components/admin/finance/finance-form';
 import FinanceShell, { FinanceBackButton } from '@/components/admin/finance/finance-shell';
 import { applicantName } from '@/components/admin/finance/helpers';
 import type { FinanceApplication } from '@/components/admin/finance/types';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Edit({ financeApplication }: { financeApplication: FinanceApplication }) {
   return (

@@ -8,7 +8,7 @@ import { EmptyState } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AdminLayout from '@/layouts/admin/admin-layout';
-import { admin as adminRoutes } from '@/routes/admin';
+import adminRoutes from '@/routes/admin';
 
 // Lazy load chart components
 const AreaChartComponent = React.lazy(() => import('@/components/design-system/chart').then(m => ({ default: m.AreaChartComponent })));

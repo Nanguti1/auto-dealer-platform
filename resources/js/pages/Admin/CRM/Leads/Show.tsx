@@ -9,7 +9,7 @@ import TimelineList from '@/components/admin/customers/timeline-list';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Show({ lead }: { lead: LeadRecord }) {
   return (

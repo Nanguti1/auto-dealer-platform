@@ -10,7 +10,7 @@ import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import { LoadingState, EmptyCustomers, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 const Index = React.memo(function Index({ customers, filters = {} }: { customers: CustomerPagination; filters?: CustomerFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);

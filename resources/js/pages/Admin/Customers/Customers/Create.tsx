@@ -1,7 +1,7 @@
 import CustomerForm from '@/components/admin/customers/customer-form';
 import CustomerShell, { CustomerBackButton } from '@/components/admin/customers/customer-shell';
 import type { CustomerRecord } from '@/components/admin/customers/types';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Create() {
   const emptyCustomer: CustomerRecord = {

@@ -1,6 +1,6 @@
 import ImportForm from '@/components/admin/imports/import-form';
 import ImportShell, { ImportBackButton } from '@/components/admin/imports/import-shell';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 export default function Create() {
   return (

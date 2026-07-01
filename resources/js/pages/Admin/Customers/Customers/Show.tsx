@@ -8,7 +8,7 @@ import type { CustomerDocument, CustomerNote, CustomerRecord, TimelineEvent } fr
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { admin } from '@/routes/admin';
+import admin from '@/routes/admin';
 
 interface ShowProps {
   customer: CustomerRecord;
