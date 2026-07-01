@@ -82,7 +82,7 @@ Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::inertia('customer/import-requests', 'customer/import-requests')->name('customer.import-requests');
 });
 
-Route::middleware(['auth', 'verified'])
+Route::middleware(['auth', 'verified', 'admin'])
     ->prefix('admin')
     ->as('admin.')
     ->group(function (): void {

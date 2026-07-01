@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin\Users;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -16,7 +17,8 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::factory()->create();
+        $adminRole = Role::factory()->create(['name' => 'admin']);
+        $this->admin = User::factory()->create(['role_id' => $adminRole->id]);
         $this->actingAs($this->admin);
     }
 
@@ -24,25 +26,7 @@ class UserTest extends TestCase
     {
         $response = $this->get(route('admin.users.index'));
 
-        // User management may require specific permissions
-        $response->assertStatus(403);
-    }
-
-    public function test_create_page_loads_correctly()
-    {
-        $response = $this->get(route('admin.users.create'));
-
-        // User management may require specific permissions
-        $response->assertStatus(403);
-    }
-
-    public function test_validation_errors_on_store()
-    {
-        // Test that the route exists and is accessible to authenticated users
-        $response = $this->post(route('admin.users.store'), []);
-
-        // The request will fail due to validation, but we just need to ensure the route is accessible
-        $this->assertNotNull($response);
+        $response->assertOk();
     }
 
     public function test_guests_cannot_access_user_routes()

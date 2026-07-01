@@ -19,7 +19,7 @@ class UserService
 
     public function paginate(array $filters = []): LengthAwarePaginator
     {
-        $query = User::query()->with('roles', 'branch');
+        $query = User::query()->with('role', 'branch');
 
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
@@ -29,7 +29,7 @@ class UserService
         }
 
         if (isset($filters['role'])) {
-            $query->whereHas('roles', function ($q) use ($filters) {
+            $query->whereHas('role', function ($q) use ($filters) {
                 $q->where('name', $filters['role']);
             });
         }
@@ -46,8 +46,8 @@ class UserService
     {
         $user = User::create($data);
 
-        if (isset($data['roles'])) {
-            $user->syncRoles($data['roles']);
+        if (isset($data['role_id'])) {
+            $user->update(['role_id' => $data['role_id']]);
         }
 
         return $user;
@@ -60,10 +60,6 @@ class UserService
         }
 
         $user->update($data);
-
-        if (isset($data['roles'])) {
-            $user->syncRoles($data['roles']);
-        }
 
         return $user->fresh();
     }

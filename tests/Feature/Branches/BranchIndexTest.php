@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Branches;
 
 use App\Models\Branch;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -19,7 +20,8 @@ class BranchIndexTest extends TestCase
     {
         parent::setUp();
 
-        $this->admin = User::factory()->create();
+        $adminRole = Role::factory()->create(['name' => 'admin']);
+        $this->admin = User::factory()->create(['role_id' => $adminRole->id]);
         $this->actingAs($this->admin);
     }
 

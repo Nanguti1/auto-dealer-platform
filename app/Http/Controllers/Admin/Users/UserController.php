@@ -8,13 +8,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\Branch;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\Users\UserService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -52,7 +52,7 @@ class UserController extends Controller
         $this->authorize('view', $user);
 
         return Inertia::render('Admin/Users/Show', [
-            'user' => $user->load('roles', 'permissions', 'branch'),
+            'user' => $user->load('role', 'branch'),
         ]);
     }
 
@@ -61,7 +61,7 @@ class UserController extends Controller
         $this->authorize('update', $user);
 
         return Inertia::render('Admin/Users/Edit', [
-            'user' => $user->load('roles', 'permissions', 'branch'),
+            'user' => $user->load('role', 'branch'),
             'roles' => Role::all(),
             'branches' => Branch::all(),
         ]);
