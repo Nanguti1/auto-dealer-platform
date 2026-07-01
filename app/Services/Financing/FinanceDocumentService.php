@@ -7,6 +7,7 @@ namespace App\Services\Financing;
 use App\Models\FinanceDocument;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class FinanceDocumentService
@@ -33,10 +34,12 @@ class FinanceDocumentService
 
     public function delete(FinanceDocument $document): void
     {
-        if ($document->path && Storage::disk('public')->exists($document->path)) {
-            Storage::disk('public')->delete($document->path);
-        }
+        DB::transaction(function () use ($document): void {
+            if ($document->path && Storage::disk('public')->exists($document->path)) {
+                Storage::disk('public')->delete($document->path);
+            }
 
-        parent::delete($document);
+            $document->delete();
+        });
     }
 }

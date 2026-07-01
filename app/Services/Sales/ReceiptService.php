@@ -7,6 +7,7 @@ namespace App\Services\Sales;
 use App\Models\Receipt;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class ReceiptService
 {
@@ -66,6 +67,6 @@ class ReceiptService
             $data['issued_at'] = now();
         }
 
-        return parent::create($data);
+        return DB::transaction(fn (): Receipt => Receipt::query()->create($data));
     }
 }

@@ -7,6 +7,7 @@ namespace App\Services\Sales;
 use App\Models\Invoice;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceService
 {
@@ -62,6 +63,6 @@ class InvoiceService
             $data['invoice_number'] = $this->generateInvoiceNumber();
         }
 
-        return parent::create($data);
+        return DB::transaction(fn (): Invoice => Invoice::query()->create($data));
     }
 }

@@ -7,6 +7,7 @@ namespace App\Services\Sales;
 use App\Models\Refund;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class RefundService
 {
@@ -62,7 +63,7 @@ class RefundService
             $data['refund_number'] = $this->generateRefundNumber();
         }
 
-        return parent::create($data);
+        return DB::transaction(fn (): Refund => Refund::query()->create($data));
     }
 
     public function process(Refund $refund): Refund
