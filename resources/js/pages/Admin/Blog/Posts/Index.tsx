@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Star, Trash2, MoreHorizontal } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { BlogPost, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -21,7 +22,7 @@ export default function Index({ blogPosts, filters = {} }: { blogPosts: Paginate
       sortable: true,
       render: (post) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/blog-posts/${post.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.blogPosts.show(post.id).url}>
             {post.title ?? 'Untitled'}
           </Link>
           <p className="text-xs text-muted-foreground">{post.slug ?? '—'}</p>
@@ -61,14 +62,14 @@ export default function Index({ blogPosts, filters = {} }: { blogPosts: Paginate
     <CmsShell
       title="Blog Posts"
       description="Manage blog content, publication status, and metadata."
-      actions={<Button asChild><Link href="/admin/blog-posts/create">Create Post</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.blogPosts.create().url}>Create Post</Link></Button>}
     >
       <AdminDataTable
         rows={blogPosts}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/blog-posts"
-        createUrl="/admin/blog-posts/create"
+        baseUrl={adminRoutes.blogPosts.index().url}
+        createUrl={adminRoutes.blogPosts.create().url}
         createLabel="Create Post"
         rowActions={(post) => (
           <>
@@ -80,13 +81,13 @@ export default function Index({ blogPosts, filters = {} }: { blogPosts: Paginate
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/blog-posts/${post.id}`}>
+                  <Link href={adminRoutes.blogPosts.show(post.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/blog-posts/${post.id}/edit`}>
+                  <Link href={adminRoutes.blogPosts.edit(post.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -104,7 +105,7 @@ export default function Index({ blogPosts, filters = {} }: { blogPosts: Paginate
               description="This will permanently delete the blog post."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/blog-posts/${post.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.blogPosts.destroy(post.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Eye, MapPin, Ship } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import TimelineList from '@/components/admin/customers/timeline-list';
 import { formatDateTime, importVehicleName, requesterName } from '@/components/admin/imports/helpers';
@@ -15,7 +16,7 @@ export default function Show({ vehicleImport }: { vehicleImport: ImportRequest }
   const portHistory = vehicleImport.request_data?.port_history ?? [];
 
   return (
-    <ImportShell title={`Shipment ${shipment?.shipment_reference ?? vehicleImport.reference_number}`} description={`Tracking import #${vehicleImport.id} · Updated ${formatDateTime(vehicleImport.updated_at)}`} actions={<><ImportBackButton href="/admin/imports/shipments" /><Button variant="outline" asChild><Link href={`/admin/imports/${vehicleImport.id}`}><Eye className="mr-2 size-4" />View Request</Link></Button></>}>
+    <ImportShell title={`Shipment ${shipment?.shipment_reference ?? vehicleImport.reference_number}`} description={`Tracking import #${vehicleImport.id} · Updated ${formatDateTime(vehicleImport.updated_at)}`} actions={<><ImportBackButton href={adminRoutes.shipments.index().url} /><Button variant="outline" asChild><Link href={adminRoutes.imports.show(vehicleImport.id).url}><Eye className="mr-2 size-4" />View Request</Link></Button></>}>
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader><CardTitle>Shipment overview</CardTitle></CardHeader>

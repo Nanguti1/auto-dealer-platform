@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MoreHorizontal, ChevronDown, ChevronUp } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { Faq, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -21,7 +22,7 @@ export default function Index({ faqs, filters = {} }: { faqs: Paginated<Faq>; fi
       sortable: true,
       render: (faq) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/faqs/${faq.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.faqs.show(faq.id).url}>
             {faq.question ?? 'Untitled'}
           </Link>
           <p className="text-xs text-muted-foreground">{faq.category ?? '—'}</p>
@@ -64,14 +65,14 @@ export default function Index({ faqs, filters = {} }: { faqs: Paginated<Faq>; fi
     <CmsShell
       title="FAQ Management"
       description="Manage frequently asked questions and their categories."
-      actions={<Button asChild><Link href="/admin/faqs/create">Create FAQ</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.faqs.create().url}>Create FAQ</Link></Button>}
     >
       <AdminDataTable
         rows={faqs}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/faqs"
-        createUrl="/admin/faqs/create"
+        baseUrl={adminRoutes.faqs.index().url}
+        createUrl={adminRoutes.faqs.create().url}
         createLabel="Create FAQ"
         rowActions={(faq) => (
           <>
@@ -83,13 +84,13 @@ export default function Index({ faqs, filters = {} }: { faqs: Paginated<Faq>; fi
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/faqs/${faq.id}`}>
+                  <Link href={adminRoutes.faqs.show(faq.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/faqs/${faq.id}/edit`}>
+                  <Link href={adminRoutes.faqs.edit(faq.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -107,7 +108,7 @@ export default function Index({ faqs, filters = {} }: { faqs: Paginated<Faq>; fi
               description="This will permanently delete this FAQ."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/faqs/${faq.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.faqs.destroy(faq.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

@@ -1,3 +1,4 @@
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import RoleForm from '@/components/admin/users/role-form';
 
@@ -15,7 +16,7 @@ export default function Create({ permissions = [] }: { permissions?: Permission[
       description="Create a new role with specific permissions."
       actions={<CmsBackButton />}
     >
-      <RoleForm action="/admin/roles" method="post" permissions={permissions} />
+      <RoleForm action={adminRoutes.roles.store().url} method="post" permissions={permissions} />
     </CmsShell>
   );
 }

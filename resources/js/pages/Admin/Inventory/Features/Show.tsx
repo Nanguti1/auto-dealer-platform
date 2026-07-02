@@ -1,3 +1,11 @@
-import { Link } from '@inertiajs/react'; import InventoryShell, { BackButton } from '@/components/admin/inventory/inventory-shell'; import type { AdminFeature } from '@/components/admin/inventory/types'; import { Badge } from '@/components/ui/badge'; import { Button } from '@/components/ui/button'; import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; export default function Show({ vehicleFeature }: { vehicleFeature: AdminFeature }) {
- return <InventoryShell title={vehicleFeature.name ?? vehicleFeature.title ?? 'Vehicle Feature'} actions={<><BackButton href="/admin/vehicle-features" /><Button asChild><Link href={`/admin/vehicle-features/${vehicleFeature.id}/edit`}>Edit</Link></Button></>}><div className="grid gap-4 md:grid-cols-2"><Card><CardHeader><CardTitle>Feature details</CardTitle></CardHeader><CardContent className="space-y-3"><p>Category: {vehicleFeature.category ?? 'General'}</p><p>Slug: {vehicleFeature.slug ?? '—'}</p><Badge>{vehicleFeature.is_active === false ? 'Inactive' : 'Active'}</Badge></CardContent></Card><Card><CardHeader><CardTitle>Assignments</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Assigned vehicle relationships appear here when returned by the backend.</CardContent></Card></div></InventoryShell>; 
+import { Link } from '@inertiajs/react';
+import adminRoutes from '@/routes/admin';
+import InventoryShell, { BackButton } from '@/components/admin/inventory/inventory-shell';
+import type { AdminFeature } from '@/components/admin/inventory/types';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+export default function Show({ vehicleFeature }: { vehicleFeature: AdminFeature }) {
+  return <InventoryShell title={vehicleFeature.name ?? vehicleFeature.title ?? 'Vehicle Feature'} actions={<><BackButton href={adminRoutes.vehicleFeatures.index().url} /><Button asChild><Link href={adminRoutes.vehicleFeatures.edit(vehicleFeature.id).url}>Edit</Link></Button></>}><div className="grid gap-4 md:grid-cols-2"><Card><CardHeader><CardTitle>Feature details</CardTitle></CardHeader><CardContent className="space-y-3"><p>Category: {vehicleFeature.category ?? 'General'}</p><p>Slug: {vehicleFeature.slug ?? '—'}</p><Badge>{vehicleFeature.is_active === false ? 'Inactive' : 'Active'}</Badge></CardContent></Card><Card><CardHeader><CardTitle>Assignments</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">Assigned vehicle relationships appear here when returned by the backend.</CardContent></Card></div></InventoryShell>;
 }

@@ -1,3 +1,4 @@
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import HeroSliderForm from '@/components/admin/cms/hero-slider-form';
 
@@ -8,7 +9,7 @@ export default function Create() {
       description="Create a new hero slider for the homepage."
       actions={<CmsBackButton />}
     >
-      <HeroSliderForm action="/admin/hero-sliders" method="post" />
+      <HeroSliderForm action={adminRoutes.heroSliders.store().url} method="post" />
     </CmsShell>
   );
 }

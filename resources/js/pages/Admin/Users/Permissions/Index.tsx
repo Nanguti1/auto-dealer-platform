@@ -9,6 +9,7 @@ import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import adminRoutes from '@/routes/admin';
 
 interface Permission {
   id: number;
@@ -30,7 +31,7 @@ export default function Index({ permissions, filters = {} }: { permissions: Pagi
       sortable: true,
       render: (permission) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/permissions/${permission.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.permissions.show(permission.id).url}>
             {permission.display_name || permission.name}
           </Link>
           <p className="text-xs text-muted-foreground font-mono">{permission.name}</p>
@@ -67,14 +68,14 @@ export default function Index({ permissions, filters = {} }: { permissions: Pagi
     <CmsShell
       title="Permissions"
       description="Manage system permissions and their assignments to roles."
-      actions={<Button asChild><Link href="/admin/permissions/create">Create Permission</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.permissions.create().url}>Create Permission</Link></Button>}
     >
       <AdminDataTable
         rows={permissions}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/permissions"
-        createUrl="/admin/permissions/create"
+        baseUrl={adminRoutes.permissions.index().url}
+        createUrl={adminRoutes.permissions.create().url}
         createLabel="Create Permission"
         rowActions={(permission) => (
           <>
@@ -86,13 +87,13 @@ export default function Index({ permissions, filters = {} }: { permissions: Pagi
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/permissions/${permission.id}`}>
+                  <Link href={adminRoutes.permissions.show(permission.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/permissions/${permission.id}/edit`}>
+                  <Link href={adminRoutes.permissions.edit(permission.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -110,7 +111,7 @@ export default function Index({ permissions, filters = {} }: { permissions: Pagi
               description="This will permanently delete the permission and remove it from all roles."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/permissions/${permission.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.permissions.destroy(permission.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

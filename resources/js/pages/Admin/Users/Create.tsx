@@ -1,3 +1,4 @@
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import UserForm from '@/components/admin/users/user-form';
 
@@ -19,7 +20,7 @@ export default function Create({ roles = [], branches = [] }: { roles?: Role[]; 
       description="Create a new user account with appropriate roles."
       actions={<CmsBackButton />}
     >
-      <UserForm action="/admin/users" method="post" roles={roles} branches={branches} />
+      <UserForm action={adminRoutes.users.store().url} method="post" roles={roles} branches={branches} />
     </CmsShell>
   );
 }

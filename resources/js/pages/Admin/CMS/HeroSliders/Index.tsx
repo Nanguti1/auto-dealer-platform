@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MoreHorizontal, Image as ImageIcon } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { HeroSlider, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -20,7 +21,7 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
       sortable: true,
       render: (slider) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/hero-sliders/${slider.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.heroSliders.show(slider.id).url}>
             {slider.title ?? 'Untitled'}
           </Link>
           <p className="text-xs text-muted-foreground">{slider.subtitle ?? '—'}</p>
@@ -71,14 +72,14 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
     <CmsShell
       title="Hero Sliders"
       description="Manage homepage hero sliders and banners."
-      actions={<Button asChild><Link href="/admin/hero-sliders/create">Create Slider</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.heroSliders.create().url}>Create Slider</Link></Button>}
     >
       <AdminDataTable
         rows={heroSliders}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/hero-sliders"
-        createUrl="/admin/hero-sliders/create"
+        baseUrl={adminRoutes.heroSliders.index().url}
+        createUrl={adminRoutes.heroSliders.create().url}
         createLabel="Create Slider"
         rowActions={(slider) => (
           <>
@@ -90,13 +91,13 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/hero-sliders/${slider.id}`}>
+                  <Link href={adminRoutes.heroSliders.show(slider.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/hero-sliders/${slider.id}/edit`}>
+                  <Link href={adminRoutes.heroSliders.edit(slider.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -114,7 +115,7 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
               description="This will permanently delete the hero slider."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/hero-sliders/${slider.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.heroSliders.destroy(slider.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

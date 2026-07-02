@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Trash2, Download, Image as ImageIcon, File, Filter } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { MediaFile, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -16,7 +17,7 @@ export default function Index({ mediaFiles, filters = {} }: { mediaFiles: Pagina
   const [categoryFilter, setCategoryFilter] = React.useState(String(filters.category ?? 'all'));
 
   const applyFilters = () => {
-    router.get('/admin/media', {
+    router.get(adminRoutes.media.index().url, {
       search: searchQuery || undefined,
       category: categoryFilter !== 'all' ? categoryFilter : undefined,
     }, { preserveState: true, preserveScroll: true });
@@ -90,7 +91,7 @@ return '—';
                       className="h-8 w-8 bg-black/50 text-white hover:bg-black/70"
                       asChild
                     >
-                      <Link href={`/admin/media/${media.id}`}>
+                      <Link href={adminRoutes.media.show(media.id).url}>
                         <Eye className="size-4" />
                       </Link>
                     </Button>
@@ -119,7 +120,7 @@ return '—';
                 description="This will permanently delete the media file."
                 trigger={<span />}
                 confirmLabel="Delete"
-                onConfirm={() => router.delete(`/admin/media/${media.id}`, { onFinish: () => setDeleteId(null) })}
+                onConfirm={() => router.delete(adminRoutes.media.destroy(media.id).url, { onFinish: () => setDeleteId(null) })}
               />
             </Card>
           ))}

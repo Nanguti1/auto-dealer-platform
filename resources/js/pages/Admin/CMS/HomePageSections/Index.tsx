@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MoreHorizontal, Layout as LayoutIcon } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { HomePageSection, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -20,7 +21,7 @@ export default function Index({ homePageSections, filters = {} }: { homePageSect
       sortable: true,
       render: (section) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/home-page-sections/${section.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.homePageSections.show(section.id).url}>
             {section.title ?? 'Untitled'}
           </Link>
           <p className="text-xs text-muted-foreground">{section.section_type ?? '—'}</p>
@@ -58,14 +59,14 @@ export default function Index({ homePageSections, filters = {} }: { homePageSect
     <CmsShell
       title="Home Page Sections"
       description="Manage homepage sections including featured vehicles, brands, and CTAs."
-      actions={<Button asChild><Link href="/admin/home-page-sections/create">Create Section</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.homePageSections.create().url}>Create Section</Link></Button>}
     >
       <AdminDataTable
         rows={homePageSections}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/home-page-sections"
-        createUrl="/admin/home-page-sections/create"
+        baseUrl={adminRoutes.homePageSections.index().url}
+        createUrl={adminRoutes.homePageSections.create().url}
         createLabel="Create Section"
         rowActions={(section) => (
           <>
@@ -77,13 +78,13 @@ export default function Index({ homePageSections, filters = {} }: { homePageSect
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/home-page-sections/${section.id}`}>
+                  <Link href={adminRoutes.homePageSections.show(section.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/home-page-sections/${section.id}/edit`}>
+                  <Link href={adminRoutes.homePageSections.edit(section.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -101,7 +102,7 @@ export default function Index({ homePageSections, filters = {} }: { homePageSect
               description="This will permanently delete the home page section."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/home-page-sections/${section.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.homePageSections.destroy(section.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

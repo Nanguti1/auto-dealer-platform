@@ -11,19 +11,20 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import adminRoutes from '@/routes/admin';
 
 export default function Index({ settings, filters = {} }: { settings: AdminSettingsPagination; filters?: SettingsFilters }) {
   const [group, setGroup] = React.useState(String(filters.group ?? ''));
   const [type, setType] = React.useState(String(filters.type ?? 'all'));
 
   const applyFilters = () => {
-    router.get('/admin/settings', { ...filters, group: group || undefined, type: type === 'all' ? undefined : type, page: undefined }, { preserveState: true, preserveScroll: true });
+    router.get(adminRoutes.settings.index().url, { ...filters, group: group || undefined, type: type === 'all' ? undefined : type, page: undefined }, { preserveState: true, preserveScroll: true });
   };
 
   const clearFilters = () => {
     setGroup('');
     setType('all');
-    router.get('/admin/settings', { search: filters.search }, { preserveState: true, preserveScroll: true });
+    router.get(adminRoutes.settings.index().url, { search: filters.search }, { preserveState: true, preserveScroll: true });
   };
 
   const columns: Column<AdminSetting>[] = [
@@ -67,14 +68,14 @@ export default function Index({ settings, filters = {} }: { settings: AdminSetti
     <SettingShell
       title="Admin Settings"
       description="Manage grouped configuration values exposed by the existing settings backend."
-      actions={<Button asChild><Link href="/admin/settings/create">Create Setting</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.settings.create().url}>Create Setting</Link></Button>}
     >
       <AdminDataTable
         rows={settings}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/settings"
-        createUrl="/admin/settings/create"
+        baseUrl={adminRoutes.settings.index().url}
+        createUrl={adminRoutes.settings.create().url}
         createLabel="Create Setting"
         filterSlot={(
           <div className="flex flex-wrap items-end gap-2">
@@ -104,7 +105,7 @@ export default function Index({ settings, filters = {} }: { settings: AdminSetti
         )}
         rowActions={(setting) => (
           <Button variant="ghost" size="sm" asChild>
-            <Link href={`/admin/settings/${setting.id}/edit`}>
+            <Link href={adminRoutes.settings.edit(setting.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>

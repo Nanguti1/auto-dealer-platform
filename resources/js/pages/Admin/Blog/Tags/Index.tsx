@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MoreHorizontal, Tag as TagIcon } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { BlogTag, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -23,7 +24,7 @@ export default function Index({ blogTags, filters = {} }: { blogTags: Paginated<
           {tag.color && (
             <div className="h-3 w-3 rounded-full" style={{ backgroundColor: tag.color }} />
           )}
-          <Link className="font-medium hover:underline" href={`/admin/blog-tags/${tag.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.blogTags.show(tag.id).url}>
             {tag.name ?? 'Untitled'}
           </Link>
           <p className="text-xs text-muted-foreground">{tag.slug ?? '—'}</p>
@@ -70,14 +71,14 @@ export default function Index({ blogTags, filters = {} }: { blogTags: Paginated<
     <CmsShell
       title="Blog Tags"
       description="Manage blog post tags for content tagging and filtering."
-      actions={<Button asChild><Link href="/admin/blog-tags/create">Create Tag</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.blogTags.create().url}>Create Tag</Link></Button>}
     >
       <AdminDataTable
         rows={blogTags}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/blog-tags"
-        createUrl="/admin/blog-tags/create"
+        baseUrl={adminRoutes.blogTags.index().url}
+        createUrl={adminRoutes.blogTags.create().url}
         createLabel="Create Tag"
         rowActions={(tag) => (
           <>
@@ -89,13 +90,13 @@ export default function Index({ blogTags, filters = {} }: { blogTags: Paginated<
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/blog-tags/${tag.id}`}>
+                  <Link href={adminRoutes.blogTags.show(tag.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/blog-tags/${tag.id}/edit`}>
+                  <Link href={adminRoutes.blogTags.edit(tag.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -113,7 +114,7 @@ export default function Index({ blogTags, filters = {} }: { blogTags: Paginated<
               description="This will permanently delete the blog tag."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/blog-tags/${tag.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.blogTags.destroy(tag.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

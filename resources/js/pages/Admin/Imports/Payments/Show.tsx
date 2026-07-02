@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { DollarSign, Eye } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import { formatCurrency, formatDateTime, importVehicleName, requesterName, supplierName } from '@/components/admin/imports/helpers';
 import ImportShell, { ImportBackButton } from '@/components/admin/imports/import-shell';
@@ -15,7 +16,7 @@ export default function Show({ vehicleImport }: { vehicleImport: ImportRequest }
   const outstandingBalance = (vehicleImport.estimated_cost ?? 0) - totalPaid;
 
   return (
-    <ImportShell title={`Payments for ${importVehicleName(vehicleImport)}`} description={`Import request #${vehicleImport.id} · Updated ${formatDateTime(vehicleImport.updated_at)}`} actions={<><ImportBackButton href="/admin/imports/payments" /><Button variant="outline" asChild><Link href={`/admin/imports/${vehicleImport.id}`}><Eye className="mr-2 size-4" />View Request</Link></Button></>}>
+    <ImportShell title={`Payments for ${importVehicleName(vehicleImport)}`} description={`Import request #${vehicleImport.id} · Updated ${formatDateTime(vehicleImport.updated_at)}`} actions={<><ImportBackButton href={adminRoutes.importPayments.index().url} /><Button variant="outline" asChild><Link href={adminRoutes.imports.show(vehicleImport.id).url}><Eye className="mr-2 size-4" />View Request</Link></Button></>}>
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader><CardTitle>Customer overview</CardTitle></CardHeader>

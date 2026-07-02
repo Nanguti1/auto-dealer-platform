@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Download, Trash2, Calendar, File, Image as ImageIcon, Copy } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { MediaFile } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -42,7 +43,7 @@ return '—';
       actions={
         <>
           <Button variant="outline" asChild>
-            <Link href="/admin/media">
+            <Link href={adminRoutes.media.index().url}>
               <ArrowLeft className="mr-2 size-4" />
               Back
             </Link>
@@ -158,7 +159,7 @@ return '—';
         description="This will permanently delete the media file."
         trigger={<span />}
         confirmLabel="Delete"
-        onConfirm={() => router.delete(`/admin/media/${mediaFile.id}`, { onSuccess: () => router.visit('/admin/media') })}
+        onConfirm={() => router.delete(adminRoutes.media.destroy(mediaFile.id).url, { onSuccess: () => router.visit(adminRoutes.media.index().url) })}
       />
     </CmsShell>
   );

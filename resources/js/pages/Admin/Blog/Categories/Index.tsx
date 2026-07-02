@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { BlogCategory, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -20,7 +21,7 @@ export default function Index({ blogCategories, filters = {} }: { blogCategories
       sortable: true,
       render: (category) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/blog-categories/${category.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.blogCategories.show(category.id).url}>
             {category.name ?? 'Untitled'}
           </Link>
           <p className="text-xs text-muted-foreground">{category.slug ?? '—'}</p>
@@ -63,14 +64,14 @@ export default function Index({ blogCategories, filters = {} }: { blogCategories
     <CmsShell
       title="Blog Categories"
       description="Manage blog post categories for content organization."
-      actions={<Button asChild><Link href="/admin/blog-categories/create">Create Category</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.blogCategories.create().url}>Create Category</Link></Button>}
     >
       <AdminDataTable
         rows={blogCategories}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/blog-categories"
-        createUrl="/admin/blog-categories/create"
+        baseUrl={adminRoutes.blogCategories.index().url}
+        createUrl={adminRoutes.blogCategories.create().url}
         createLabel="Create Category"
         rowActions={(category) => (
           <>
@@ -82,13 +83,13 @@ export default function Index({ blogCategories, filters = {} }: { blogCategories
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/blog-categories/${category.id}`}>
+                  <Link href={adminRoutes.blogCategories.show(category.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/blog-categories/${category.id}/edit`}>
+                  <Link href={adminRoutes.blogCategories.edit(category.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -106,7 +107,7 @@ export default function Index({ blogCategories, filters = {} }: { blogCategories
               description="This will permanently delete the blog category."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/blog-categories/${category.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.blogCategories.destroy(category.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

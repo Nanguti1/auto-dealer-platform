@@ -1,3 +1,4 @@
+import adminRoutes from '@/routes/admin';
 import CategoryForm from '@/components/admin/cms/category-form';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 
@@ -8,7 +9,7 @@ export default function Create() {
       description="Create a new blog post category for content organization."
       actions={<CmsBackButton />}
     >
-      <CategoryForm action="/admin/blog-categories" method="post" />
+      <CategoryForm action={adminRoutes.blogCategories.store().url} method="post" />
     </CmsShell>
   );
 }

@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Trash2, MoreHorizontal } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { CmsPage, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -20,7 +21,7 @@ export default function Index({ pages, filters = {} }: { pages: Paginated<CmsPag
       sortable: true,
       render: (page) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/cms-pages/${page.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.cmsPages.show(page.id).url}>
             {page.title ?? 'Untitled'}
           </Link>
           <p className="text-xs text-muted-foreground">{page.slug ?? '—'}</p>
@@ -57,14 +58,14 @@ export default function Index({ pages, filters = {} }: { pages: Paginated<CmsPag
     <CmsShell
       title="Static Pages"
       description="Manage static content pages, SEO, and visibility settings."
-      actions={<Button asChild><Link href="/admin/cms-pages/create">Create Page</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.cmsPages.create().url}>Create Page</Link></Button>}
     >
       <AdminDataTable
         rows={pages}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/cms-pages"
-        createUrl="/admin/cms-pages/create"
+        baseUrl={adminRoutes.cmsPages.index().url}
+        createUrl={adminRoutes.cmsPages.create().url}
         createLabel="Create Page"
         rowActions={(page) => (
           <>
@@ -76,13 +77,13 @@ export default function Index({ pages, filters = {} }: { pages: Paginated<CmsPag
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/cms-pages/${page.id}`}>
+                  <Link href={adminRoutes.cmsPages.show(page.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/cms-pages/${page.id}/edit`}>
+                  <Link href={adminRoutes.cmsPages.edit(page.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -100,7 +101,7 @@ export default function Index({ pages, filters = {} }: { pages: Paginated<CmsPag
               description="This will permanently delete the static page."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/cms-pages/${page.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.cmsPages.destroy(page.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

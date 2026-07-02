@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { ArrowLeft, CalendarDays } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import AnalyticsShell from '@/components/admin/analytics/analytics-shell';
 import { formatDate, previewValue } from '@/components/admin/settings/helpers';
 import { Badge } from '@/components/ui/badge';
@@ -30,7 +31,7 @@ export default function Show({ analyticsData }: { analyticsData: AnalyticsData }
       description="Analytics metric details, metadata, and related dashboard context."
       actions={(
         <Button variant="outline" asChild>
-          <Link href="/admin/analytics">
+          <Link href={adminRoutes.analytics.index().url}>
             <ArrowLeft className="mr-2 size-4" />
             Back to analytics
           </Link>

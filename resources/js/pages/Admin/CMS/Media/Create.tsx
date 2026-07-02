@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import { Button } from '@/components/ui/button';
 

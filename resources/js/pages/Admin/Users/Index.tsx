@@ -9,6 +9,7 @@ import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import adminRoutes from '@/routes/admin';
 
 interface User {
   id: number;
@@ -31,7 +32,7 @@ export default function Index({ users, filters = {} }: { users: Paginated<User>;
       sortable: true,
       render: (user) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/users/${user.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.users.show(user.id).url}>
             {user.name ?? '—'}
           </Link>
           <p className="text-xs text-muted-foreground">{user.email ?? '—'}</p>
@@ -80,14 +81,14 @@ export default function Index({ users, filters = {} }: { users: Paginated<User>;
     <CmsShell
       title="Users"
       description="Manage user accounts and their roles."
-      actions={<Button asChild><Link href="/admin/users/create">Create User</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.users.create().url}>Create User</Link></Button>}
     >
       <AdminDataTable
         rows={users}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/users"
-        createUrl="/admin/users/create"
+        baseUrl={adminRoutes.users.index().url}
+        createUrl={adminRoutes.users.create().url}
         createLabel="Create User"
         rowActions={(user) => (
           <>
@@ -99,13 +100,13 @@ export default function Index({ users, filters = {} }: { users: Paginated<User>;
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/users/${user.id}`}>
+                  <Link href={adminRoutes.users.show(user.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/users/${user.id}/edit`}>
+                  <Link href={adminRoutes.users.edit(user.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -123,7 +124,7 @@ export default function Index({ users, filters = {} }: { users: Paginated<User>;
               description="This will permanently delete the user account."
               trigger={<span />}
               confirmLabel="Delete"
-              onConfirm={() => router.delete(`/admin/users/${user.id}`, { onFinish: () => setDeleteId(null) })}
+              onConfirm={() => router.delete(adminRoutes.users.destroy(user.id).url, { onFinish: () => setDeleteId(null) })}
             />
           </>
         )}

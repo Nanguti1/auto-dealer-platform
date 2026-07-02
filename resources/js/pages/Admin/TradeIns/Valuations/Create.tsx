@@ -1,4 +1,5 @@
 import { Form } from '@inertiajs/react';
+import adminRoutes from '@/routes/admin';
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 export default function Create() {
   return (
     <TradeInShell title="Create Vehicle Valuation" description="Create a new vehicle valuation for a trade-in request.">
-      <Form action="/admin/valuations" method="post" className="grid max-w-4xl gap-4 rounded-xl border bg-card p-4">
+      <Form action={adminRoutes.valuations.store().url} method="post" className="grid max-w-4xl gap-4 rounded-xl border bg-card p-4">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="trade_in_request_id">Trade-In Request ID</Label>

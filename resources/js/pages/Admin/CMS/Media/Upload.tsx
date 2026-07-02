@@ -1,4 +1,5 @@
 import { Form } from '@inertiajs/react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import InputError from '@/components/input-error';
 import { ImageDropzone } from '@/components/shared/media-upload';
@@ -15,7 +16,7 @@ export default function Create() {
       description="Upload new media files to the library."
       actions={<CmsBackButton />}
     >
-      <Form action="/admin/media" method="post" encType="multipart/form-data" className="grid max-w-2xl gap-4 rounded-xl border bg-card p-4">
+      <Form action={adminRoutes.media.store().url} method="post" encType="multipart/form-data" className="grid max-w-2xl gap-4 rounded-xl border bg-card p-4">
         {({ errors, processing }) => (
           <>
             <div className="space-y-2">

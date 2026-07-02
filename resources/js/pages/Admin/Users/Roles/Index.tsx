@@ -9,6 +9,7 @@ import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import adminRoutes from '@/routes/admin';
 
 interface Role {
   id: number;
@@ -30,7 +31,7 @@ export default function Index({ roles, filters = {} }: { roles: Paginated<Role>;
       sortable: true,
       render: (role) => (
         <div>
-          <Link className="font-medium hover:underline" href={`/admin/roles/${role.id}`}>
+          <Link className="font-medium hover:underline" href={adminRoutes.roles.show(role.id).url}>
             {role.display_name || role.name}
           </Link>
           <p className="text-xs text-muted-foreground">{role.name}</p>
@@ -68,14 +69,14 @@ export default function Index({ roles, filters = {} }: { roles: Paginated<Role>;
     <CmsShell
       title="Roles"
       description="Manage user roles and their associated permissions."
-      actions={<Button asChild><Link href="/admin/roles/create">Create Role</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.roles.create().url}>Create Role</Link></Button>}
     >
       <AdminDataTable
         rows={roles}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/roles"
-        createUrl="/admin/roles/create"
+        baseUrl={adminRoutes.roles.index().url}
+        createUrl={adminRoutes.roles.create().url}
         createLabel="Create Role"
         rowActions={(role) => (
           <>
@@ -87,13 +88,13 @@ export default function Index({ roles, filters = {} }: { roles: Paginated<Role>;
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/roles/${role.id}`}>
+                  <Link href={adminRoutes.roles.show(role.id).url}>
                     <Eye className="mr-2 size-4" />
                     View
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href={`/admin/roles/${role.id}/edit`}>
+                  <Link href={adminRoutes.roles.edit(role.id).url}>
                     <Pencil className="mr-2 size-4" />
                     Edit
                   </Link>
@@ -114,7 +115,7 @@ export default function Index({ roles, filters = {} }: { roles: Paginated<Role>;
                 description="This will permanently delete the role and remove it from all users."
                 trigger={<span />}
                 confirmLabel="Delete"
-                onConfirm={() => router.delete(`/admin/roles/${role.id}`, { onFinish: () => setDeleteId(null) })}
+                onConfirm={() => router.delete(adminRoutes.roles.destroy(role.id).url, { onFinish: () => setDeleteId(null) })}
               />
             )}
           </>

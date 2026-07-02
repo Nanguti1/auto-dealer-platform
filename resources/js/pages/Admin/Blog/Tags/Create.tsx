@@ -1,3 +1,4 @@
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import TagForm from '@/components/admin/cms/tag-form';
 
@@ -8,7 +9,7 @@ export default function Create() {
       description="Create a new blog post tag for content tagging."
       actions={<CmsBackButton />}
     >
-      <TagForm action="/admin/blog-tags" method="post" />
+      <TagForm action={adminRoutes.blogTags.store().url} method="post" />
     </CmsShell>
   );
 }
