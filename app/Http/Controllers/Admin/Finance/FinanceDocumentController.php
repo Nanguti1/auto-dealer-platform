@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin\Financing;
+namespace App\Http\Controllers\Admin\Finance;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Financing\StoreFinanceDocumentRequest;
+use App\Http\Requests\Finance\StoreFinanceDocumentRequest;
 use App\Models\FinanceApplication;
 use App\Models\FinanceDocument;
-use App\Services\Financing\FinanceDocumentService;
+use App\Services\Finance\FinanceDocumentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,7 +22,7 @@ class FinanceDocumentController extends Controller
     {
         $this->authorize('viewAny', FinanceDocument::class);
 
-        return Inertia::render('Admin/Financing/Documents/Index', [
+        return Inertia::render('Admin/Finance/Documents/Index', [
             'financeApplication' => $financeApplication,
             'documents' => $financeApplication->documents()->latest()->get(),
         ]);
@@ -32,7 +32,7 @@ class FinanceDocumentController extends Controller
     {
         $this->authorize('create', FinanceDocument::class);
 
-        return Inertia::render('Admin/Financing/Documents/Create', [
+        return Inertia::render('Admin/Finance/Documents/Create', [
             'financeApplication' => $financeApplication,
         ]);
     }
@@ -52,7 +52,7 @@ class FinanceDocumentController extends Controller
         $document = FinanceDocument::findOrFail($document);
         $this->authorize('view', $document);
 
-        return Inertia::render('Admin/Financing/Documents/Show', [
+        return Inertia::render('Admin/Finance/Documents/Show', [
             'financeApplication' => $financeApplication,
             'document' => $document,
         ]);

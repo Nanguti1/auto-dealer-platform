@@ -2,17 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Financing;
+namespace App\Actions\Finance;
 
-use Illuminate\Database\Eloquent\Model as EloquentModel;
 use App\Models\FinanceApplication;
-use App\Services\Financing\FinanceService;
+use App\Services\Finance\FinanceService;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 class RejectFinanceApplicationAction
 {
-    public function __construct(private readonly FinanceService $service)
-    {
-    }
+    public function __construct(private readonly FinanceService $service) {}
 
     public function __invoke(FinanceApplication $financeApplication): EloquentModel
     {

@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Actions\Financing;
+namespace App\Actions\Finance;
 
-use App\Services\Financing\FinanceService;
+use App\Services\Finance\FinanceService;
 
 class CalculateLoanAction
 {
-    public function __construct(private readonly FinanceService $service)
-    {
-    }
+    public function __construct(private readonly FinanceService $service) {}
 
     public function __invoke(array $data): array
     {

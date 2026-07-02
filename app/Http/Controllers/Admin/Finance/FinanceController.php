@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\Admin\Financing;
+namespace App\Http\Controllers\Admin\Finance;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Financing\StoreFinanceApplicationRequest;
-use App\Http\Requests\Financing\UpdateFinanceApplicationRequest;
+use App\Http\Requests\Finance\StoreFinanceApplicationRequest;
+use App\Http\Requests\Finance\UpdateFinanceApplicationRequest;
 use App\Models\FinanceApplication;
-use App\Services\Financing\FinanceService;
+use App\Services\Finance\FinanceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class FinanceController extends Controller
 {
-    public function __construct(private readonly FinanceService $service)
-    {
-    }
+    public function __construct(private readonly FinanceService $service) {}
 
     public function index(Request $request): Response
     {

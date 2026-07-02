@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Financing;
+namespace App\Services\Finance;
 
 use App\Models\FinanceDocument;
 use App\Services\Concerns\ManagesEloquentModels;

@@ -176,7 +176,6 @@ return 'A';
       id: 'sales',
       label: 'Sales',
       items: [
-        { name: 'CRM/Leads', href: adminRoutes.leads.index().url, icon: Phone },
         { name: 'Trade-Ins', href: adminRoutes.tradeIns.index().url, icon: MessageSquare },
         { name: 'Finance', href: adminRoutes.financeApplications.index().url, icon: DollarSign },
         { name: 'Reservations', href: adminRoutes.reservations.index().url, icon: Calendar },
@@ -187,6 +186,7 @@ return 'A';
       id: 'crm',
       label: 'CRM',
       items: [
+        { name: 'Leads', href: adminRoutes.leads.index().url, icon: Phone },
         { name: 'Activities', href: adminRoutes.activities.index().url, icon: ClipboardList },
         { name: 'Tasks', href: adminRoutes.tasks.index().url, icon: CheckCircle },
         { name: 'Pipeline', href: adminRoutes.pipeline.index().url, icon: Columns3 },
