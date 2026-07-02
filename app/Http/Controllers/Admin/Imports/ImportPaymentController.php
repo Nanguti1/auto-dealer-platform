@@ -22,7 +22,7 @@ class ImportPaymentController extends Controller
     {
         $this->authorize('viewAny', ImportPayment::class);
 
-        return Inertia::render('Admin/Imports/ImportPayments/Index', [
+        return Inertia::render('Admin/Imports/Payments/Index', [
             'importPayments' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -32,7 +32,7 @@ class ImportPaymentController extends Controller
     {
         $this->authorize('create', ImportPayment::class);
 
-        return Inertia::render('Admin/Imports/ImportPayments/Create');
+        return Inertia::render('Admin/Imports/Payments/Create');
     }
 
     public function store(StoreImportPaymentRequest $request): RedirectResponse
@@ -46,7 +46,7 @@ class ImportPaymentController extends Controller
     {
         $this->authorize('view', $importPayment);
 
-        return Inertia::render('Admin/Imports/ImportPayments/Show', [
+        return Inertia::render('Admin/Imports/Payments/Show', [
             'importPayment' => $importPayment->load(['vehicleImport', 'payment']),
         ]);
     }
@@ -55,7 +55,7 @@ class ImportPaymentController extends Controller
     {
         $this->authorize('update', $importPayment);
 
-        return Inertia::render('Admin/Imports/ImportPayments/Edit', [
+        return Inertia::render('Admin/Imports/Payments/Edit', [
             'importPayment' => $importPayment->load(['vehicleImport', 'payment']),
         ]);
     }

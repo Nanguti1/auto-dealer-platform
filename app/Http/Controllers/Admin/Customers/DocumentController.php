@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Customers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customers\StoreCustomerDocumentRequest;
+use App\Http\Requests\Customers\UpdateCustomerDocumentRequest;
 use App\Models\Customer;
 use App\Models\CustomerDocument;
 use App\Services\Customers\CustomerDocumentService;
@@ -56,6 +57,43 @@ class DocumentController extends Controller
             'customer' => $customer,
             'document' => $document,
         ]);
+    }
+
+    public function edit(Customer $customer, $document): Response
+    {
+        $document = CustomerDocument::findOrFail($document);
+        $this->authorize('update', $document);
+
+        return Inertia::render('Admin/Customers/Documents/Edit', [
+            'customer' => $customer,
+            'document' => $document,
+        ]);
+    }
+
+    public function update(UpdateCustomerDocumentRequest $request, Customer $customer, $document): RedirectResponse
+    {
+        $document = CustomerDocument::findOrFail($document);
+        $this->authorize('update', $document);
+
+        $validated = $request->validated();
+
+        // Update document metadata
+        if (isset($validated['name'])) {
+            $document->name = $validated['name'];
+        }
+        if (isset($validated['type'])) {
+            $document->type = $validated['type'];
+        }
+
+        // Handle file replacement if provided
+        if ($request->hasFile('file')) {
+            $this->service->delete($document);
+            $this->service->upload($document, $request->file('file'), $document->type);
+        }
+
+        $document->save();
+
+        return redirect()->route('admin.customers.documents.index', $customer)->with('success', 'Document updated successfully.');
     }
 
     public function destroy(Customer $customer, $document): RedirectResponse

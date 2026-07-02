@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Imports;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Imports\StoreImportDocumentRequest;
+use App\Http\Requests\Imports\UpdateImportDocumentRequest;
 use App\Models\ImportDocument;
 use App\Models\VehicleImport;
 use App\Services\Imports\ImportDocumentService;
@@ -56,6 +57,43 @@ class ImportDocumentController extends Controller
             'vehicleImport' => $vehicleImport,
             'document' => $document,
         ]);
+    }
+
+    public function edit(VehicleImport $vehicleImport, $document): Response
+    {
+        $document = ImportDocument::findOrFail($document);
+        $this->authorize('update', $document);
+
+        return Inertia::render('Admin/Imports/Documents/Edit', [
+            'vehicleImport' => $vehicleImport,
+            'document' => $document,
+        ]);
+    }
+
+    public function update(UpdateImportDocumentRequest $request, VehicleImport $vehicleImport, $document): RedirectResponse
+    {
+        $document = ImportDocument::findOrFail($document);
+        $this->authorize('update', $document);
+
+        $validated = $request->validated();
+
+        // Update document metadata
+        if (isset($validated['name'])) {
+            $document->name = $validated['name'];
+        }
+        if (isset($validated['type'])) {
+            $document->type = $validated['type'];
+        }
+
+        // Handle file replacement if provided
+        if ($request->hasFile('file')) {
+            $this->service->delete($document);
+            $this->service->upload($document, $request->file('file'), $document->type);
+        }
+
+        $document->save();
+
+        return redirect()->route('admin.imports.documents.index', $vehicleImport)->with('success', 'Document updated successfully.');
     }
 
     public function destroy(VehicleImport $vehicleImport, $document): RedirectResponse

@@ -16,15 +16,13 @@ use Inertia\Response;
 
 class SettingController extends Controller
 {
-    public function __construct(private readonly SettingService $service)
-    {
-    }
+    public function __construct(private readonly SettingService $service) {}
 
     public function index(Request $request): Response
     {
         $this->authorize('viewAny', Setting::class);
 
-        return Inertia::render('Admin/Settings/Index/Index', [
+        return Inertia::render('Admin/Settings/Index', [
             'settings' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -34,7 +32,7 @@ class SettingController extends Controller
     {
         $this->authorize('create', Setting::class);
 
-        return Inertia::render('Admin/Settings/Index/Create');
+        return Inertia::render('Admin/Settings/Create');
     }
 
     public function store(StoreSettingRequest $request): RedirectResponse
@@ -48,7 +46,7 @@ class SettingController extends Controller
     {
         $this->authorize('view', $setting);
 
-        return Inertia::render('Admin/Settings/Index/Show', [
+        return Inertia::render('Admin/Settings/Show', [
             'setting' => $setting,
         ]);
     }
@@ -57,7 +55,7 @@ class SettingController extends Controller
     {
         $this->authorize('update', $setting);
 
-        return Inertia::render('Admin/Settings/Index/Edit', [
+        return Inertia::render('Admin/Settings/Edit', [
             'setting' => $setting,
         ]);
     }

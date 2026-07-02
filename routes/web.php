@@ -97,11 +97,13 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('vehicle-features', VehicleFeatureController::class);
         Route::resource('customers', CustomerController::class);
         Route::prefix('customers/{customer}')->group(function (): void {
-            Route::resource('documents', DocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->names([
+            Route::resource('documents', DocumentController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])->names([
                 'index' => 'customers.documents.index',
                 'create' => 'customers.documents.create',
                 'store' => 'customers.documents.store',
                 'show' => 'customers.documents.show',
+                'edit' => 'customers.documents.edit',
+                'update' => 'customers.documents.update',
                 'destroy' => 'customers.documents.destroy',
             ]);
             Route::resource('notes', NoteController::class);
@@ -120,22 +122,26 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('valuations', ValuationController::class);
         Route::resource('finance-applications', FinanceController::class);
         Route::prefix('finance-applications/{financeApplication}')->group(function (): void {
-            Route::resource('documents', FinanceDocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->names([
+            Route::resource('documents', FinanceDocumentController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])->names([
                 'index' => 'finance-applications.documents.index',
                 'create' => 'finance-applications.documents.create',
                 'store' => 'finance-applications.documents.store',
                 'show' => 'finance-applications.documents.show',
+                'edit' => 'finance-applications.documents.edit',
+                'update' => 'finance-applications.documents.update',
                 'destroy' => 'finance-applications.documents.destroy',
             ]);
         });
         Route::resource('reservations', ReservationController::class);
         Route::resource('imports', ImportController::class);
         Route::prefix('imports/{vehicleImport}')->group(function (): void {
-            Route::resource('documents', ImportDocumentController::class)->only(['index', 'create', 'store', 'show', 'destroy'])->names([
+            Route::resource('documents', ImportDocumentController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])->names([
                 'index' => 'imports.documents.index',
                 'create' => 'imports.documents.create',
                 'store' => 'imports.documents.store',
                 'show' => 'imports.documents.show',
+                'edit' => 'imports.documents.edit',
+                'update' => 'imports.documents.update',
                 'destroy' => 'imports.documents.destroy',
             ]);
         });
@@ -171,7 +177,7 @@ Route::middleware(['auth', 'verified', 'admin'])
             Route::delete('/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
             Route::get('/export', [ReportController::class, 'export'])->name('reports.export');
         });
-        Route::resource('settings', SettingController::class)->except(['show']);
+        Route::resource('settings', SettingController::class);
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
         Route::resource('permissions', PermissionController::class);

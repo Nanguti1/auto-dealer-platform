@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin\Finance;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\StoreFinanceDocumentRequest;
+use App\Http\Requests\Finance\UpdateFinanceDocumentRequest;
 use App\Models\FinanceApplication;
 use App\Models\FinanceDocument;
 use App\Services\Finance\FinanceDocumentService;
@@ -56,6 +57,43 @@ class FinanceDocumentController extends Controller
             'financeApplication' => $financeApplication,
             'document' => $document,
         ]);
+    }
+
+    public function edit(FinanceApplication $financeApplication, $document): Response
+    {
+        $document = FinanceDocument::findOrFail($document);
+        $this->authorize('update', $document);
+
+        return Inertia::render('Admin/Finance/Documents/Edit', [
+            'financeApplication' => $financeApplication,
+            'document' => $document,
+        ]);
+    }
+
+    public function update(UpdateFinanceDocumentRequest $request, FinanceApplication $financeApplication, $document): RedirectResponse
+    {
+        $document = FinanceDocument::findOrFail($document);
+        $this->authorize('update', $document);
+
+        $validated = $request->validated();
+
+        // Update document metadata
+        if (isset($validated['name'])) {
+            $document->name = $validated['name'];
+        }
+        if (isset($validated['type'])) {
+            $document->type = $validated['type'];
+        }
+
+        // Handle file replacement if provided
+        if ($request->hasFile('file')) {
+            $this->service->delete($document);
+            $this->service->upload($document, $request->file('file'), $document->type);
+        }
+
+        $document->save();
+
+        return redirect()->route('admin.finance-applications.documents.index', $financeApplication)->with('success', 'Document updated successfully.');
     }
 
     public function destroy(FinanceApplication $financeApplication, $document): RedirectResponse
