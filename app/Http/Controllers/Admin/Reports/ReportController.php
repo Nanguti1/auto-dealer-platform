@@ -62,11 +62,12 @@ class ReportController extends Controller
             ->orderBy('date')
             ->get();
 
-        $salesByMake = Vehicle::forBranch($user)
-            ->whereHas('payments', fn ($query) => $query->whereBetween('created_at', [$startDate, $endDate]))
-            ->with('make')
-            ->select('make_id', DB::raw('COUNT(*) as count'))
-            ->groupBy('make_id')
+        $salesByMake = Payment::forBranchThrough($user, 'vehicle')
+            ->whereBetween('payments.created_at', [$startDate, $endDate])
+            ->join('vehicles', 'payments.vehicle_id', '=', 'vehicles.id')
+            ->with('vehicle.make')
+            ->select('vehicles.make_id', DB::raw('COUNT(*) as count'))
+            ->groupBy('vehicles.make_id')
             ->get();
 
         return Inertia::render('Admin/Reports/SalesReport', [
@@ -86,12 +87,9 @@ class ReportController extends Controller
         $user = $request->user();
 
         $inventoryData = Vehicle::forBranch($user)
-            ->select(
-                'status',
-                DB::raw('COUNT(*) as count'),
-                DB::raw('AVG(price) as avg_price')
-            )
-            ->groupBy('status')
+            ->with('inventoryStatus')
+            ->select('inventory_status_id', DB::raw('COUNT(*) as count'), DB::raw('AVG(sale_price) as avg_price'))
+            ->groupBy('inventory_status_id')
             ->get();
 
         $inventoryByMake = Vehicle::forBranch($user)
@@ -313,9 +311,9 @@ class ReportController extends Controller
 
         $csv = "Date,Customer,Vehicle,Amount,Payment Method\n";
         foreach ($payments as $payment) {
-            $customerName = $payment->customer ? $payment->customer->name : 'N/A';
+            $customerName = $payment->user ? $payment->user->name : 'N/A';
             $vehicleTitle = $payment->vehicle ? $payment->vehicle->title : 'N/A';
-            $csv .= "{$payment->created_at},{$customerName},{$vehicleTitle},{$payment->amount},{$payment->payment_method}\n";
+            $csv .= "{$payment->created_at},{$customerName},{$vehicleTitle},{$payment->amount},{$payment->method}\n";
         }
 
         return $csv;
@@ -325,7 +323,7 @@ class ReportController extends Controller
     {
         $user = $request->user();
         $vehicles = Vehicle::forBranch($user)
-            ->with(['make', 'model', 'status'])
+            ->with(['make', 'model', 'inventoryStatus'])
             ->get();
 
         $csv = "VIN,Make,Model,Year,Price,Status,Days in Stock\n";
@@ -333,7 +331,8 @@ class ReportController extends Controller
             $daysInStock = $vehicle->created_at ? now()->diffInDays($vehicle->created_at) : 0;
             $makeName = $vehicle->make ? $vehicle->make->name : 'N/A';
             $modelName = $vehicle->model ? $vehicle->model->name : 'N/A';
-            $csv .= "{$vehicle->vin},{$makeName},{$modelName},{$vehicle->year},{$vehicle->price},{$vehicle->status},{$daysInStock}\n";
+            $statusName = $vehicle->inventoryStatus ? $vehicle->inventoryStatus->name : 'N/A';
+            $csv .= "{$vehicle->vin},{$makeName},{$modelName},{$vehicle->year},{$vehicle->sale_price},{$statusName},{$daysInStock}\n";
         }
 
         return $csv;
@@ -364,7 +363,7 @@ class ReportController extends Controller
     {
         $user = $request->user();
         $applications = FinanceApplication::forBranchThrough($user, 'vehicle')
-            ->with(['lender'])
+            ->with(['lender', 'user'])
             ->whereBetween('created_at', [
                 $request->query('start_date', now()->subDays(30)),
                 $request->query('end_date', now()),

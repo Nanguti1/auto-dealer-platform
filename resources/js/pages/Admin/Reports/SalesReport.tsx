@@ -18,8 +18,10 @@ interface SalesData {
 interface SalesByMake {
   make_id: number;
   count: number;
-  make?: {
-    name: string;
+  vehicle?: {
+    make?: {
+      name: string;
+    };
   };
 }
 
@@ -60,7 +62,7 @@ export default function SalesReport({ salesData, salesByMake, filters }: Props) 
   const totalRevenue = salesData.reduce((sum, item) => sum + Number(item.total), 0);
 
   const pieData = salesByMake.map((item) => ({
-    name: item.make?.name || 'Unknown',
+    name: item.vehicle?.make?.name || 'Unknown',
     value: item.count,
   }));
 
@@ -201,7 +203,7 @@ export default function SalesReport({ salesData, salesByMake, filters }: Props) 
               <div className="space-y-2">
                 {salesByMake.map((item) => (
                   <div key={item.make_id} className="flex justify-between items-center p-2 border rounded">
-                    <span className="font-medium">{item.make?.name || 'Unknown'}</span>
+                    <span className="font-medium">{item.vehicle?.make?.name || 'Unknown'}</span>
                     <Badge variant="secondary">{item.count} sales</Badge>
                   </div>
                 ))}

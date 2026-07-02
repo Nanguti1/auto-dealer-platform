@@ -8,9 +8,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface InventoryData {
-  status: string;
+  inventory_status_id: number;
   count: number;
   avg_price: number;
+  inventoryStatus?: {
+    name: string;
+  };
 }
 
 interface InventoryByMake {
@@ -50,7 +53,7 @@ export default function InventoryReport({ inventoryData, inventoryByMake, invent
   const avgInventoryPrice = inventoryData.reduce((sum, item) => sum + (item.avg_price * item.count), 0) / totalVehicles || 0;
 
   const statusPieData = inventoryData.map((item) => ({
-    name: item.status,
+    name: item.inventoryStatus?.name || 'Unknown',
     value: item.count,
   }));
 
@@ -171,8 +174,8 @@ export default function InventoryReport({ inventoryData, inventoryByMake, invent
             <CardContent>
               <div className="space-y-2">
                 {inventoryData.map((item) => (
-                  <div key={item.status} className="flex justify-between items-center p-2 border rounded">
-                    <span className="font-medium">{item.status}</span>
+                  <div key={item.inventory_status_id} className="flex justify-between items-center p-2 border rounded">
+                    <span className="font-medium">{item.inventoryStatus?.name || 'Unknown'}</span>
                     <div className="flex items-center gap-2">
                       <Badge variant="secondary">{item.count} vehicles</Badge>
                       <span className="text-sm text-muted-foreground">{formatCurrency(item.avg_price)} avg</span>

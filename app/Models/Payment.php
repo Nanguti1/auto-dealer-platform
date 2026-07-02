@@ -36,4 +36,9 @@ class Payment extends Model
     {
         return $this->belongsTo(VehicleReservation::class, 'vehicle_reservation_id');
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

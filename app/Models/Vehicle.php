@@ -112,4 +112,9 @@ class Vehicle extends Model
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function inventoryStatus(): BelongsTo
+    {
+        return $this->belongsTo(InventoryStatus::class, 'inventory_status_id');
+    }
 }
