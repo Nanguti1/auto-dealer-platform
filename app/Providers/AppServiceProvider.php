@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Permission;
+use App\Models\Setting;
+use App\Models\User;
+use App\Observers\PermissionObserver;
+use App\Observers\SettingObserver;
+use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +30,17 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->configureDefaults();
+        $this->registerObservers();
+    }
+
+    /**
+     * Register model observers for audit logging.
+     */
+    protected function registerObservers(): void
+    {
+        User::observe(UserObserver::class);
+        Setting::observe(SettingObserver::class);
+        Permission::observe(PermissionObserver::class);
     }
 
     /**

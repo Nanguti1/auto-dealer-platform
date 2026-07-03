@@ -15,9 +15,13 @@ class UpdateVehicleAction
 
     public function __invoke(Vehicle $vehicle, array $data): EloquentModel
     {
+        $oldValues = $vehicle->getOriginal();
         $vehicle = $this->service->update($vehicle, $data);
 
-        event(new VehicleUpdated($vehicle));
+        // Get only the fields that were in the data array
+        $relevantOldValues = array_intersect_key($oldValues, $data);
+
+        event(new VehicleUpdated($vehicle, $relevantOldValues));
 
         return $vehicle;
     }
