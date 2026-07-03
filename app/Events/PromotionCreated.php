@@ -13,7 +13,5 @@ class PromotionCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly Promotion $promotion)
-    {
-    }
+    public function __construct(public readonly Promotion $promotion) {}
 }

@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class BlogPostController extends Controller
 {
-    public function __construct(private readonly BlogService $service)
-    {
-    }
+    public function __construct(private readonly BlogService $service) {}
 
     public function index(Request $request): Response
     {

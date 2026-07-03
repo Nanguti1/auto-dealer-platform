@@ -15,5 +15,4 @@ class SettingService
     {
         return Setting::class;
     }
-
 }

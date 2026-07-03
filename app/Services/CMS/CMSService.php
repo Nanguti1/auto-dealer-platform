@@ -15,5 +15,4 @@ class CMSService
     {
         return DynamicCmsPage::class;
     }
-
 }

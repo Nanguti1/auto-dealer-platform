@@ -13,8 +13,8 @@ return new class extends Migration
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('vehicle_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('vehicle_reservation_id')->nullable()->constrained()->nullOnDelete();
-            $table->decimal('amount',12,2);
-            $table->string('currency',3)->default('USD');
+            $table->decimal('amount', 12, 2);
+            $table->string('currency', 3)->default('USD');
             $table->string('method')->index();
             $table->string('status')->default('pending')->index();
             $table->string('transaction_reference')->nullable()->unique();

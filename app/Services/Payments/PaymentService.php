@@ -15,5 +15,4 @@ class PaymentService
     {
         return Payment::class;
     }
-
 }

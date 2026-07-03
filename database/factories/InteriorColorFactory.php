@@ -10,7 +10,8 @@ class InteriorColorFactory extends Factory
     {
         return [
             'name' => fake()->colorName(),
-            'hex_code' => fake()->hexColor(),
+            'slug' => fake()->slug(),
+            'code' => fake()->hexColor(),
         ];
     }
 }

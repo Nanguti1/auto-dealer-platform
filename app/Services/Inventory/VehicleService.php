@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Inventory;
 
+use App\Exceptions\VehicleAlreadySoldException;
 use App\Models\Vehicle;
 use App\Services\Concerns\ManagesEloquentModels;
-use App\Exceptions\VehicleAlreadySoldException;
 use Illuminate\Support\Facades\DB;
 
 class VehicleService

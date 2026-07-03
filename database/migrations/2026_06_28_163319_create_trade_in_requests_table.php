@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedSmallInteger('year');
             $table->string('vin')->nullable()->index();
             $table->unsignedInteger('mileage')->nullable();
-            $table->decimal('estimated_value',12,2)->nullable();
-            $table->decimal('offered_value',12,2)->nullable();
+            $table->decimal('estimated_value', 12, 2)->nullable();
+            $table->decimal('offered_value', 12, 2)->nullable();
             $table->string('status')->default('submitted')->index();
             $table->json('condition_report')->nullable();
             $table->softDeletes();

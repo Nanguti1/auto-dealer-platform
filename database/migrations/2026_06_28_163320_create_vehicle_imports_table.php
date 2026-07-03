@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('reference_number')->unique();
             $table->string('origin_country')->index();
             $table->string('destination_port')->nullable();
-            $table->decimal('estimated_cost',12,2)->nullable();
+            $table->decimal('estimated_cost', 12, 2)->nullable();
             $table->string('status')->default('requested')->index();
             $table->json('request_data')->nullable();
             $table->softDeletes();

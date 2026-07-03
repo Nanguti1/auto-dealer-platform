@@ -15,7 +15,7 @@ return new class extends Migration
             $table->longText('value')->nullable();
             $table->string('type')->default('string');
             $table->boolean('is_public')->default(false);
-            $table->unique(['group','key']);
+            $table->unique(['group', 'key']);
             $table->timestamps();
         });
     }

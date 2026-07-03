@@ -14,9 +14,9 @@ return new class extends Migration
             $table->foreignId('vehicle_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('payment_id')->nullable()->constrained()->nullOnDelete();
             $table->string('invoice_number')->unique();
-            $table->decimal('subtotal',12,2);
-            $table->decimal('tax_total',12,2)->default(0);
-            $table->decimal('total',12,2);
+            $table->decimal('subtotal', 12, 2);
+            $table->decimal('tax_total', 12, 2)->default(0);
+            $table->decimal('total', 12, 2);
             $table->string('status')->default('draft')->index();
             $table->date('issued_at')->nullable();
             $table->date('due_at')->nullable();

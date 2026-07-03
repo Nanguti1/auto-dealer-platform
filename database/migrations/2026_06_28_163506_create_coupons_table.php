@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('promotion_id')->nullable()->constrained()->nullOnDelete();
             $table->string('code')->unique();
             $table->string('type')->index();
-            $table->decimal('value',12,2);
+            $table->decimal('value', 12, 2);
             $table->unsignedInteger('usage_limit')->nullable();
             $table->unsignedInteger('used_count')->default(0);
             $table->dateTime('starts_at')->nullable();

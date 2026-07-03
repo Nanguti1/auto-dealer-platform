@@ -15,5 +15,4 @@ class ReservationService
     {
         return VehicleReservation::class;
     }
-
 }

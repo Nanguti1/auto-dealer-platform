@@ -15,5 +15,4 @@ class CustomerService
     {
         return Customer::class;
     }
-
 }

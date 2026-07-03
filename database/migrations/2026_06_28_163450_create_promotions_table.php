@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('type')->index();
-            $table->decimal('value',12,2)->nullable();
+            $table->decimal('value', 12, 2)->nullable();
             $table->dateTime('starts_at')->nullable()->index();
             $table->dateTime('ends_at')->nullable()->index();
             $table->boolean('is_active')->default(true);

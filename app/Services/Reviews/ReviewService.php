@@ -15,5 +15,4 @@ class ReviewService
     {
         return Review::class;
     }
-
 }

@@ -15,5 +15,4 @@ class BlogService
     {
         return BlogPost::class;
     }
-
 }

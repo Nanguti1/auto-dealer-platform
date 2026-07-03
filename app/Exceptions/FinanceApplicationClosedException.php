@@ -6,6 +6,4 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class FinanceApplicationClosedException extends RuntimeException
-{
-}
+class FinanceApplicationClosedException extends RuntimeException {}

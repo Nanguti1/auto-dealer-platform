@@ -13,11 +13,11 @@ return new class extends Migration
             $table->foreignId('vehicle_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('lender_id')->nullable()->constrained()->nullOnDelete();
-            $table->decimal('requested_amount',12,2);
-            $table->decimal('down_payment',12,2)->default(0);
+            $table->decimal('requested_amount', 12, 2);
+            $table->decimal('down_payment', 12, 2)->default(0);
             $table->unsignedSmallInteger('term_months');
-            $table->decimal('interest_rate',5,2)->nullable();
-            $table->decimal('estimated_monthly_payment',12,2)->nullable();
+            $table->decimal('interest_rate', 5, 2)->nullable();
+            $table->decimal('estimated_monthly_payment', 12, 2)->nullable();
             $table->string('status')->default('submitted')->index();
             $table->json('applicant_data');
             $table->timestamps();

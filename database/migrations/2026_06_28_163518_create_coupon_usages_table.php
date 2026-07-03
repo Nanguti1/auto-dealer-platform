@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('coupon_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('vehicle_id')->nullable()->constrained()->nullOnDelete();
-            $table->decimal('discount_amount',12,2);
+            $table->decimal('discount_amount', 12, 2);
             $table->timestamp('used_at')->index();
             $table->timestamps();
         });

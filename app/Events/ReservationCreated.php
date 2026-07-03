@@ -13,7 +13,5 @@ class ReservationCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly VehicleReservation $reservation)
-    {
-    }
+    public function __construct(public readonly VehicleReservation $reservation) {}
 }

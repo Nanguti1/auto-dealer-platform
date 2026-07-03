@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class VehicleController extends Controller
 {
-    public function __construct(private readonly VehicleService $service)
-    {
-    }
+    public function __construct(private readonly VehicleService $service) {}
 
     public function index(Request $request): Response
     {

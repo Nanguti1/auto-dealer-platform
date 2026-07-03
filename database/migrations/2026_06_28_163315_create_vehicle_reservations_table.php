@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->decimal('deposit_amount',12,2)->default(0);
+            $table->decimal('deposit_amount', 12, 2)->default(0);
             $table->string('status')->default('pending')->index();
             $table->timestamp('expires_at')->nullable()->index();
             $table->timestamps();

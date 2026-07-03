@@ -15,5 +15,4 @@ class ImportService
     {
         return VehicleImport::class;
     }
-
 }

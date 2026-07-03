@@ -15,5 +15,4 @@ class VehicleFeatureService
     {
         return VehicleFeature::class;
     }
-
 }

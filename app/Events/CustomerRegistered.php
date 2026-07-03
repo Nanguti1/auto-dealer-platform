@@ -13,7 +13,5 @@ class CustomerRegistered
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly Customer $customer)
-    {
-    }
+    public function __construct(public readonly Customer $customer) {}
 }

@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class VehicleGalleryController extends Controller
 {
-    public function __construct(private readonly VehicleGalleryService $service)
-    {
-    }
+    public function __construct(private readonly VehicleGalleryService $service) {}
 
     public function index(Request $request): Response
     {

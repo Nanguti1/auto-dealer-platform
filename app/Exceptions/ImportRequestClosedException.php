@@ -6,6 +6,4 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class ImportRequestClosedException extends RuntimeException
-{
-}
+class ImportRequestClosedException extends RuntimeException {}

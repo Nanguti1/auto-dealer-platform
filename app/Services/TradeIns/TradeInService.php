@@ -15,5 +15,4 @@ class TradeInService
     {
         return TradeInRequest::class;
     }
-
 }

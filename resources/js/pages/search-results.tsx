@@ -7,7 +7,7 @@ import VehicleCard from '@/components/shared/vehicle-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { mockVehicles, toSummary } from '@/data/mock-vehicles';
+
 import PublicLayout from '@/layouts/public/public-layout';
 
 const articles = [
@@ -24,7 +24,7 @@ const articles = [
 ];
 
 export default function SearchResults() {
-    const vehicles = mockVehicles.map(toSummary).slice(0, 3);
+    const vehicles: any[] = [];
 
     return (
         <PublicLayout title="Search Results" description="Search Dealership inventory, articles, services, and ownership tools from one premium discovery experience.">

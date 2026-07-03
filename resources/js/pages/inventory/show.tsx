@@ -20,7 +20,7 @@ import {
     WishlistButton,
     CompareButton,
 } from '@/components/vehicles';
-import { findVehicleBySlug, mockVehicles, toSummary } from '@/data/mock-vehicles';
+
 import { useCompare } from '@/hooks/use-compare';
 import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 import { useWishlist } from '@/hooks/use-wishlist';
@@ -33,10 +33,8 @@ interface InventoryShowProps {
 }
 
 export default function InventoryShow({ vehicle: serverVehicle, related: serverRelated }: InventoryShowProps) {
-    const { url } = usePage();
-    const slug = url.split('/inventory/')[1]?.split('?')[0] ?? '';
-    const vehicle = serverVehicle ?? findVehicleBySlug(slug) ?? mockVehicles[0];
-    const related = serverRelated ?? mockVehicles.filter((v) => v.id !== vehicle.id).slice(0, 3);
+    const vehicle = serverVehicle;
+    const related = serverRelated ?? [];
 
     const { toggle: toggleWishlist, isWishlisted } = useWishlist();
     const { toggle: toggleCompare, isInCompare, maxReached } = useCompare();
@@ -45,13 +43,30 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
     const shouldReduceMotion = useReducedMotion();
 
     React.useEffect(() => {
-        record(vehicle.id);
-    }, [vehicle.id, record]);
+        if (vehicle) {
+            record(vehicle.id);
+        }
+    }, [vehicle?.id, record]);
 
     const formatPrice = (price: number) =>
         new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
 
     const formatMileage = (mileage: number) => new Intl.NumberFormat('en-US').format(mileage);
+
+    if (!vehicle) {
+        return (
+            <PublicLayout title="Vehicle Not Found" description="The requested vehicle could not be found.">
+                <Head title="Vehicle Not Found" />
+                <div className="container py-20 text-center">
+                    <h1 className="text-3xl font-bold mb-4">Vehicle Not Found</h1>
+                    <p className="text-muted-foreground mb-6">The vehicle you're looking for is not available or has been sold.</p>
+                    <Button asChild>
+                        <Link href="/inventory">Back to Inventory</Link>
+                    </Button>
+                </div>
+            </PublicLayout>
+        );
+    }
 
     const persistLead = (type: string) => {
         if (typeof window === 'undefined') {
@@ -135,7 +150,7 @@ return;
                 <div className="container">
                     <div className="grid gap-10 lg:grid-cols-3">
                         <div className="space-y-10 lg:col-span-2">
-                            <VehicleGallery images={vehicle.galleries} />
+                            <VehicleGallery images={vehicle.galleries ?? []} />
 
                             <motion.div
                                 initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
@@ -176,10 +191,10 @@ return;
                                 </div>
                             )}
 
-                            <VehicleVideoSection videos={vehicle.videos} />
+                            <VehicleVideoSection videos={vehicle.videos ?? []} />
 
                             {/* Features */}
-                            {vehicle.features.length > 0 && (
+                            {vehicle.features && vehicle.features.length > 0 && (
                                 <div>
                                     <h2 className="mb-4 text-2xl font-bold">Features & Equipment</h2>
                                     <div className="grid gap-3 sm:grid-cols-2">
@@ -196,7 +211,7 @@ return;
                                 </div>
                             )}
 
-                            <VehicleSpecsPanel specifications={vehicle.specifications} sticky={false} />
+                            <VehicleSpecsPanel specifications={vehicle.specifications ?? []} sticky={false} />
                         </div>
 
                         {/* Sticky purchase panel */}

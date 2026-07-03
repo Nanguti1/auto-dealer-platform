@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class PaymentController extends Controller
 {
-    public function __construct(private readonly PaymentService $service)
-    {
-    }
+    public function __construct(private readonly PaymentService $service) {}
 
     public function index(Request $request): Response
     {

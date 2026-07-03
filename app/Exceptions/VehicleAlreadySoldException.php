@@ -6,6 +6,4 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class VehicleAlreadySoldException extends RuntimeException
-{
-}
+class VehicleAlreadySoldException extends RuntimeException {}

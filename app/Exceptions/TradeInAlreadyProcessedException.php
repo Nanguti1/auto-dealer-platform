@@ -6,6 +6,4 @@ namespace App\Exceptions;
 
 use RuntimeException;
 
-class TradeInAlreadyProcessedException extends RuntimeException
-{
-}
+class TradeInAlreadyProcessedException extends RuntimeException {}

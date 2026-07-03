@@ -32,9 +32,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug')->unique();
             $table->unsignedInteger('mileage')->default(0);
-            $table->decimal('cost_price',12,2)->nullable();
-            $table->decimal('sale_price',12,2)->index();
-            $table->decimal('msrp',12,2)->nullable();
+            $table->decimal('cost_price', 12, 2)->nullable();
+            $table->decimal('sale_price', 12, 2)->index();
+            $table->decimal('msrp', 12, 2)->nullable();
             $table->boolean('is_featured')->default(false)->index();
             $table->boolean('is_certified')->default(false);
             $table->date('acquired_at')->nullable();
@@ -43,8 +43,8 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->json('metadata')->nullable();
             $table->softDeletes();
-            $table->index(['branch_id','sale_price']);
-            $table->index(['make_id','model_id','year']);
+            $table->index(['branch_id', 'sale_price']);
+            $table->index(['make_id', 'model_id', 'year']);
             $table->timestamps();
         });
     }

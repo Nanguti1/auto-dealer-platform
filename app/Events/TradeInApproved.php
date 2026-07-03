@@ -13,7 +13,5 @@ class TradeInApproved
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly TradeInRequest $tradeInRequest)
-    {
-    }
+    public function __construct(public readonly TradeInRequest $tradeInRequest) {}
 }

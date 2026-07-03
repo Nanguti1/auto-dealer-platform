@@ -13,7 +13,5 @@ class LeadCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly Lead $lead)
-    {
-    }
+    public function __construct(public readonly Lead $lead) {}
 }

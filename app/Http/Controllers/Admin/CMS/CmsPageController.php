@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class CmsPageController extends Controller
 {
-    public function __construct(private readonly CMSService $service)
-    {
-    }
+    public function __construct(private readonly CMSService $service) {}
 
     public function index(Request $request): Response
     {

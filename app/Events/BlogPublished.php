@@ -13,7 +13,5 @@ class BlogPublished
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly BlogPost $blogPost)
-    {
-    }
+    public function __construct(public readonly BlogPost $blogPost) {}
 }

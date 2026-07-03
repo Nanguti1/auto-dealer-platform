@@ -15,5 +15,4 @@ class PromotionService
     {
         return Promotion::class;
     }
-
 }

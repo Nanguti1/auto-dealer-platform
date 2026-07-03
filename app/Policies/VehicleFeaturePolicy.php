@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\VehicleFeature;
 use App\Models\User;
+use App\Models\VehicleFeature;
 
 class VehicleFeaturePolicy
 {
-    public function viewAny(User $user,): bool
+    public function viewAny(User $user): bool
     {
         return $user !== null;
     }
@@ -19,7 +19,7 @@ class VehicleFeaturePolicy
         return $user !== null;
     }
 
-    public function create(User $user,): bool
+    public function create(User $user): bool
     {
         return $user !== null;
     }
@@ -68,5 +68,4 @@ class VehicleFeaturePolicy
     {
         return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
     }
-
 }

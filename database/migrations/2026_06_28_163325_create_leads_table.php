@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->string('email')->nullable()->index();
             $table->string('phone')->nullable();
-            $table->decimal('budget',12,2)->nullable();
+            $table->decimal('budget', 12, 2)->nullable();
             $table->timestamp('last_contacted_at')->nullable();
             $table->softDeletes();
             $table->timestamps();

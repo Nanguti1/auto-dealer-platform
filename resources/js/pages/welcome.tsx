@@ -1,10 +1,10 @@
 import { Head, Link } from '@inertiajs/react';
-import { 
-  Car, 
-  Search, 
-  TrendingUp, 
-  Award, 
-  Shield, 
+import {
+  Car,
+  Search,
+  TrendingUp,
+  Award,
+  Shield,
   Clock,
   Fuel,
   Gauge,
@@ -31,100 +31,52 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import GuestLayout from '@/layouts/guest/guest-layout';
 
-export default function Welcome() {
-  // Mock data - in production, this would come from the backend
-  const featuredVehicles = [
-    {
-      id: 1,
-      name: 'Tesla Model S',
-      brand: 'Tesla',
-      model: 'Model S',
-      year: 2024,
-      price: 89990,
-      mileage: 0,
-      fuelType: 'Electric',
-      transmission: 'Automatic',
-      seats: 5,
-      image: '/images/vehicles/tesla-model-s.jpg',
-      condition: 'new',
-      featured: true,
-    },
-    {
-      id: 2,
-      name: 'BMW X5',
-      brand: 'BMW',
-      model: 'X5',
-      year: 2023,
-      price: 65990,
-      mileage: 12500,
-      fuelType: 'Hybrid',
-      transmission: 'Automatic',
-      seats: 7,
-      image: '/images/vehicles/bmw-x5.jpg',
-      condition: 'used',
-      featured: true,
-    },
-    {
-      id: 3,
-      name: 'Mercedes-Benz E-Class',
-      brand: 'Mercedes-Benz',
-      model: 'E-Class',
-      year: 2024,
-      price: 72990,
-      mileage: 0,
-      fuelType: 'Gasoline',
-      transmission: 'Automatic',
-      seats: 5,
-      image: '/images/vehicles/mercedes-e-class.jpg',
-      condition: 'new',
-      featured: true,
-    },
-  ];
+interface WelcomeProps {
+  featuredVehicles: Array<{
+    id: number;
+    slug: string;
+    name: string;
+    brand: string;
+    model: string;
+    year: number;
+    price: number;
+    mileage: number;
+    fuelType: string;
+    transmission: string;
+    bodyType: string;
+    image: string;
+    condition: string;
+    featured: boolean;
+    stockNumber: string;
+    vin: string;
+    msrp: number | null;
+    color: string;
+    interiorColor: string;
+  }>;
+  latestArrivals: Array<{
+    id: number;
+    slug: string;
+    name: string;
+    brand: string;
+    model: string;
+    year: number;
+    price: number;
+    mileage: number;
+    fuelType: string;
+    transmission: string;
+    bodyType: string;
+    image: string;
+    condition: string;
+    featured: boolean;
+    stockNumber: string;
+    vin: string;
+    msrp: number | null;
+    color: string;
+    interiorColor: string;
+  }>;
+}
 
-  const latestArrivals = [
-    {
-      id: 4,
-      name: 'Porsche 911',
-      brand: 'Porsche',
-      model: '911 Carrera',
-      year: 2024,
-      price: 115990,
-      mileage: 500,
-      fuelType: 'Gasoline',
-      transmission: 'Automatic',
-      seats: 4,
-      image: '/images/vehicles/porsche-911.jpg',
-      condition: 'new',
-    },
-    {
-      id: 5,
-      name: 'Audi Q8',
-      brand: 'Audi',
-      model: 'Q8',
-      year: 2023,
-      price: 78990,
-      mileage: 8500,
-      fuelType: 'Gasoline',
-      transmission: 'Automatic',
-      seats: 5,
-      image: '/images/vehicles/audi-q8.jpg',
-      condition: 'used',
-    },
-    {
-      id: 6,
-      name: 'Land Rover Range Rover',
-      brand: 'Land Rover',
-      model: 'Range Rover',
-      year: 2024,
-      price: 105990,
-      mileage: 0,
-      fuelType: 'Hybrid',
-      transmission: 'Automatic',
-      seats: 5,
-      image: '/images/vehicles/range-rover.jpg',
-      condition: 'new',
-    },
-  ];
+export default function Welcome({ featuredVehicles, latestArrivals }: WelcomeProps) {
 
   const brands = [
     { id: 1, name: 'Tesla', logo: '/images/brands/tesla.png', vehicleCount: 45 },

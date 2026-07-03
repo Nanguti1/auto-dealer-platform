@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class LeadController extends Controller
 {
-    public function __construct(private readonly LeadService $service)
-    {
-    }
+    public function __construct(private readonly LeadService $service) {}
 
     public function index(Request $request): Response
     {

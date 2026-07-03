@@ -13,7 +13,5 @@ class VehicleUpdated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly Vehicle $vehicle)
-    {
-    }
+    public function __construct(public readonly Vehicle $vehicle) {}
 }

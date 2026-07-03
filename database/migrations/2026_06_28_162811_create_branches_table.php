@@ -22,11 +22,11 @@ return new class extends Migration
             $table->string('state')->index();
             $table->string('postal_code')->nullable();
             $table->string('country')->default('US');
-            $table->decimal('latitude',10,7)->nullable();
-            $table->decimal('longitude',10,7)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->boolean('is_active')->default(true)->index();
             $table->softDeletes();
-            $table->unique(['company_id','slug']);
+            $table->unique(['company_id', 'slug']);
             $table->timestamps();
         });
     }

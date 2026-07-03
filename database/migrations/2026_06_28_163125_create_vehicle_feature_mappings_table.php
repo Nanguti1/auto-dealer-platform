@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
             $table->foreignId('vehicle_feature_id')->constrained()->cascadeOnDelete();
-            $table->unique(['vehicle_id','vehicle_feature_id']);
+            $table->unique(['vehicle_id', 'vehicle_feature_id']);
             $table->timestamps();
         });
     }

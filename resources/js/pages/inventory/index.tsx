@@ -14,7 +14,7 @@ import {
     ActiveFilterTags,
     VehicleLoadingGrid,
 } from '@/components/vehicles';
-import { filterVehicles, mockFilterOptions } from '@/data/mock-vehicles';
+
 import { useCompare } from '@/hooks/use-compare';
 import { useSavedSearches } from '@/hooks/use-saved-searches';
 import { useWishlist } from '@/hooks/use-wishlist';
@@ -41,7 +41,7 @@ return 'grid';
         return (localStorage.getItem('dealership:inventory-view') as 'grid' | 'list' | null) ?? 'grid';
     });
     const filters = serverFilters;
-    const filterOptions = serverOptions ?? mockFilterOptions;
+    const filterOptions = serverOptions;
     const { toggle: toggleWishlist, isWishlisted } = useWishlist();
     const { toggle: toggleCompare, isInCompare, ids: compareIds, maxReached } = useCompare();
     const { save: saveSearch } = useSavedSearches();
@@ -59,14 +59,14 @@ return 'grid';
     }, [viewMode]);
 
     const vehicles: VehicleSummary[] = React.useMemo(() => {
-        const data = serverVehicles?.data ?? filterVehicles(filters as Record<string, string | number | undefined>);
+        const data = serverVehicles?.data ?? [];
 
         return data.map((v) => ({
             ...v,
             isWishlisted: v.isWishlisted ?? isWishlisted(v.id),
             isInCompare: v.isInCompare ?? isInCompare(v.id),
         }));
-    }, [serverVehicles, filters, isWishlisted, isInCompare]);
+    }, [serverVehicles, isWishlisted, isInCompare]);
 
     const applyFilters = (next: InventoryFilters) => {
         setLoading(true);

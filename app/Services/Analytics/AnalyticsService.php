@@ -15,5 +15,4 @@ class AnalyticsService
     {
         return AnalyticsData::class;
     }
-
 }

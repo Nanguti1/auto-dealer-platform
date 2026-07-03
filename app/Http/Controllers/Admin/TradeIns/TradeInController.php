@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class TradeInController extends Controller
 {
-    public function __construct(private readonly TradeInService $service)
-    {
-    }
+    public function __construct(private readonly TradeInService $service) {}
 
     public function index(Request $request): Response
     {

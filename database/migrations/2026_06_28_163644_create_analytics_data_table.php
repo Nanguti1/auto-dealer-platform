@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('metric')->index();
             $table->string('dimension')->nullable()->index();
-            $table->decimal('value',15,4)->default(0);
+            $table->decimal('value', 15, 4)->default(0);
             $table->date('recorded_on')->index();
             $table->json('metadata')->nullable();
             $table->timestamps();

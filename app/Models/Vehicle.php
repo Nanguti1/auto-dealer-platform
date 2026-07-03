@@ -43,9 +43,9 @@ class Vehicle extends Model
         return $this->belongsTo(Make::class, 'make_id');
     }
 
-    public function model(): BelongsTo
+    public function vehicleModel(): BelongsTo
     {
-        return $this->belongsTo(Model::class, 'model_id');
+        return $this->belongsTo(\App\Models\Model::class, 'model_id');
     }
 
     public function trimLevel(): BelongsTo

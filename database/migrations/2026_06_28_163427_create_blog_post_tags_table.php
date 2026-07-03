@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('blog_post_id')->constrained()->cascadeOnDelete();
             $table->foreignId('blog_tag_id')->constrained()->cascadeOnDelete();
-            $table->unique(['blog_post_id','blog_tag_id']);
+            $table->unique(['blog_post_id', 'blog_tag_id']);
             $table->timestamps();
         });
     }

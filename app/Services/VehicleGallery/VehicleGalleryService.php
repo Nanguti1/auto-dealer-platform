@@ -15,5 +15,4 @@ class VehicleGalleryService
     {
         return VehicleGallery::class;
     }
-
 }

@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class ImportController extends Controller
 {
-    public function __construct(private readonly ImportService $service)
-    {
-    }
+    public function __construct(private readonly ImportService $service) {}
 
     public function index(Request $request): Response
     {

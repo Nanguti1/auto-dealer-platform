@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class PromotionController extends Controller
 {
-    public function __construct(private readonly PromotionService $service)
-    {
-    }
+    public function __construct(private readonly PromotionService $service) {}
 
     public function index(Request $request): Response
     {

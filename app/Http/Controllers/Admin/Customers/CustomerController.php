@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class CustomerController extends Controller
 {
-    public function __construct(private readonly CustomerService $service)
-    {
-    }
+    public function __construct(private readonly CustomerService $service) {}
 
     public function index(Request $request): Response
     {

@@ -13,7 +13,5 @@ class FinanceApplicationSubmitted
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public readonly FinanceApplication $financeApplication)
-    {
-    }
+    public function __construct(public readonly FinanceApplication $financeApplication) {}
 }

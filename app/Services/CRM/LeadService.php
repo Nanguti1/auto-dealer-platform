@@ -15,5 +15,4 @@ class LeadService
     {
         return Lead::class;
     }
-
 }

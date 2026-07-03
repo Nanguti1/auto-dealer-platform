@@ -16,9 +16,7 @@ use Inertia\Response;
 
 class ReviewController extends Controller
 {
-    public function __construct(private readonly ReviewService $service)
-    {
-    }
+    public function __construct(private readonly ReviewService $service) {}
 
     public function index(Request $request): Response
     {
