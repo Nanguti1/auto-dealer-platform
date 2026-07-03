@@ -61,9 +61,9 @@ interface TableLoadingProps {
 
 export function TableLoading({ rows = 5, columns = 4, className }: TableLoadingProps) {
   return (
-    <div className={cn('space-y-2', className)}>
+    <div className={cn('space-y-2', className)} role="status" aria-live="polite" aria-label="Loading table data">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="h-10 bg-muted rounded animate-pulse" />
+        <div key={i} className="h-10 bg-muted rounded animate-pulse" aria-hidden="true" />
       ))}
     </div>
   );
@@ -76,9 +76,9 @@ interface CardLoadingProps {
 
 export function CardLoading({ count = 3, className }: CardLoadingProps) {
   return (
-    <div className={cn('grid gap-4 md:grid-cols-2 lg:grid-cols-3', className)}>
+    <div className={cn('grid gap-4 md:grid-cols-2 lg:grid-cols-3', className)} role="status" aria-live="polite" aria-label="Loading cards">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" />
+        <div key={i} className="h-32 bg-muted rounded-lg animate-pulse" aria-hidden="true" />
       ))}
     </div>
   );
@@ -91,9 +91,12 @@ interface ChartLoadingProps {
 
 export function ChartLoading({ height = 260, className }: ChartLoadingProps) {
   return (
-    <div 
+    <div
       className={cn('bg-muted rounded-lg animate-pulse', className)}
       style={{ height: `${height}px` }}
+      role="status"
+      aria-live="polite"
+      aria-label="Loading chart"
     />
   );
 }

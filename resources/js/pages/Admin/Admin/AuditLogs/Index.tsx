@@ -4,7 +4,7 @@ import * as React from 'react';
 import type { Paginated } from '@/components/admin/cms/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyState } from '@/components/admin/shared';
+import { LoadingState, EmptyState, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -59,6 +59,8 @@ export default function Index({
 }) {
   const [showFilters, setShowFilters] = React.useState(false);
   const [localFilters, setLocalFilters] = React.useState<Record<string, any>>(filters);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const handleFilterChange = (key: string, value: string) => {
     setLocalFilters((prev) => ({ ...prev, [key]: value }));
@@ -121,6 +123,40 @@ url.searchParams.set(key, value);
       render: (log) => new Date(log.created_at).toLocaleString(),
     },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
+            <p className="text-muted-foreground">View and filter system activity logs.</p>
+          </div>
+        </div>
+        <LoadingState message="Loading audit logs..." variant="full-page" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
+            <p className="text-muted-foreground">View and filter system activity logs.</p>
+          </div>
+        </div>
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(auditLogs.index.url());
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

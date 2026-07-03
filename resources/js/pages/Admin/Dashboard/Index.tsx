@@ -1,10 +1,9 @@
 import { Head, Link } from '@inertiajs/react';
 import { ArrowRight, BarChart3, CheckCircle2, Clock, DollarSign, Layers, Users } from 'lucide-react';
 import * as React from 'react';
-import { LoadingSkeleton } from '@/components/admin/loading-skeleton';
 import PageHeader from '@/components/admin/page-header';
 import PageWrapper from '@/components/admin/page-wrapper';
-import { EmptyState } from '@/components/admin/shared';
+import { LoadingState, EmptyState, ChartLoading } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AdminLayout from '@/layouts/admin/admin-layout';
@@ -155,7 +154,7 @@ export default function AdminDashboard({ summary, recentActivity, charts }: Admi
               </div>
             </CardHeader>
             <CardContent>
-              <React.Suspense fallback={<LoadingSkeleton variant="chart" />}>
+              <React.Suspense fallback={<ChartLoading height={260} />}>
                 <AreaChartComponent data={charts.sales} height={260} />
               </React.Suspense>
             </CardContent>
@@ -167,7 +166,7 @@ export default function AdminDashboard({ summary, recentActivity, charts }: Admi
                 <CardTitle>Inventory distribution</CardTitle>
               </CardHeader>
               <CardContent>
-                <React.Suspense fallback={<LoadingSkeleton variant="chart" />}>
+                <React.Suspense fallback={<ChartLoading height={240} />}>
                   <PieChartComponent data={charts.distribution} height={240} />
                 </React.Suspense>
               </CardContent>

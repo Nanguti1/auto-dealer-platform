@@ -5,7 +5,7 @@ import type { Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyState } from '@/components/admin/shared';
+import { LoadingState, EmptyState, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -26,6 +26,25 @@ interface Branch {
 
 export default function Index({ branches, filters = {} }: { branches: Paginated<Branch>; filters?: Record<string, any> }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
+
+  const handleDelete = React.useCallback(() => {
+    if (deleteId) {
+      setIsDeleting(true);
+      router.delete(branches.destroy.url(deleteId), {
+        onSuccess: () => {
+          setDeleteId(null);
+          setIsDeleting(false);
+        },
+        onError: (errors) => {
+          setError(new Error(errors.message || 'Failed to delete branch'));
+          setIsDeleting(false);
+        },
+      });
+    }
+  }, [deleteId]);
 
   const columns: Column<Branch>[] = [
     {
@@ -80,6 +99,40 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Branches</h1>
+            <p className="text-muted-foreground">Manage your dealership branches and locations.</p>
+          </div>
+        </div>
+        <LoadingState message="Loading branches..." variant="full-page" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Branches</h1>
+            <p className="text-muted-foreground">Manage your dealership branches and locations.</p>
+          </div>
+        </div>
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(branches.index.url());
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -121,25 +174,25 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
             <>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="size-4" />
+                  <Button variant="ghost" size="icon" aria-label={`More options for branch ${branch.id}`}>
+                    <MoreHorizontal className="size-4" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link href={branches.show.url(branch.id)}>
-                      <Eye className="mr-2 size-4" />
+                    <Link href={branches.show.url(branch.id)} aria-label={`View branch ${branch.id}`}>
+                      <Eye className="mr-2 size-4" aria-hidden="true" />
                       View
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href={branches.edit.url(branch.id)}>
-                      <Pencil className="mr-2 size-4" />
+                    <Link href={branches.edit.url(branch.id)} aria-label={`Edit branch ${branch.id}`}>
+                      <Pencil className="mr-2 size-4" aria-hidden="true" />
                       Edit
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setDeleteId(branch.id)}>
-                    <Trash2 className="mr-2 size-4" />
+                  <DropdownMenuItem onClick={() => setDeleteId(branch.id)} aria-label={`Delete branch ${branch.id}`}>
+                    <Trash2 className="mr-2 size-4" aria-hidden="true" />
                     Delete
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -149,9 +202,9 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
                 onOpenChange={(open) => !open && setDeleteId(null)}
                 title="Delete branch?"
                 description="This will permanently delete the branch and all associated data."
-                trigger={<span />}
                 confirmLabel="Delete"
-                onConfirm={() => router.delete(branches.destroy.url(branch.id), { onFinish: () => setDeleteId(null) })}
+                onConfirm={handleDelete}
+                isLoading={isDeleting}
               />
             </>
           )}

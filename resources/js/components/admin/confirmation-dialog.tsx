@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -19,7 +20,8 @@ interface ConfirmationDialogProps {
   confirmLabel?: string;
   cancelLabel?: string;
   onConfirm: () => void;
-  trigger: React.ReactNode;
+  trigger?: React.ReactNode;
+  isLoading?: boolean;
 }
 
 export default function ConfirmationDialog({
@@ -31,10 +33,11 @@ export default function ConfirmationDialog({
   cancelLabel = 'Cancel',
   onConfirm,
   trigger,
+  isLoading = false,
 }: ConfirmationDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="max-w-lg">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -42,9 +45,12 @@ export default function ConfirmationDialog({
         </DialogHeader>
         <DialogFooter className="mt-4 justify-end gap-2">
           <DialogClose asChild>
-            <Button variant="secondary">{cancelLabel}</Button>
+            <Button variant="secondary" disabled={isLoading}>{cancelLabel}</Button>
           </DialogClose>
-          <Button variant="destructive" onClick={onConfirm}>{confirmLabel}</Button>
+          <Button variant="destructive" onClick={onConfirm} disabled={isLoading} aria-label={confirmLabel}>
+            {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />}
+            {isLoading ? 'Processing...' : confirmLabel}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

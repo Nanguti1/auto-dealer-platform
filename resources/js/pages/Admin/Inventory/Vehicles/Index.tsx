@@ -16,6 +16,7 @@ import admin from '@/routes/admin';
 const Index = React.memo(function Index({ vehicles, filters = {} }: { vehicles: Paginated<AdminVehicle>; filters?: Filters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
 
   const columns: Column<AdminVehicle>[] = React.useMemo(() => [
@@ -51,15 +52,15 @@ const Index = React.memo(function Index({ vehicles, filters = {} }: { vehicles: 
 
   const handleDelete = React.useCallback(() => {
     if (deleteId) {
-      setIsLoading(true);
+      setIsDeleting(true);
       router.delete(admin.vehicles.destroy(deleteId).url, {
         onSuccess: () => {
           setDeleteId(null);
-          setIsLoading(false);
+          setIsDeleting(false);
         },
         onError: (errors) => {
           setError(new Error(errors.message || 'Failed to delete vehicle'));
-          setIsLoading(false);
+          setIsDeleting(false);
         },
       });
     }
@@ -166,7 +167,7 @@ const Index = React.memo(function Index({ vehicles, filters = {} }: { vehicles: 
         title="Delete vehicle"
         description="Are you sure you want to delete this vehicle? This action cannot be undone."
         onConfirm={handleDelete}
-        isLoading={isLoading}
+        isLoading={isDeleting}
       />
     </>
   );

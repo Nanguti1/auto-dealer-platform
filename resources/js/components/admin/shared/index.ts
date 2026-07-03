@@ -2,7 +2,7 @@ export { default as FormShell } from './FormShell';
 export { default as FormField } from './FormField';
 export { default as FormSection } from './FormSection';
 export { EmptyState, EmptyCustomers, EmptyVehicles, EmptyLeads, EmptyReservations, EmptyFinanceApplications, EmptySearchResults, EmptyDocuments, EmptyGeneric } from './EmptyState';
-export { LoadingState } from './LoadingState';
+export { LoadingState, TableLoading, CardLoading, ChartLoading } from './LoadingState';
 export { ErrorBoundary, InlineError } from './ErrorBoundary';
 export { default as ModuleShell } from './ModuleShell';
 export { default as StatusBadge } from './StatusBadge';
