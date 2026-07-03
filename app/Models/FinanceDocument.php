@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\BranchAware;
+use Database\Factories\FinanceDocumentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class FinanceDocument extends Model
 {
     use BranchAware, HasFactory;
+
+    protected static function newFactory()
+    {
+        return FinanceDocumentFactory::new();
+    }
 
     protected $fillable = ['finance_application_id', 'name', 'path', 'type'];
 

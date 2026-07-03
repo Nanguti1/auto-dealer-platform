@@ -22,7 +22,7 @@ class PaymentController extends Controller
     {
         $this->authorize('viewAny', Payment::class);
 
-        return Inertia::render('Admin/Sales/Payments/Index', [
+        return Inertia::render('Admin/Payments/Index', [
             'payments' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -32,7 +32,7 @@ class PaymentController extends Controller
     {
         $this->authorize('create', Payment::class);
 
-        return Inertia::render('Admin/Sales/Payments/Create');
+        return Inertia::render('Admin/Payments/Create');
     }
 
     public function store(StorePaymentRequest $request): RedirectResponse
@@ -46,7 +46,7 @@ class PaymentController extends Controller
     {
         $this->authorize('view', $payment);
 
-        return Inertia::render('Admin/Sales/Payments/Show', [
+        return Inertia::render('Admin/Payments/Show', [
             'payment' => $payment,
         ]);
     }
@@ -55,7 +55,7 @@ class PaymentController extends Controller
     {
         $this->authorize('update', $payment);
 
-        return Inertia::render('Admin/Sales/Payments/Edit', [
+        return Inertia::render('Admin/Payments/Edit', [
             'payment' => $payment,
         ]);
     }

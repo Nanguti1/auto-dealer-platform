@@ -19,9 +19,16 @@ class StoreFinanceApplicationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'vehicle_id' => ['required', 'exists:vehicles,id'],
+            'user_id' => ['required', 'exists:users,id'],
+            'lender_id' => ['sometimes', 'nullable', 'exists:lenders,id'],
+            'requested_amount' => ['required', 'numeric', 'min:0'],
+            'down_payment' => ['required', 'numeric', 'min:0'],
+            'term_months' => ['required', 'integer', 'min:1', 'max:120'],
+            'interest_rate' => ['sometimes', 'nullable', 'numeric', 'min:0', 'max:100'],
+            'estimated_monthly_payment' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:submitted,under_review,approved,rejected,funded'],
+            'applicant_data' => ['sometimes', 'nullable', 'array'],
         ];
     }
 }
