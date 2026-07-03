@@ -42,7 +42,7 @@ class SendNotification implements ShouldQueue
     private function handleCustomerRegistered(CustomerRegistered $event): void
     {
         $event->customer->user->notify(
-            new \App\Notifications\CustomerRegistered($event->customer)
+            new \App\Notifications\CustomerRegistered
         );
         Log::info("Sent customer registration notification to: {$event->customer->user->email}");
     }

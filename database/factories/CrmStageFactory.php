@@ -11,9 +11,9 @@ class CrmStageFactory extends Factory
         return [
             'name' => fake()->word(),
             'slug' => fake()->slug(),
-            'description' => fake()->sentence(),
-            'is_active' => true,
             'sort_order' => fake()->numberBetween(0, 100),
+            'is_won' => fake()->boolean(),
+            'is_lost' => fake()->boolean(),
         ];
     }
 }
