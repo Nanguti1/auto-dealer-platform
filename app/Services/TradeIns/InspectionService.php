@@ -7,6 +7,7 @@ namespace App\Services\TradeIns;
 use App\Models\TradeInInspection;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class InspectionService
 {
@@ -41,10 +42,15 @@ class InspectionService
 
     public function complete(TradeInInspection $inspection): TradeInInspection
     {
-        $inspection->update([
-            'status' => 'completed',
-        ]);
+        return DB::transaction(function () use ($inspection) {
+            $inspection->markAsCompleted();
 
-        return $inspection->fresh();
+            // Update the associated trade-in request status
+            if ($inspection->tradeInRequest) {
+                $inspection->tradeInRequest->markAsInspectionCompleted();
+            }
+
+            return $inspection->fresh();
+        });
     }
 }

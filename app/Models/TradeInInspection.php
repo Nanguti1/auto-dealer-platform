@@ -48,4 +48,29 @@ class TradeInInspection extends Model
     {
         return $this->belongsTo(User::class, 'inspector_id');
     }
+
+    public function markAsScheduled(): void
+    {
+        $this->update(['status' => 'scheduled']);
+    }
+
+    public function markAsInProgress(): void
+    {
+        $this->update(['status' => 'in_progress']);
+    }
+
+    public function markAsCompleted(): void
+    {
+        $this->update(['status' => 'completed']);
+    }
+
+    public function markAsFailed(): void
+    {
+        $this->update(['status' => 'failed']);
+    }
+
+    public function markAsCancelled(): void
+    {
+        $this->update(['status' => 'cancelled']);
+    }
 }

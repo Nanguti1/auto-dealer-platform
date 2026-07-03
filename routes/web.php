@@ -132,6 +132,9 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::get('pipeline', [PipelineController::class, 'index'])->name('pipeline.index');
         Route::patch('leads/{lead}/stage', [PipelineController::class, 'updateStage'])->name('leads.update-stage');
         Route::resource('trade-ins', TradeInController::class);
+        Route::patch('trade-ins/{trade_in}/approve', [TradeInController::class, 'approve'])->name('trade-ins.approve');
+        Route::patch('trade-ins/{trade_in}/reject', [TradeInController::class, 'reject'])->name('trade-ins.reject');
+        Route::patch('trade-ins/{trade_in}/convert-to-inventory', [TradeInController::class, 'convertToInventory'])->name('trade-ins.convert-to-inventory');
         Route::resource('inspections', InspectionController::class);
         Route::patch('inspections/{inspection}/complete', [InspectionController::class, 'complete'])->name('inspections.complete');
         Route::resource('offers', OfferController::class);

@@ -55,4 +55,35 @@ class TradeInOffer extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function markAsPending(): void
+    {
+        $this->update(['status' => 'pending']);
+    }
+
+    public function markAsAccepted(): void
+    {
+        $this->update([
+            'status' => 'accepted',
+            'accepted_at' => now(),
+        ]);
+    }
+
+    public function markAsRejected(): void
+    {
+        $this->update([
+            'status' => 'rejected',
+            'rejected_at' => now(),
+        ]);
+    }
+
+    public function markAsExpired(): void
+    {
+        $this->update(['status' => 'expired']);
+    }
+
+    public function markAsWithdrawn(): void
+    {
+        $this->update(['status' => 'withdrawn']);
+    }
 }

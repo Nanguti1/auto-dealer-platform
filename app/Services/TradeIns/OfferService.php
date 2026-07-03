@@ -7,6 +7,7 @@ namespace App\Services\TradeIns;
 use App\Models\TradeInOffer;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 class OfferService
 {
@@ -23,7 +24,8 @@ class OfferService
 
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('status', 'like', '%'.$filters['search'].'%');
+                $q->where('status', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('offer_amount', 'like', '%'.$filters['search'].'%');
             });
         }
 
@@ -41,21 +43,29 @@ class OfferService
 
     public function accept(TradeInOffer $offer): TradeInOffer
     {
-        $offer->update([
-            'status' => 'accepted',
-            'accepted_at' => now(),
-        ]);
+        return DB::transaction(function () use ($offer) {
+            $offer->markAsAccepted();
 
-        return $offer->fresh();
+            // Update the associated trade-in request status
+            if ($offer->tradeInRequest) {
+                $offer->tradeInRequest->markAsOfferAccepted();
+            }
+
+            return $offer->fresh();
+        });
     }
 
     public function reject(TradeInOffer $offer): TradeInOffer
     {
-        $offer->update([
-            'status' => 'rejected',
-            'rejected_at' => now(),
-        ]);
+        return DB::transaction(function () use ($offer) {
+            $offer->markAsRejected();
 
-        return $offer->fresh();
+            // Update the associated trade-in request status
+            if ($offer->tradeInRequest) {
+                $offer->tradeInRequest->markAsOfferRejected();
+            }
+
+            return $offer->fresh();
+        });
     }
 }

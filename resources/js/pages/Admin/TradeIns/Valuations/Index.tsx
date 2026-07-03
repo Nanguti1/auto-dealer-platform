@@ -4,17 +4,16 @@ import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { formatCurrency, formatDateTime } from '@/components/admin/trade-ins/helpers';
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
-import type { TradeInValuation, ValuationPagination, ValuationFilters } from '@/components/admin/trade-ins/types';
+import type { TradeInValuation, ValuationPagination, TradeInFilters } from '@/components/admin/trade-ins/types';
 import { Button } from '@/components/ui/button';
 
-export default function Index({ valuations, filters = {} }: { valuations: ValuationPagination; filters?: ValuationFilters }) {
+export default function Index({ valuations, filters = {} }: { valuations: ValuationPagination; filters?: TradeInFilters }) {
   const columns: Column<TradeInValuation>[] = [
     { key: 'trade_in_request_id', label: 'Trade-In Request', sortable: true, render: (row) => <Link href={`/admin/trade-ins/${row.trade_in_request_id}`} className="font-medium hover:underline">#{row.trade_in_request_id}</Link> },
-    { key: 'market_value', label: 'Market Value', sortable: true, render: (row) => formatCurrency(row.market_value) },
-    { key: 'estimated_resale_value', label: 'Resale Value', sortable: true, render: (row) => formatCurrency(row.estimated_resale_value) },
-    { key: 'repair_estimate', label: 'Repair Estimate', sortable: true, render: (row) => formatCurrency(row.repair_estimate) },
-    { key: 'final_trade_in_value', label: 'Final Value', sortable: true, render: (row) => formatCurrency(row.final_trade_in_value) },
-    { key: 'approval_status', label: 'Status', sortable: true, render: (row) => <span className="capitalize">{row.approval_status}</span> },
+    { key: 'trade_in_value', label: 'Trade-In Value', sortable: true, render: (row) => formatCurrency(row.trade_in_value) },
+    { key: 'wholesale_value', label: 'Wholesale Value', sortable: true, render: (row) => row.wholesale_value ? formatCurrency(row.wholesale_value) : '—' },
+    { key: 'retail_value', label: 'Retail Value', sortable: true, render: (row) => row.retail_value ? formatCurrency(row.retail_value) : '—' },
+    { key: 'valuation_method', label: 'Method', sortable: true, render: (row) => <span className="capitalize">{row.valuation_method}</span> },
     { key: 'created_at', label: 'Created', sortable: true, render: (row) => formatDateTime(row.created_at) },
   ];
 

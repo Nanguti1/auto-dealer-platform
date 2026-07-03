@@ -23,7 +23,8 @@ class ValuationService
 
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('valuation_method', 'like', '%'.$filters['search'].'%');
+                $q->where('valuation_method', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('trade_in_value', 'like', '%'.$filters['search'].'%');
             });
         }
 

@@ -47,7 +47,7 @@ class TradeInController extends Controller
         $this->authorize('view', $tradeInRequest);
 
         return Inertia::render('Admin/TradeIns/Requests/Show', [
-            'tradeInRequest' => $tradeInRequest,
+            'tradeInRequest' => $tradeInRequest->load(['user', 'vehicle', 'valuations', 'inspections', 'offers']),
         ]);
     }
 
@@ -73,5 +73,29 @@ class TradeInController extends Controller
         $this->service->delete($tradeInRequest);
 
         return redirect()->route('admin.trade-ins.index')->with('success', 'Deleted successfully.');
+    }
+
+    public function approve(TradeInRequest $tradeInRequest): RedirectResponse
+    {
+        $this->authorize('update', $tradeInRequest);
+        $this->service->approve($tradeInRequest);
+
+        return back()->with('success', 'Trade-in approved successfully.');
+    }
+
+    public function reject(TradeInRequest $tradeInRequest): RedirectResponse
+    {
+        $this->authorize('update', $tradeInRequest);
+        $this->service->reject($tradeInRequest);
+
+        return back()->with('success', 'Trade-in rejected successfully.');
+    }
+
+    public function convertToInventory(TradeInRequest $tradeInRequest): RedirectResponse
+    {
+        $this->authorize('update', $tradeInRequest);
+        $this->service->convertToInventory($tradeInRequest);
+
+        return redirect()->route('admin.inventory.index')->with('success', 'Trade-in converted to inventory successfully.');
     }
 }
