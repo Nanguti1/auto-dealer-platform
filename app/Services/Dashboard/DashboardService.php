@@ -26,12 +26,20 @@ class DashboardService
     {
         $user = auth()->user();
 
-        // Use withCount for better performance on related counts
+        // Optimize with single aggregated queries
+        $vehicleStats = Vehicle::forBranch($user)
+            ->selectRaw('
+                COUNT(*) as total,
+                SUM(CASE WHEN sold_at IS NULL THEN 1 ELSE 0 END) as available,
+                SUM(CASE WHEN sold_at IS NOT NULL THEN 1 ELSE 0 END) as sold
+            ')
+            ->first();
+
         return [
-            'totalVehicles' => Vehicle::forBranch($user)->count(),
-            'availableVehicles' => Vehicle::forBranch($user)->whereNull('sold_at')->count(),
+            'totalVehicles' => (int) $vehicleStats->total,
+            'availableVehicles' => (int) $vehicleStats->available,
             'reservedVehicles' => VehicleReservation::forBranchThrough($user, 'vehicle')->count(),
-            'soldVehicles' => Vehicle::forBranch($user)->whereNotNull('sold_at')->count(),
+            'soldVehicles' => (int) $vehicleStats->sold,
             'customers' => Customer::forBranchThrough($user, 'user')->count(),
             'leads' => Lead::forBranchThrough($user, 'vehicle')->count(),
             'reservations' => VehicleReservation::forBranchThrough($user, 'vehicle')->count(),
@@ -45,7 +53,9 @@ class DashboardService
     {
         $user = auth()->user();
 
+        // Optimize by selecting only needed columns
         $leadActivities = Lead::forBranchThrough($user, 'vehicle')
+            ->select('id', 'first_name', 'last_name', 'created_at')
             ->latest()
             ->limit($limit)
             ->get()
@@ -60,6 +70,7 @@ class DashboardService
             });
 
         $reservationActivities = VehicleReservation::forBranchThrough($user, 'vehicle')
+            ->select('id', 'vehicle_id', 'created_at')
             ->latest()
             ->limit($limit)
             ->get()
@@ -85,15 +96,15 @@ class DashboardService
     {
         $user = auth()->user();
 
-        // Sales trend over the last 6 months - optimized with indexed query
-        // Use database-agnostic date formatting
+        // Sales trend over the last 6 months - optimized with database aggregation
         $salesTrend = Vehicle::forBranch($user)
             ->whereNotNull('sold_at')
             ->where('sold_at', '>=', now()->subMonths(6))
+            ->selectRaw('DATE_FORMAT(sold_at, "%b") as month, COUNT(*) as count')
+            ->groupBy('month')
+            ->orderBy('sold_at')
             ->get()
-            ->groupBy(fn ($vehicle) => $vehicle->sold_at->format('M'))
-            ->map(fn ($vehicles, $month) => ['name' => $month, 'value' => $vehicles->count()])
-            ->values()
+            ->map(fn ($item) => ['name' => $item->month, 'value' => $item->count])
             ->toArray();
 
         // Ensure we have all 6 months even if no sales

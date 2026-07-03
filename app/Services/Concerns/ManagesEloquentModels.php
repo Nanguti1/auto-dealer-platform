@@ -46,7 +46,31 @@ trait ManagesEloquentModels
      */
     public function paginate(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        return $this->query($filters)->paginate($perPage)->withQueryString();
+        $query = $this->query($filters);
+
+        // Add eager loading for common relationships based on model type
+        $model = new ($this->modelClass());
+        $this->applyEagerLoading($query, $model);
+
+        return $query->paginate($perPage)->withQueryString();
+    }
+
+    /**
+     * Apply eager loading based on model type
+     */
+    protected function applyEagerLoading(Builder $query, EloquentModel $model): void
+    {
+        $eagerLoadMap = [
+            Vehicle::class => ['make', 'vehicleModel', 'inventoryStatus'],
+            Lead::class => ['crmStage', 'vehicle'],
+            FinanceApplication::class => ['lender', 'vehicle'],
+            VehicleReservation::class => ['vehicle'],
+            Customer::class => ['user'],
+        ];
+
+        if (isset($eagerLoadMap[$model::class])) {
+            $query->with($eagerLoadMap[$model::class]);
+        }
     }
 
     /**

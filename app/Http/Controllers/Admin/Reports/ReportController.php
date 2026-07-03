@@ -30,14 +30,32 @@ class ReportController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
+        // Optimize summary queries with single aggregated query
+        $startDate = $request->query('start_date', now()->subDays(30));
+        $endDate = $request->query('end_date', now());
+
+        $paymentStats = Payment::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('COUNT(*) as total_sales, SUM(amount) as total_revenue')
+            ->first();
+
+        $leadStats = Lead::forBranchThrough($user, 'vehicle')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('COUNT(*) as total_leads, SUM(CASE WHEN status = "converted" THEN 1 ELSE 0 END) as converted_leads')
+            ->first();
+
+        $conversionRate = $leadStats->total_leads > 0
+            ? ($leadStats->converted_leads / $leadStats->total_leads) * 100
+            : 0.0;
+
         return Inertia::render('Admin/Reports/Index', [
             'savedReports' => $savedReports,
             'summary' => [
-                'totalSales' => $this->getTotalSales($request, $user),
-                'totalRevenue' => $this->getTotalRevenue($request, $user),
+                'totalSales' => (int) $paymentStats->total_sales,
+                'totalRevenue' => (float) $paymentStats->total_revenue,
                 'totalVehicles' => Vehicle::forBranch($user)->count(),
-                'totalLeads' => Lead::forBranchThrough($user, 'vehicle')->count(),
-                'conversionRate' => $this->getConversionRate($request, $user),
+                'totalLeads' => (int) $leadStats->total_leads,
+                'conversionRate' => $conversionRate,
                 'avgFinanceAmount' => $this->getAvgFinanceAmount($request, $user),
             ],
         ]);
@@ -65,9 +83,9 @@ class ReportController extends Controller
         $salesByMake = Payment::forBranchThrough($user, 'vehicle')
             ->whereBetween('payments.created_at', [$startDate, $endDate])
             ->join('vehicles', 'payments.vehicle_id', '=', 'vehicles.id')
-            ->with('vehicle.make')
-            ->select('vehicles.make_id', DB::raw('COUNT(*) as count'))
-            ->groupBy('vehicles.make_id')
+            ->join('makes', 'vehicles.make_id', '=', 'makes.id')
+            ->select('vehicles.make_id', 'makes.name as make_name', DB::raw('COUNT(*) as count'))
+            ->groupBy('vehicles.make_id', 'makes.name')
             ->get();
 
         return Inertia::render('Admin/Reports/SalesReport', [
@@ -87,21 +105,21 @@ class ReportController extends Controller
         $user = $request->user();
 
         $inventoryData = Vehicle::forBranch($user)
-            ->with('inventoryStatus')
-            ->select('inventory_status_id', DB::raw('COUNT(*) as count'), DB::raw('AVG(sale_price) as avg_price'))
-            ->groupBy('inventory_status_id')
+            ->join('inventory_statuses', 'vehicles.inventory_status_id', '=', 'inventory_statuses.id')
+            ->select('inventory_status_id', 'inventory_statuses.name as status_name', DB::raw('COUNT(*) as count'), DB::raw('AVG(sale_price) as avg_price'))
+            ->groupBy('inventory_status_id', 'inventory_statuses.name')
             ->get();
 
         $inventoryByMake = Vehicle::forBranch($user)
-            ->with('make')
-            ->select('make_id', DB::raw('COUNT(*) as count'))
-            ->groupBy('make_id')
+            ->join('makes', 'vehicles.make_id', '=', 'makes.id')
+            ->select('make_id', 'makes.name as make_name', DB::raw('COUNT(*) as count'))
+            ->groupBy('make_id', 'makes.name')
             ->get();
 
         $inventoryByBodyType = Vehicle::forBranch($user)
-            ->with('bodyType')
-            ->select('body_type_id', DB::raw('COUNT(*) as count'))
-            ->groupBy('body_type_id')
+            ->join('body_types', 'vehicles.body_type_id', '=', 'body_types.id')
+            ->select('body_type_id', 'body_types.name as body_type_name', DB::raw('COUNT(*) as count'))
+            ->groupBy('body_type_id', 'body_types.name')
             ->get();
 
         $agedInventory = Vehicle::forBranch($user)
@@ -125,9 +143,9 @@ class ReportController extends Controller
         $endDate = $request->query('end_date', now()->toDateString());
 
         $leadsByStage = Lead::forBranchThrough($user, 'vehicle')
-            ->with('crmStage')
-            ->select('crm_stage_id', DB::raw('COUNT(*) as count'))
-            ->groupBy('crm_stage_id')
+            ->join('crm_stages', 'leads.crm_stage_id', '=', 'crm_stages.id')
+            ->select('crm_stage_id', 'crm_stages.name as stage_name', DB::raw('COUNT(*) as count'))
+            ->groupBy('crm_stage_id', 'crm_stages.name')
             ->get();
 
         $leadsBySource = Lead::forBranchThrough($user, 'vehicle')
@@ -184,9 +202,9 @@ class ReportController extends Controller
             ->get();
 
         $financeByLender = FinanceApplication::forBranchThrough($user, 'vehicle')
-            ->with('lender')
-            ->select('lender_id', DB::raw('COUNT(*) as count'))
-            ->groupBy('lender_id')
+            ->join('lenders', 'finance_applications.lender_id', '=', 'lenders.id')
+            ->select('lender_id', 'lenders.name as lender_name', DB::raw('COUNT(*) as count'))
+            ->groupBy('lender_id', 'lenders.name')
             ->get();
 
         return Inertia::render('Admin/Reports/FinanceReport', [
@@ -250,45 +268,6 @@ class ReportController extends Controller
             ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
     }
 
-    private function getTotalSales(Request $request, ?User $user = null): int
-    {
-        return Payment::forBranchThrough($user, 'vehicle')
-            ->whereBetween('created_at', [
-                $request->query('start_date', now()->subDays(30)),
-                $request->query('end_date', now()),
-            ])->count();
-    }
-
-    private function getTotalRevenue(Request $request, ?User $user = null): float
-    {
-        return (float) Payment::forBranchThrough($user, 'vehicle')
-            ->whereBetween('created_at', [
-                $request->query('start_date', now()->subDays(30)),
-                $request->query('end_date', now()),
-            ])->sum('amount');
-    }
-
-    private function getConversionRate(Request $request, ?User $user = null): float
-    {
-        $totalLeads = Lead::forBranchThrough($user, 'vehicle')
-            ->whereBetween('created_at', [
-                $request->query('start_date', now()->subDays(30)),
-                $request->query('end_date', now()),
-            ])->count();
-
-        if ($totalLeads === 0) {
-            return 0.0;
-        }
-
-        $convertedLeads = Lead::forBranchThrough($user, 'vehicle')
-            ->whereBetween('created_at', [
-                $request->query('start_date', now()->subDays(30)),
-                $request->query('end_date', now()),
-            ])->where('status', 'converted')->count();
-
-        return ($convertedLeads / $totalLeads) * 100;
-    }
-
     private function getAvgFinanceAmount(Request $request, ?User $user = null): float
     {
         return (float) FinanceApplication::forBranchThrough($user, 'vehicle')
@@ -302,7 +281,7 @@ class ReportController extends Controller
     {
         $user = $request->user();
         $payments = Payment::forBranchThrough($user, 'vehicle')
-            ->with(['vehicle', 'customer'])
+            ->with(['vehicle', 'user'])
             ->whereBetween('created_at', [
                 $request->query('start_date', now()->subDays(30)),
                 $request->query('end_date', now()),
@@ -323,14 +302,14 @@ class ReportController extends Controller
     {
         $user = $request->user();
         $vehicles = Vehicle::forBranch($user)
-            ->with(['make', 'model', 'inventoryStatus'])
+            ->with(['make', 'vehicleModel', 'inventoryStatus'])
             ->get();
 
         $csv = "VIN,Make,Model,Year,Price,Status,Days in Stock\n";
         foreach ($vehicles as $vehicle) {
             $daysInStock = $vehicle->created_at ? now()->diffInDays($vehicle->created_at) : 0;
             $makeName = $vehicle->make ? $vehicle->make->name : 'N/A';
-            $modelName = $vehicle->model ? $vehicle->model->name : 'N/A';
+            $modelName = $vehicle->vehicleModel ? $vehicle->vehicleModel->name : 'N/A';
             $statusName = $vehicle->inventoryStatus ? $vehicle->inventoryStatus->name : 'N/A';
             $csv .= "{$vehicle->vin},{$makeName},{$modelName},{$vehicle->year},{$vehicle->sale_price},{$statusName},{$daysInStock}\n";
         }

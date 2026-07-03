@@ -52,7 +52,7 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ summary, recentActivity, charts }: AdminDashboardProps) {
-  const statItems = [
+  const statItems = React.useMemo(() => [
     {
       icon: Layers,
       value: summary.totalVehicles,
@@ -77,9 +77,9 @@ export default function AdminDashboard({ summary, recentActivity, charts }: Admi
       label: 'Sold Vehicles',
       description: 'Vehicles marked as sold this year.',
     },
-  ];
+  ], [summary]);
 
-  const quickActions = [
+  const quickActions = React.useMemo(() => [
     {
       label: 'Add vehicle',
       href: adminRoutes.vehicles.create().url,
@@ -104,7 +104,7 @@ export default function AdminDashboard({ summary, recentActivity, charts }: Admi
       label: 'View analytics',
       href: adminRoutes.analytics.index().url,
     },
-  ];
+  ], []);
 
   return (
     <PageWrapper>
