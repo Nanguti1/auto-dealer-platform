@@ -5,7 +5,6 @@ import { EmptyState } from '@/components/design-system';
 import { H1, P } from '@/components/design-system/typography';
 import { Button } from '@/components/ui/button';
 import { VehicleComparisonTable } from '@/components/vehicles';
-import { findVehicleById, mockVehicles } from '@/data/mock-vehicles';
 import { useCompare } from '@/hooks/use-compare';
 import PublicLayout from '@/layouts/public/public-layout';
 import type { VehicleDetail } from '@/types/vehicle';
@@ -18,11 +17,14 @@ export default function ComparePage({ vehicles: serverVehicles }: ComparePagePro
     const { ids, remove, clear } = useCompare();
 
     const vehicles = React.useMemo(() => {
+        // If server provides vehicles, use those
         if (serverVehicles?.length) {
-return serverVehicles;
-}
+            return serverVehicles;
+        }
 
-        return ids.map((id) => findVehicleById(id)).filter(Boolean) as VehicleDetail[];
+        // Otherwise, the compare hook should handle everything client-side
+        // The vehicles are stored in localStorage by the useCompare hook
+        return [];
     }, [serverVehicles, ids]);
 
     return (

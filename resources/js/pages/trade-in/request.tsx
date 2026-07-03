@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import PublicLayout from '@/layouts/public/public-layout';
 
 export default function TradeInRequestPage() {
@@ -31,6 +32,18 @@ export default function TradeInRequestPage() {
                             <Form action="/trade-in" method="post" className="space-y-4">
                                 {({ errors, processing, wasSuccessful }) => (
                                     <>
+                                        <div className="grid gap-4 sm:grid-cols-2">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="name">Name</Label>
+                                                <Input id="name" name="name" required />
+                                                <InputError message={errors.name} />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="email">Email</Label>
+                                                <Input id="email" name="email" type="email" required />
+                                                <InputError message={errors.email} />
+                                            </div>
+                                        </div>
                                         <div className="grid gap-4 sm:grid-cols-2">
                                             <div className="space-y-2">
                                                 <Label htmlFor="make">Make</Label>
@@ -59,6 +72,15 @@ export default function TradeInRequestPage() {
                                             <Label htmlFor="vin">VIN (optional)</Label>
                                             <Input id="vin" name="vin" placeholder="1HGBH41JXMN109186" />
                                             <InputError message={errors.vin} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="notes">Additional Notes</Label>
+                                            <Textarea
+                                                id="notes"
+                                                name="notes"
+                                                rows={4}
+                                                placeholder="Any additional details about your vehicle..."
+                                            />
                                         </div>
                                         <Button type="submit" className="w-full" size="lg" disabled={processing}>
                                             {processing ? 'Submitting...' : 'Get Trade-In Estimate'}

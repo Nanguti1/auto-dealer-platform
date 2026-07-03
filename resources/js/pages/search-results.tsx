@@ -10,22 +10,46 @@ import { Input } from '@/components/ui/input';
 
 import PublicLayout from '@/layouts/public/public-layout';
 
-const articles = [
-    {
-        id: 'top-electric-vehicles-2024',
-        title: 'Top Electric Vehicles Defining Premium Mobility',
-        excerpt: 'A curated look at silent performance, long-range battery platforms, and luxury interiors shaping the next generation of EVs.',
-        image: 'https://picsum.photos/seed/blog-ev/1200/800',
-        category: 'Electric Vehicles',
-        publishedAt: '2024-01-15',
-        readTime: '5 min read',
-        author: { name: 'Avery Stone' },
-    },
-];
+interface Article {
+  id: number;
+  title: string;
+  excerpt: string;
+  image: string;
+  category: string;
+  publishedAt: string;
+  readTime: string;
+  author: { name: string };
+}
 
-export default function SearchResults() {
-    const vehicles: any[] = [];
+interface Vehicle {
+  id: number;
+  slug: string;
+  name: string;
+  brand: string;
+  model: string;
+  year: number;
+  price: number;
+  mileage: number;
+  fuelType: string;
+  transmission: string;
+  bodyType: string;
+  image: string;
+  condition: string;
+  featured: boolean;
+  stockNumber: string;
+  vin: string;
+  msrp: number | null;
+  color: string;
+  interiorColor: string;
+}
 
+interface SearchResultsProps {
+  vehicles: Vehicle[];
+  articles: Article[];
+  query: string;
+}
+
+export default function SearchResults({ vehicles, articles, query }: SearchResultsProps) {
     return (
         <PublicLayout title="Search Results" description="Search Dealership inventory, articles, services, and ownership tools from one premium discovery experience.">
             <Head title="Search Results" />
@@ -35,7 +59,7 @@ export default function SearchResults() {
                     <H1 className="mb-6">Find vehicles, services, and insights</H1>
                     <Lead className="mb-8">Search across inventory, editorial content, and customer resources.</Lead>
                     <form className="mx-auto flex max-w-2xl gap-3" action="/search">
-                        <Input name="q" aria-label="Search site" placeholder="Search by model, feature, article, or service" className="h-12" />
+                        <Input name="q" aria-label="Search site" placeholder="Search by model, feature, article, or service" className="h-12" defaultValue={query} />
                         <Button type="submit" size="lg"><Search className="mr-2 h-4 w-4" /> Search</Button>
                     </form>
                 </div>
@@ -61,11 +85,15 @@ export default function SearchResults() {
 
                     <div>
                         <H2 className="mb-6">Article matches</H2>
-                        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                            {articles.map((article) => (
-                                <BlogCard key={article.id} blog={article} />
-                            ))}
-                        </div>
+                        {articles.length > 0 ? (
+                            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                                {articles.map((article) => (
+                                    <BlogCard key={article.id} blog={article} />
+                                ))}
+                            </div>
+                        ) : (
+                            <EmptyState title="No article matches" description="Try adjusting your search terms or browse our blog." icon={Search} />
+                        )}
                     </div>
                 </div>
             </section>
