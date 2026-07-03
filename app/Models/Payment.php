@@ -41,4 +41,27 @@ class Payment extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function invoice(): BelongsTo
+    {
+        return $this->belongsTo(Invoice::class, 'invoice_id');
+    }
+
+    public function markAsPaid(): void
+    {
+        $this->update([
+            'status' => 'completed',
+            'paid_at' => now(),
+        ]);
+    }
+
+    public function markAsFailed(): void
+    {
+        $this->update(['status' => 'failed']);
+    }
+
+    public function markAsRefunded(): void
+    {
+        $this->update(['status' => 'refunded']);
+    }
 }

@@ -19,9 +19,13 @@ class UpdatePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'amount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'currency' => ['sometimes', 'nullable', 'string', 'max:3', 'in:USD,EUR,GBP,CAD'],
+            'method' => ['sometimes', 'nullable', 'string', 'in:credit_card,debit_card,bank_transfer,cash,check'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:pending,completed,failed,refunded'],
+            'transaction_reference' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'paid_at' => ['sometimes', 'nullable', 'date'],
+            'metadata' => ['sometimes', 'nullable', 'array'],
         ];
     }
 }

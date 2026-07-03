@@ -11,7 +11,7 @@ class Refund extends Model
 {
     use BranchAware, HasFactory;
 
-    protected $fillable = ['user_id', 'payment_id', 'invoice_id', 'refund_number', 'amount', 'currency', 'reason', 'status', 'processed_at'];
+    protected $fillable = ['user_id', 'payment_id', 'invoice_id', 'refund_number', 'amount', 'currency', 'reason', 'status', 'processed_at', 'notes'];
 
     protected function casts(): array
     {

@@ -19,9 +19,11 @@ class StoreReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'vehicle_id' => ['required', 'exists:vehicles,id'],
+            'user_id' => ['required', 'exists:users,id'],
+            'deposit_amount' => ['required', 'numeric', 'min:0'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:pending,confirmed,expired,cancelled,converted'],
+            'expires_at' => ['sometimes', 'nullable', 'date', 'after:now'],
         ];
     }
 }

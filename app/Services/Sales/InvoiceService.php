@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services\Sales;
 
 use App\Models\Invoice;
+use App\Models\User;
+use App\Models\Vehicle;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -63,6 +65,48 @@ class InvoiceService
             $data['invoice_number'] = $this->generateInvoiceNumber();
         }
 
-        return DB::transaction(fn (): Invoice => Invoice::query()->create($data));
+        return DB::transaction(function () use ($data): Invoice {
+            $invoice = Invoice::query()->create($data);
+
+            if (isset($data['vehicle_id']) && isset($data['user_id'])) {
+                $vehicle = Vehicle::find($data['vehicle_id']);
+                $user = User::find($data['user_id']);
+
+                if ($vehicle && $user) {
+                    $vehicle->markAsSold($user);
+                }
+            }
+
+            return $invoice;
+        });
+    }
+
+    public function finalize(Invoice $invoice): Invoice
+    {
+        return DB::transaction(function () use ($invoice): Invoice {
+            $invoice->update([
+                'status' => 'paid',
+                'issued_at' => now(),
+            ]);
+
+            if ($invoice->vehicle) {
+                $invoice->vehicle->markAsDelivered();
+            }
+
+            return $invoice->refresh();
+        });
+    }
+
+    public function cancel(Invoice $invoice): Invoice
+    {
+        return DB::transaction(function () use ($invoice): Invoice {
+            $invoice->update(['status' => 'cancelled']);
+
+            if ($invoice->vehicle) {
+                $invoice->vehicle->markAsCancelled();
+            }
+
+            return $invoice->refresh();
+        });
     }
 }

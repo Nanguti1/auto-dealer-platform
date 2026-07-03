@@ -105,6 +105,11 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::patch('vehicles/{vehicle}/feature', [VehicleController::class, 'feature'])->name('vehicles.feature');
         Route::patch('vehicles/{vehicle}/unfeature', [VehicleController::class, 'unfeature'])->name('vehicles.unfeature');
         Route::patch('vehicles/{vehicle}/mark-sold', [VehicleController::class, 'markSold'])->name('vehicles.mark-sold');
+        Route::patch('vehicles/{vehicle}/mark-available', [VehicleController::class, 'markAvailable'])->name('vehicles.mark-available');
+        Route::patch('vehicles/{vehicle}/mark-reserved', [VehicleController::class, 'markReserved'])->name('vehicles.mark-reserved');
+        Route::patch('vehicles/{vehicle}/mark-delivered', [VehicleController::class, 'markDelivered'])->name('vehicles.mark-delivered');
+        Route::patch('vehicles/{vehicle}/mark-cancelled', [VehicleController::class, 'markCancelled'])->name('vehicles.mark-cancelled');
+        Route::patch('vehicles/{vehicle}/mark-returned', [VehicleController::class, 'markReturned'])->name('vehicles.mark-returned');
         Route::post('vehicles/{vehicle}/duplicate', [VehicleController::class, 'duplicate'])->name('vehicles.duplicate');
         Route::resource('vehicle-galleries', VehicleGalleryController::class);
         Route::resource('vehicle-features', VehicleFeatureController::class);
@@ -146,6 +151,9 @@ Route::middleware(['auth', 'verified', 'admin'])
             ]);
         });
         Route::resource('reservations', ReservationController::class);
+        Route::patch('reservations/{vehicleReservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
+        Route::patch('reservations/{vehicleReservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
+        Route::patch('reservations/{vehicleReservation}/convert-to-sale', [ReservationController::class, 'convertToSale'])->name('reservations.convert-to-sale');
         Route::resource('imports', ImportController::class);
         Route::prefix('imports/{vehicleImport}')->group(function (): void {
             Route::resource('documents', ImportDocumentController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])->names([
@@ -165,6 +173,8 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::patch('import-payments/{importPayment}/mark-as-paid', [ImportPaymentController::class, 'markAsPaid'])->name('import-payments.mark-as-paid');
         Route::resource('payments', PaymentController::class);
         Route::resource('invoices', InvoiceController::class);
+        Route::patch('invoices/{invoice}/finalize', [InvoiceController::class, 'finalize'])->name('invoices.finalize');
+        Route::patch('invoices/{invoice}/cancel', [InvoiceController::class, 'cancel'])->name('invoices.cancel');
         Route::resource('receipts', ReceiptController::class);
         Route::resource('refunds', RefundController::class);
         Route::patch('refunds/{refund}/process', [RefundController::class, 'process'])->name('refunds.process');

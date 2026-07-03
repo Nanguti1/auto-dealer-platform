@@ -74,4 +74,33 @@ class ReservationController extends Controller
 
         return redirect()->route('admin.reservations.index')->with('success', 'Deleted successfully.');
     }
+
+    public function confirm(VehicleReservation $vehicleReservation): RedirectResponse
+    {
+        $this->authorize('update', $vehicleReservation);
+        $vehicleReservation->confirm();
+
+        return back()->with('success', 'Reservation confirmed successfully.');
+    }
+
+    public function cancel(VehicleReservation $vehicleReservation): RedirectResponse
+    {
+        $this->authorize('update', $vehicleReservation);
+        $vehicleReservation->cancel();
+
+        return back()->with('success', 'Reservation cancelled successfully.');
+    }
+
+    public function convertToSale(VehicleReservation $vehicleReservation): RedirectResponse
+    {
+        $this->authorize('update', $vehicleReservation);
+
+        $vehicleReservation->update(['status' => 'converted']);
+        $vehicleReservation->vehicle->markAsSold($vehicleReservation->user);
+
+        return redirect()->route('admin.invoices.create', [
+            'vehicle_id' => $vehicleReservation->vehicle_id,
+            'user_id' => $vehicleReservation->user_id,
+        ])->with('success', 'Reservation converted to sale successfully.');
+    }
 }

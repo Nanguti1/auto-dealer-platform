@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Inventory;
 
 use App\Exceptions\VehicleAlreadySoldException;
+use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Support\Facades\DB;
@@ -41,13 +42,18 @@ class VehicleService
         $this->delete($vehicle);
     }
 
-    public function markSold(Vehicle $vehicle): Vehicle
+    public function markSold(Vehicle $vehicle, ?User $buyer = null): Vehicle
     {
         if ($vehicle->sold_at !== null) {
             throw new VehicleAlreadySoldException('This vehicle has already been marked as sold.');
         }
 
-        return $this->update($vehicle, ['sold_at' => now(), 'is_featured' => false]);
+        $data = ['sold_at' => now(), 'is_featured' => false];
+        if ($buyer) {
+            $data['assigned_user_id'] = $buyer->id;
+        }
+
+        return $this->update($vehicle, $data);
     }
 
     public function duplicate(Vehicle $vehicle): Vehicle

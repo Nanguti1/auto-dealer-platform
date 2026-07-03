@@ -23,9 +23,9 @@ class UpdateReceiptRequest extends FormRequest
             'invoice_id' => ['sometimes', 'nullable', 'exists:invoices,id'],
             'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
             'receipt_number' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'amount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
-            'payment_method' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'amount' => ['sometimes', 'nullable', 'numeric', 'min:0.01'],
+            'payment_method' => ['sometimes', 'nullable', 'string', 'in:credit_card,debit_card,bank_transfer,cash,check'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:issued,void'],
             'notes' => ['sometimes', 'nullable', 'string'],
         ];
     }

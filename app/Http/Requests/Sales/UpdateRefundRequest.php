@@ -23,9 +23,9 @@ class UpdateRefundRequest extends FormRequest
             'invoice_id' => ['sometimes', 'nullable', 'exists:invoices,id'],
             'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
             'refund_number' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'amount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'amount' => ['sometimes', 'nullable', 'numeric', 'min:0.01'],
             'reason' => ['sometimes', 'nullable', 'string'],
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:pending,processed,failed'],
             'processed_at' => ['sometimes', 'nullable', 'date'],
             'notes' => ['sometimes', 'nullable', 'string'],
         ];

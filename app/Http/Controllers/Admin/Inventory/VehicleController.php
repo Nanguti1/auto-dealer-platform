@@ -99,6 +99,46 @@ class VehicleController extends Controller
         return back()->with('success', 'Vehicle marked as sold.');
     }
 
+    public function markAvailable(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('update', $vehicle);
+        $vehicle->markAsAvailable();
+
+        return back()->with('success', 'Vehicle marked as available.');
+    }
+
+    public function markReserved(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('update', $vehicle);
+        $vehicle->markAsReserved();
+
+        return back()->with('success', 'Vehicle marked as reserved.');
+    }
+
+    public function markDelivered(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('update', $vehicle);
+        $vehicle->markAsDelivered();
+
+        return back()->with('success', 'Vehicle marked as delivered.');
+    }
+
+    public function markCancelled(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('update', $vehicle);
+        $vehicle->markAsCancelled();
+
+        return back()->with('success', 'Vehicle marked as cancelled.');
+    }
+
+    public function markReturned(Vehicle $vehicle): RedirectResponse
+    {
+        $this->authorize('update', $vehicle);
+        $vehicle->markAsReturned();
+
+        return back()->with('success', 'Vehicle marked as returned.');
+    }
+
     public function duplicate(Vehicle $vehicle): RedirectResponse
     {
         $this->authorize('create', Vehicle::class);

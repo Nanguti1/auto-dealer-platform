@@ -68,11 +68,18 @@ class RefundService
 
     public function process(Refund $refund): Refund
     {
-        $refund->update([
-            'status' => 'processed',
-            'processed_at' => now(),
-        ]);
+        return DB::transaction(function () use ($refund) {
+            $refund->update([
+                'status' => 'processed',
+                'processed_at' => now(),
+            ]);
 
-        return $refund->fresh();
+            // Update the associated payment status
+            if ($refund->payment) {
+                $refund->payment->markAsRefunded();
+            }
+
+            return $refund->fresh();
+        });
     }
 }

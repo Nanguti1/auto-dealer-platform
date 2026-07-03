@@ -117,4 +117,85 @@ class Vehicle extends Model
     {
         return $this->belongsTo(InventoryStatus::class, 'inventory_status_id');
     }
+
+    public function reservations(): HasMany
+    {
+        return $this->hasMany(VehicleReservation::class, 'vehicle_id');
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class, 'vehicle_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'vehicle_id');
+    }
+
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+
+    public function markAsReserved(): void
+    {
+        $reservedStatus = InventoryStatus::where('slug', 'reserved')->first();
+        if ($reservedStatus) {
+            $this->update(['inventory_status_id' => $reservedStatus->id]);
+        }
+    }
+
+    public function markAsAvailable(): void
+    {
+        $availableStatus = InventoryStatus::where('slug', 'available')->first();
+        if ($availableStatus) {
+            $this->update(['inventory_status_id' => $availableStatus->id, 'assigned_user_id' => null]);
+        }
+    }
+
+    public function markAsSold(User $buyer): void
+    {
+        $soldStatus = InventoryStatus::where('slug', 'sold')->first();
+        if ($soldStatus) {
+            $this->update([
+                'inventory_status_id' => $soldStatus->id,
+                'assigned_user_id' => $buyer->id,
+                'sold_at' => now(),
+                'is_featured' => false,
+            ]);
+        }
+    }
+
+    public function markAsDelivered(): void
+    {
+        $deliveredStatus = InventoryStatus::where('slug', 'delivered')->first();
+        if ($deliveredStatus) {
+            $this->update(['inventory_status_id' => $deliveredStatus->id]);
+        }
+    }
+
+    public function markAsCancelled(): void
+    {
+        $cancelledStatus = InventoryStatus::where('slug', 'cancelled')->first();
+        if ($cancelledStatus) {
+            $this->update([
+                'inventory_status_id' => $cancelledStatus->id,
+                'assigned_user_id' => null,
+                'sold_at' => null,
+            ]);
+        }
+    }
+
+    public function markAsReturned(): void
+    {
+        $returnedStatus = InventoryStatus::where('slug', 'returned')->first();
+        if ($returnedStatus) {
+            $this->update([
+                'inventory_status_id' => $returnedStatus->id,
+                'assigned_user_id' => null,
+                'sold_at' => null,
+            ]);
+        }
+    }
 }

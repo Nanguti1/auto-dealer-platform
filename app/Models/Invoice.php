@@ -12,7 +12,7 @@ class Invoice extends Model
 {
     use BranchAware, HasFactory;
 
-    protected $fillable = ['user_id', 'vehicle_id', 'payment_id', 'invoice_number', 'subtotal', 'tax_total', 'total', 'status', 'issued_at', 'due_at'];
+    protected $fillable = ['user_id', 'vehicle_id', 'payment_id', 'invoice_number', 'subtotal', 'tax_total', 'total', 'status', 'issued_at', 'due_at', 'branch_id'];
 
     protected function casts(): array
     {
@@ -38,6 +38,16 @@ class Invoice extends Model
     public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class, 'payment_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function branch(): BelongsTo
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 
     public function receipts(): HasMany

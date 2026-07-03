@@ -35,4 +35,22 @@ class VehicleReservation extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function confirm(): void
+    {
+        $this->update(['status' => 'confirmed']);
+        $this->vehicle->markAsReserved();
+    }
+
+    public function cancel(): void
+    {
+        $this->update(['status' => 'cancelled']);
+        $this->vehicle->markAsAvailable();
+    }
+
+    public function expire(): void
+    {
+        $this->update(['status' => 'expired']);
+        $this->vehicle->markAsAvailable();
+    }
 }

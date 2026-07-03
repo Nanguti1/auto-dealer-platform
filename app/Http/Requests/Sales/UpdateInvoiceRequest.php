@@ -22,14 +22,26 @@ class UpdateInvoiceRequest extends FormRequest
             'vehicle_id' => ['sometimes', 'nullable', 'exists:vehicles,id'],
             'payment_id' => ['sometimes', 'nullable', 'exists:payments,id'],
             'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
+            'branch_id' => ['sometimes', 'nullable', 'exists:branches,id'],
             'invoice_number' => ['sometimes', 'nullable', 'string', 'max:255'],
             'subtotal' => ['sometimes', 'nullable', 'numeric', 'min:0'],
-            'tax' => ['sometimes', 'nullable', 'numeric', 'min:0'],
-            'discount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'tax_total' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'total' => ['sometimes', 'nullable', 'numeric', 'min:0'],
-            'due_date' => ['sometimes', 'nullable', 'date'],
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'notes' => ['sometimes', 'nullable', 'string'],
+            'issued_at' => ['sometimes', 'nullable', 'date'],
+            'due_at' => ['sometimes', 'nullable', 'date', 'after:issued_at'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:draft,sent,paid,overdue,cancelled'],
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->filled('subtotal') && $this->filled('tax_total') && $this->filled('total')) {
+                $calculatedTotal = $this->subtotal + $this->tax_total;
+                if (abs($this->total - $calculatedTotal) > 0.01) {
+                    $validator->errors()->add('total', 'Total must equal subtotal plus tax total.');
+                }
+            }
+        });
     }
 }

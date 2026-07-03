@@ -19,9 +19,11 @@ class UpdateReservationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'vehicle_id' => ['sometimes', 'nullable', 'exists:vehicles,id'],
+            'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
+            'deposit_amount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:pending,confirmed,expired,cancelled,converted'],
+            'expires_at' => ['sometimes', 'nullable', 'date', 'after:now'],
         ];
     }
 }

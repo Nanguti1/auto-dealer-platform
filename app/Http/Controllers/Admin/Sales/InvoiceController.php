@@ -74,4 +74,20 @@ class InvoiceController extends Controller
 
         return redirect()->route('admin.invoices.index')->with('success', 'Invoice deleted successfully.');
     }
+
+    public function finalize(Invoice $invoice): RedirectResponse
+    {
+        $this->authorize('update', $invoice);
+        $this->service->finalize($invoice);
+
+        return back()->with('success', 'Invoice finalized successfully.');
+    }
+
+    public function cancel(Invoice $invoice): RedirectResponse
+    {
+        $this->authorize('update', $invoice);
+        $this->service->cancel($invoice);
+
+        return back()->with('success', 'Invoice cancelled successfully.');
+    }
 }
