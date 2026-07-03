@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Imports;
 
+use App\Jobs\ImportVehicles;
 use App\Models\VehicleImport;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -34,5 +35,18 @@ class ImportService
 
         return $query->orderBy('created_at', 'desc')
             ->paginate($filters['per_page'] ?? 15);
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function create(array $data): VehicleImport
+    {
+        $import = parent::create($data);
+
+        // Dispatch import processing job asynchronously
+        ImportVehicles::dispatch($import);
+
+        return $import;
     }
 }

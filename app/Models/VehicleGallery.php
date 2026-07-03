@@ -11,13 +11,14 @@ class VehicleGallery extends Model
 {
     use BranchAware, HasFactory;
 
-    protected $fillable = ['vehicle_id', 'path', 'alt_text', 'is_primary', 'sort_order'];
+    protected $fillable = ['vehicle_id', 'path', 'alt_text', 'is_primary', 'sort_order', 'metadata'];
 
     protected function casts(): array
     {
         return [
             'is_primary' => 'boolean',
             'sort_order' => 'integer',
+            'metadata' => 'array',
         ];
     }
 
