@@ -74,9 +74,35 @@ interface WelcomeProps {
     color: string;
     interiorColor: string;
   }>;
+  heroSliders: Array<{
+    id: number;
+    title: string;
+    subtitle: string;
+    image: string;
+    ctaLabel: string;
+    ctaUrl: string;
+  }>;
+  testimonials: Array<{
+    id: number;
+    name: string;
+    role: string;
+    rating: number;
+    content: string;
+    avatar: string;
+  }>;
+  latestBlogs: Array<{
+    id: number;
+    title: string;
+    excerpt: string;
+    image: string;
+    category: string;
+    publishedAt: string;
+    readTime: string;
+    author: { name: string };
+  }>;
 }
 
-export default function Welcome({ featuredVehicles, latestArrivals }: WelcomeProps) {
+export default function Welcome({ featuredVehicles, latestArrivals, heroSliders, testimonials, latestBlogs }: WelcomeProps) {
 
   const brands = [
     { id: 1, name: 'Tesla', logo: '/images/brands/tesla.png', vehicleCount: 45 },
@@ -96,66 +122,6 @@ export default function Welcome({ featuredVehicles, latestArrivals }: WelcomePro
     { id: 6, name: 'Electric', icon: Car, count: 28 },
   ];
 
-  const testimonials = [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      role: 'First-time Buyer',
-      rating: 5,
-      content: 'Amazing experience! The team made my first car purchase stress-free. They were patient, knowledgeable, and helped me find the perfect car within my budget.',
-      avatar: '',
-    },
-    {
-      id: 2,
-      name: 'Michael Chen',
-      role: 'Business Owner',
-      rating: 5,
-      content: 'I\'ve purchased multiple vehicles for my business here. The service is consistently excellent, and the finance team always gets us great rates.',
-      avatar: '',
-    },
-    {
-      id: 3,
-      name: 'Emily Rodriguez',
-      role: 'Family of Four',
-      rating: 5,
-      content: 'We needed a reliable family SUV, and they delivered. The staff listened to our needs and recommended the perfect vehicle. The whole family loves it!',
-      avatar: '',
-    },
-  ];
-
-  const latestBlogs = [
-    {
-      id: 1,
-      title: 'Top 10 Electric Vehicles for 2024',
-      excerpt: 'Discover the best electric vehicles on the market this year, from luxury sedans to practical SUVs.',
-      image: '/images/blog/ev-2024.jpg',
-      category: 'Electric Vehicles',
-      publishedAt: '2024-01-15',
-      readTime: '5 min read',
-      author: { name: 'John Smith' },
-    },
-    {
-      id: 2,
-      title: 'Understanding Car Financing Options',
-      excerpt: 'Learn about different financing options and how to choose the best one for your situation.',
-      image: '/images/blog/financing.jpg',
-      category: 'Finance',
-      publishedAt: '2024-01-10',
-      readTime: '7 min read',
-      author: { name: 'Sarah Johnson' },
-    },
-    {
-      id: 3,
-      title: 'Spring Car Maintenance Tips',
-      excerpt: 'Prepare your vehicle for the season with these essential maintenance tips.',
-      image: '/images/blog/maintenance.jpg',
-      category: 'Maintenance',
-      publishedAt: '2024-01-05',
-      readTime: '4 min read',
-      author: { name: 'Mike Davis' },
-    },
-  ];
-
   const partners = [
     { id: 1, name: 'Toyota Financial', logo: '/images/partners/toyota.png' },
     { id: 2, name: 'BMW Financial', logo: '/images/partners/bmw.png' },
@@ -164,6 +130,14 @@ export default function Welcome({ featuredVehicles, latestArrivals }: WelcomePro
     { id: 5, name: 'Bank of America', logo: '/images/partners/boa.png' },
   ];
 
+  const heroSlider = heroSliders?.[0] || {
+    title: 'Find Your Dream Vehicle',
+    subtitle: 'Browse our premium selection of quality vehicles',
+    image: '/images/hero/default.jpg',
+    ctaLabel: 'Browse Inventory',
+    ctaUrl: '/inventory',
+  };
+
   return (
     <GuestLayout title="Home" description="Shop premium vehicles with luxury browsing, search, finance, trade-in, import, and customer ownership tools.">
       <Head title="Home" />
@@ -171,7 +145,13 @@ export default function Welcome({ featuredVehicles, latestArrivals }: WelcomePro
       
       <main>
         {/* Hero Section */}
-        <HeroSection />
+        <HeroSection
+          title={heroSlider.title}
+          subtitle={heroSlider.subtitle}
+          image={heroSlider.image}
+          ctaLabel={heroSlider.ctaLabel}
+          ctaUrl={heroSlider.ctaUrl}
+        />
 
         {/* Vehicle Search */}
         <section className="relative z-20 pt-12 pb-20 md:pt-16">
@@ -363,9 +343,11 @@ export default function Welcome({ featuredVehicles, latestArrivals }: WelcomePro
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {testimonials.map((testimonial) => (
+              {testimonials.length > 0 ? testimonials.map((testimonial) => (
                 <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-              ))}
+              )) : (
+                <p className="col-span-3 text-center text-muted-foreground">No testimonials available at this time.</p>
+              )}
             </div>
 
             <div className="text-center mt-12">
@@ -391,9 +373,11 @@ export default function Welcome({ featuredVehicles, latestArrivals }: WelcomePro
             </div>
 
             <div className="grid md:grid-cols-3 gap-6">
-              {latestBlogs.map((blog) => (
+              {latestBlogs.length > 0 ? latestBlogs.map((blog) => (
                 <BlogCard key={blog.id} blog={blog} />
-              ))}
+              )) : (
+                <p className="col-span-3 text-center text-muted-foreground">No blog posts available at this time.</p>
+              )}
             </div>
 
             <div className="text-center mt-12">

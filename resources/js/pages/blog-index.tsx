@@ -6,42 +6,30 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import PublicLayout from '@/layouts/public/public-layout';
 
-const posts = [
-    {
-        id: 'top-electric-vehicles-2024',
-        title: 'Top Electric Vehicles Defining Premium Mobility',
-        excerpt: 'A curated look at silent performance, long-range battery platforms, and luxury interiors shaping the next generation of EVs.',
-        image: 'https://picsum.photos/seed/blog-ev/1200/800',
-        category: 'Electric Vehicles',
-        publishedAt: '2024-01-15',
-        readTime: '5 min read',
-        author: { name: 'Avery Stone' },
-    },
-    {
-        id: 'luxury-financing-guide',
-        title: 'How to Structure Financing for a Luxury Vehicle',
-        excerpt: 'Compare payment strategies, down-payment scenarios, and ownership costs before reserving your next premium vehicle.',
-        image: 'https://picsum.photos/seed/blog-finance/1200/800',
-        category: 'Finance',
-        publishedAt: '2024-01-10',
-        readTime: '7 min read',
-        author: { name: 'Maya Chen' },
-    },
-    {
-        id: 'performance-suv-buying-guide',
-        title: 'Performance SUV Buying Guide',
-        excerpt: 'What to evaluate when comparing high-output family SUVs, from adaptive suspension to connected driver assistance.',
-        image: 'https://picsum.photos/seed/blog-suv/1200/800',
-        category: 'Buying Guides',
-        publishedAt: '2024-01-05',
-        readTime: '6 min read',
-        author: { name: 'Julian Reyes' },
-    },
-];
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  image: string;
+  category: string;
+  publishedAt: string;
+  readTime: string;
+  author: { name: string };
+}
 
-const categories = ['Electric Vehicles', 'Buying Guides', 'Finance', 'Ownership', 'Technology'];
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+}
 
-export default function BlogIndex() {
+interface BlogIndexProps {
+  posts: BlogPost[];
+  categories: Category[];
+  currentCategory: string | null;
+}
+
+export default function BlogIndex({ posts, categories, currentCategory }: BlogIndexProps) {
     return (
         <PublicLayout title="Blog" description="Read premium automotive guides, finance insights, EV trends, maintenance tips, and buying advice from Dealership.">
             <Head title="Blog" />
@@ -69,8 +57,14 @@ export default function BlogIndex() {
                             <H2 className="mb-3 text-2xl">Categories</H2>
                             <div className="flex flex-wrap gap-2 lg:flex-col">
                                 {categories.map((category) => (
-                                    <a key={category} href={`/blog?category=${encodeURIComponent(category)}`} className="rounded-full border px-4 py-2 text-sm transition-colors hover:bg-muted">
-                                        {category}
+                                    <a
+                                        key={category.id}
+                                        href={`/blog?category=${encodeURIComponent(category.slug)}`}
+                                        className={`rounded-full border px-4 py-2 text-sm transition-colors hover:bg-muted ${
+                                            currentCategory === category.slug ? 'bg-primary text-primary-foreground' : ''
+                                        }`}
+                                    >
+                                        {category.name}
                                     </a>
                                 ))}
                             </div>
@@ -78,9 +72,11 @@ export default function BlogIndex() {
                     </aside>
 
                     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                        {posts.map((post) => (
+                        {posts.length > 0 ? posts.map((post) => (
                             <BlogCard key={post.id} blog={post} />
-                        ))}
+                        )) : (
+                            <p className="col-span-full text-center text-muted-foreground">No blog posts available at this time.</p>
+                        )}
                     </div>
                 </div>
             </section>

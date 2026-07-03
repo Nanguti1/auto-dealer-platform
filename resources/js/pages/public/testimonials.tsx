@@ -6,57 +6,20 @@ import StickyNav from '@/components/navigation/sticky-nav';
 import TestimonialCard from '@/components/shared/testimonial-card';
 import GuestLayout from '@/layouts/guest/guest-layout';
 
-export default function Testimonials() {
-  const testimonials = [
-    {
-      id: 1,
-      name: 'Sarah Johnson',
-      role: 'First-time Buyer',
-      rating: 5,
-      content: 'Amazing experience! The team made my first car purchase stress-free. They were patient, knowledgeable, and helped me find the perfect car within my budget.',
-      avatar: '',
-    },
-    {
-      id: 2,
-      name: 'Michael Chen',
-      role: 'Business Owner',
-      rating: 5,
-      content: 'I\'ve purchased multiple vehicles for my business here. The service is consistently excellent, and the finance team always gets us great rates.',
-      avatar: '',
-    },
-    {
-      id: 3,
-      name: 'Emily Rodriguez',
-      role: 'Family of Four',
-      rating: 5,
-      content: 'We needed a reliable family SUV, and they delivered. The staff listened to our needs and recommended the perfect vehicle. The whole family loves it!',
-      avatar: '',
-    },
-    {
-      id: 4,
-      name: 'David Thompson',
-      role: 'Repeat Customer',
-      rating: 5,
-      content: 'This is my third purchase from Dealership. I keep coming back because of their honesty and fair pricing. No pressure, just great service.',
-      avatar: '',
-    },
-    {
-      id: 5,
-      name: 'Lisa Anderson',
-      role: 'Luxury Buyer',
-      rating: 5,
-      content: 'Found my dream luxury car here. The selection was impressive, and the staff really knew their stuff. The buying process was smooth from start to finish.',
-      avatar: '',
-    },
-    {
-      id: 6,
-      name: 'Robert Martinez',
-      role: 'Trade-in Customer',
-      rating: 5,
-      content: 'Got a great trade-in value for my old truck and found an even better replacement. The appraisal was fair and the process was quick.',
-      avatar: '',
-    },
-  ];
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  rating: number;
+  content: string;
+  avatar: string;
+}
+
+interface TestimonialsProps {
+  testimonials: Testimonial[];
+}
+
+export default function Testimonials({ testimonials }: TestimonialsProps) {
 
   return (
     <GuestLayout title="Testimonials" description="Read customer stories from drivers who found premium vehicles and concierge support through Dealership.">
@@ -86,9 +49,11 @@ export default function Testimonials() {
         <section className="py-20">
           <div className="container">
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {testimonials.map((testimonial) => (
+              {testimonials.length > 0 ? testimonials.map((testimonial) => (
                 <TestimonialCard key={testimonial.id} testimonial={testimonial} />
-              ))}
+              )) : (
+                <p className="col-span-3 text-center text-muted-foreground">No testimonials available at this time.</p>
+              )}
             </div>
           </div>
         </section>

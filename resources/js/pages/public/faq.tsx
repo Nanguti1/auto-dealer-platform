@@ -12,51 +12,19 @@ import {
 } from '@/components/ui/collapsible';
 import GuestLayout from '@/layouts/guest/guest-layout';
 
-export default function FAQ() {
-  const [openItem, setOpenItem] = useState<string | null>(null);
+interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+  category: string;
+}
 
-  const faqs = [
-    {
-      id: '1',
-      question: 'What financing options do you offer?',
-      answer: 'We offer a variety of financing options to suit different budgets and credit situations. Our finance team works with multiple lenders to get you the best rates possible. We also offer special financing for first-time buyers and those with less-than-perfect credit.',
-    },
-    {
-      id: '2',
-      question: 'Do you accept trade-ins?',
-      answer: 'Yes, we accept trade-ins! Our team will provide a fair market value for your current vehicle. You can get an estimate online or bring your vehicle to our dealership for a professional appraisal.',
-    },
-    {
-      id: '3',
-      question: 'What warranties do you offer?',
-      answer: 'We offer various warranty options depending on the vehicle. New vehicles come with manufacturer warranties, and we offer extended warranty options for additional peace of mind. Our certified pre-owned vehicles also come with comprehensive warranty coverage.',
-    },
-    {
-      id: '4',
-      question: 'Can I test drive a vehicle before purchasing?',
-      answer: 'Absolutely! We encourage test drives to ensure you find the perfect vehicle for your needs. Just bring a valid driver\'s license, and we\'ll get you set up for a test drive at your convenience.',
-    },
-    {
-      id: '5',
-      question: 'Do you offer vehicle delivery?',
-      answer: 'Yes, we offer vehicle delivery services within a certain radius of our dealership. Contact us for more information about delivery options and any associated fees.',
-    },
-    {
-      id: '6',
-      question: 'What types of vehicles do you sell?',
-      answer: 'We offer a wide range of vehicles including sedans, SUVs, trucks, crossovers, and luxury vehicles. Our inventory includes both new and pre-owned vehicles from various manufacturers to suit different preferences and budgets.',
-    },
-    {
-      id: '7',
-      question: 'How do I schedule a service appointment?',
-      answer: 'You can schedule a service appointment online through our website, by phone, or in person at our dealership. We offer flexible scheduling options including early morning and evening appointments.',
-    },
-    {
-      id: '8',
-      question: 'Do you offer vehicle inspections?',
-      answer: 'Yes, every vehicle on our lot undergoes a comprehensive inspection before being offered for sale. We also offer pre-purchase inspections for vehicles you\'re considering elsewhere.',
-    },
-  ];
+interface FAQProps {
+  faqs: FAQ[];
+}
+
+export default function FAQ({ faqs }: FAQProps) {
+  const [openItem, setOpenItem] = useState<string | null>(null);
 
   return (
     <GuestLayout title="FAQ" description="Find answers about inventory, financing, trade-ins, reservations, test drives, delivery, and ownership support.">
@@ -80,7 +48,7 @@ export default function FAQ() {
         <section className="py-20">
           <div className="container">
             <div className="max-w-3xl mx-auto space-y-4">
-              {faqs.map((faq) => (
+              {faqs.length > 0 ? faqs.map((faq) => (
                 <Collapsible
                   key={faq.id}
                   open={openItem === faq.id}
@@ -99,7 +67,9 @@ export default function FAQ() {
                     <P className="text-muted-foreground">{faq.answer}</P>
                   </CollapsibleContent>
                 </Collapsible>
-              ))}
+              )) : (
+                <p className="text-center text-muted-foreground">No FAQs available at this time.</p>
+              )}
             </div>
 
             {/* Still have questions */}
