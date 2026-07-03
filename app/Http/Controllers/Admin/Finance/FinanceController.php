@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Finance;
 
+use App\Events\FinanceApplicationSubmitted;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\StoreFinanceApplicationRequest;
 use App\Http\Requests\Finance\UpdateFinanceApplicationRequest;
@@ -37,7 +38,9 @@ class FinanceController extends Controller
 
     public function store(StoreFinanceApplicationRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $financeApplication = $this->service->create($request->validated());
+
+        event(new FinanceApplicationSubmitted($financeApplication));
 
         return redirect()->route('admin.finance-applications.index')->with('success', 'Created successfully.');
     }

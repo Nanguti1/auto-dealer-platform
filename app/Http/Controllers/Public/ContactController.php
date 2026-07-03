@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Public;
 
+use App\Events\LeadCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class ContactController extends Controller
         ]);
 
         // Create a lead for the contact request
-        Lead::create([
+        $lead = Lead::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
@@ -39,6 +40,8 @@ class ContactController extends Controller
                 'message' => $validated['message'],
             ]),
         ]);
+
+        event(new LeadCreated($lead));
 
         return back()->with('success', 'Message sent successfully.');
     }

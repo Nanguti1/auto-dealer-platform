@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Promotions;
 
+use App\Events\PromotionCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Promotions\StorePromotionRequest;
 use App\Http\Requests\Promotions\UpdatePromotionRequest;
@@ -37,7 +38,9 @@ class PromotionController extends Controller
 
     public function store(StorePromotionRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $promotion = $this->service->create($request->validated());
+
+        event(new PromotionCreated($promotion));
 
         return redirect()->route('admin.promotions.index')->with('success', 'Created successfully.');
     }

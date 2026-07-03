@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Public;
 
+use App\Events\LeadCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
 use App\Models\VehicleImport;
@@ -41,7 +42,7 @@ class ImportController extends Controller
         ]);
 
         // Also create a lead for CRM tracking
-        Lead::create([
+        $lead = Lead::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'source' => 'import',
@@ -54,6 +55,8 @@ class ImportController extends Controller
                 'notes' => $validated['notes'] ?? null,
             ]),
         ]);
+
+        event(new LeadCreated($lead));
 
         return back()->with('success', 'Your import request has been received. Our team will be in touch.');
     }

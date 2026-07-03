@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Admin\Customers;
 
+use App\Events\CustomerRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customers\StoreCustomerRequest;
 use App\Http\Requests\Customers\UpdateCustomerRequest;
@@ -37,7 +38,9 @@ class CustomerController extends Controller
 
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $customer = $this->service->create($request->validated());
+
+        event(new CustomerRegistered($customer));
 
         return redirect()->route('admin.customers.index')->with('success', 'Created successfully.');
     }

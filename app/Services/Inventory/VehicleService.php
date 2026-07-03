@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Inventory;
 
+use App\Events\VehicleSold;
 use App\Exceptions\VehicleAlreadySoldException;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -53,7 +54,11 @@ class VehicleService
             $data['assigned_user_id'] = $buyer->id;
         }
 
-        return $this->update($vehicle, $data);
+        $vehicle = $this->update($vehicle, $data);
+
+        event(new VehicleSold($vehicle));
+
+        return $vehicle;
     }
 
     public function duplicate(Vehicle $vehicle): Vehicle
