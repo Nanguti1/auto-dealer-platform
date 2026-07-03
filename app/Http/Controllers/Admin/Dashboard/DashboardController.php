@@ -20,6 +20,7 @@ class DashboardController extends Controller
             'dashboard' => $this->service->paginate($request->query()),
             'summary' => $this->service->summary(),
             'recentActivity' => $this->service->recentActivity(),
+            'charts' => $this->service->charts(),
             'filters' => $request->query(),
         ]);
     }

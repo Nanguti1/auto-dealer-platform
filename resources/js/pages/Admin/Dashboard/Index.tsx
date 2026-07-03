@@ -44,9 +44,14 @@ interface AdminDashboardProps {
   };
   summary: SummaryMetrics;
   recentActivity: RecentActivityItem[];
+  charts: {
+    sales: Array<{ name: string; value: number }>;
+    distribution: Array<{ name: string; value: number }>;
+    operations: Array<{ name: string; value: number }>;
+  };
 }
 
-export default function AdminDashboard({ summary, recentActivity }: AdminDashboardProps) {
+export default function AdminDashboard({ summary, recentActivity, charts }: AdminDashboardProps) {
   const statItems = [
     {
       icon: Layers,
@@ -73,28 +78,6 @@ export default function AdminDashboard({ summary, recentActivity }: AdminDashboa
       description: 'Vehicles marked as sold this year.',
     },
   ];
-
-  const charts = {
-    sales: [
-      { name: 'Jan', value: summary.soldVehicles * 0.8 },
-      { name: 'Feb', value: summary.soldVehicles * 0.9 },
-      { name: 'Mar', value: summary.soldVehicles * 1.2 },
-      { name: 'Apr', value: summary.soldVehicles * 1.1 },
-      { name: 'May', value: summary.soldVehicles * 1.4 },
-      { name: 'Jun', value: summary.soldVehicles * 1.3 },
-    ],
-    distribution: [
-      { name: 'Available', value: summary.availableVehicles },
-      { name: 'Reserved', value: summary.reservedVehicles },
-      { name: 'Sold', value: summary.soldVehicles },
-    ],
-    operations: [
-      { name: 'Customers', value: summary.customers },
-      { name: 'Leads', value: summary.leads },
-      { name: 'Finance', value: summary.financeApplications },
-      { name: 'Trade-Ins', value: summary.tradeIns },
-    ],
-  };
 
   const quickActions = [
     {
