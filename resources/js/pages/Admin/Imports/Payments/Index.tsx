@@ -1,38 +1,39 @@
-import { Link } from '@inertiajs/react';
-import { Eye, DollarSign } from 'lucide-react';
-import CustomerAvatar from '@/components/admin/customers/customer-avatar';
-import { formatCurrency, formatDateTime, importVehicleName, requesterName } from '@/components/admin/imports/helpers';
+import { Link, router } from '@inertiajs/react';
+import { CheckCircle2, Eye, Pencil, DollarSign } from 'lucide-react';
+import { formatCurrency, formatDateTime } from '@/components/admin/imports/helpers';
 import ImportShell from '@/components/admin/imports/import-shell';
 import ImportStatusBadge from '@/components/admin/imports/import-status-badge';
-import type { ImportFilters, ImportPagination, ImportRequest } from '@/components/admin/imports/types';
+import type { ImportFilters, PaymentPagination, ImportPayment } from '@/components/admin/imports/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { Button } from '@/components/ui/button';
 
-export default function Index({ imports, filters = {} }: { imports: ImportPagination; filters?: ImportFilters }) {
-  const columns: Column<ImportRequest>[] = [
+export default function Index({ importPayments, filters = {} }: { importPayments: PaymentPagination; filters?: ImportFilters }) {
+  const columns: Column<ImportPayment>[] = [
     { key: 'status', label: 'Status', sortable: true, render: (row) => <ImportStatusBadge status={row.status} /> },
-    { key: 'customer', label: 'Customer', render: (row) => <div className="flex items-center gap-3">{row.customer ? <CustomerAvatar customer={row.customer} /> : null}<div><Link href={`/admin/imports/${row.id}/payments`} className="font-medium hover:underline">{requesterName(row)}</Link><p className="text-xs text-muted-foreground">{row.customer?.email ?? row.user?.email ?? 'No contact'}</p></div></div> },
-    { key: 'vehicle', label: 'Vehicle', sortable: true, render: (row) => importVehicleName(row) },
-    { key: 'payment_status', label: 'Payment status', sortable: true, render: (row) => <ImportStatusBadge status={row.payment_status} /> },
-    { key: 'estimated_cost', label: 'Est. cost', sortable: true, render: (row) => formatCurrency(row.estimated_cost) },
-    { key: 'total_paid', label: 'Total paid', sortable: true, render: (row) => formatCurrency(row.payments?.reduce((sum, p) => sum + (Number(p.amount) || 0), 0) ?? 0) },
-    { key: 'outstanding_balance', label: 'Outstanding', sortable: true, render: (row) => formatCurrency((row.estimated_cost ?? 0) - (row.payments?.reduce((sum, p) => sum + (Number(p.amount) || 0), 0) ?? 0)) },
-    { key: 'supplier', label: 'Supplier', sortable: true, render: (row) => row.supplier?.company_name ?? row.supplier?.name ?? '—' },
-    { key: 'updated_at', label: 'Last updated', sortable: true, render: (row) => formatDateTime(row.updated_at) },
+    { key: 'payment_reference', label: 'Reference', sortable: true, render: (row) => row.payment_reference ?? '—' },
+    { key: 'amount', label: 'Amount', sortable: true, render: (row) => formatCurrency(row.amount) },
+    { key: 'payment_type', label: 'Type', sortable: true, render: (row) => <span className="capitalize">{row.payment_type}</span> },
+    { key: 'due_date', label: 'Due Date', sortable: true, render: (row) => row.due_date ? formatDateTime(row.due_date) : '—' },
+    { key: 'paid_at', label: 'Paid Date', sortable: true, render: (row) => row.paid_at ? formatDateTime(row.paid_at) : '—' },
+    { key: 'vehicle_import_id', label: 'Import', sortable: true, render: (row) => <Link href={`/admin/imports/${row.vehicle_import_id}`} className="font-medium hover:underline">#{row.vehicle_import_id}</Link> },
+    { key: 'created_at', label: 'Created', sortable: true, render: (row) => formatDateTime(row.created_at) },
   ];
 
   return (
     <ImportShell title="Import Payments" description="Track deposit, supplier, shipping, customs, taxes, and outstanding balances for import requests.">
       <AdminDataTable
-        rows={imports}
+        rows={importPayments}
         filters={filters}
         columns={columns}
-        baseUrl="/admin/imports/payments"
+        baseUrl="/admin/import-payments"
+        createUrl="/admin/import-payments/create"
+        createLabel="Create Payment"
         rowActions={(row) => (
           <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}/payments`}><DollarSign className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}`}><Eye className="size-4" /></Link></Button>
+            <Button variant="ghost" size="icon" asChild><Link href={`/admin/import-payments/${row.id}`}><Eye className="size-4" /></Link></Button>
+            <Button variant="ghost" size="icon" asChild><Link href={`/admin/import-payments/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
+            <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/import-payments/${row.id}/mark-as-paid`)}><CheckCircle2 className="size-4" /></Button>
           </div>
         )}
       />

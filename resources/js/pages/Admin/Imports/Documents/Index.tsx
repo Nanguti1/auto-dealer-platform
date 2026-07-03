@@ -9,7 +9,7 @@ export default function Index({ vehicleImport, documents = [] }: { vehicleImport
   const base = vehicleImport ? `/admin/imports/${vehicleImport.id}/documents` : '/admin/import-documents';
 
   return (
-    <ImportShell title="Import Documents" description={vehicleImport ? importVehicleName(vehicleImport) : 'Preview, download, approve, and manage import documents.'} actions={<><ImportBackButton href={vehicleImport ? `/admin/imports/${vehicleImport.id}` : '/admin/imports'} /><Button asChild><Link href={`${base}/upload`}>Upload Document</Link></Button></>}>
+    <ImportShell title="Import Documents" description={vehicleImport ? importVehicleName(vehicleImport) : 'Preview, download, approve, and manage import documents.'} actions={<><ImportBackButton href={vehicleImport ? `/admin/imports/${vehicleImport.id}` : '/admin/imports'} /><Button asChild><Link href={`${base}/create`}>Upload Document</Link></Button></>}>
       {documents.length === 0 ? <div className="rounded-xl border bg-card p-8 text-center text-muted-foreground">No import documents uploaded.</div> : null}
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {documents.map((document) => <ImportDocumentCard key={document.id} document={document} detailsHref={`${base}/${document.id}`} onDeleteUrl={`${base}/${document.id}`} />)}

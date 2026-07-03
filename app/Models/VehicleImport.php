@@ -28,6 +28,11 @@ class VehicleImport extends Model
         return $query->latest();
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
@@ -41,5 +46,20 @@ class VehicleImport extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(ImportDocument::class, 'vehicle_import_id');
+    }
+
+    public function shipments(): HasMany
+    {
+        return $this->hasMany(ImportShipment::class, 'vehicle_import_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(ImportPayment::class, 'vehicle_import_id');
+    }
+
+    public function vehicleMappings(): HasMany
+    {
+        return $this->hasMany(ImportVehicleMapping::class, 'vehicle_import_id');
     }
 }

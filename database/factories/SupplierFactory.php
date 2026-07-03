@@ -10,11 +10,9 @@ class SupplierFactory extends Factory
     {
         return [
             'name' => fake()->company(),
-            'slug' => fake()->slug(),
-            'contact_person' => fake()->name(),
+            'contact_name' => fake()->name(),
             'email' => fake()->email(),
             'phone' => fake()->phoneNumber(),
-            'address' => fake()->address(),
             'country' => fake()->country(),
             'is_active' => true,
         ];

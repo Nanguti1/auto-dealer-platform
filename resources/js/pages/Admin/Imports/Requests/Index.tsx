@@ -33,12 +33,12 @@ export default function Index({ imports, filters = {} }: { imports: ImportPagina
         filters={filters}
         columns={columns}
         baseUrl="/admin/imports"
+        createUrl="/admin/imports/create"
+        createLabel="Create Import"
         rowActions={(row) => (
           <div className="flex justify-end gap-1">
             <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}`}><Eye className="size-4" /></Link></Button>
             <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/imports/${row.id}`, { status: 'approved' })}><CheckCircle2 className="size-4" /></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/imports/${row.id}`, { status: 'cancelled' })}><XCircle className="size-4" /></Button>
             <Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/imports/${row.id}`)}><Archive className="size-4" /></Button>
           </div>
         )}

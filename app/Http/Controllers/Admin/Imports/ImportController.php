@@ -47,7 +47,7 @@ class ImportController extends Controller
         $this->authorize('view', $vehicleImport);
 
         return Inertia::render('Admin/Imports/Requests/Show', [
-            'vehicleImport' => $vehicleImport,
+            'vehicleImport' => $vehicleImport->load(['user', 'supplier', 'vehicle', 'documents', 'shipments', 'payments']),
         ]);
     }
 
@@ -56,7 +56,7 @@ class ImportController extends Controller
         $this->authorize('update', $vehicleImport);
 
         return Inertia::render('Admin/Imports/Requests/Edit', [
-            'vehicleImport' => $vehicleImport,
+            'vehicleImport' => $vehicleImport->load(['user', 'supplier', 'vehicle']),
         ]);
     }
 

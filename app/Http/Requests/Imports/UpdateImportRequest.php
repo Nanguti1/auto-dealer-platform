@@ -18,10 +18,18 @@ class UpdateImportRequest extends FormRequest
      */
     public function rules(): array
     {
+        $vehicleImport = $this->route('vehicleImport');
+        $ignoreId = $vehicleImport ? $vehicleImport->id : null;
+
         return [
+            'supplier_id' => ['sometimes', 'nullable', 'exists:suppliers,id'],
+            'reference_number' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:vehicle_imports,reference_number,'.$ignoreId],
+            'origin_country' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'destination_port' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'estimated_cost' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'vehicle_id' => ['sometimes', 'nullable', 'exists:vehicles,id'],
+            'request_data' => ['sometimes', 'nullable', 'array'],
         ];
     }
 }

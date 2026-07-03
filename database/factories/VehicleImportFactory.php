@@ -13,14 +13,13 @@ class VehicleImportFactory extends Factory
         return [
             'user_id' => User::factory(),
             'supplier_id' => Supplier::factory(),
-            'import_number' => fake()->bothify('IMP-####'),
-            'vehicle_count' => fake()->numberBetween(1, 50),
-            'total_cost' => fake()->randomFloat(2, 50000, 500000),
-            'currency' => fake()->randomElement(['USD', 'EUR', 'GBP', 'JPY']),
+            'vehicle_id' => null,
+            'reference_number' => fake()->bothify('IMP-####'),
+            'origin_country' => fake()->country(),
+            'destination_port' => fake()->city(),
+            'estimated_cost' => fake()->randomFloat(2, 50000, 500000),
             'status' => fake()->randomElement(['pending', 'processing', 'shipped', 'arrived', 'completed', 'cancelled']),
-            'estimated_arrival' => fake()->date(),
-            'actual_arrival' => fake()->optional()->date(),
-            'notes' => fake()->paragraph(),
+            'request_data' => [],
         ];
     }
 }
