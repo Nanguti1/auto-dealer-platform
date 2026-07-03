@@ -6,28 +6,29 @@ import { H2 } from '@/components/design-system/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { toSummary, mockVehicles } from '@/data/mock-vehicles';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
-import type { CustomerBooking } from '@/types/vehicle';
 
-interface BookingsProps {
-    bookings?: CustomerBooking[];
+interface Vehicle {
+    id: number;
+    name: string;
+    image: string | null;
+    price: number;
 }
 
-export default function BookingsPage({ bookings = [] }: BookingsProps) {
-    const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
+interface Booking {
+    id: number;
+    vehicle: Vehicle;
+    scheduledAt: string;
+    status: string;
+    notes: string | null;
+}
 
-    const items: CustomerBooking[] = bookings.length
-        ? bookings
-        : [
-              {
-                  id: 1,
-                  vehicle: toSummary(mockVehicles[0]),
-                  scheduledAt: '2024-03-15T10:00:00',
-                  status: 'confirmed',
-                  notes: 'Please have the vehicle ready at the front lot.',
-              },
-          ];
+interface BookingsProps {
+    bookings: Booking[];
+}
+
+export default function BookingsPage({ bookings }: BookingsProps) {
+    const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
 
     return (
         <DashboardLayout title="Test Drive Bookings" user={auth?.user}>
@@ -35,7 +36,7 @@ export default function BookingsPage({ bookings = [] }: BookingsProps) {
 
             <H2 className="mb-6">Test Drive Bookings</H2>
 
-            {items.length === 0 ? (
+            {bookings.length === 0 ? (
                 <EmptyState
                     icon={Car}
                     title="No test drives scheduled"
@@ -44,11 +45,11 @@ export default function BookingsPage({ bookings = [] }: BookingsProps) {
                 />
             ) : (
                 <div className="space-y-4">
-                    {items.map((b) => (
+                    {bookings.map((b) => (
                         <Card key={b.id}>
                             <CardContent className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
                                 <div className="flex items-center gap-4">
-                                    <img src={b.vehicle.image} alt={b.vehicle.name} className="h-16 w-24 rounded-lg object-cover" />
+                                    <img src={b.vehicle.image || ''} alt={b.vehicle.name} className="h-16 w-24 rounded-lg object-cover" />
                                     <div>
                                         <p className="font-semibold">{b.vehicle.name}</p>
                                         <p className="text-sm text-muted-foreground">

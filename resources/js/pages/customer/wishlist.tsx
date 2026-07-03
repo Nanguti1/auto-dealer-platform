@@ -1,18 +1,41 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import { Heart } from 'lucide-react';
 import { EmptyState } from '@/components/design-system';
 import { H2 } from '@/components/design-system/typography';
 import VehicleCard from '@/components/shared/vehicle-card';
 import { Button } from '@/components/ui/button';
-import { findVehicleById, toSummary } from '@/data/mock-vehicles';
-import { useWishlist } from '@/hooks/use-wishlist';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
-export default function WishlistPage() {
+interface WishlistProps {
+    vehicles: Array<{
+        id: number;
+        name: string;
+        price: number;
+        image: string | null;
+        year: number;
+        mileage: number;
+        fuel_type: string;
+        transmission: string;
+        location: string | null;
+    }>;
+}
+
+export default function WishlistPage({ vehicles }: WishlistProps) {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
-    const { ids, toggle } = useWishlist();
-    const vehicles = ids.map((id) => findVehicleById(id)).filter(Boolean);
+
+    const toggleWishlist = (vehicleId: number) => {
+        router.post('/customer/wishlist', { vehicle_id: vehicleId }, {
+            preserveScroll: true,
+        });
+    };
+
+    const removeWishlist = (vehicleId: number) => {
+        router.delete('/customer/wishlist', {
+            data: { vehicle_id: vehicleId },
+            preserveScroll: true,
+        });
+    };
 
     return (
         <DashboardLayout title="Wishlist" user={auth?.user}>
@@ -28,11 +51,22 @@ export default function WishlistPage() {
                 />
             ) : (
                 <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {vehicles.map((v) => v && (
+                    {vehicles.map((vehicle) => (
                         <VehicleCard
-                            key={v.id}
-                            vehicle={{ ...toSummary(v), isWishlisted: true }}
-                            onWishlistToggle={() => toggle(v.id)}
+                            key={vehicle.id}
+                            vehicle={{
+                                id: vehicle.id,
+                                name: vehicle.name,
+                                price: vehicle.price,
+                                image: vehicle.image,
+                                year: vehicle.year,
+                                mileage: vehicle.mileage,
+                                fuelType: vehicle.fuel_type,
+                                transmission: vehicle.transmission,
+                                location: vehicle.location,
+                                isWishlisted: true,
+                            }}
+                            onWishlistToggle={() => removeWishlist(vehicle.id)}
                         />
                     ))}
                 </div>

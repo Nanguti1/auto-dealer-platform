@@ -1,47 +1,57 @@
 import { Head, Link, usePage } from '@inertiajs/react';
 import { Car, Heart, GitCompareArrows, Clock, Bell, Calendar, FileText } from 'lucide-react';
-import * as React from 'react';
 import { H2, P } from '@/components/design-system/typography';
 import VehicleCard from '@/components/shared/vehicle-card';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { findVehicleById, toSummary } from '@/data/mock-vehicles';
 import { useCompare } from '@/hooks/use-compare';
-import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
-import { useWishlist } from '@/hooks/use-wishlist';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
-import type { CustomerNotification, CustomerReservation, CustomerBooking } from '@/types/vehicle';
+
+interface Vehicle {
+    id: number;
+    name: string;
+    price: number;
+    image: string | null;
+    year: number;
+    mileage: number;
+    fuel_type: string;
+    transmission: string;
+    location: string | null;
+}
+
+interface Reservation {
+    id: number;
+    vehicle: Vehicle;
+    status: string;
+}
+
+interface Booking {
+    id: number;
+    vehicle: Vehicle;
+    scheduledAt: string;
+}
 
 interface DashboardProps {
-    reservations?: CustomerReservation[];
-    bookings?: CustomerBooking[];
-    notifications?: CustomerNotification[];
+    wishlistCount: number;
+    recentlyViewed: Vehicle[];
+    reservations: Reservation[];
+    bookings: Booking[];
 }
 
 export default function CustomerDashboard({
-    reservations = [],
-    bookings = [],
-    notifications = [],
+    wishlistCount,
+    recentlyViewed,
+    reservations,
+    bookings,
 }: DashboardProps) {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
-    const { ids: wishlistIds } = useWishlist();
     const { ids: compareIds } = useCompare();
-    const { ids: recentIds } = useRecentlyViewed();
-
-    const recentVehicles = recentIds.map((id) => findVehicleById(id)).filter(Boolean).slice(0, 3);
-
-    const mockNotifications: CustomerNotification[] = notifications.length
-        ? notifications
-        : [
-              { id: 1, title: 'Price Drop Alert', message: 'Tesla Model S price reduced by $2,000', read: false, createdAt: '2024-03-01' },
-              { id: 2, title: 'New Match', message: 'A vehicle matching your saved search is available', read: true, createdAt: '2024-02-28' },
-          ];
 
     const stats = [
-        { label: 'Wishlist', value: wishlistIds.length, icon: Heart, href: '/customer/wishlist' },
+        { label: 'Wishlist', value: wishlistCount, icon: Heart, href: '/customer/wishlist' },
         { label: 'Compare', value: compareIds.length, icon: GitCompareArrows, href: '/inventory/compare' },
-        { label: 'Recently Viewed', value: recentIds.length, icon: Clock, href: '/customer/recently-viewed' },
-        { label: 'Notifications', value: mockNotifications.filter((n) => !n.read).length, icon: Bell, href: '/customer/notifications' },
+        { label: 'Recently Viewed', value: recentlyViewed.length, icon: Clock, href: '/customer/recently-viewed' },
+        { label: 'Notifications', value: 0, icon: Bell, href: '/customer/notifications' },
     ];
 
     return (
@@ -113,7 +123,7 @@ export default function CustomerDashboard({
                             bookings.map((b) => (
                                 <div key={b.id} className="flex justify-between border-b py-3 last:border-0">
                                     <span>{b.vehicle.name}</span>
-                                    <span className="text-sm text-muted-foreground">{b.scheduledAt}</span>
+                                    <span className="text-sm text-muted-foreground">{new Date(b.scheduledAt).toLocaleString()}</span>
                                 </div>
                             ))
                         )}
@@ -121,7 +131,7 @@ export default function CustomerDashboard({
                 </Card>
             </div>
 
-            {recentVehicles.length > 0 && (
+            {recentlyViewed.length > 0 && (
                 <div className="mt-8">
                     <div className="mb-4 flex items-center justify-between">
                         <h3 className="text-lg font-semibold">Recently Viewed</h3>
@@ -130,7 +140,22 @@ export default function CustomerDashboard({
                         </Button>
                     </div>
                     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                        {recentVehicles.map((v) => v && <VehicleCard key={v.id} vehicle={toSummary(v)} />)}
+                        {recentlyViewed.map((vehicle) => (
+                            <VehicleCard
+                                key={vehicle.id}
+                                vehicle={{
+                                    id: vehicle.id,
+                                    name: vehicle.name,
+                                    price: vehicle.price,
+                                    image: vehicle.image,
+                                    year: vehicle.year,
+                                    mileage: vehicle.mileage,
+                                    fuelType: vehicle.fuel_type,
+                                    transmission: vehicle.transmission,
+                                    location: vehicle.location,
+                                }}
+                            />
+                        ))}
                     </div>
                 </div>
             )}

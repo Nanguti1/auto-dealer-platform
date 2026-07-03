@@ -63,4 +63,29 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->role && in_array($this->role->name, ['admin', 'manager'], true);
     }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function savedSearches()
+    {
+        return $this->hasMany(SavedSearch::class);
+    }
+
+    public function recentlyViewedVehicles()
+    {
+        return $this->hasMany(RecentlyViewedVehicle::class);
+    }
+
+    public function vehicleReservations()
+    {
+        return $this->hasMany(VehicleReservation::class);
+    }
+
+    public function testDriveBookings()
+    {
+        return $this->hasMany(TestDriveBooking::class);
+    }
 }

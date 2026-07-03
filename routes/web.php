@@ -45,6 +45,10 @@ use App\Http\Controllers\Admin\Users\RoleController;
 use App\Http\Controllers\Admin\Users\UserController;
 use App\Http\Controllers\Admin\VehicleFeatures\VehicleFeatureController;
 use App\Http\Controllers\Admin\VehicleGallery\VehicleGalleryController;
+use App\Http\Controllers\Customer\BookingController;
+use App\Http\Controllers\Customer\RecentlyViewController;
+use App\Http\Controllers\Customer\SavedSearchController;
+use App\Http\Controllers\Customer\WishlistController;
 use App\Http\Controllers\Public\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -69,12 +73,18 @@ Route::inertia('contact/dealer', 'contact/dealer')->name('contact.dealer');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
-    Route::inertia('customer/dashboard', 'customer/dashboard')->name('customer.dashboard');
-    Route::inertia('customer/wishlist', 'customer/wishlist')->name('customer.wishlist');
-    Route::inertia('customer/saved-searches', 'customer/saved-searches')->name('customer.saved-searches');
-    Route::inertia('customer/recently-viewed', 'customer/recently-viewed')->name('customer.recently-viewed');
-    Route::inertia('customer/reservations', 'customer/reservations')->name('customer.reservations');
-    Route::inertia('customer/bookings', 'customer/bookings')->name('customer.bookings');
+    Route::get('customer/dashboard', [App\Http\Controllers\Customer\CustomerController::class, 'dashboard'])->name('customer.dashboard');
+    Route::get('customer/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist');
+    Route::post('customer/wishlist', [WishlistController::class, 'store']);
+    Route::delete('customer/wishlist', [WishlistController::class, 'destroy']);
+    Route::get('customer/saved-searches', [SavedSearchController::class, 'index'])->name('customer.saved-searches');
+    Route::post('customer/saved-searches', [SavedSearchController::class, 'store']);
+    Route::delete('customer/saved-searches/{savedSearch}', [SavedSearchController::class, 'destroy']);
+    Route::get('customer/recently-viewed', [RecentlyViewController::class, 'index'])->name('customer.recently-viewed');
+    Route::post('customer/recently-viewed', [RecentlyViewController::class, 'store']);
+    Route::delete('customer/recently-viewed', [RecentlyViewController::class, 'destroy']);
+    Route::get('customer/reservations', [App\Http\Controllers\Customer\ReservationController::class, 'index'])->name('customer.reservations');
+    Route::get('customer/bookings', [BookingController::class, 'index'])->name('customer.bookings');
     Route::inertia('customer/notifications', 'customer/notifications')->name('customer.notifications');
     Route::inertia('customer/profile', 'customer/profile')->name('customer.profile');
     Route::inertia('customer/settings', 'customer/settings')->name('customer.settings');

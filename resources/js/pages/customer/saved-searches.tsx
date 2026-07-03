@@ -6,15 +6,31 @@ import { H2 } from '@/components/design-system/typography';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useSavedSearches } from '@/hooks/use-saved-searches';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
 
-export default function SavedSearchesPage() {
+interface SavedSearch {
+    id: number;
+    name: string;
+    filters: Record<string, unknown>;
+    notifyOnMatch: boolean;
+    createdAt: string;
+}
+
+interface SavedSearchesProps {
+    searches: SavedSearch[];
+}
+
+export default function SavedSearchesPage({ searches }: SavedSearchesProps) {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
-    const { searches, remove } = useSavedSearches();
 
     const applySearch = (filters: Record<string, unknown>) => {
         router.get('/inventory', filters as Record<string, string | number>);
+    };
+
+    const removeSearch = (id: number) => {
+        router.delete(`/customer/saved-searches/${id}`, {
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -51,7 +67,7 @@ export default function SavedSearchesPage() {
                                 </div>
                                 <div className="flex gap-2">
                                     <Button size="sm" onClick={() => applySearch(search.filters)}>Apply</Button>
-                                    <Button size="sm" variant="ghost" onClick={() => remove(search.id)}>
+                                    <Button size="sm" variant="ghost" onClick={() => removeSearch(search.id)}>
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
                                 </div>
