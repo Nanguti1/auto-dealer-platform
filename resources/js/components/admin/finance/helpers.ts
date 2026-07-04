@@ -1,21 +1,13 @@
+import { userName as sharedUserName, vehicleName as sharedVehicleName } from '@/lib/name-utils';
 import { customerName } from '@/components/admin/customers/helpers';
-import { vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
 import { formatDate, formatDateTime } from '@/lib/date-utils';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { FinanceApplication, FinanceUser, FinanceVehicle, PaymentInstallment } from './types';
 
-export { formatDate, formatDateTime, formatCurrency, formatNumber };
-
-export function userName(user?: FinanceUser): string {
-  return user?.name ?? ([user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.email || 'Unassigned');
-}
+export { formatDate, formatDateTime, formatCurrency, formatNumber, sharedUserName as userName, sharedVehicleName as vehicleName };
 
 export function applicantName(application: FinanceApplication): string {
   return application.customer ? customerName(application.customer) : userName(application.user);
-}
-
-export function vehicleName(vehicle?: FinanceVehicle): string {
-  return inventoryVehicleName(vehicle as Parameters<typeof inventoryVehicleName>[0]);
 }
 
 export function officerName(application: FinanceApplication): string {

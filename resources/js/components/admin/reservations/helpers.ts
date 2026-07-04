@@ -1,16 +1,16 @@
-import { vehicleName as inventoryVehicleName } from '@/components/admin/inventory/helpers';
+import { vehicleName as sharedVehicleName } from '@/lib/name-utils';
 import { formatDate, formatDateTime } from '@/lib/date-utils';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { ReservationRecord } from './types';
 
-export { formatDate, formatDateTime, formatCurrency, formatNumber };
+export { formatDate, formatDateTime, formatCurrency, formatNumber, sharedVehicleName as vehicleName };
 
-export function vehicleName(reservation?: ReservationRecord): string {
+export function reservationVehicleName(reservation?: ReservationRecord): string {
   if (!reservation?.vehicle) {
 return 'No vehicle';
 }
 
-  return inventoryVehicleName(reservation.vehicle as Parameters<typeof inventoryVehicleName>[0]);
+  return vehicleName(reservation.vehicle);
 }
 
 export function customerName(reservation?: ReservationRecord): string {

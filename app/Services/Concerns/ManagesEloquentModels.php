@@ -23,6 +23,7 @@ use App\Models\Refund;
 use App\Models\Review;
 use App\Models\TestDriveBooking;
 use App\Models\TradeInRequest;
+use App\Models\Vehicle;
 use App\Models\VehicleEnquiry;
 use App\Models\VehicleGallery;
 use App\Models\VehicleImport;

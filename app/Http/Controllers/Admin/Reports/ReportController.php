@@ -12,6 +12,7 @@ use App\Models\Report;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -288,14 +289,13 @@ class ReportController extends Controller
             ])
             ->get();
 
-        $csv = "Date,Customer,Vehicle,Amount,Payment Method\n";
-        foreach ($payments as $payment) {
-            $customerName = $payment->user ? $payment->user->name : 'N/A';
-            $vehicleTitle = $payment->vehicle ? $payment->vehicle->title : 'N/A';
-            $csv .= "{$payment->created_at},{$customerName},{$vehicleTitle},{$payment->amount},{$payment->method}\n";
-        }
-
-        return $csv;
+        return $this->generateCsv($payments, [
+            'Date' => fn ($payment) => $payment->created_at,
+            'Customer' => fn ($payment) => $payment->user?->name ?? 'N/A',
+            'Vehicle' => fn ($payment) => $payment->vehicle?->title ?? 'N/A',
+            'Amount' => fn ($payment) => $payment->amount,
+            'Payment Method' => fn ($payment) => $payment->method,
+        ]);
     }
 
     private function getInventoryExportData(Request $request): string
@@ -305,16 +305,15 @@ class ReportController extends Controller
             ->with(['make', 'vehicleModel', 'inventoryStatus'])
             ->get();
 
-        $csv = "VIN,Make,Model,Year,Price,Status,Days in Stock\n";
-        foreach ($vehicles as $vehicle) {
-            $daysInStock = $vehicle->created_at ? now()->diffInDays($vehicle->created_at) : 0;
-            $makeName = $vehicle->make ? $vehicle->make->name : 'N/A';
-            $modelName = $vehicle->vehicleModel ? $vehicle->vehicleModel->name : 'N/A';
-            $statusName = $vehicle->inventoryStatus ? $vehicle->inventoryStatus->name : 'N/A';
-            $csv .= "{$vehicle->vin},{$makeName},{$modelName},{$vehicle->year},{$vehicle->sale_price},{$statusName},{$daysInStock}\n";
-        }
-
-        return $csv;
+        return $this->generateCsv($vehicles, [
+            'VIN' => fn ($vehicle) => $vehicle->vin,
+            'Make' => fn ($vehicle) => $vehicle->make?->name ?? 'N/A',
+            'Model' => fn ($vehicle) => $vehicle->vehicleModel?->name ?? 'N/A',
+            'Year' => fn ($vehicle) => $vehicle->year,
+            'Price' => fn ($vehicle) => $vehicle->sale_price,
+            'Status' => fn ($vehicle) => $vehicle->inventoryStatus?->name ?? 'N/A',
+            'Days in Stock' => fn ($vehicle) => $vehicle->created_at ? now()->diffInDays($vehicle->created_at) : 0,
+        ]);
     }
 
     private function getLeadsExportData(Request $request): string
@@ -328,14 +327,13 @@ class ReportController extends Controller
             ])
             ->get();
 
-        $csv = "Date,Customer,Source,Stage,Status\n";
-        foreach ($leads as $lead) {
-            $customerName = $lead->first_name.' '.$lead->last_name;
-            $stageName = $lead->crmStage ? $lead->crmStage->name : 'N/A';
-            $csv .= "{$lead->created_at},{$customerName},{$lead->source},{$stageName},{$lead->status}\n";
-        }
-
-        return $csv;
+        return $this->generateCsv($leads, [
+            'Date' => fn ($lead) => $lead->created_at,
+            'Customer' => fn ($lead) => $lead->first_name.' '.$lead->last_name,
+            'Source' => fn ($lead) => $lead->source,
+            'Stage' => fn ($lead) => $lead->crmStage?->name ?? 'N/A',
+            'Status' => fn ($lead) => $lead->status,
+        ]);
     }
 
     private function getFinanceExportData(Request $request): string
@@ -349,12 +347,31 @@ class ReportController extends Controller
             ])
             ->get();
 
-        $csv = "Date,Customer,Requested Amount,Approved Amount,Status,Lender\n";
-        foreach ($applications as $application) {
-            $customerName = $application->user ? $application->user->name : 'N/A';
-            $lenderName = $application->lender ? $application->lender->name : 'N/A';
-            $approvedAmount = $application->approved_amount ?? 0;
-            $csv .= "{$application->created_at},{$customerName},{$application->requested_amount},{$approvedAmount},{$application->status},{$lenderName}\n";
+        return $this->generateCsv($applications, [
+            'Date' => fn ($application) => $application->created_at,
+            'Customer' => fn ($application) => $application->user?->name ?? 'N/A',
+            'Requested Amount' => fn ($application) => $application->requested_amount,
+            'Approved Amount' => fn ($application) => $application->approved_amount ?? 0,
+            'Status' => fn ($application) => $application->status,
+            'Lender' => fn ($application) => $application->lender?->name ?? 'N/A',
+        ]);
+    }
+
+    /**
+     * @param  Collection  $data
+     * @param  array<string, callable>  $columns
+     */
+    private function generateCsv($data, array $columns): string
+    {
+        $headers = array_keys($columns);
+        $csv = implode(',', $headers)."\n";
+
+        foreach ($data as $item) {
+            $row = [];
+            foreach ($columns as $column) {
+                $row[] = $column($item);
+            }
+            $csv .= implode(',', $row)."\n";
         }
 
         return $csv;
