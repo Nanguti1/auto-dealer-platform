@@ -13,18 +13,15 @@ class TradeInRequestFactory extends Factory
         return [
             'user_id' => User::factory(),
             'vehicle_id' => Vehicle::factory(),
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'email' => fake()->email(),
-            'phone' => fake()->phoneNumber(),
-            'vin' => fake()->bothify('####################'),
-            'year' => fake()->numberBetween(2010, 2024),
             'make' => fake()->company(),
             'model' => fake()->word(),
+            'year' => fake()->numberBetween(2010, 2024),
+            'vin' => fake()->bothify('####################'),
             'mileage' => fake()->numberBetween(0, 200000),
-            'condition' => fake()->randomElement(['excellent', 'good', 'fair', 'poor']),
-            'status' => fake()->randomElement(['pending', 'reviewed', 'accepted', 'rejected']),
-            'notes' => fake()->paragraph(),
+            'estimated_value' => fake()->randomFloat(2, 5000, 50000),
+            'offered_value' => fake()->randomFloat(2, 4000, 45000),
+            'status' => fake()->randomElement(['pending', 'under_review', 'inspection_scheduled', 'inspection_completed', 'offer_pending', 'offer_accepted', 'offer_rejected', 'approved', 'rejected', 'completed', 'cancelled']),
+            'condition_report' => [],
         ];
     }
 }
