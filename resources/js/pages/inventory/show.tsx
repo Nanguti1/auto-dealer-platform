@@ -1,12 +1,13 @@
-import { Head, Link, usePage } from '@inertiajs/react';
+import { Head, Link, usePage, useForm } from '@inertiajs/react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Calendar, Gauge, Fuel, ArrowLeft, Share2, Phone, CheckCircle2, TrendingDown } from 'lucide-react';
+import { Calendar, Gauge, Fuel, ArrowLeft, Share2, Phone, CheckCircle2, TrendingDown, Loader2 } from 'lucide-react';
 import * as React from 'react';
 import VehicleCard from '@/components/shared/vehicle-card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { InputError } from '@/components/input-error';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
@@ -42,6 +43,27 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
     const [shareCopied, setShareCopied] = React.useState(false);
     const shouldReduceMotion = useReducedMotion();
 
+    const reservationForm = useForm({
+        type: 'reservation',
+        vehicle_id: vehicle?.id,
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        notes: '',
+    });
+
+    const testDriveForm = useForm({
+        type: 'test-drive',
+        vehicle_id: vehicle?.id,
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        preferred_date: '',
+        notes: '',
+    });
+
     React.useEffect(() => {
         if (vehicle) {
             record(vehicle.id);
@@ -67,16 +89,6 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
             </PublicLayout>
         );
     }
-
-    const persistLead = (type: string) => {
-        if (typeof window === 'undefined') {
-return;
-}
-
-        const key = 'dealership:vehicle-leads';
-        const current = JSON.parse(localStorage.getItem(key) ?? '[]') as Array<Record<string, unknown>>;
-        localStorage.setItem(key, JSON.stringify([{ type, vehicleId: vehicle.id, vehicleName: vehicle.name, createdAt: new Date().toISOString() }, ...current]));
-    };
 
     const shareVehicle = async () => {
         const shareUrl = typeof window !== 'undefined' ? window.location.href : `/inventory/${vehicle.slug}`;
@@ -259,12 +271,69 @@ return;
                                             <DialogContent>
                                                 <DialogHeader><DialogTitle>Reserve {vehicle.name}</DialogTitle></DialogHeader>
                                                 <form className="space-y-4" onSubmit={(event) => {
- event.preventDefault(); persistLead('reservation'); 
-}}>
-                                                    <div className="grid gap-2"><Label htmlFor="reserve-name">Name</Label><Input id="reserve-name" required /></div>
-                                                    <div className="grid gap-2"><Label htmlFor="reserve-email">Email</Label><Input id="reserve-email" type="email" required /></div>
+                                                    event.preventDefault();
+                                                    reservationForm.post('/leads/public', {
+                                                        onSuccess: () => {
+                                                            reservationForm.reset();
+                                                        },
+                                                    });
+                                                }}>
+                                                    <input type="hidden" name="type" value="reservation" />
+                                                    <input type="hidden" name="vehicle_id" value={vehicle.id} />
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="reserve-first-name">First Name</Label>
+                                                        <Input
+                                                            id="reserve-first-name"
+                                                            value={reservationForm.data.first_name}
+                                                            onChange={e => reservationForm.setData('first_name', e.target.value)}
+                                                            required
+                                                        />
+                                                        <InputError message={reservationForm.errors.first_name} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="reserve-last-name">Last Name</Label>
+                                                        <Input
+                                                            id="reserve-last-name"
+                                                            value={reservationForm.data.last_name}
+                                                            onChange={e => reservationForm.setData('last_name', e.target.value)}
+                                                        />
+                                                        <InputError message={reservationForm.errors.last_name} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="reserve-email">Email</Label>
+                                                        <Input
+                                                            id="reserve-email"
+                                                            type="email"
+                                                            value={reservationForm.data.email}
+                                                            onChange={e => reservationForm.setData('email', e.target.value)}
+                                                            required
+                                                        />
+                                                        <InputError message={reservationForm.errors.email} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="reserve-phone">Phone</Label>
+                                                        <Input
+                                                            id="reserve-phone"
+                                                            type="tel"
+                                                            value={reservationForm.data.phone}
+                                                            onChange={e => reservationForm.setData('phone', e.target.value)}
+                                                        />
+                                                        <InputError message={reservationForm.errors.phone} />
+                                                    </div>
                                                     <div className="rounded-lg bg-muted p-3 text-sm text-muted-foreground">A specialist will confirm availability and deposit details.</div>
-                                                    <Button type="submit" className="w-full">Submit Reservation</Button>
+                                                    <Button type="submit" className="w-full" disabled={reservationForm.processing}>
+                                                        {reservationForm.processing ? (
+                                                            <>
+                                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                Submitting...
+                                                            </>
+                                                        ) : (
+                                                            'Submit Reservation'
+                                                        )}
+                                                    </Button>
+                                                    {reservationForm.recentlySuccessful && (
+                                                        <p className="text-center text-sm text-green-600">Your reservation request has been submitted successfully.</p>
+                                                    )}
                                                 </form>
                                             </DialogContent>
                                         </Dialog>
@@ -273,11 +342,89 @@ return;
                                             <DialogContent>
                                                 <DialogHeader><DialogTitle>Book a private test drive</DialogTitle></DialogHeader>
                                                 <form className="space-y-4" onSubmit={(event) => {
- event.preventDefault(); persistLead('test-drive'); 
-}}>
-                                                    <div className="grid gap-2"><Label htmlFor="drive-date">Preferred date</Label><Input id="drive-date" type="date" required /></div>
-                                                    <div className="grid gap-2"><Label htmlFor="drive-notes">Notes</Label><Textarea id="drive-notes" placeholder="Preferred time, questions, or trade-in details" /></div>
-                                                    <Button type="submit" className="w-full">Request Test Drive</Button>
+                                                    event.preventDefault();
+                                                    testDriveForm.post('/leads/public', {
+                                                        onSuccess: () => {
+                                                            testDriveForm.reset();
+                                                        },
+                                                    });
+                                                }}>
+                                                    <input type="hidden" name="type" value="test-drive" />
+                                                    <input type="hidden" name="vehicle_id" value={vehicle.id} />
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="drive-first-name">First Name</Label>
+                                                        <Input
+                                                            id="drive-first-name"
+                                                            value={testDriveForm.data.first_name}
+                                                            onChange={e => testDriveForm.setData('first_name', e.target.value)}
+                                                            required
+                                                        />
+                                                        <InputError message={testDriveForm.errors.first_name} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="drive-last-name">Last Name</Label>
+                                                        <Input
+                                                            id="drive-last-name"
+                                                            value={testDriveForm.data.last_name}
+                                                            onChange={e => testDriveForm.setData('last_name', e.target.value)}
+                                                        />
+                                                        <InputError message={testDriveForm.errors.last_name} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="drive-email">Email</Label>
+                                                        <Input
+                                                            id="drive-email"
+                                                            type="email"
+                                                            value={testDriveForm.data.email}
+                                                            onChange={e => testDriveForm.setData('email', e.target.value)}
+                                                            required
+                                                        />
+                                                        <InputError message={testDriveForm.errors.email} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="drive-phone">Phone</Label>
+                                                        <Input
+                                                            id="drive-phone"
+                                                            type="tel"
+                                                            value={testDriveForm.data.phone}
+                                                            onChange={e => testDriveForm.setData('phone', e.target.value)}
+                                                        />
+                                                        <InputError message={testDriveForm.errors.phone} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="drive-date">Preferred date</Label>
+                                                        <Input
+                                                            id="drive-date"
+                                                            type="date"
+                                                            value={testDriveForm.data.preferred_date}
+                                                            onChange={e => testDriveForm.setData('preferred_date', e.target.value)}
+                                                            required
+                                                        />
+                                                        <InputError message={testDriveForm.errors.preferred_date} />
+                                                    </div>
+                                                    <div className="grid gap-2">
+                                                        <Label htmlFor="drive-notes">Notes</Label>
+                                                        <Textarea
+                                                            id="drive-notes"
+                                                            placeholder="Preferred time, questions, or trade-in details"
+                                                            value={testDriveForm.data.notes}
+                                                            onChange={e => testDriveForm.setData('notes', e.target.value)}
+                                                        />
+                                                        <InputError message={testDriveForm.errors.notes} />
+                                                    </div>
+                                                    <Button type="submit" className="w-full" disabled={testDriveForm.processing}>
+                                                        {testDriveForm.processing ? (
+                                                            <>
+                                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                Submitting...
+                                                            </>
+                                                        ) : (
+                                                            'Request Test Drive'
+                                                        )}
+                                                    </Button>
+                                                    {testDriveForm.recentlySuccessful && (
+                                                        <p className="text-center text-sm text-green-600">Your test drive request has been submitted successfully.</p>
+                                                    )}
                                                 </form>
                                             </DialogContent>
                                         </Dialog>

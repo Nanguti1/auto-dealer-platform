@@ -79,6 +79,7 @@ Route::get('import/request', [App\Http\Controllers\Public\ImportController::clas
 Route::post('import', [App\Http\Controllers\Public\ImportController::class, 'store'])->name('import.store');
 Route::get('contact/dealer', [ContactController::class, 'create'])->name('contact.dealer');
 Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
+Route::post('leads/public', [ContactController::class, 'storeLead'])->name('leads.public.store');
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');

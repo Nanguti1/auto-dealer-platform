@@ -132,3 +132,96 @@ This file tracks the progress of code remediation work based on the CODE_REMEDIA
 - Frontend form field names are properly mapped to backend field names
 - Validation follows Laravel best practices with proper type hints and array structure
 - Code formatted with Laravel Pint to maintain project standards
+
+## Session 2
+- Inquiry form connected to backend API.
+- Reservation form connected to backend API.
+- Test Drive form connected to backend API.
+- Backend lead creation integrated with proper validation.
+- localStorage dead-end flow removed.
+- Loading states added to all forms.
+- Validation added to all forms.
+- Success and error handling added to all forms.
+
+### Files Modified
+
+#### Backend
+- `app/Http/Requests/Public/StorePublicLeadRequest.php` (new)
+  - Created form request for public lead submission
+  - Added validation for: type, vehicle_id, first_name, last_name, email, phone, message, preferred_date, notes
+  - Added in validation for type field (inquiry, reservation, test-drive)
+  - Added exists validation for vehicle_id
+  - Added date validation for preferred_date with after:today rule
+  - Added custom error messages for better UX
+
+- `app/Http/Controllers/Public/ContactController.php`
+  - Added storeLead method to handle public lead submissions
+  - Integrated with Lead model creation
+  - Added type-based source mapping (vehicle_inquiry, vehicle_reservation, test_drive)
+  - Added structured notes storage for different lead types
+  - Added LeadCreated event dispatch
+  - Updated existing store method to use first_name field instead of name
+
+- `routes/web.php`
+  - Added POST route for /leads/public endpoint
+  - Route name: leads.public.store
+
+#### Frontend
+- `resources/js/pages/inventory/show.tsx`
+  - Removed localStorage-only persistLead function
+  - Added useForm hooks for reservation and test drive forms
+  - Replaced inline forms with controlled form state
+  - Added validation error display with InputError components
+  - Added loading states with Loader2 spinner
+  - Added success messages with recentlySuccessful flag
+  - Split name field into first_name and last_name
+  - Added proper form reset on successful submission
+  - Reservation form: Added first_name, last_name, email, phone fields
+  - Test Drive form: Added first_name, last_name, email, phone, preferred_date, notes fields
+
+- `resources/js/components/vehicles/vehicle-inquiry-form.tsx`
+  - Replaced Form component with useForm hook for better control
+  - Removed action prop (now uses fixed /leads/public endpoint)
+  - Split name field into first_name and last_name
+  - Added validation error display with InputError components
+  - Added loading state with Loader2 spinner
+  - Added success message with recentlySuccessful flag
+  - Added form reset on successful submission
+  - Updated to POST to /leads/public endpoint with type=inquiry
+
+#### Testing
+- `tests/Feature/PublicLeadSubmissionTest.php` (new)
+  - Created comprehensive test suite for public lead submission
+  - Test for inquiry lead submission
+  - Test for reservation lead submission
+  - Test for test drive lead submission
+  - Test for required type field validation
+  - Test for valid type field validation
+  - Test for required first_name validation
+  - Test for required email validation
+  - Test for valid email format validation
+  - Test for valid vehicle_id validation
+  - Test for future date validation on test drive
+  - Test for submission without vehicle_id (general inquiry)
+
+### Key Improvements
+
+1. **Backend Integration**: All three forms now properly submit data to backend API instead of localStorage dead-end
+2. **Lead Creation**: Forms integrate with Lead model creation and trigger LeadCreated events
+3. **Type-Based Routing**: Different lead types (inquiry, reservation, test-drive) are routed to appropriate sources
+4. **Structured Data**: Lead notes are structured based on type (JSON for test drive dates, reservation flags)
+5. **Validation**: Comprehensive validation on both frontend and backend
+6. **Loading States**: All forms show loading spinners during submission
+7. **Error Handling**: Validation errors are displayed inline with clear messages
+8. **Success Feedback**: Success messages appear after successful submission
+9. **Form Reset**: Forms reset automatically after successful submission
+10. **User Experience**: Improved UX with proper field labels, placeholders, and error messages
+
+### Testing Notes
+
+- Created comprehensive test suite covering all lead types
+- Tests validate required fields, data types, and business rules
+- Tests verify proper lead creation in database
+- Tests verify correct source assignment based on lead type
+- Tests verify structured notes storage for different lead types
+- Code formatted with Laravel Pint to maintain project standards
