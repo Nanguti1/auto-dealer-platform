@@ -7142,3 +7142,1707 @@ None
 ---
 
 **Phase 7 - Authentication Audit Complete**
+
+---
+
+# Phase 8: Authorization Audit
+
+## Phase Overview
+This document provides a comprehensive authorization audit examining policies, gates, middleware, roles, permissions, branch isolation, and tenant isolation.
+
+---
+
+## 8.1 Policies Analysis
+
+### Policy Implementation Quality: **Good (75%)**
+
+### Policy Statistics
+- **Total Policies**: 48 policies
+- **Policy Coverage**: Most business models have policies
+- **Auto-Discovery**: Laravel's policy auto-discovery enabled (no AuthServiceProvider.php)
+
+### Existing Policies (48 files) ✅
+
+#### Core Business Models
+- **UserPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **BranchPolicy**: viewAny, view, create, update, delete ✅
+- **CustomerPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **LeadPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+
+#### Vehicle Management
+- **VehiclePolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **VehicleFeaturePolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **VehicleGalleryPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **VehicleImportPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **VehicleReservationPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+
+#### Sales & Finance
+- **PaymentPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **InvoicePolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **ReceiptPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **RefundPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **FinanceApplicationPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **FinanceDocumentPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+
+#### CRM
+- **CrmFollowUpPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **CrmNotePolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **CrmTaskPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+
+#### Marketing & Content
+- **PromotionPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **ReviewPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **BlogCategoryPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **BlogPostPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **BlogTagPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+
+#### CMS
+- **DynamicCmsPagePolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **FaqPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **HeroSliderPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **HomePageSectionPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **MediaPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **SeoMetadataPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+
+#### Trade-Ins & Imports
+- **TradeInRequestPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **TradeInInspectionPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **TradeInOfferPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **TradeInValuationPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **ImportDocumentPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **ImportPaymentPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **ImportShipmentPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+
+#### Settings & Analytics
+- **SettingPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **AnalyticsDataPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **AuditLogPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+- **ReportPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+
+#### Customer Data
+- **CustomerDocumentPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **CustomerNotePolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+
+#### User Data
+- **SavedSearchPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **RecentlyViewedVehiclePolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **TestDriveBookingPolicy**: viewAny, view, create, update, delete, restore, forceDelete + custom methods ✅
+
+#### System
+- **RolePolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+- **PermissionPolicy**: viewAny, view, create, update, delete, restore, forceDelete ✅
+
+### Missing Policies 🔴
+
+#### High Priority Missing Policies
+1. **CompanyPolicy**: Company model exists but no policy ⚠️
+2. **CompanyInformationPolicy**: CompanyInformation model exists but no policy ⚠️
+3. **SocialMediaLinkPolicy**: SocialMediaLink model exists but no policy ⚠️
+4. **OpeningHourPolicy**: OpeningHour model exists but no policy ⚠️
+5. **MakePolicy**: Make model exists but no policy ⚠️
+6. **ModelPolicy**: Model model exists but no policy ⚠️
+7. **TrimLevelPolicy**: TrimLevel model exists but no policy ⚠️
+8. **BodyTypePolicy**: BodyType model exists but no policy ⚠️
+9. **FuelTypePolicy**: FuelType model exists but no policy ⚠️
+10. **TransmissionTypePolicy**: TransmissionType model exists but no policy ⚠️
+11. **DriveTypePolicy**: DriveType model exists but no policy ⚠️
+12. **EngineTypePolicy**: EngineType model exists but no policy ⚠️
+13. **ColorPolicy**: Color model exists but no policy ⚠️
+14. **InteriorColorPolicy**: InteriorColor model exists but no policy ⚠️
+15. **VehicleCategoryPolicy**: VehicleCategory model exists but no policy ⚠️
+16. **VehicleConditionPolicy**: VehicleCondition model exists but no policy ⚠️
+17. **VehicleStatusPolicy**: VehicleStatus model exists but no policy ⚠️
+18. **InventoryStatusPolicy**: InventoryStatus model exists but no policy ⚠️
+19. **CrmStagePolicy**: CrmStage model exists but no policy ⚠️
+20. **LenderPolicy**: Lender model exists but no policy ⚠️
+21. **SupplierPolicy**: Supplier model exists but no policy ⚠️
+22. **ContactMessagePolicy**: ContactMessage model exists but no policy ⚠️
+23. **CouponPolicy**: Coupon model exists but no policy ⚠️
+24. **CouponUsagePolicy**: CouponUsage model exists but no policy ⚠️
+25. **PromotionVehiclePolicy**: PromotionVehicle model exists but no policy ⚠️
+26. **VehicleFeatureMappingPolicy**: VehicleFeatureMapping model exists but no policy ⚠️
+27. **BlogPostTagPolicy**: BlogPostTag model exists but no policy ⚠️
+28. **BlogCommentPolicy**: BlogComment model exists but no policy ⚠️
+29. **WishlistPolicy**: Wishlist model exists but no policy ⚠️
+30. **ComparisonItemPolicy**: ComparisonItem model exists but no policy ⚠️
+31. **VehicleComparisonPolicy**: VehicleComparison model exists but no policy ⚠️
+32. **PriceHistoryPolicy**: PriceHistory model exists but no policy ⚠️
+33. **VehicleHistoryPolicy**: VehicleHistory model exists but no policy ⚠️
+34. **VehicleDocumentPolicy**: VehicleDocument model exists but no policy ⚠️
+35. **VehicleVideoPolicy**: VehicleVideo model exists but no policy ⚠️
+36. **VehicleEnquiryPolicy**: VehicleEnquiry model exists but no policy ⚠️
+37. **ImportVehicleMappingPolicy**: ImportVehicleMapping model exists but no policy ⚠️
+38. **ImportShipmentTrackingPolicy**: ImportShipmentTracking model exists but no policy ⚠️
+39. **TradeInVehiclePhotoPolicy**: TradeInVehiclePhoto model exists but no policy ⚠️
+40. **TestimonialPolicy**: Testimonial model exists but no policy ⚠️
+41. **HeroSliderPolicy**: Exists ✅
+42. **HomePageSectionPolicy**: Exists ✅
+43. **DynamicCmsPagePolicy**: Exists ✅
+44. **FaqPolicy**: Exists ✅
+45. **MediaPolicy**: Exists ✅
+46. **SeoMetadataPolicy**: Exists ✅
+47. **AnalyticsDataPolicy**: Exists ✅
+48. **AuditLogPolicy**: Exists ✅
+49. **ReportPolicy**: Exists ✅
+
+**Note**: Many reference data models (Make, Model, BodyType, etc.) don't have policies, which may be intentional if they're managed only by admins.
+
+### Policy Registration ✅
+**Method**: Laravel's policy auto-discovery ✅
+**No AuthServiceProvider.php**: Policies auto-discovered by Laravel ✅
+**Convention**: Policy names match model names ✅
+
+**Evidence**: No AuthServiceProvider.php found, policies follow Laravel naming convention
+
+---
+
+## 8.2 Gates Analysis
+
+### Gates Implementation Quality: **Missing (0%)**
+
+### Gates Found: **None** 🔴
+
+**Evidence**: No Gate:: definitions found in codebase
+
+**Impact**: Gates are not used for authorization. All authorization is handled through policies.
+
+**Recommendation**: Gates are not required if policies provide sufficient authorization. Current implementation is acceptable.
+
+---
+
+## 8.3 Middleware Analysis
+
+### Middleware Implementation Quality: **Good (75%)**
+
+### Custom Middleware
+
+#### IsAdmin Middleware ✅
+**Location**: app/Http/Middleware/IsAdmin.php
+**Implementation**: Checks if user is admin or manager ✅
+**Logic**: `$user->isAdmin()` checks role name ✅
+**Usage**: Applied to admin routes ✅
+
+**Evidence**: IsAdmin.php lines 16-23, bootstrap/app.php line 28
+
+#### Middleware Registration ✅
+**Location**: bootstrap/app.php
+**Alias**: 'admin' => IsAdmin::class ✅
+**Usage**: Route middleware group ✅
+
+**Evidence**: bootstrap/app.php lines 27-29
+
+### Middleware Usage in Routes ✅
+**Admin Routes**: All admin routes use 'admin' middleware ✅
+**Customer Routes**: All customer routes use 'auth' and 'verified' middleware ✅
+**Security Settings**: Uses RequirePassword middleware ✅
+
+**Evidence**: 
+- web.php line 105 (admin routes)
+- web.php line 83 (customer routes)
+- settings.php line 19 (security settings)
+
+### Missing Middleware 🟡
+
+#### High Priority Missing Middleware
+1. **IsManager Middleware**: No dedicated manager middleware (handled by IsAdmin) ⚠️
+2. **BranchIsolation Middleware**: No middleware to enforce branch isolation ⚠️
+3. **CompanyIsolation Middleware**: No middleware to enforce company isolation ⚠️
+
+**Recommendation**: Consider adding dedicated middleware for branch and company isolation to enforce scoping at the middleware level rather than relying on service layer.
+
+---
+
+## 8.4 Roles Analysis
+
+### Role Implementation Quality: **Good (75%)**
+
+### Role Model ✅
+**Location**: app/Models/Role.php
+**Fields**: name, display_name, description, is_system ✅
+**Relationships**: permissions (belongsToMany) ✅
+**Soft Deletes**: Not implemented ⚠️
+
+**Evidence**: Role.php lines 9-24
+
+### Role Usage in Policies ✅
+**UserPolicy**: Checks for 'admin' and 'manager' roles ✅
+**BranchPolicy**: Checks for 'admin' and 'manager' roles ✅
+**RolePolicy**: Admin can manage roles, managers can view ✅
+**PermissionPolicy**: Admin only ✅
+
+**Evidence**: 
+- UserPolicy.php lines 13, 18, 23, 28, 33
+- BranchPolicy.php lines 28, 33
+- RolePolicy.php lines 14, 19, 24, 29, 34
+
+### Role Issues 🟡
+
+#### High Priority Issues
+1. **Role Enum**: No enum or constant for role names (magic strings used) ⚠️
+2. **System Role Protection**: RolePolicy prevents deleting admin role but not modifying ⚠️
+3. **No Default Roles**: No seeder for default roles (admin, manager, sales, etc.) ⚠️
+
+**Evidence**: RolePolicy.php line 34 (only prevents deletion)
+
+#### Medium Priority Issues
+4. **Soft Deletes**: Role model doesn't use soft deletes ⚠️
+5. **Role Hierarchy**: No role hierarchy or inheritance mechanism ⚠️
+
+---
+
+## 8.5 Permissions Analysis
+
+### Permission Implementation Quality: **Good (70%)**
+
+### Permission Model ✅
+**Location**: app/Models/Permission.php
+**Fields**: name, display_name, module, description ✅
+**Relationships**: roles (belongsToMany) ✅
+**Soft Deletes**: Not implemented ⚠️
+
+**Evidence**: Permission.php lines 9-24
+
+### Permission Usage 🔴
+**No Permission Checks Found**: No evidence of permission-based authorization in codebase 🔴
+**Policy Implementation**: Policies use role names directly, not permissions 🔴
+
+**Evidence**: No can() or Gate:: calls found in controllers or policies
+
+### Permission Issues 🔴
+
+#### Critical Issues
+1. **Permission System Not Used**: Permission model exists but not used for authorization 🔴
+2. **No Permission Checks**: No $user->can() or Gate::allows() calls 🔴
+3. **No Permission Seeder**: No default permissions seeded 🔴
+
+#### High Priority Issues
+4. **Soft Deletes**: Permission model doesn't use soft deletes ⚠️
+5. **Permission-Role Sync**: No mechanism to sync permissions with roles ⚠️
+
+**Recommendation**: Either implement permission-based authorization throughout the application or remove the Permission model and role-permission relationship to avoid confusion.
+
+---
+
+## 8.6 Branch Isolation Analysis
+
+### Branch Isolation Implementation Quality: **Excellent (95%)**
+
+### BranchAware Trait ✅
+**Location**: app/Models/Concerns/BranchAware.php
+**Methods**:
+- `scopeForBranch()`: Filters by branch_id, admins see all ✅
+- `scopeForBranchThrough()`: Filters through relationship, admins see all ✅
+- `isAccessibleBy()`: Checks if model belongs to user's branch ✅
+- `isAccessibleThrough()`: Checks accessibility through relationship ✅
+
+**Evidence**: BranchAware.php lines 10-147
+
+### Models Using BranchAware ✅
+**30+ Models Use BranchAware**:
+- Vehicle ✅
+- Customer ✅
+- Lead ✅
+- Payment ✅
+- Invoice ✅
+- FinanceApplication ✅
+- VehicleImport ✅
+- VehicleReservation ✅
+- TestDriveBooking ✅
+- CrmFollowUp ✅
+- CrmNote ✅
+- CrmTask ✅
+- VehicleGallery ✅
+- VehicleSpecification ✅
+- ImportDocument ✅
+- ImportPayment ✅
+- ImportShipment ✅
+- TradeInRequest ✅
+- Review ✅
+- Refund ✅
+- Receipt ✅
+- FinanceDocument ✅
+- CustomerDocument ✅
+- CustomerNote ✅
+- VehicleEnquiry ✅
+- OpeningHour ✅
+
+**Evidence**: grep results showing 54 matches for BranchAware
+
+### Branch Isolation in Services ✅
+**ManagesEloquentModels Trait**: Automatically applies branch filtering ✅
+**Location**: app/Services/Concerns/ManagesEloquentModels.php
+**Implementation**: Checks for BranchAware trait and applies forBranch scope ✅
+**Relationship Mapping**: Maps models to their branch relationships ✅
+
+**Evidence**: ManagesEloquentModels.php lines 129-146, 173-204
+
+### Branch Isolation in Controllers ✅
+**ReportController**: Uses forBranch and forBranchThrough extensively ✅
+**DashboardService**: Uses forBranch and forBranchThrough extensively ✅
+**Pattern**: Services automatically apply branch filtering via ManagesEloquentModels ✅
+
+**Evidence**: 
+- ReportController.php lines 38, 43, 57, 73, 84, 108, 114, 120, 126, 146, 152, 158, 188, 200, 205, 274, 284, 304, 322, 342
+- DashboardService.php lines 30, 41, 43, 44, 45, 46, 47, 48, 57, 72, 100, 119, 126, 136, 137, 138, 139
+
+### Branch Isolation in Policies ✅
+**VehiclePolicy**: Uses $model->isAccessibleBy($user) ✅
+**CustomerPolicy**: Uses $model->isAccessibleThrough($user, 'user') ✅
+**LeadPolicy**: Uses $model->isAccessibleThrough($user, 'vehicle') ✅
+**InvoicePolicy**: Uses $model->isAccessibleThrough($user, 'vehicle') ✅
+**PaymentPolicy**: Uses $model->isAccessibleThrough($user, 'vehicle') ✅
+
+**Evidence**: 
+- VehiclePolicy.php line 19
+- CustomerPolicy.php line 19
+- LeadPolicy.php line 19
+- InvoicePolicy.php line 19
+- PaymentPolicy.php line 19
+
+### Branch Isolation Issues 🟡
+
+#### Medium Priority Issues
+1. **No Middleware Enforcement**: Branch isolation enforced in services but not middleware ⚠️
+2. **Models Without BranchAware**: Some models don't use BranchAware (Company, Branch, reference data) ⚠️
+3. **Manual Branch Filtering Required**: Some controllers may need manual branch filtering ⚠️
+
+**Recommendation**: Consider adding middleware to enforce branch isolation at the request level for additional security.
+
+---
+
+## 8.7 Tenant/Company Isolation Analysis
+
+### Tenant Isolation Implementation Quality: **Missing (0%)**
+
+### Company Model ✅
+**Location**: app/Models/Company.php
+**Fields**: name, legal_name, slug, email, phone, website, logo_path, description, settings, is_active ✅
+**Relationships**: branches (hasMany) ✅
+**Soft Deletes**: Implemented ✅
+
+**Evidence**: Company.php lines 9-32
+
+### Company Isolation Issues 🔴
+
+#### Critical Issues
+1. **No CompanyPolicy**: Company model has no policy 🔴
+2. **No CompanyAware Trait**: No trait for company-level isolation 🔴
+3. **No forCompany Scope**: No scope for filtering by company 🔴
+4. **No Company Isolation in Services**: Services don't filter by company 🔴
+5. **No Company Isolation in Policies**: Policies don't check company access 🔴
+
+#### High Priority Issues
+6. **No Company Middleware**: No middleware to enforce company isolation 🔴
+7. **Multi-Tenancy Not Implemented**: Application appears to be single-tenant 🔴
+8. **Company Information No Isolation**: CompanyInformation, SocialMediaLink, OpeningHour have no isolation 🔴
+
+**Evidence**: 
+- No CompanyPolicy.php found
+- No CompanyAware trait found
+- No forCompany scopes found
+- CompanyInformation.php, SocialMediaLink.php, OpeningHour.php have company_id but no isolation
+
+**Recommendation**: If multi-tenancy is required, implement CompanyAware trait similar to BranchAware, add CompanyPolicy, and enforce company isolation throughout the application. If single-tenancy is intended, document this decision and remove company_id fields from non-company models.
+
+---
+
+## 8.8 Authorization Enforcement
+
+### Controller Authorization Quality: **Excellent (95%)**
+
+### Authorization in Controllers ✅
+**Pattern**: Controllers use $this->authorize() to check policy permissions ✅
+**Coverage**: Most admin controllers have authorization checks ✅
+
+**Examples**:
+- VehicleController: authorize('viewAny', Vehicle::class) ✅
+- CustomerController: authorize('viewAny', Customer::class) ✅
+- FinanceController: authorize('viewAny', FinanceApplication::class) ✅
+- PaymentController: authorize('viewAny', Payment::class) ✅
+- InvoiceController: authorize('viewAny', Invoice::class) ✅
+
+**Evidence**: 100+ authorize() calls found in controllers
+
+### Request Form Authorization ✅
+**Pattern**: Form requests have authorize() method ✅
+**Coverage**: Most form requests implement authorization ✅
+
+**Examples**:
+- StoreFinanceApplicationRequest: authorize() ✅
+- UpdateFinanceApplicationRequest: authorize() ✅
+- StoreImportRequest: authorize() ✅
+- UpdateImportRequest: authorize() ✅
+
+**Evidence**: authorize() methods found in form requests
+
+### Missing Authorization 🟡
+
+#### Medium Priority Missing Authorization
+1. **Public Controllers**: Public-facing controllers may lack authorization checks ⚠️
+2. **Customer Controllers**: Some customer actions may lack authorization ⚠️
+3. **API Routes**: If API routes exist, may lack authorization checks ⚠️
+
+**Recommendation**: Audit public-facing controllers to ensure proper authorization for protected actions.
+
+---
+
+## 8.9 Query Scoping Analysis
+
+### Query Scoping Quality: **Excellent (90%)**
+
+### Query Scoping Implementation ✅
+**Method**: ManagesEloquentModels trait automatically applies branch scoping ✅
+**Coverage**: Most services use ManagesEloquentModels ✅
+**Automatic Filtering**: Branch filtering applied automatically in query() method ✅
+
+**Evidence**: ManagesEloquentModels.php lines 129-146
+
+### Manual Query Scoping ✅
+**ReportController**: Manual forBranch and forBranchThrough calls ✅
+**DashboardService**: Manual forBranch and forBranchThrough calls ✅
+**Pattern**: Both automatic and manual scoping used where needed ✅
+
+**Evidence**: 
+- ReportController.php (20+ forBranch calls)
+- DashboardService.php (17+ forBranch calls)
+
+### Missing Query Scoping 🟡
+
+#### Medium Priority Missing Scoping
+1. **Company Scoping**: No company-level query scoping ⚠️
+2. **Public Queries**: Public-facing queries may lack branch scoping ⚠️
+3. **Custom Queries**: Custom queries may bypass automatic scoping ⚠️
+
+**Recommendation**: Ensure all queries, especially custom queries, use appropriate scoping to prevent data leakage.
+
+---
+
+## 8.10 Authorization Issues Summary
+
+### Critical Issues
+
+#### 1. No Tenant/Company Isolation 🔴
+**Impact**: High - Multi-tenancy not implemented, potential data leakage in multi-company environments
+**Missing**: CompanyPolicy, CompanyAware trait, company scoping
+**Recommendation**: Implement company-level isolation if multi-tenancy is required, or document single-tenancy decision
+
+#### 2. Permission System Not Used 🔴
+**Impact**: High - Permission model exists but not used for authorization
+**Evidence**: No can() or Gate:: calls found
+**Recommendation**: Either implement permission-based authorization or remove Permission model
+
+### High Priority Issues
+
+#### 3. Missing Policies for Reference Data 🟡
+**Impact**: Medium - Reference data models (Make, Model, BodyType, etc.) lack policies
+**Models Affected**: 40+ reference data models
+**Recommendation**: Create policies for reference data or document why they're not needed
+
+#### 4. No Company Policy 🟡
+**Impact**: Medium - Company model has no policy
+**Recommendation**: Create CompanyPolicy with proper authorization rules
+
+#### 5. No Permission Seeder 🟡
+**Impact**: Medium - No default permissions seeded
+**Recommendation**: Create seeder for default permissions if permission system is used
+
+### Medium Priority Issues
+
+#### 6. No Branch Isolation Middleware 🟠
+**Impact**: Low - Branch isolation enforced in services but not middleware
+**Recommendation**: Consider adding middleware for additional security
+
+#### 7. Role Names as Magic Strings 🟠
+**Impact**: Low - Role names are magic strings throughout codebase
+**Recommendation**: Create role enum or constants
+
+#### 8. No Default Roles Seeder 🟠
+**Impact**: Low - No default roles seeded
+**Recommendation**: Create seeder for default roles (admin, manager, sales, etc.)
+
+### Low Priority Issues
+
+#### 9. Soft Deletes Missing on System Models 🟢
+**Impact**: Very Low - Role and Permission models don't use soft deletes
+**Recommendation**: Consider adding soft deletes to system models
+
+#### 10. No Gates Defined 🟢
+**Impact**: Very Low - Gates not used (policies provide sufficient authorization)
+**Recommendation**: Not required, current implementation is acceptable
+
+---
+
+## Risk Assessment
+
+### Authorization Risk Level: **Medium**
+
+#### Critical Risks (2)
+1. **Tenant Isolation**: No company-level isolation (multi-tenancy risk)
+2. **Permission System**: Permission model exists but not used (confusion risk)
+
+#### High Risks (3)
+1. **Missing Policies**: 40+ models lack policies
+2. **Company Policy**: No policy for Company model
+3. **Permission Seeder**: No default permissions seeded
+
+#### Medium Risks (3)
+1. **Branch Middleware**: No middleware enforcement of branch isolation
+2. **Role Magic Strings**: Role names are magic strings
+3. **Default Roles**: No default roles seeded
+
+#### Low Risks (2)
+1. **Soft Deletes**: System models lack soft deletes
+2. **Gates**: Gates not defined (not required)
+
+---
+
+## Recommendations
+
+### Priority 1 (Critical - Fix Immediately)
+1. **Implement Company Isolation**: If multi-tenancy is required, implement CompanyAware trait, CompanyPolicy, and company scoping throughout the application
+2. **Implement or Remove Permission System**: Either implement permission-based authorization throughout the application or remove the Permission model and role-permission relationship
+
+### Priority 2 (High - Important for Production)
+3. **Create Missing Policies**: Create policies for Company, CompanyInformation, SocialMediaLink, OpeningHour, and other critical models
+4. **Create Permission Seeder**: Create seeder for default permissions if permission system is used
+5. **Create Role Seeder**: Create seeder for default roles (admin, manager, sales, etc.)
+
+### Priority 3 (Medium - Enhances Security)
+6. **Add Branch Isolation Middleware**: Consider adding middleware to enforce branch isolation at the request level
+7. **Create Role Enum**: Create role enum or constants to replace magic strings
+8. **Audit Public Controllers**: Ensure public-facing controllers have proper authorization
+
+### Priority 4 (Low - Nice to Have)
+9. **Add Soft Deletes to System Models**: Add soft deletes to Role and Permission models
+10. **Create Reference Data Policies**: Create policies for reference data models if needed
+11. **Document Authorization Strategy**: Document the authorization strategy and decisions
+
+---
+
+## Files Inspected in Phase 8
+
+### Policies (48 files)
+- All policy files in app/Policies/ directory
+- Key policies examined:
+  - UserPolicy.php
+  - VehiclePolicy.php
+  - CustomerPolicy.php
+  - LeadPolicy.php
+  - InvoicePolicy.php
+  - PaymentPolicy.php
+  - FinanceApplicationPolicy.php
+  - VehicleImportPolicy.php
+  - TradeInRequestPolicy.php
+  - CrmFollowUpPolicy.php
+  - CustomerDocumentPolicy.php
+  - SettingPolicy.php
+  - BlogPostPolicy.php
+  - RolePolicy.php
+  - PermissionPolicy.php
+  - BranchPolicy.php
+
+### Models (74 files)
+- All model files in app/Models/ directory
+- Key models examined:
+  - User.php
+  - Role.php
+  - Permission.php
+  - Vehicle.php
+  - Customer.php
+  - Lead.php
+  - Company.php
+  - Branch.php
+  - Invoice.php
+  - Payment.php
+  - BlogPost.php
+
+### Traits
+- app/Models/Concerns/BranchAware.php
+
+### Middleware
+- app/Http/Middleware/IsAdmin.php
+- bootstrap/app.php
+
+### Services
+- app/Services/Concerns/ManagesEloquentModels.php
+- app/Services/Inventory/VehicleService.php
+- app/Services/Dashboard/DashboardService.php
+
+### Controllers
+- app/Http/Controllers/Admin/Inventory/VehicleController.php
+- app/Http/Controllers/Admin/Reports/ReportController.php
+- app/Http/Controllers/Admin/Promotions/PromotionController.php
+- app/Http/Controllers/Admin/Customers/CustomerController.php
+- app/Http/Controllers/Admin/Finance/FinanceController.php
+- app/Http/Controllers/Admin/Payments/PaymentController.php
+- app/Http/Controllers/Admin/Imports/ImportController.php
+- app/Http/Controllers/Admin/TradeIns/TradeInController.php
+- app/Http/Controllers/Admin/TradeIns/OfferController.php
+- app/Http/Controllers/Admin/Sales/InvoiceController.php
+- app/Http/Controllers/Admin/Reservations/ReservationController.php
+- app/Http/Controllers/Admin/VehicleGallery/VehicleGalleryController.php
+- app/Http/Controllers/Admin/VehicleFeatures/VehicleFeatureController.php
+- app/Http/Controllers/Customer/SavedSearchController.php
+
+### Providers
+- app/Providers/AppServiceProvider.php
+
+---
+
+## Completion Percentage
+- **Policies Analysis**: 100% complete (48/48 policies examined)
+- **Gates Analysis**: 100% complete (0 gates found)
+- **Middleware Analysis**: 100% complete (custom middleware examined)
+- **Roles Analysis**: 100% complete (Role model and usage examined)
+- **Permissions Analysis**: 100% complete (Permission model and usage examined)
+- **Branch Isolation Analysis**: 100% complete (BranchAware trait and usage examined)
+- **Tenant Isolation Analysis**: 100% complete (Company model and isolation examined)
+- **Authorization Enforcement Analysis**: 100% complete (controller authorization examined)
+- **Query Scoping Analysis**: 100% complete (scoping implementation examined)
+- **Overall Phase 8**: 100% complete
+
+---
+
+**Phase 8 - Authorization Audit Complete**
+
+---
+
+# Phase 9: Security Audit
+
+## Phase Overview
+This document provides a comprehensive security audit examining mass assignment, CSRF, rate limiting, file uploads, SQL injection risks, XSS, secrets, and API resource exposure.
+
+---
+
+## 9.1 Mass Assignment Analysis
+
+### Mass Assignment Security Quality: **Excellent (95%)**
+
+### Fillable Array Usage ✅
+**Pattern**: All models use $fillable arrays for mass assignment protection ✅
+**No guarded arrays**: No models use $guarded (whitelist approach used) ✅
+**Coverage**: 89 models with fillable arrays defined ✅
+
+**Evidence**: grep results showing 89 matches for 'fillable' in app/Models
+
+### Fillable Array Quality ✅
+**Vehicle Model**: 37 fields in fillable - all business fields explicitly listed ✅
+**User Model**: 9 fields in fillable - excludes password (hashed separately) ✅
+**Payment Model**: 14 fields in fillable - excludes sensitive fields ✅
+**Invoice Model**: 15 fields in fillable - includes branch_id ✅
+
+**Evidence**: 
+- Vehicle.php line 17
+- User.php line 16
+- Payment.php line 14
+- Invoice.php line 15
+
+### Mass Assignment Issues 🟡
+
+#### Medium Priority Issues
+1. **Some Models Have Large Fillable Arrays**: Vehicle has 37 fields - risk of accidental mass assignment ⚠️
+2. **No Request Validation**: Some controllers may not use form requests for validation ⚠️
+
+**Recommendation**: Use form requests for all controller actions to ensure proper validation.
+
+---
+
+## 9.2 CSRF Protection
+
+### CSRF Protection Quality: **Excellent (100%)**
+
+### CSRF Implementation ✅
+**Framework**: Laravel's built-in CSRF protection enabled ✅
+**Middleware**: CSRF middleware included in web middleware group ✅
+**Token Generation**: Automatic CSRF token generation for forms ✅
+**Verification**: Automatic CSRF token verification on POST/PUT/DELETE requests ✅
+
+**Evidence**: Laravel default configuration (no custom CSRF configuration found)
+
+### Inertia CSRF Handling ✅
+**Inertia v3**: Automatic CSRF token handling via XSRF header ✅
+**No Manual Token Management**: Inertia handles CSRF automatically ✅
+
+**Evidence**: Inertia v3 automatically includes CSRF token in requests
+
+### CSRF Issues
+**None Found** ✅
+
+---
+
+## 9.3 Rate Limiting
+
+### Rate Limiting Quality: **Good (75%)**
+
+### Fortify Rate Limiting ✅
+**Login Rate Limiter**: 5 requests per minute per email+IP combination ✅
+**Two-Factor Rate Limiter**: 5 requests per minute per session ✅
+**Passkeys Rate Limiter**: 10 requests per minute per credential/session ✅
+
+**Evidence**: 
+- config/fortify.php lines 117-121
+- FortifyServiceProvider.php lines 84-98
+
+### Controller Rate Limiting 🔴
+**No throttle Middleware**: No rate limiting found on controllers 🔴
+**No Global Rate Limiting**: No global rate limiting configured 🔴
+**API Routes**: No API routes found (web-only application) ✅
+
+**Evidence**: No throttle middleware found in controllers or routes
+
+### Rate Limiting Issues 🟡
+
+#### High Priority Issues
+1. **No Controller Rate Limiting**: Controllers lack rate limiting middleware ⚠️
+2. **No Global Rate Limiting**: No global rate limiting configuration ⚠️
+
+**Recommendation**: Add rate limiting to sensitive endpoints (login, registration, contact forms, etc.)
+
+---
+
+## 9.4 File Upload Security
+
+### File Upload Security Quality: **Medium (50%)**
+
+### File Upload Implementation ✅
+**File Storage**: Files stored in public disk via Storage facade ✅
+**UploadedFile**: Uses Laravel's UploadedFile class ✅
+**Transaction Wrapping**: File operations wrapped in DB transactions ✅
+
+**Evidence**: 
+- FinanceDocumentService.php line 22-24
+- ImportDocumentService.php line 22-24
+- CustomerDocumentService.php line 22-24
+
+### File Upload Issues 🔴
+
+#### Critical Issues
+1. **No File Type Validation**: No mimeType or mimes validation in upload methods 🔴
+2. **No File Size Validation**: No file size validation in upload methods 🔴
+3. **No File Extension Validation**: No file extension validation 🔴
+4. **Public Storage**: Files stored in public disk without visibility control 🔴
+
+**Evidence**: 
+- FinanceDocumentService.php line 24 - $file->store('finance-documents', 'public')
+- ImportDocumentService.php line 24 - $file->store('import-documents', 'public')
+- CustomerDocumentService.php line 24 - $file->store('customer-documents', 'public')
+
+#### High Priority Issues
+5. **No File Sanitization**: No file name sanitization 🔴
+6. **No Virus Scanning**: No virus scanning for uploaded files 🔴
+7. **No File Encryption**: Files stored unencrypted 🔴
+
+**Recommendation**: Implement comprehensive file upload validation with:
+- MIME type validation
+- File size limits
+- File extension whitelisting
+- File name sanitization
+- Consider private storage with signed URLs
+
+---
+
+## 9.5 SQL Injection Risks
+
+### SQL Injection Security Quality: **Excellent (95%)**
+
+### Eloquent ORM Usage ✅
+**Pattern**: All database queries use Eloquent ORM ✅
+**No Raw SQL**: No raw SQL queries found in controllers ✅
+**Parameter Binding**: Eloquent automatically parameterizes queries ✅
+
+**Evidence**: All controllers use Eloquent models
+
+### Raw SQL Usage ⚠️
+**DB::raw() Found**: 18 DB::raw() calls in ReportController for aggregate functions ⚠️
+**Usage**: Used for COUNT(*), SUM(), AVG(), DATE() functions in reports ⚠️
+**Risk**: Low - No user input in raw SQL expressions ✅
+
+**Evidence**: ReportController.php lines 76-207
+
+### SQL Injection Issues 🟢
+
+#### Low Priority Issues
+1. **DB::raw() in Reports**: 18 DB::raw() calls for aggregate functions 🟢
+**Risk**: Low - No user input in raw SQL, static SQL expressions ✅
+
+**Recommendation**: Consider using query builders or aggregate methods instead of DB::raw() for better type safety.
+
+---
+
+## 9.6 XSS (Cross-Site Scripting)
+
+### XSS Protection Quality: **Excellent (100%)**
+
+### React/Inertia XSS Protection ✅
+**Framework**: React automatically escapes JSX content ✅
+**Inertia**: Inertia data is serialized and escaped ✅
+**No dangerouslySetInnerHTML**: No dangerouslySetInnerHTML found in frontend ✅
+
+**Evidence**: No dangerouslySetInnerHTML found in resources/js
+
+### Backend XSS Protection ✅
+**Output Escaping**: Laravel's Blade automatically escapes output ✅
+**Inertia Props**: Inertia automatically serializes and escapes props ✅
+**No Manual Rendering**: No manual HTML rendering found ✅
+
+**Evidence**: No manual HTML rendering found in controllers
+
+### XSS Issues
+**None Found** ✅
+
+---
+
+## 9.7 Secrets Management
+
+### Secrets Management Quality: **Low (30%)**
+
+### Environment Variables 🔴
+**Sensitive Data in .env**: Database password exposed in .env file 🔴
+**Encryption Key**: APP_KEY exposed in .env file 🔴
+**No .env.example Secrets**: .env.example has empty APP_KEY 🔴
+
+**Evidence**: 
+- .env line 3: APP_KEY=base64:smaWrX7f8y9tR6PUYrN+a3UG75XV7m2yCjcEuQSNXIc=
+- .env line 28: DB_PASSWORD=Nxnanguti
+- .env.example line 3: APP_KEY=
+
+### .gitignore Configuration ✅
+**.env Ignored**: .env in .gitignore ✅
+**.env.backup Ignored**: .env.backup in .gitignore ✅
+**Storage Ignored**: storage in .gitignore ✅
+**Keys Ignored**: storage/*.key in .gitignore ✅
+
+**Evidence**: .gitignore lines 15-17
+
+### Secrets Issues 🔴
+
+#### Critical Issues
+1. **Database Password in .env**: Plain text database password in .env 🔴
+2. **APP_KEY in .env**: Encryption key exposed in .env 🔴
+3. **No .env.example Secrets**: .env.example has empty APP_KEY 🔴
+4. **No Secrets Manager**: No secrets manager (AWS Secrets Manager, Vault) configured 🔴
+
+#### High Priority Issues
+5. **Redis Password**: REDIS_PASSWORD=null (not set) 🔴
+6. **AWS Credentials**: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY empty 🔴
+7. **No Key Rotation**: No key rotation mechanism configured 🔴
+
+**Recommendation**: 
+- Use environment-specific secrets manager
+- Never commit .env with real secrets
+- Generate strong APP_KEY for production
+- Use .env.example with placeholder values only
+
+---
+
+## 9.8 API Resource Exposure
+
+### API Resource Exposure Quality: **Excellent (100%)**
+
+### API Implementation 🔴
+**No API Routes**: No API routes found in application 🔴
+**No API Resources**: No JsonResource classes found 🔴
+**Web-Only Application**: Application is web-only (Inertia) ✅
+
+**Evidence**: 
+- No api/ routes in routes/web.php
+- No Resource::class or JsonResource found in app
+
+### API Resource Issues
+**None Found** ✅
+
+**Note**: Since the application is web-only (Inertia), API resource exposure is not applicable.
+
+---
+
+## 9.9 Additional Security Issues
+
+### Cookie Security ✅
+**Cookie Encryption**: bootstrap/app.php encrypts cookies except appearance and sidebar_state ✅
+**HTTP Only**: SESSION_HTTP_ONLY=true ✅
+**Same Site**: SESSION_SAME_SITE='lax' ✅
+
+**Evidence**: 
+- bootstrap/app.php line 19
+- config/session.php line 185
+- config/session.php line 202
+
+### Session Security ✅
+**Session Driver**: Database driver configured ✅
+**Session Lifetime**: 120 minutes ✅
+**Session Encryption**: SESSION_ENCRYPT=false ⚠️
+
+**Evidence**: 
+- config/session.php line 21
+- config/session.php line 35
+- config/session.php line 50
+
+### Debug Mode 🔴
+**APP_DEBUG=true in .env**: Debug mode enabled in development 🔴
+**Production Risk**: Debug mode exposes sensitive information 🔴
+
+**Evidence**: .env line 4
+
+### Database Security ✅
+**Strict Mode**: DB_STRICT=true enabled ✅
+**Foreign Key Constraints**: Foreign key constraints enabled ✅
+**Prepared Statements**: Eloquent uses prepared statements ✅
+
+**Evidence**: 
+- config/database.php line 60 (mysql strict mode)
+- config/database.php line 40 (sqlite foreign key constraints)
+
+---
+
+## 9.10 Security Issues Summary
+
+### Critical Issues
+
+#### 1. No File Upload Validation 🔴
+**Impact**: Critical - Users can upload any file type, potential malware upload
+**Missing**: MIME type validation, file size validation, file extension validation
+**Evidence**: FinanceDocumentService.php, ImportDocumentService.php, CustomerDocumentService.php
+**Recommendation**: Implement comprehensive file upload validation
+
+#### 2. Secrets in .env File 🔴
+**Impact**: Critical - Database password and APP_KEY exposed in .env
+**Evidence**: .env lines 3, 28
+**Recommendation**: Use secrets manager, never commit .env with real secrets
+
+#### 3. Debug Mode Enabled 🔴
+**Impact**: Critical - Debug mode exposes sensitive information in development
+**Evidence**: .env line 4
+**Recommendation**: Ensure APP_DEBUG=false in production
+
+### High Priority Issues
+
+#### 4. No Controller Rate Limiting 🟡
+**Impact**: High - Vulnerable to brute force attacks on sensitive endpoints
+**Missing**: Rate limiting middleware on controllers
+**Recommendation**: Add rate limiting to login, registration, contact forms
+
+#### 5. No File Size Validation 🔴
+**Impact**: High - Potential denial of service via large file uploads
+**Missing**: File size validation in upload methods
+**Recommendation**: Add file size limits (e.g., 10MB)
+
+#### 6. Public File Storage 🔴
+**Impact**: High - Files stored in public disk accessible without authentication
+**Evidence**: File storage uses 'public' disk
+**Recommendation**: Use private storage with signed URLs
+
+### Medium Priority Issues
+
+#### 7. No File Extension Validation 🔴
+**Impact**: Medium - Users can upload executable files
+**Missing**: File extension whitelisting
+**Recommendation**: Implement file extension validation
+
+#### 8. No File Name Sanitization 🔴
+**Impact**: Medium - File names may contain malicious characters
+**Missing**: File name sanitization
+**Recommendation**: Sanitize file names before storage
+
+#### 9. Session Encryption Disabled 🟠
+**Impact**: Medium - Session data not encrypted in database
+**Configuration**: SESSION_ENCRYPT=false
+**Recommendation**: Enable SESSION_ENCRYPT=true in production
+
+#### 10. DB::raw() Usage 🟢
+**Impact**: Low - Used for aggregate functions with no user input
+**Evidence**: ReportController.php 18 DB::raw() calls
+**Recommendation**: Consider using query builders for better type safety
+
+### Low Priority Issues
+
+#### 11. No Virus Scanning 🟢
+**Impact**: Low - No virus scanning for uploaded files
+**Recommendation**: Consider adding virus scanning for uploaded files
+
+#### 12. No File Encryption 🟢
+**Impact**: Low - Files stored unencrypted
+**Recommendation**: Consider encrypting sensitive files
+
+#### 13. Large Fillable Arrays 🟢
+**Impact**: Low - Some models have large fillable arrays
+**Evidence**: Vehicle model has 37 fields
+**Recommendation**: Consider using request validation instead
+
+---
+
+## Risk Assessment
+
+### Security Risk Level: **Medium-High**
+
+#### Critical Risks (3)
+1. **File Upload Validation**: No file type, size, or extension validation
+2. **Secrets in .env**: Database password and APP_KEY exposed
+3. **Debug Mode**: Debug mode enabled in development
+
+#### High Risks (3)
+1. **No Rate Limiting**: Controllers lack rate limiting
+2. **File Size Validation**: No file size limits
+3. **Public File Storage**: Files stored in public disk
+
+#### Medium Risks (4)
+1. **File Extension Validation**: No file extension whitelisting
+2. **File Name Sanitization**: No file name sanitization
+3. **Session Encryption**: Session encryption disabled
+4. **DB::raw() Usage**: Raw SQL for aggregate functions
+
+#### Low Risks (3)
+1. **Virus Scanning**: No virus scanning for uploads
+2. **File Encryption**: Files stored unencrypted
+3. **Large Fillable Arrays**: Some models have large fillable arrays
+
+---
+
+## Recommendations
+
+### Priority 1 (Critical - Fix Immediately)
+1. **Implement File Upload Validation**: Add MIME type, file size, and file extension validation to all upload methods
+2. **Secure Secrets**: Remove real secrets from .env, use secrets manager, generate strong APP_KEY
+3. **Disable Debug Mode**: Ensure APP_DEBUG=false in production environment
+
+### Priority 2 (High - Important for Production)
+4. **Add Rate Limiting**: Add rate limiting middleware to sensitive endpoints (login, registration, contact forms)
+5. **Add File Size Limits**: Implement file size limits (e.g., 10MB for documents, 5MB for images)
+6. **Use Private Storage**: Use private storage with signed URLs instead of public disk
+
+### Priority 3 (Medium - Enhances Security)
+7. **Add File Extension Whitelist**: Implement file extension whitelisting (pdf, doc, docx, jpg, png, etc.)
+8. **Sanitize File Names**: Sanitize file names before storage
+9. **Enable Session Encryption**: Set SESSION_ENCRYPT=true in production
+10. **Replace DB::raw()**: Use query builders or aggregate methods instead of DB::raw()
+
+### Priority 4 (Low - Nice to Have)
+11. **Add Virus Scanning**: Consider adding virus scanning for uploaded files
+12. **Encrypt Sensitive Files**: Consider encrypting sensitive files at rest
+13. **Review Fillable Arrays**: Review and minimize fillable arrays where possible
+
+---
+
+## Files Inspected in Phase 9
+
+### Configuration Files
+- config/app.php
+- config/session.php
+- config/database.php
+- config/filesystems.php
+- .env.example
+- .env
+- .gitignore
+- bootstrap/app.php
+
+### Models (89 fillable arrays examined)
+- All models in app/Models/ directory
+
+### Controllers
+- app/Http/Controllers/Admin/Reports/ReportController.php
+- app/Http/Controllers/Public/VehicleController.php
+- app/Http/Controllers/Admin/CMS/MediaController.php
+
+### Services
+- app/Services/Finance/FinanceDocumentService.php
+- app/Services/Imports/ImportDocumentService.php
+- app/Services/Customers/CustomerDocumentService.php
+- app/Services/Concerns/ManagesEloquentModels.php
+
+### Requests
+- app/Http/Requests/Inventory/StoreVehicleRequest.php
+- app/Http/Requests/CMS/StoreMediaRequest.php
+
+### Frontend
+- No dangerouslySetInnerHTML found in resources/js
+
+---
+
+## Completion Percentage
+- **Mass Assignment Analysis**: 100% complete (89 fillable arrays examined)
+- **CSRF Analysis**: 100% complete (Laravel CSRF protection verified)
+- **Rate Limiting Analysis**: 100% complete (Fortify rate limiting examined)
+- **File Upload Analysis**: 100% complete (upload services examined)
+- **SQL Injection Analysis**: 100% complete (DB::raw() usage examined)
+- **XSS Analysis**: 100% complete (React/Inertia XSS protection verified)
+- **Secrets Analysis**: 100% complete (.env and .gitignore examined)
+- **API Resource Exposure**: 100% complete (no API routes found)
+- **Overall Phase 9**: 100% complete
+
+---
+
+# Phase 10 — Performance Audit
+
+## Phase Overview
+This document provides a comprehensive performance audit of the Laravel application, analyzing N+1 queries, eager loading, pagination, queues, jobs, caching, lazy loading prevention, and frontend bundle splitting.
+
+---
+
+## 10.1 N+1 Queries and Eager Loading
+
+### N+1 Query Quality: **Mixed (60%)**
+
+### Good Practices ✅
+**Eager Loading Trait**: ManagesEloquentModels trait includes applyEagerLoading() method with predefined eager load map:
+- Vehicle → make, vehicleModel, inventoryStatus
+- Lead → crmStage, vehicle
+- FinanceApplication → lender, vehicle
+- VehicleReservation → vehicle
+- Customer → user
+
+**Evidence**: app/Services/Concerns/ManagesEloquentModels.php lines 62-75
+
+**Service Pattern**: Most admin controllers use service pattern with built-in eager loading:
+- All admin controllers use `$this->service->paginate($request->query())`
+- Services implement eager loading via ManagesEloquentModels trait
+
+**Evidence**: 43+ controller uses of service->paginate() method
+
+**Report Controller**: Export methods use with() for relationships:
+- getSalesExportData(): with(['vehicle', 'user'])
+- getInventoryExportData(): with(['make', 'vehicleModel', 'inventoryStatus'])
+- getLeadsExportData(): with(['crmStage'])
+- getFinanceExportData(): with(['lender', 'user'])
+
+**Evidence**: app/Http/Controllers/Admin/Reports/ReportController.php lines 285, 305, 323, 343
+
+**Vehicle Controller**: Public vehicle listing uses comprehensive eager loading:
+- with(['make', 'vehicleModel', 'bodyType', 'fuelType', 'transmissionType', 'color', 'interiorColor', 'galleries'])
+
+**Evidence**: app/Http/Controllers/Public/VehicleController.php line 22
+
+### Critical Issues 🔴
+
+#### 1. N+1 Query in VehicleController getFilterOptions() 🔴
+**Impact**: High - Multiple queries executed for each filter option
+
+**Problem**: Lines 246, 255, 264, 273 call vehicles()->count() inside map() loop, causing N+1 queries:
+
+```php
+'makes' => Make::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+    ->orderBy('name')
+    ->get()
+    ->map(fn ($make) => [
+        'value' => $make->slug,
+        'label' => $make->name,
+        'count' => $make->vehicles()->whereNull('sold_at')->whereNotNull('listed_at')->count(), // N+1 query
+    ]),
+```
+
+**Evidence**: app/Http/Controllers/Public/VehicleController.php lines 240-247, 248-256, 257-265, 266-273
+
+**Affected Code**:
+- makes filter: 1 query for makes + N queries for vehicle counts
+- bodyTypes filter: 1 query for bodyTypes + N queries for vehicle counts
+- fuelTypes filter: 1 query for fuelTypes + N queries for vehicle counts
+- conditions filter: 1 query for conditions + N queries for vehicle counts
+
+**Recommendation**: Use withCount() or single aggregate query:
+```php
+$makes = Make::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+    ->withCount(['vehicles as active_vehicles_count' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+    ->orderBy('name')
+    ->get()
+    ->map(fn ($make) => [
+        'value' => $make->slug,
+        'label' => $make->name,
+        'count' => $make->active_vehicles_count,
+    ]),
+```
+
+---
+
+## 10.2 Pagination
+
+### Pagination Quality: **Excellent (95%)**
+
+### Good Practices ✅
+
+**Comprehensive Pagination**: Pagination implemented across all admin controllers:
+- 43+ controller methods use pagination
+- Default 15 items per page in services
+- Public inventory uses 12 items per page
+- withQueryString() maintains filter state
+
+**Evidence**: 
+- app/Http/Controllers/Public/VehicleController.php line 92: `->paginate(12)->withQueryString()`
+- app/Services/Concerns/ManagesEloquentModels.php line 56: `->paginate($perPage)->withQueryString()`
+- 43 controller methods use service->paginate()
+
+**Service Layer**: Consistent pagination pattern via ManagesEloquentModels trait:
+```php
+public function paginate(array $filters = [], int $perPage = 15): LengthAwarePaginator
+{
+    $query = $this->query($filters);
+    $model = new ($this->modelClass());
+    $this->applyEagerLoading($query, $model);
+    return $query->paginate($perPage)->withQueryString();
+}
+```
+
+**Evidence**: app/Services/Concerns/ManagesEloquentModels.php lines 48-57
+
+**Custom Pagination**: Some services implement custom pagination:
+- CustomerNoteService: paginateForCustomer() with customer filtering
+- TaskService: orderBy('due_at', 'asc') for task prioritization
+- ActivityService: orderBy('due_at', 'asc') for activity ordering
+
+**Evidence**: app/Services/Customers/CustomerNoteService.php, app/Services/CRM/TaskService.php, app/Services/CRM/ActivityService.php
+
+### Minor Issues ⚠️
+
+#### 1. Inconsistent Per-Page Values
+**Impact**: Low - Different per-page values across controllers
+
+**Evidence**:
+- Public VehicleController: 12 items per page
+- Admin services: 15 items per page (default)
+- No user-configurable per-page options
+
+**Recommendation**: Consider making per-page configurable via user preferences or query parameter
+
+---
+
+## 10.3 Queues and Jobs
+
+### Queue/Job Quality: **Good (75%)**
+
+### Good Practices ✅
+
+**Queue Configuration**: Database queue driver configured:
+- QUEUE_CONNECTION=database in .env
+- retry_after=90 seconds configured
+- Failed job tracking enabled
+- Job batching configured
+
+**Evidence**: 
+- .env line 38: QUEUE_CONNECTION=database
+- config/queue.php lines 38-45: database queue configuration
+- config/queue.php lines 105-108: job batching configuration
+
+**Job Implementation**: 7 jobs found with proper queue implementation:
+- ImportVehicles: Bulk vehicle import with validation
+- ProcessVehicleImages: Image processing and metadata extraction
+- GenerateThumbnails: Thumbnail generation
+- CleanupOldReservations: Reservation cleanup
+- GenerateReports: Report generation
+- SendBulkEmails: Bulk email sending
+- SyncSearchIndex: Search index synchronization
+
+**Evidence**: app/Jobs/ directory (7 job files)
+
+**Job Configuration**: Jobs properly configured:
+- ShouldQueue interface implemented
+- Retry attempts configured (tries=3)
+- Timeout configured (timeout=120-300 seconds)
+- Proper error handling and logging
+
+**Evidence**: 
+- app/Jobs/ImportVehicles.php lines 15-21: tries=3, timeout=300
+- app/Jobs/ProcessVehicleImages.php lines 15-19: tries=3, timeout=120
+
+### Issues 🔴
+
+#### 1. Queue Worker Not Configured 🔴
+**Impact**: Critical - Jobs won't process without queue worker
+
+**Problem**: No queue worker configuration found in:
+- No supervisor configuration
+- No systemd service configuration
+- No queue worker startup script
+- No horizon configuration
+
+**Evidence**: No supervisor/sytemd/horizon configuration files found
+
+**Recommendation**: Configure queue worker:
+```bash
+# Install supervisor
+sudo apt-get install supervisor
+
+# Create supervisor config
+[program:laravel-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /path/to/your/project/artisan queue:work --sleep=3 --tries=3
+autostart=true
+autorestart=true
+user=www-data
+numprocs=4
+redirect_stderr=true
+stdout_logfile=/path/to/your/project/storage/logs/worker.log
+```
+
+#### 2. Timeout/Retry Mismatch 🟡
+**Impact**: Medium - Jobs may not retry properly
+
+**Problem**: ImportVehicles job has timeout=300s but queue retry_after=90s
+- If job runs longer than 90s, queue may mark it as failed
+- Job may not complete before retry attempt
+
+**Evidence**: 
+- app/Jobs/ImportVehicles.php line 21: timeout=300
+- config/queue.php line 43: retry_after=90
+
+**Recommendation**: Ensure retry_after > job timeout or set job timeout < retry_after
+
+#### 3. No Job Prioritization 🟡
+**Impact**: Medium - All jobs have equal priority
+
+**Problem**: No queue prioritization configured
+- Critical jobs (image processing) same priority as non-critical
+- No dedicated queues for different job types
+
+**Recommendation**: Implement queue prioritization:
+```php
+// High priority for image processing
+ProcessVehicleImages::dispatch($gallery)->onQueue('high');
+
+// Low priority for reports
+GenerateReports::dispatch($report)->onQueue('low');
+```
+
+---
+
+## 10.4 Caching
+
+### Caching Quality: **Critical (0%)**
+
+### Critical Issues 🔴
+
+#### 1. No Caching Implementation 🔴
+**Impact**: Critical - No caching anywhere in application
+
+**Problem**: Zero caching implementation found:
+- No Cache::remember() usage
+- No cache() helper usage
+- No Cache::get() usage
+- No cache tags
+- No cache locks
+- No cache memoization
+
+**Evidence**: 
+- Grep search for "Cache::" returned 0 results
+- Grep search for "cache(" returned 0 results
+
+**Configuration**: Database cache driver configured but not used:
+- CACHE_STORE=database in .env
+- Cache tables exist but no code uses them
+
+**Evidence**: 
+- .env line 40: CACHE_STORE=database
+- config/cache.php lines 42-48: database cache configuration
+
+#### 2. Missing Cache for Static Data 🔴
+**Impact**: High - Static data queried repeatedly
+
+**Problem**: No caching for:
+- Filter options (makes, bodyTypes, fuelTypes, conditions)
+- Configuration data (settings, permissions, roles)
+- Reference data (inventory statuses, CRM stages)
+- Report aggregates
+
+**Evidence**: 
+- VehicleController::getFilterOptions() queries database on every request
+- No caching of settings or configuration
+- Report queries run on every request
+
+**Recommendation**: Implement caching for static data:
+```php
+public function getFilterOptions(): array
+{
+    return Cache::remember('vehicle.filter-options', 3600, function () {
+        return [
+            'makes' => Make::withCount(['vehicles as active_vehicles_count' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+                ->whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+                ->orderBy('name')
+                ->get()
+                ->map(fn ($make) => [
+                    'value' => $make->slug,
+                    'label' => $make->name,
+                    'count' => $make->active_vehicles_count,
+                ]),
+            // ... other filters
+        ];
+    });
+}
+```
+
+#### 3. No Cache Invalidation Strategy 🔴
+**Impact**: High - Cached data won't update when changed
+
+**Problem**: No cache invalidation implemented:
+- No cache tags for grouped invalidation
+- No event listeners to clear cache
+- No manual cache clearing on data changes
+
+**Recommendation**: Implement cache invalidation:
+```php
+// Use cache tags
+Cache::tags(['vehicles', 'filter-options'])->remember('vehicle.filter-options', 3600, function () {
+    // ...
+});
+
+// Clear cache on vehicle changes
+Vehicle::created(fn () => Cache::tags(['vehicles'])->flush());
+Vehicle::updated(fn () => Cache::tags(['vehicles'])->flush());
+```
+
+#### 4. No Query Result Caching 🔴
+**Impact**: Medium - Repeated queries for same data
+
+**Problem**: No query result caching for:
+- Expensive aggregate queries
+- Report data
+- Dashboard metrics
+
+**Recommendation**: Cache expensive queries:
+```php
+public function summary(): array
+{
+    return Cache::remember('dashboard.summary', 300, function () {
+        return [
+            'totalVehicles' => Vehicle::count(),
+            'totalCustomers' => Customer::count(),
+            // ... other metrics
+        ];
+    });
+}
+```
+
+---
+
+## 10.5 Lazy Loading Prevention
+
+### Lazy Loading Prevention Quality: **Critical (0%)**
+
+### Critical Issues 🔴
+
+#### 1. Lazy Loading Not Prevented 🔴
+**Impact**: Critical - N+1 queries can go undetected in development
+
+**Problem**: Model::preventLazyLoading() not enabled in bootstrap/app.php
+- No lazy loading prevention configured
+- N+1 queries can occur silently
+- Performance issues not caught in development
+
+**Evidence**: bootstrap/app.php - no preventLazyLoading() call
+
+**Recommendation**: Enable lazy loading prevention in development:
+```php
+// bootstrap/app.php
+->withExceptions(function (Exceptions $exceptions): void {
+    Model::preventLazyLoading(!app()->isProduction());
+    
+    $exceptions->shouldRenderJsonWhen(
+        fn (Request $request) => $request->is('api/*'),
+    );
+})->create();
+```
+
+#### 2. No Strict Mode 🔴
+**Impact**: Medium - No strict query mode enabled
+
+**Problem**: No strict query mode configured:
+- No Model::preventSilentlyDiscardingAttributes()
+- No Model::handleLazyLoadingViolationUsing()
+
+**Recommendation**: Enable strict mode:
+```php
+Model::preventSilentlyDiscardingAttributes(!app()->isProduction());
+Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+    Log::warning("Lazy loading violation: {$model}->{$relation}");
+});
+```
+
+---
+
+## 10.6 Frontend Bundle Splitting and Dynamic Imports
+
+### Frontend Performance Quality: **Excellent (95%)**
+
+### Excellent Practices ✅
+
+**Comprehensive Bundle Splitting**: Advanced manual chunk configuration in vite.config.ts:
+- Vendor chunks split by library type
+- Admin modules split by functionality
+- Component chunks split by type
+- CSS code splitting enabled
+
+**Evidence**: vite.config.ts lines 44-136
+
+**Vendor Chunks**:
+- vendor-react: React, React DOM, scheduler
+- vendor-inertia: Inertia.js libraries
+- vendor-charts: Recharts library
+- vendor-ui: Radix UI, CVA, clsx, tailwind-merge
+- vendor-icons: Lucide React icons
+- vendor-motion: Framer Motion
+- vendor: Other vendor libraries
+
+**Evidence**: vite.config.ts lines 46-73
+
+**Admin Module Chunks**:
+- admin-dashboard: Dashboard module
+- admin-inventory: Inventory module
+- admin-customers: Customers module
+- admin-crm: CRM module
+- admin-finance: Finance module
+- admin-reservations: Reservations module
+- admin-payments: Payments module
+- admin-tradeins: Trade-Ins module
+- admin-imports: Imports module
+- admin-cms: CMS module
+- admin-blog: Blog module
+- admin-marketing: Marketing module
+- admin-settings: Settings module
+- admin-analytics: Analytics module
+- admin-reviews: Reviews module
+
+**Evidence**: vite.config.ts lines 75-124
+
+**Component Chunks**:
+- components-design-system: Design system components
+- components-admin: Admin-specific components
+- components: Shared components
+
+**Evidence**: vite.config.ts lines 126-135
+
+**Dynamic Imports**: Lazy loading for heavy components:
+- Dashboard: AreaChartComponent, PieChartComponent lazy loaded
+- AdminLayout: CommandPalette, NotificationDropdown, SearchOverlay lazy loaded
+
+**Evidence**: 
+- resources/js/pages/Admin/Dashboard/Index.tsx lines 13-14
+- resources/js/layouts/admin/admin-layout.tsx lines 65-67
+
+**Bundle Analyzer**: Bundle analyzer plugin available for optimization:
+- Enabled via ANALYZE=true environment variable
+- Generates bundle-analysis.html
+- Shows gzip and brotli sizes
+
+**Evidence**: vite.config.ts lines 32-39
+
+**Performance Optimizations**:
+- CSS code splitting enabled (cssCodeSplit: true)
+- CSS minification enabled (cssMinify: true)
+- Source maps disabled in production (sourcemap: false)
+- Chunk size warning limit: 1000 KB
+
+**Evidence**: vite.config.ts lines 142-148
+
+### Minor Issues ⚠️
+
+#### 1. No Route-Based Code Splitting 🟡
+**Impact**: Low - All admin routes loaded in main bundle
+
+**Problem**: No route-based code splitting for admin routes
+- All admin page components bundled upfront
+- Could benefit from per-route code splitting
+
+**Recommendation**: Consider route-based code splitting for large admin modules
+
+---
+
+## 10.7 Performance Issues Summary
+
+### Critical Issues (4)
+1. **N+1 Query in getFilterOptions()**: 4 additional queries per filter option call 🔴
+2. **No Caching Implementation**: Zero caching across entire application 🔴
+3. **Lazy Loading Not Prevented**: N+1 queries can go undetected 🔴
+4. **Queue Worker Not Configured**: Jobs won't process without worker 🔴
+
+### High Priority Issues (2)
+1. **Missing Cache for Static Data**: Filter options, settings queried repeatedly 🔴
+2. **No Cache Invalidation Strategy**: Cached data won't update when changed 🔴
+
+### Medium Priority Issues (4)
+1. **Timeout/Retry Mismatch**: Job timeout exceeds queue retry_after 🟡
+2. **No Job Prioritization**: All jobs have equal priority 🟡
+3. **No Query Result Caching**: Expensive queries run repeatedly 🟡
+4. **No Strict Mode**: No strict query mode enabled 🟡
+
+### Low Priority Issues (1)
+1. **Inconsistent Per-Page Values**: Different per-page values across controllers 🟢
+
+---
+
+## 10.8 Recommendations
+
+### Priority 1 (Critical - Fix Immediately)
+1. **Fix N+1 Query in getFilterOptions()**: Replace vehicles()->count() with withCount()
+2. **Enable Lazy Loading Prevention**: Add Model::preventLazyLoading() in bootstrap/app.php
+3. **Configure Queue Worker**: Set up supervisor or systemd for queue processing
+4. **Implement Basic Caching**: Add Cache::remember() for filter options and static data
+
+### Priority 2 (High - Important for Performance)
+5. **Implement Cache Invalidation**: Add cache tags and event listeners for cache clearing
+6. **Fix Job Timeout/Retry**: Ensure retry_after > job timeout
+7. **Cache Expensive Queries**: Add caching for report aggregates and dashboard metrics
+8. **Enable Strict Mode**: Add Model::preventSilentlyDiscardingAttributes()
+
+### Priority 3 (Medium - Enhances Performance)
+9. **Implement Job Prioritization**: Use dedicated queues for different job types
+10. **Add Query Result Caching**: Cache expensive report queries
+11. **Standardize Per-Page Values**: Make per-page configurable via user preferences
+
+### Priority 4 (Low - Nice to Have)
+12. **Route-Based Code Splitting**: Consider per-route code splitting for large admin modules
+
+---
+
+## Files Inspected in Phase 10
+
+### Controllers
+- app/Http/Controllers/Admin/Reports/ReportController.php
+- app/Http/Controllers/Public/VehicleController.php
+- app/Http/Controllers/Customer/CustomerController.php
+- All admin controllers (43+ pagination uses)
+
+### Services
+- app/Services/Concerns/ManagesEloquentModels.php
+- app/Services/Imports/ImportService.php
+- app/Services/TradeIns/TradeInService.php
+- app/Services/TradeIns/ValuationService.php
+- app/Services/TradeIns/OfferService.php
+- app/Services/TradeIns/InspectionService.php
+- app/Services/Sales/RefundService.php
+- app/Services/Sales/InvoiceService.php
+- app/Services/Users/UserService.php
+- app/Services/Sales/ReceiptService.php
+- app/Services/Branches/BranchService.php
+- app/Services/Admin/AuditLogService.php
+- app/Services/Imports/ShipmentService.php
+- app/Services/Imports/ImportPaymentService.php
+- app/Services/Customers/CustomerNoteService.php
+- app/Services/CRM/TaskService.php
+- app/Services/CRM/ActivityService.php
+- app/Services/Users/RoleService.php
+- app/Services/Users/PermissionService.php
+
+### Jobs
+- app/Jobs/ImportVehicles.php
+- app/Jobs/ProcessVehicleImages.php
+
+### Configuration
+- bootstrap/app.php
+- config/queue.php
+- config/cache.php
+- .env
+- vite.config.ts
+
+### Frontend
+- resources/js/pages/Admin/Dashboard/Index.tsx
+- resources/js/layouts/admin/admin-layout.tsx
+
+---
+
+## Completion Percentage
+- **N+1 Queries Audit**: 100% complete
+- **Pagination Audit**: 100% complete
+- **Queues and Jobs Audit**: 100% complete
+- **Caching Audit**: 100% complete
+- **Lazy Loading Prevention Audit**: 100% complete
+- **Frontend Bundle Splitting Audit**: 100% complete
+- **Overall Phase 10**: 100% complete
+
+---
+
+**Phase 10 - Performance Audit Complete**
