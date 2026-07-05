@@ -16,28 +16,32 @@ export default function Create() {
             <Input id="trade_in_request_id" name="trade_in_request_id" type="number" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="market_value">Market value</Label>
-            <Input id="market_value" name="market_value" type="number" required />
+            <Label htmlFor="trade_in_value">Trade-In Value</Label>
+            <Input id="trade_in_value" name="trade_in_value" type="number" step="0.01" required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="estimated_resale_value">Estimated resale value</Label>
-            <Input id="estimated_resale_value" name="estimated_resale_value" type="number" required />
+            <Label htmlFor="wholesale_value">Wholesale Value</Label>
+            <Input id="wholesale_value" name="wholesale_value" type="number" step="0.01" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="repair_estimate">Repair estimate</Label>
-            <Input id="repair_estimate" name="repair_estimate" type="number" />
+            <Label htmlFor="retail_value">Retail Value</Label>
+            <Input id="retail_value" name="retail_value" type="number" step="0.01" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="final_trade_in_value">Final trade-in value</Label>
-            <Input id="final_trade_in_value" name="final_trade_in_value" type="number" />
+            <Label htmlFor="valuation_method">Valuation Method</Label>
+            <Input id="valuation_method" name="valuation_method" placeholder="e.g., market_comparable, dealer_book" />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="approval_status">Approval status</Label>
-            <Input id="approval_status" name="approval_status" defaultValue="pending" />
+            <Label htmlFor="valuation_source_id">Valuation Source ID</Label>
+            <Input id="valuation_source_id" name="valuation_source_id" type="number" />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="adjustments">Pricing adjustments (JSON)</Label>
-            <Textarea id="adjustments" name="adjustments" rows={6} defaultValue="[]" />
+            <Label htmlFor="adjustments">Adjustments</Label>
+            <Textarea id="adjustments" name="adjustments" rows={3} placeholder="Pricing adjustments..." />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="notes">Notes</Label>
+            <Textarea id="notes" name="notes" rows={3} placeholder="Additional valuation notes..." />
           </div>
         </div>
         <Button className="w-fit">Create valuation</Button>

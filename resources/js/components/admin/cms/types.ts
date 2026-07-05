@@ -1,8 +1,8 @@
 import type { Paginated } from '@/components/admin/inventory/types';
 
 export interface CmsUser { id?: number; name?: string; email?: string; avatar_url?: string; [key: string]: unknown }
-export interface BlogCategory { id?: number; name?: string; slug?: string; description?: string; is_active?: boolean; is_visible?: boolean; order?: number; posts_count?: number; created_at?: string; updated_at?: string; [key: string]: unknown }
-export interface BlogTag { id?: number; name?: string; slug?: string; color?: string; is_visible?: boolean; posts_count?: number; created_at?: string; updated_at?: string; [key: string]: unknown }
+export interface BlogCategory { id?: number; name?: string; slug?: string; description?: string; is_active?: boolean; sort_order?: number; posts_count?: number; created_at?: string; updated_at?: string; [key: string]: unknown }
+export interface BlogTag { id?: number; name?: string; slug?: string; color?: string; usage_count?: number; posts_count?: number; created_at?: string; updated_at?: string; [key: string]: unknown }
 export interface BlogPost { id: number; blog_category_id?: number; author_id?: number; title?: string; slug?: string; excerpt?: string; body?: string; featured_image_path?: string; status?: string; published_at?: string; is_featured?: boolean; category?: BlogCategory; author?: CmsUser; tags?: BlogTag[]; comments_count?: number; views_count?: number; created_at?: string; updated_at?: string; [key: string]: unknown }
 export interface CmsPage { id: number; title?: string; slug?: string; content?: string; meta_title?: string; meta_description?: string; status?: string; is_visible?: boolean; published_at?: string; created_at?: string; updated_at?: string; [key: string]: unknown }
 export interface Faq { id: number; category?: string; question?: string; answer?: string; order?: number; is_visible?: boolean; is_published?: boolean; created_at?: string; updated_at?: string; [key: string]: unknown }

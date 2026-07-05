@@ -44,10 +44,10 @@ export default function TagForm({ tag, action, method = 'post' }: { tag?: BlogTa
           </div>
         </div>
         <FormField
-          name="is_visible"
-          label="Visible"
-          type="switch"
-          value={tag?.is_visible ?? true}
+          name="usage_count"
+          label="Usage Count"
+          type="number"
+          value={String(tag?.usage_count ?? 0)}
           onChange={() => {}}
         />
       </FormSection>

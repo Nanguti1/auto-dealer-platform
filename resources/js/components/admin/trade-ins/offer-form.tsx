@@ -12,29 +12,23 @@ export default function OfferForm({ offer, action, tradeInRequestId }: { offer?:
       {tradeInRequestId && <input type="hidden" name="trade_in_request_id" value={tradeInRequestId} />}
       <FormSection title="Offer Details" gridCols={2}>
         <FormField
-          name="amount"
+          name="offer_amount"
           label="Offer amount"
           type="number"
-          value={String(offer?.amount ?? offer?.offer_amount ?? '')}
+          value={String(offer?.offer_amount ?? '')}
           onChange={() => {}}
         />
         <FormField
-          name="expires_at"
+          name="valid_until"
           label="Expiration date"
           type="datetime-local"
-          value={offer?.expires_at ?? offer?.expiration_date ?? ''}
+          value={offer?.valid_until ?? ''}
           onChange={() => {}}
         />
         <FormField
           name="status"
           label="Status"
-          value={offer?.status ?? 'draft'}
-          onChange={() => {}}
-        />
-        <FormField
-          name="approval_status"
-          label="Approval status"
-          value={offer?.approval_status ?? 'pending'}
+          value={offer?.status ?? 'pending'}
           onChange={() => {}}
         />
       </FormSection>

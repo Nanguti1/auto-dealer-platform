@@ -30,10 +30,10 @@ export default function CategoryForm({ category, action, method = 'post' }: { ca
           onChange={() => {}}
         />
         <FormField
-          name="order"
+          name="sort_order"
           label="Display Order"
           type="number"
-          value={String(category?.order ?? 0)}
+          value={String(category?.sort_order ?? 0)}
           onChange={() => {}}
         />
         <FormField
@@ -41,13 +41,6 @@ export default function CategoryForm({ category, action, method = 'post' }: { ca
           label="Active"
           type="switch"
           value={category?.is_active ?? true}
-          onChange={() => {}}
-        />
-        <FormField
-          name="is_visible"
-          label="Visible"
-          type="switch"
-          value={category?.is_visible ?? true}
           onChange={() => {}}
         />
       </FormSection>

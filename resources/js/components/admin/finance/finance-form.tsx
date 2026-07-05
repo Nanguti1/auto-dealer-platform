@@ -21,14 +21,14 @@ export default function FinanceForm({ financeApplication, action, method = 'post
           name="down_payment"
           label="Deposit"
           type="number"
-          value={String(financeApplication?.down_payment ?? financeApplication?.deposit ?? '')}
+          value={String(financeApplication?.down_payment ?? '')}
           onChange={() => {}}
         />
         <FormField
           name="term_months"
           label="Repayment period"
           type="number"
-          value={String(financeApplication?.term_months ?? financeApplication?.loan_term ?? '')}
+          value={String(financeApplication?.term_months ?? '')}
           onChange={() => {}}
         />
         <FormField
@@ -43,7 +43,7 @@ export default function FinanceForm({ financeApplication, action, method = 'post
           name="estimated_monthly_payment"
           label="Monthly payment"
           type="number"
-          value={String(financeApplication?.estimated_monthly_payment ?? financeApplication?.monthly_payment ?? '')}
+          value={String(financeApplication?.estimated_monthly_payment ?? '')}
           onChange={() => {}}
         />
         <FormField

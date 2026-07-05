@@ -1144,3 +1144,39 @@ Users can use common passwords (e.g., "password123"), which is a security risk. 
 **Generated from:** AUDIT_NOTES.md  
 **Date:** 2025-01-08  
 **Scope:** Repository and application code only (excludes infrastructure, DevOps, cloud architecture, CI/CD)
+
+---
+
+## Session 7
+- Field names standardized.
+- Frontend/backend mappings aligned.
+
+### Changes Made
+
+#### Blog Module
+- **BlogCategory**: Fixed type definition to use `sort_order` instead of `order`
+- **BlogTag**: Fixed type definition to use `usage_count` instead of `is_visible`
+- Removed field name mapping logic from `StoreBlogCategoryRequest` and `UpdateBlogCategoryRequest` (frontend already uses correct field names)
+
+#### Finance Module
+- **FinanceApplication**: Field names already aligned between frontend and backend - no changes needed
+
+#### TradeIns Module
+- **Inspection**: Updated frontend forms to use backend field names:
+  - Replaced custom fields (`tire_condition`, `engine_condition`, `transmission_condition`, `electrical_systems`, `damage_notes`, `inspector_notes`) with backend fields (`inspection_date`, `estimated_repair_cost`, `repair_recommendations`, `notes`)
+  - Added `trade_in_request_id` hidden field
+- **Valuation**: Updated frontend forms to use backend field names:
+  - Replaced custom fields (`market_value`, `estimated_resale_value`, `repair_estimate`, `final_trade_in_value`, `approval_status`) with backend fields (`trade_in_value`, `wholesale_value`, `retail_value`, `valuation_method`, `valuation_source_id`, `adjustments`, `notes`)
+
+### Files Modified
+- `resources/js/components/admin/cms/types.ts`
+- `resources/js/pages/Admin/TradeIns/Inspections/Create.tsx`
+- `resources/js/pages/Admin/TradeIns/Inspections/Edit.tsx`
+- `resources/js/pages/Admin/TradeIns/Valuations/Create.tsx`
+- `resources/js/pages/Admin/TradeIns/Valuations/Edit.tsx`
+- `app/Http/Requests/Blog/StoreBlogCategoryRequest.php`
+- `app/Http/Requests/Blog/UpdateBlogCategoryRequest.php`
+
+### Verification
+- Ran Laravel Pint to ensure code formatting compliance
+- All field names now match between frontend forms, backend validation, and models
