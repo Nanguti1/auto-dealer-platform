@@ -3,11 +3,26 @@
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\IsAdmin;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+
+// Enable strict mode in development to catch N+1 queries and other issues
+$shouldPrevent = env('APP_ENV') !== 'production';
+Model::preventLazyLoading($shouldPrevent);
+Model::preventSilentlyDiscardingAttributes($shouldPrevent);
+Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
+    $class = get_class($model);
+    Log::warning("Lazy loading detected on {$class}::{$relation}", [
+        'model' => $class,
+        'relation' => $relation,
+        'url' => request()?->fullUrl(),
+    ]);
+});
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
