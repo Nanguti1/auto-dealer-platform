@@ -93,6 +93,16 @@ class Vehicle extends Model
         return $this->belongsTo(VehicleCondition::class, 'vehicle_condition_id');
     }
 
+    public function vehicleStatus(): BelongsTo
+    {
+        return $this->belongsTo(VehicleStatus::class, 'vehicle_status_id');
+    }
+
+    public function vehicleCategory(): BelongsTo
+    {
+        return $this->belongsTo(VehicleCategory::class, 'vehicle_category_id');
+    }
+
     public function features(): BelongsToMany
     {
         return $this->belongsToMany(VehicleFeature::class, 'vehicle_feature_mappings');
@@ -101,6 +111,76 @@ class Vehicle extends Model
     public function galleries(): HasMany
     {
         return $this->hasMany(VehicleGallery::class);
+    }
+
+    public function videos(): HasMany
+    {
+        return $this->hasMany(VehicleVideo::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(VehicleDocument::class);
+    }
+
+    public function histories(): HasMany
+    {
+        return $this->hasMany(VehicleHistory::class);
+    }
+
+    public function priceHistories(): HasMany
+    {
+        return $this->hasMany(PriceHistory::class);
+    }
+
+    public function enquiries(): HasMany
+    {
+        return $this->hasMany(VehicleEnquiry::class);
+    }
+
+    public function testDriveBookings(): HasMany
+    {
+        return $this->hasMany(TestDriveBooking::class);
+    }
+
+    public function financeApplications(): HasMany
+    {
+        return $this->hasMany(FinanceApplication::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class);
+    }
+
+    public function recentlyViewed(): HasMany
+    {
+        return $this->hasMany(RecentlyViewedVehicle::class);
+    }
+
+    public function comparisonItems(): HasMany
+    {
+        return $this->hasMany(ComparisonItem::class);
+    }
+
+    public function couponUsages(): HasMany
+    {
+        return $this->hasMany(CouponUsage::class);
+    }
+
+    public function tradeInRequests(): HasMany
+    {
+        return $this->hasMany(TradeInRequest::class);
+    }
+
+    public function promotions(): BelongsToMany
+    {
+        return $this->belongsToMany(Promotion::class, 'promotion_vehicles');
     }
 
     public function specifications(): HasMany

@@ -34,4 +34,9 @@ class Make extends Model
     {
         return $this->hasMany(Vehicle::class, 'make_id');
     }
+
+    public function models(): HasMany
+    {
+        return $this->hasMany(Model::class);
+    }
 }

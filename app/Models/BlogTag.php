@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlogTag extends Model
@@ -22,5 +23,10 @@ class BlogTag extends Model
     public function scopeRecent($query)
     {
         return $query->latest();
+    }
+
+    public function posts(): BelongsToMany
+    {
+        return $this->belongsToMany(BlogPost::class, 'blog_post_tags');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -87,5 +88,120 @@ class User extends Authenticatable implements MustVerifyEmail
     public function testDriveBookings()
     {
         return $this->hasMany(TestDriveBooking::class);
+    }
+
+    public function leads(): HasMany
+    {
+        return $this->hasMany(Lead::class, 'assigned_user_id');
+    }
+
+    public function vehicles(): HasMany
+    {
+        return $this->hasMany(Vehicle::class, 'assigned_user_id');
+    }
+
+    public function followUps(): HasMany
+    {
+        return $this->hasMany(CrmFollowUp::class, 'assigned_user_id');
+    }
+
+    public function crmNotes(): HasMany
+    {
+        return $this->hasMany(CrmNote::class);
+    }
+
+    public function crmTasks(): HasMany
+    {
+        return $this->hasMany(CrmTask::class, 'assigned_user_id');
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(CrmNotification::class);
+    }
+
+    public function customers(): HasMany
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    public function blogPosts(): HasMany
+    {
+        return $this->hasMany(BlogPost::class, 'author_id');
+    }
+
+    public function blogComments(): HasMany
+    {
+        return $this->hasMany(BlogComment::class);
+    }
+
+    public function vehicleEnquiries(): HasMany
+    {
+        return $this->hasMany(VehicleEnquiry::class, 'assigned_user_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    public function receipts(): HasMany
+    {
+        return $this->hasMany(Receipt::class);
+    }
+
+    public function refunds(): HasMany
+    {
+        return $this->hasMany(Refund::class);
+    }
+
+    public function couponUsages(): HasMany
+    {
+        return $this->hasMany(CouponUsage::class);
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function reports(): HasMany
+    {
+        return $this->hasMany(Report::class);
+    }
+
+    public function auditLogs(): HasMany
+    {
+        return $this->hasMany(AuditLog::class);
+    }
+
+    public function priceHistories(): HasMany
+    {
+        return $this->hasMany(PriceHistory::class);
+    }
+
+    public function vehicleImports(): HasMany
+    {
+        return $this->hasMany(VehicleImport::class);
+    }
+
+    public function tradeInValuations(): HasMany
+    {
+        return $this->hasMany(TradeInValuation::class, 'valuation_source_id');
+    }
+
+    public function tradeInInspections(): HasMany
+    {
+        return $this->hasMany(TradeInInspection::class, 'inspector_id');
+    }
+
+    public function tradeInOffers(): HasMany
+    {
+        return $this->hasMany(TradeInOffer::class, 'created_by');
     }
 }

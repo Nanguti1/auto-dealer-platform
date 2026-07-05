@@ -6,6 +6,7 @@ use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model
@@ -40,5 +41,25 @@ class Lead extends Model
     public function assignedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+
+    public function followUps(): HasMany
+    {
+        return $this->hasMany(CrmFollowUp::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(CrmNote::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(CrmTask::class);
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(CrmNotification::class);
     }
 }

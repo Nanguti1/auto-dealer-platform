@@ -1236,3 +1236,125 @@ Users can use common passwords (e.g., "password123"), which is a security risk. 
 - Manual ID fields replaced with searchable dropdown selectors
 - Components are reusable across all modules
 - Loading states and error handling implemented
+
+---
+
+## Session 9
+- Missing model relationships implemented.
+
+### P1 - Missing Model Relationships - COMPLETED
+
+**Objectives:**
+Implement missing Eloquent relationships across all models based on database foreign keys.
+
+**Requirements Met:**
+- ✅ Correct relationship types (belongsTo, hasMany, belongsToMany)
+- ✅ Proper return type hints added
+- ✅ Naming consistency with Laravel conventions
+- ✅ Inverse relationships verified where applicable
+
+### Models Updated
+
+#### Vehicle Model (`app/Models/Vehicle.php`)
+**Added Relationships:**
+- `vehicleStatus()` - BelongsTo VehicleStatus
+- `vehicleCategory()` - BelongsTo VehicleCategory
+- `videos()` - HasMany VehicleVideo
+- `documents()` - HasMany VehicleDocument
+- `histories()` - HasMany VehicleHistory
+- `priceHistories()` - HasMany PriceHistory
+- `enquiries()` - HasMany VehicleEnquiry
+- `testDriveBookings()` - HasMany TestDriveBooking
+- `financeApplications()` - HasMany FinanceApplication
+- `reviews()` - HasMany Review
+- `wishlists()` - HasMany Wishlist
+- `recentlyViewed()` - HasMany RecentlyViewedVehicle
+- `comparisonItems()` - HasMany ComparisonItem
+- `couponUsages()` - HasMany CouponUsage
+- `tradeInRequests()` - HasMany TradeInRequest
+- `promotions()` - BelongsToMany Promotion
+
+#### Lead Model (`app/Models/Lead.php`)
+**Added Relationships:**
+- `followUps()` - HasMany CrmFollowUp
+- `notes()` - HasMany CrmNote
+- `tasks()` - HasMany CrmTask
+- `notifications()` - HasMany CrmNotification
+
+#### BlogPost Model (`app/Models/BlogPost.php`)
+**Added Relationships:**
+- `tags()` - BelongsToMany BlogTag
+- `comments()` - HasMany BlogComment
+
+#### User Model (`app/Models/User.php`)
+**Added Relationships:**
+- `leads()` - HasMany Lead (assigned_user_id)
+- `vehicles()` - HasMany Vehicle (assigned_user_id)
+- `followUps()` - HasMany CrmFollowUp (assigned_user_id)
+- `crmNotes()` - HasMany CrmNote
+- `crmTasks()` - HasMany CrmTask (assigned_user_id)
+- `notifications()` - HasMany CrmNotification
+- `customers()` - HasMany Customer
+- `blogPosts()` - HasMany BlogPost (author_id)
+- `blogComments()` - HasMany BlogComment
+- `vehicleEnquiries()` - HasMany VehicleEnquiry (assigned_user_id)
+- `payments()` - HasMany Payment
+- `invoices()` - HasMany Invoice
+- `receipts()` - HasMany Receipt
+- `refunds()` - HasMany Refund
+- `couponUsages()` - HasMany CouponUsage
+- `reviews()` - HasMany Review
+- `reports()` - HasMany Report
+- `auditLogs()` - HasMany AuditLog
+- `priceHistories()` - HasMany PriceHistory
+- `vehicleImports()` - HasMany VehicleImport
+- `tradeInValuations()` - HasMany TradeInValuation (valuation_source_id)
+- `tradeInInspections()` - HasMany TradeInInspection (inspector_id)
+- `tradeInOffers()` - HasMany TradeInOffer (created_by)
+
+#### Other Models Updated
+- **VehicleCategory** - Added `vehicles()` HasMany
+- **Model** - Added `vehicles()` HasMany, `trimLevels()` HasMany
+- **Branch** - Added `company()` BelongsTo
+- **Make** - Added `models()` HasMany
+- **TrimLevel** - Added `vehicles()` HasMany
+- **Company** - Added `branches()`, `companyInformation()`, `socialMediaLinks()`, `openingHours()` HasMany
+- **Role** - Added `users()` HasMany
+- **BlogTag** - Added `posts()` BelongsToMany
+- **BlogCategory** - Added `posts()` HasMany
+- **Promotion** - Added `vehicles()` BelongsToMany, `coupons()` HasMany
+- **Coupon** - Added `couponUsages()` HasMany
+- **VehicleStatus** - Added `vehicles()` HasMany
+- **InventoryStatus** - Added `vehicles()` HasMany
+- **CrmStage** - Added `leads()` HasMany
+
+#### TradeInRequest Model
+**Status:** ✅ Already complete - all required relationships present (user, vehicle, valuations, inspections, offers, photos)
+
+### Files Modified
+- `app/Models/Vehicle.php`
+- `app/Models/Lead.php`
+- `app/Models/BlogPost.php`
+- `app/Models/User.php`
+- `app/Models/VehicleCategory.php`
+- `app/Models/Model.php`
+- `app/Models/Branch.php`
+- `app/Models/Make.php`
+- `app/Models/TrimLevel.php`
+- `app/Models/Company.php`
+- `app/Models/Role.php`
+- `app/Models/BlogTag.php`
+- `app/Models/BlogCategory.php`
+- `app/Models/Promotion.php`
+- `app/Models/Coupon.php`
+- `app/Models/VehicleStatus.php`
+- `app/Models/InventoryStatus.php`
+- `app/Models/CrmStage.php`
+
+### Verification
+- ✅ All relationship methods use correct relationship types
+- ✅ Proper return type hints added (BelongsTo, HasMany, BelongsToMany)
+- ✅ Relationship naming follows Laravel conventions
+- ✅ Inverse relationships verified where applicable
+- ✅ Ran Laravel Pint to ensure code formatting compliance
+- ✅ Total of 50+ missing relationships added across 18 models
