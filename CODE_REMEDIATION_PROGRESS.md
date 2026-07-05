@@ -589,3 +589,107 @@ Model::handleLazyLoadingViolationUsing(function ($model, $relation) {
 - Tests verify bootstrap/app.php contains required strict mode settings
 - Tests verify environment check logic works correctly
 - Code formatted with Laravel Pint to maintain project standards
+
+## Session 6
+- Filter queries verified as optimized.
+- N+1 queries already prevented via withCount().
+- Query reduction tests created.
+- Filter option logic validated.
+
+### Files Modified
+
+#### Controllers
+- `app/Http/Controllers/Public/VehicleController.php` (verified)
+  - getFilterOptions() already optimized with withCount()
+  - All 4 filter options (makes, bodyTypes, fuelTypes, conditions) use eager loading
+  - Each filter option uses withCount() for vehicle counts
+  - No N+1 queries present in current implementation
+  - Uses whereHas() and withCount() with consistent conditions
+
+#### Testing
+- `tests/Feature/FilterOptionsQueryOptimizationTest.php` (new)
+  - test_filter_options_uses_withcount_instead_of_n_plus_one - verifies query optimization
+  - test_filter_options_only_includes_active_items - validates active status filtering
+  - test_filter_options_only_includes_available_vehicles - validates available vehicle filtering
+  - Tests verify at most 4 queries are executed (one per filter type)
+  - Tests verify count aggregation is used in queries
+  - Tests verify correct vehicle counts for each filter option
+
+### Key Improvements
+
+1. **Already Optimized**: The getFilterOptions() method was already optimized in Session 4
+2. **withCount() Usage**: All 4 filter options use withCount() for eager loading
+3. **Query Reduction**: Reduced from 1+N queries per filter type to 1 query per filter type
+4. **Consistent Conditions**: All count queries use the same availability conditions
+5. **Active Filtering**: Body types and fuel types filter by is_active status
+6. **Available Vehicles**: Only counts vehicles where sold_at is null and listed_at is not null
+7. **Caching**: Results are cached for 6 hours to further reduce database load
+8. **Test Coverage**: Comprehensive tests verify optimization and correctness
+
+### Current Implementation Analysis
+
+**Makes Filter:**
+```php
+Make::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+    ->orderBy('name')
+    ->get()
+```
+
+**Body Types Filter:**
+```php
+BodyType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+    ->where('is_active', true)
+    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+    ->orderBy('name')
+    ->get()
+```
+
+**Fuel Types Filter:**
+```php
+FuelType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+    ->where('is_active', true)
+    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+    ->orderBy('name')
+    ->get()
+```
+
+**Conditions Filter:**
+```php
+VehicleCondition::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+    ->orderBy('name')
+    ->get()
+```
+
+### Query Performance
+
+**Before Optimization (N+1):**
+- 1 query to get filter options
+- N queries to count vehicles for each option
+- Total: 1 + N queries per filter type
+- For 4 filter types with 10 options each: 40+ queries
+
+**After Optimization (withCount):**
+- 1 query per filter type with eager loading
+- Total: 4 queries total
+- Query reduction: ~90% reduction in database queries
+
+### Benefits
+
+1. **Performance**: Significantly reduced database query count
+2. **Scalability**: Performs consistently regardless of data volume
+3. **Accuracy**: withCount() provides accurate vehicle counts
+4. **Caching**: Results cached for 6 hours for additional performance
+5. **Correctness**: Only counts available vehicles (not sold, properly listed)
+6. **Filtering**: Respects active status for body types and fuel types
+
+### Testing Notes
+
+- Created comprehensive test suite to verify query optimization
+- Tests verify query count is minimized (at most 4 queries)
+- Tests verify count aggregation is used in SQL queries
+- Tests verify correct filtering of active items
+- Tests verify correct filtering of available vehicles
+- Tests verify accurate vehicle counts for each filter option
+- Code formatted with Laravel Pint to maintain project standards
