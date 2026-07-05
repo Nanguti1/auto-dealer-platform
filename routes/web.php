@@ -74,25 +74,39 @@ Route::inertia('inventory/compare', 'inventory/compare')->name('inventory.compar
 Route::get('inventory/{slug}', [App\Http\Controllers\Public\VehicleController::class, 'show'])->name('inventory.show');
 Route::inertia('finance/calculator', 'finance/calculator')->name('finance.calculator');
 Route::get('trade-in/request', [App\Http\Controllers\Public\TradeInController::class, 'create'])->name('trade-in.request');
-Route::post('trade-in', [App\Http\Controllers\Public\TradeInController::class, 'store'])->name('trade-in.store');
+Route::middleware(['throttle:trade-in'])->group(function (): void {
+    Route::post('trade-in', [App\Http\Controllers\Public\TradeInController::class, 'store'])->name('trade-in.store');
+});
 Route::get('import/request', [App\Http\Controllers\Public\ImportController::class, 'create'])->name('import.request');
-Route::post('import', [App\Http\Controllers\Public\ImportController::class, 'store'])->name('import.store');
+Route::middleware(['throttle:import'])->group(function (): void {
+    Route::post('import', [App\Http\Controllers\Public\ImportController::class, 'store'])->name('import.store');
+});
 Route::get('contact/dealer', [ContactController::class, 'create'])->name('contact.dealer');
-Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
-Route::post('leads/public', [ContactController::class, 'storeLead'])->name('leads.public.store');
+Route::middleware(['throttle:contact'])->group(function (): void {
+    Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
+});
+Route::middleware(['throttle:leads'])->group(function (): void {
+    Route::post('leads/public', [ContactController::class, 'storeLead'])->name('leads.public.store');
+});
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::get('customer/dashboard', [App\Http\Controllers\Customer\CustomerController::class, 'dashboard'])->name('customer.dashboard');
     Route::get('customer/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist');
-    Route::post('customer/wishlist', [WishlistController::class, 'store']);
-    Route::delete('customer/wishlist', [WishlistController::class, 'destroy']);
+    Route::middleware(['throttle:customer-actions'])->group(function (): void {
+        Route::post('customer/wishlist', [WishlistController::class, 'store']);
+        Route::delete('customer/wishlist', [WishlistController::class, 'destroy']);
+    });
     Route::get('customer/saved-searches', [SavedSearchController::class, 'index'])->name('customer.saved-searches');
-    Route::post('customer/saved-searches', [SavedSearchController::class, 'store']);
-    Route::delete('customer/saved-searches/{savedSearch}', [SavedSearchController::class, 'destroy']);
+    Route::middleware(['throttle:customer-actions'])->group(function (): void {
+        Route::post('customer/saved-searches', [SavedSearchController::class, 'store']);
+        Route::delete('customer/saved-searches/{savedSearch}', [SavedSearchController::class, 'destroy']);
+    });
     Route::get('customer/recently-viewed', [RecentlyViewController::class, 'index'])->name('customer.recently-viewed');
-    Route::post('customer/recently-viewed', [RecentlyViewController::class, 'store']);
-    Route::delete('customer/recently-viewed', [RecentlyViewController::class, 'destroy']);
+    Route::middleware(['throttle:customer-actions'])->group(function (): void {
+        Route::post('customer/recently-viewed', [RecentlyViewController::class, 'store']);
+        Route::delete('customer/recently-viewed', [RecentlyViewController::class, 'destroy']);
+    });
     Route::get('customer/reservations', [App\Http\Controllers\Customer\ReservationController::class, 'index'])->name('customer.reservations');
     Route::get('customer/bookings', [BookingController::class, 'index'])->name('customer.bookings');
     Route::inertia('customer/notifications', 'customer/notifications')->name('customer.notifications');

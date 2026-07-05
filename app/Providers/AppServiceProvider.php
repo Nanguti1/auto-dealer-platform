@@ -9,8 +9,11 @@ use App\Observers\PermissionObserver;
 use App\Observers\SettingObserver;
 use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -31,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->registerObservers();
+        $this->configureRateLimiting();
     }
 
     /**
@@ -63,5 +67,51 @@ class AppServiceProvider extends ServiceProvider
                 ->uncompromised()
             : null,
         );
+    }
+
+    /**
+     * Configure rate limiters for sensitive endpoints.
+     */
+    protected function configureRateLimiting(): void
+    {
+        // Login rate limiting: 5 attempts per minute per email/IP combination
+        RateLimiter::for('login', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip().':'.$request->input('email'));
+        });
+
+        // Registration rate limiting: 3 attempts per hour per IP
+        RateLimiter::for('registration', function (Request $request) {
+            return Limit::perHour(3)->by($request->ip());
+        });
+
+        // Contact form rate limiting: 10 submissions per minute per email/IP combination
+        RateLimiter::for('contact', function (Request $request) {
+            return Limit::perMinute(10)->by($request->ip().':'.$request->input('email'));
+        });
+
+        // Lead submission rate limiting: 5 submissions per minute per IP
+        RateLimiter::for('leads', function (Request $request) {
+            return Limit::perMinute(5)->by($request->ip());
+        });
+
+        // Trade-in request rate limiting: 3 requests per hour per IP
+        RateLimiter::for('trade-in', function (Request $request) {
+            return Limit::perHour(3)->by($request->ip());
+        });
+
+        // Import request rate limiting: 3 requests per hour per IP
+        RateLimiter::for('import', function (Request $request) {
+            return Limit::perHour(3)->by($request->ip());
+        });
+
+        // Password reset rate limiting: 3 attempts per hour per email/IP
+        RateLimiter::for('password-reset', function (Request $request) {
+            return Limit::perHour(3)->by($request->ip().':'.$request->input('email'));
+        });
+
+        // Customer actions rate limiting: 60 actions per minute per authenticated user
+        RateLimiter::for('customer-actions', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
     }
 }

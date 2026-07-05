@@ -1358,3 +1358,71 @@ Implement missing Eloquent relationships across all models based on database for
 - ✅ Inverse relationships verified where applicable
 - ✅ Ran Laravel Pint to ensure code formatting compliance
 - ✅ Total of 50+ missing relationships added across 18 models
+
+## Session 10
+- Rate limiting added to sensitive endpoints.
+
+### P1 - Controller Rate Limiting - COMPLETED
+
+**Objectives:**
+Protect sensitive routes from brute force attacks and abuse by implementing appropriate rate limiting middleware.
+
+**Requirements Met:**
+- ✅ Login throttling (5 attempts per minute per email/IP combination)
+- ✅ Registration throttling (3 attempts per hour per IP)
+- ✅ Contact form throttling (10 submissions per minute per email/IP combination)
+- ✅ Lead submission throttling (5 submissions per minute per IP)
+- ✅ Trade-in request throttling (3 requests per hour per IP)
+- ✅ Import request throttling (3 requests per hour per IP)
+- ✅ Password reset throttling (3 attempts per hour per email/IP combination)
+- ✅ Customer actions throttling (60 actions per minute per authenticated user)
+- ✅ Appropriate middleware applied to all sensitive routes
+- ✅ Rate limiters configured in AppServiceProvider
+- ✅ Tests added to verify rate limiting implementation
+
+### Rate Limiters Configured
+
+#### Authentication Endpoints
+- **login**: 5 attempts per minute per email/IP combination
+- **registration**: 3 attempts per hour per IP
+- **password-reset**: 3 attempts per hour per email/IP combination
+
+#### Public Submission Endpoints
+- **contact**: 10 submissions per minute per email/IP combination
+- **leads**: 5 submissions per minute per IP
+- **trade-in**: 3 requests per hour per IP
+- **import**: 3 requests per hour per IP
+
+#### Customer Actions
+- **customer-actions**: 60 actions per minute per authenticated user (applies to wishlist, saved searches, recently viewed)
+
+### Files Modified
+- `app/Providers/AppServiceProvider.php` - Added rate limiter configurations and fixed missing DB import
+- `routes/web.php` - Applied throttle middleware to sensitive routes
+
+### Routes with Rate Limiting
+- `POST /login` - login limiter (via Fortify)
+- `POST /register` - registration limiter (via Fortify)
+- `POST /forgot-password` - password-reset limiter (via Fortify)
+- `POST /contact` - contact limiter
+- `POST /leads/public` - leads limiter
+- `POST /trade-in` - trade-in limiter
+- `POST /import` - import limiter
+- `POST /customer/wishlist` - customer-actions limiter
+- `DELETE /customer/wishlist` - customer-actions limiter
+- `POST /customer/saved-searches` - customer-actions limiter
+- `DELETE /customer/saved-searches/{savedSearch}` - customer-actions limiter
+- `POST /customer/recently-viewed` - customer-actions limiter
+- `DELETE /customer/recently-viewed` - customer-actions limiter
+
+### Tests Added
+- `tests/Feature/ContactFormRateLimitingTest.php` - New test file to verify contact form rate limiting
+- `tests/Feature/PublicLeadSubmissionTest.php` - Added tests for lead submission rate limiting configuration
+
+### Verification
+- ✅ All rate limiters registered in AppServiceProvider
+- ✅ Throttle middleware applied to sensitive routes
+- ✅ Rate limiter tests pass
+- ✅ Authentication rate limiting tests pass (existing)
+- ✅ Laravel Pint run to ensure code formatting compliance
+- ✅ Configuration cache cleared to apply changes

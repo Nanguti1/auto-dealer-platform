@@ -7,6 +7,8 @@ namespace Tests\Feature;
 use App\Models\Lead;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Tests\TestCase;
 
 class PublicLeadSubmissionTest extends TestCase
@@ -230,5 +232,29 @@ class PublicLeadSubmissionTest extends TestCase
             'first_name' => 'John',
             'email' => 'john@example.com',
         ]);
+    }
+
+    public function test_lead_submission_rate_limiter_is_configured(): void
+    {
+        // Verify that the rate limiter is registered in the service provider
+        $limiter = RateLimiter::limiter('leads');
+
+        $this->assertNotNull($limiter, 'Lead submission rate limiter should be configured');
+
+        // Test the limiter by calling it
+        $request = Request::create('/leads/public', 'POST');
+
+        $limit = $limiter($request);
+        $this->assertNotNull($limit, 'Rate limiter should return a limit');
+    }
+
+    public function test_lead_submission_has_rate_limiting_middleware(): void
+    {
+        // This test verifies that the rate limiting middleware is applied
+        // by checking that the route exists and has the throttle middleware
+        $route = $this->app['router']->getRoutes()->getByAction('App\Http\Controllers\Public\ContactController@storeLead');
+
+        $this->assertNotNull($route, 'Lead submission route should exist');
+        $this->assertContains('throttle:leads', $route->middleware(), 'Lead submission route should have throttle middleware');
     }
 }
