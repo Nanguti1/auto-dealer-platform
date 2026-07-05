@@ -9,6 +9,7 @@ use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FinanceDocumentService
 {
@@ -21,10 +22,11 @@ class FinanceDocumentService
 
     public function upload(FinanceDocument $document, UploadedFile $file, string $type): FinanceDocument
     {
-        $path = $file->store('finance-documents', 'public');
+        $sanitizedFilename = $this->sanitizeFilename($file->getClientOriginalName());
+        $path = $file->storeAs('finance-documents', $sanitizedFilename, 'public');
 
         $document->update([
-            'name' => $file->getClientOriginalName(),
+            'name' => $sanitizedFilename,
             'path' => $path,
             'type' => $type,
         ]);
@@ -41,5 +43,20 @@ class FinanceDocumentService
 
             $document->delete();
         });
+    }
+
+    protected function sanitizeFilename(string $filename): string
+    {
+        $extension = pathinfo($filename, PATHINFO_EXTENSION);
+        $name = pathinfo($filename, PATHINFO_FILENAME);
+
+        $sanitized = Str::slug($name, '_');
+        $sanitized = preg_replace('/[^a-zA-Z0-9_-]/', '', $sanitized);
+
+        if (empty($sanitized)) {
+            $sanitized = 'file_'.time();
+        }
+
+        return $sanitized.'.'.$extension;
     }
 }

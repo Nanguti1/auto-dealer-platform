@@ -225,3 +225,103 @@ This file tracks the progress of code remediation work based on the CODE_REMEDIA
 - Tests verify correct source assignment based on lead type
 - Tests verify structured notes storage for different lead types
 - Code formatted with Laravel Pint to maintain project standards
+
+## Session 3
+- Upload validation added to all document services.
+- MIME validation implemented for Finance, Import, and Customer documents.
+- File size limits implemented (10MB max).
+- Extension whitelist implemented for all services.
+- Filename sanitization completed for all services.
+- Validation consistency ensured across all document upload services.
+
+### Files Modified
+
+#### Form Requests
+- `app/Http/Requests/Finance/StoreFinanceDocumentRequest.php`
+  - Added MIME type validation: pdf, doc, docx, txt, jpg, jpeg, png
+  - Added extension validation: .pdf, .doc, .docx, .txt, .jpg, .jpeg, .png
+  - Added file size validation: max 10240 KB (10MB)
+  - Added custom error messages for better UX
+
+- `app/Http/Requests/Finance/UpdateFinanceDocumentRequest.php`
+  - Added same validation rules as store request
+  - Added custom error messages for better UX
+
+- `app/Http/Requests/Imports/StoreImportDocumentRequest.php`
+  - Added MIME type validation: pdf, doc, docx, txt, jpg, jpeg, png, csv, xlsx, xls
+  - Added extension validation: .pdf, .doc, .docx, .txt, .jpg, .jpeg, .png, .csv, .xlsx, .xls
+  - Added file size validation: max 10240 KB (10MB)
+  - Added custom error messages for better UX
+
+- `app/Http/Requests/Imports/UpdateImportDocumentRequest.php`
+  - Added same validation rules as store request
+  - Added custom error messages for better UX
+
+- `app/Http/Requests/Customers/StoreCustomerDocumentRequest.php`
+  - Added MIME type validation: pdf, doc, docx, txt, jpg, jpeg, png
+  - Added extension validation: .pdf, .doc, .docx, .txt, .jpg, .jpeg, .png
+  - Added file size validation: max 10240 KB (10MB)
+  - Added custom error messages for better UX
+
+- `app/Http/Requests/Customers/UpdateCustomerDocumentRequest.php`
+  - Added same validation rules as store request
+  - Added custom error messages for better UX
+
+#### Services
+- `app/Services/Finance/FinanceDocumentService.php`
+  - Added sanitizeFilename method to clean filenames
+  - Uses Str::slug to convert spaces and special characters to underscores
+  - Removes any remaining non-alphanumeric characters except underscores and hyphens
+  - Generates fallback filename if sanitization results in empty string
+  - Changed from store() to storeAs() to use sanitized filename
+  - Added Str facade import
+
+- `app/Services/Imports/ImportDocumentService.php`
+  - Added sanitizeFilename method (same implementation as Finance)
+  - Changed from store() to storeAs() to use sanitized filename
+  - Added Str facade import
+
+- `app/Services/Customers/CustomerDocumentService.php`
+  - Added sanitizeFilename method (same implementation as Finance)
+  - Changed from store() to storeAs() to use sanitized filename
+  - Added Str facade import
+
+#### Testing
+- `tests/Feature/FileUploadValidationTest.php` (new)
+  - Test for finance document accepting valid PDF
+  - Test for finance document accepting valid image
+  - Test for finance document rejecting executable files
+  - Test for finance document rejecting large files (>10MB)
+  - Test for import document accepting valid spreadsheet
+  - Test for import document rejecting invalid file types
+  - Test for customer document accepting valid PDF
+  - Test for customer document rejecting invalid extensions
+  - Test for finance document service filename sanitization
+  - Test for import document service filename sanitization
+  - Test for customer document service filename sanitization
+  - Test for finance update request file validation
+  - Test for import update request file validation
+  - Test for customer update request file validation
+
+### Key Improvements
+
+1. **MIME Type Validation**: All document uploads now validate MIME types to prevent malicious file uploads
+2. **Extension Whitelist**: Files must have allowed extensions, preventing execution of uploaded scripts
+3. **File Size Limits**: Maximum file size of 10MB prevents denial of service attacks and storage abuse
+4. **Filename Sanitization**: Filenames are sanitized to remove special characters, spaces, and potential path traversal characters
+5. **Consistent Validation**: All three document services use consistent validation patterns
+6. **Clear Error Messages**: Custom error messages provide clear feedback to users about validation failures
+7. **Security Hardening**: Prevents upload of executables, scripts, and other potentially dangerous files
+8. **Storage Architecture**: Kept public storage unchanged for local development as requested
+9. **Service-Level Sanitization**: Filename sanitization happens at service level for consistency
+10. **Type-Specific Allowlists**: Import documents allow spreadsheet formats, while others focus on documents and images
+
+### Testing Notes
+
+- Created comprehensive test suite covering all three document services
+- Tests validate MIME type restrictions work correctly
+- Tests verify file size limits are enforced
+- Tests confirm filename sanitization removes dangerous characters
+- Tests verify extension whitelisting prevents malicious uploads
+- Tests cover both store and update operations
+- Code formatted with Laravel Pint to maintain project standards

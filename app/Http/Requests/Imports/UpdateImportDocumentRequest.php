@@ -21,7 +21,19 @@ class UpdateImportDocumentRequest extends FormRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'type' => ['sometimes', 'string', 'max:255'],
-            'file' => ['sometimes', 'file', 'max:10240'],
+            'file' => ['sometimes', 'file', 'max:10240', 'mimes:pdf,doc,docx,txt,jpg,jpeg,png,csv,xlsx,xls', 'extensions:pdf,doc,docx,txt,jpg,jpeg,png,csv,xlsx,xls'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'file.mimes' => 'The file must be one of the following types: PDF, DOC, DOCX, TXT, JPG, JPEG, PNG, CSV, XLSX, XLS.',
+            'file.extensions' => 'The file must have one of the following extensions: .pdf, .doc, .docx, .txt, .jpg, .jpeg, .png, .csv, .xlsx, .xls.',
+            'file.max' => 'The file may not be larger than 10MB.',
         ];
     }
 }
