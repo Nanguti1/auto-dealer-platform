@@ -7,7 +7,9 @@ namespace App\Http\Controllers\Admin\TradeIns;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeIns\StoreValuationRequest;
 use App\Http\Requests\TradeIns\UpdateValuationRequest;
+use App\Models\TradeInRequest;
 use App\Models\TradeInValuation;
+use App\Models\User;
 use App\Services\TradeIns\ValuationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +34,10 @@ class ValuationController extends Controller
     {
         $this->authorize('create', TradeInValuation::class);
 
-        return Inertia::render('Admin/TradeIns/Valuations/Create');
+        return Inertia::render('Admin/TradeIns/Valuations/Create', [
+            'tradeInRequests' => TradeInRequest::select('id', 'make', 'model', 'year')->get(),
+            'users' => User::select('id', 'name', 'email')->get(),
+        ]);
     }
 
     public function store(StoreValuationRequest $request): RedirectResponse
@@ -57,6 +62,8 @@ class ValuationController extends Controller
 
         return Inertia::render('Admin/TradeIns/Valuations/Edit', [
             'valuation' => $valuation->load(['tradeInRequest', 'valuationSource']),
+            'tradeInRequests' => \App\Models\TradeInRequest::select('id', 'make', 'model', 'year')->get(),
+            'users' => \App\Models\User::select('id', 'name', 'email')->get(),
         ]);
     }
 

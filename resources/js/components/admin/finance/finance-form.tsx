@@ -1,7 +1,25 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { FormShell, FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
 import type { FinanceApplication } from './types';
 
-export default function FinanceForm({ financeApplication, action, method = 'post' }: { financeApplication?: FinanceApplication; action: string; method?: 'post' | 'put' }) {
+interface FinanceFormProps {
+  financeApplication?: FinanceApplication;
+  action: string;
+  method?: 'post' | 'put';
+  users?: Array<{ id: number; name: string; email?: string }>;
+  lenders?: Array<{ id: number; name: string }>;
+}
+
+export default function FinanceForm({ financeApplication, action, method = 'post', users = [], lenders = [] }: FinanceFormProps) {
+  const userOptions = users.map(user => ({
+    value: user.id,
+    label: user.name || user.email || `User #${user.id}`,
+  }));
+
+  const lenderOptions = lenders.map(lender => ({
+    value: lender.id,
+    label: lender.name || `Lender #${lender.id}`,
+  }));
+
   return (
     <FormShell
       action={action}
@@ -61,19 +79,21 @@ export default function FinanceForm({ financeApplication, action, method = 'post
           value={financeApplication?.approval_status ?? 'pending'}
           onChange={() => {}}
         />
-        <FormField
+        <ForeignSelector
           name="assigned_user_id"
-          label="Assigned officer ID"
-          type="number"
-          value={String(financeApplication?.assigned_user?.id ?? financeApplication?.assignedUser?.id ?? financeApplication?.officer?.id ?? '')}
-          onChange={() => {}}
+          label="Assigned officer"
+          value={financeApplication?.assigned_user_id ?? financeApplication?.assignedUser?.id ?? financeApplication?.officer?.id}
+          options={userOptions}
+          placeholder="Select an officer"
+          searchable
         />
-        <FormField
+        <ForeignSelector
           name="lender_id"
-          label="Lender ID"
-          type="number"
-          value={String(financeApplication?.lender_id ?? financeApplication?.lender?.id ?? '')}
-          onChange={() => {}}
+          label="Lender"
+          value={financeApplication?.lender_id}
+          options={lenderOptions}
+          placeholder="Select a lender"
+          searchable
         />
       </FormSection>
 

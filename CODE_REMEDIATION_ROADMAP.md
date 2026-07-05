@@ -1180,3 +1180,59 @@ Users can use common passwords (e.g., "password123"), which is a security risk. 
 ### Verification
 - Ran Laravel Pint to ensure code formatting compliance
 - All field names now match between frontend forms, backend validation, and models
+
+---
+
+## Session 8
+- Foreign key selectors implemented.
+- Manual ID fields removed.
+
+### Changes Made
+
+#### Created Reusable Components
+- **ForeignSelector**: A synchronous dropdown selector component with:
+  - Search/filter functionality
+  - Loading states
+  - Error handling
+  - Validation compatibility
+  - Accessibility support
+- **AsyncForeignSelector**: An async version that fetches options from a URL
+- Both components exported from `@/components/admin/shared`
+
+#### Finance Module
+- **FinanceApplication**: Replaced manual ID inputs with ForeignSelector:
+  - `assigned_user_id` → searchable user dropdown
+  - `lender_id` → searchable lender dropdown
+- Updated `FinanceController` to pass users and lenders data to create/edit pages
+- Updated `FinanceForm` component to accept and display dropdown options
+
+#### TradeIns Module
+- **Valuation**: Replaced manual ID inputs with ForeignSelector:
+  - `trade_in_request_id` → searchable trade-in request dropdown
+  - `valuation_source_id` → searchable user dropdown
+- Updated `ValuationController` to pass trade-in requests and users data to create/edit pages
+- Updated valuation forms to use dropdown selectors
+
+#### Other Modules
+- Blog, CMS, and other modules were audited - they primarily use auto-generated forms or don't have manual ID fields that need dropdowns at this time
+- The ForeignSelector component is now available for use across all modules as needed
+
+### Files Created
+- `resources/js/components/admin/shared/ForeignSelector.tsx`
+- `resources/js/components/admin/shared/AsyncForeignSelector.tsx`
+
+### Files Modified
+- `resources/js/components/admin/shared/index.ts` (exported new components)
+- `resources/js/components/admin/finance/finance-form.tsx`
+- `resources/js/pages/Admin/Finance/Applications/Create.tsx`
+- `resources/js/pages/Admin/Finance/Applications/Edit.tsx`
+- `app/Http/Controllers/Admin/Finance/FinanceController.php`
+- `resources/js/pages/Admin/TradeIns/Valuations/Create.tsx`
+- `resources/js/pages/Admin/TradeIns/Valuations/Edit.tsx`
+- `app/Http/Controllers/Admin/TradeIns/ValuationController.php`
+
+### Verification
+- Ran Laravel Pint to ensure code formatting compliance
+- Manual ID fields replaced with searchable dropdown selectors
+- Components are reusable across all modules
+- Loading states and error handling implemented

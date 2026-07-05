@@ -9,6 +9,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Finance\StoreFinanceApplicationRequest;
 use App\Http\Requests\Finance\UpdateFinanceApplicationRequest;
 use App\Models\FinanceApplication;
+use App\Models\Lender;
+use App\Models\User;
 use App\Services\Finance\FinanceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +35,10 @@ class FinanceController extends Controller
     {
         $this->authorize('create', FinanceApplication::class);
 
-        return Inertia::render('Admin/Finance/Applications/Create');
+        return Inertia::render('Admin/Finance/Applications/Create', [
+            'users' => User::select('id', 'name', 'email')->get(),
+            'lenders' => Lender::select('id', 'name')->get(),
+        ]);
     }
 
     public function store(StoreFinanceApplicationRequest $request): RedirectResponse
@@ -60,6 +65,8 @@ class FinanceController extends Controller
 
         return Inertia::render('Admin/Finance/Applications/Edit', [
             'financeApplication' => $financeApplication,
+            'users' => User::select('id', 'name', 'email')->get(),
+            'lenders' => Lender::select('id', 'name')->get(),
         ]);
     }
 
