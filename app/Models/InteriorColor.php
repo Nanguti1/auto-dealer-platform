@@ -5,6 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Reference Data Model - Vehicle Interior Colors
+ *
+ * NOTE: This model does not have a policy because it is not accessible through
+ * the web interface. Vehicle interior colors are managed through database seeders and
+ * migrations only. They are used as reference data for vehicle filtering and
+ * dropdown options throughout the application.
+ *
+ * All reference data models (Make, Model, BodyType, FuelType, etc.) are intentionally
+ * restricted to database-level management to maintain data consistency and prevent
+ * accidental modification through the UI. Changes to reference data should be made
+ * through proper database migrations to ensure data integrity across the application.
+ */
 class InteriorColor extends Model
 {
     use HasFactory;
