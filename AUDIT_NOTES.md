@@ -900,4 +900,1894 @@ Route::delete('customer/recently-viewed', [RecentlyViewController::class, 'destr
 
 ---
 
-**Phase 2 Complete - Awaiting Phase 3 instructions**
+# Phase 3: Backend Module Audit
+
+## Phase Overview
+This document provides a comprehensive backend audit of 10 admin modules, analyzing Controllers, Services, Actions, Models, Form Requests, Policies, Jobs, Events, Observers, Resources, and Notifications for each module.
+
+---
+
+## Module 1: Admin (Audit Logs, Performance)
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Admin/AuditLogController.php` | Complete | Full CRUD with index, show, export methods. Uses service properly. |
+| **Services** | `app/Services/Admin/AuditLogService.php` | Complete | Custom paginate with filters (search, user_id, event, date_from, date_to). |
+| **Actions** | N/A | Unreachable | No Admin-specific actions found. |
+| **Models** | `app/Models/AuditLog.php` | Complete | Model with fillable, casts (JSON fields), relationships (user, auditable morphTo). |
+| **Form Requests** | N/A | Unreachable | No audit log form requests (read-only module). |
+| **Policies** | `app/Policies/AuditLogPolicy.php` | Complete | Admin-only access for viewAny and view methods. |
+| **Jobs** | N/A | Unreachable | No Admin-specific jobs. |
+| **Events** | N/A | Unreachable | No Admin-specific events. |
+| **Observers** | N/A | Unreachable | No Admin observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | N/A | Unreachable | No Admin notifications. |
+
+### Performance Submodule
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | N/A | Unreachable | No Performance controller found. |
+| **Services** | N/A | Unreachable | No Performance service found. |
+| **Actions** | N/A | Unreachable | No Performance actions found. |
+| **Models** | N/A | Unreachable | No Performance model found. |
+| **Frontend** | `resources/js/pages/Admin/Admin/Performance/Index.tsx` | Orphaned | Frontend page exists but no backend implementation. |
+
+### Backend Completion: **90%**
+
+### Justification
+Audit Logs module is well-implemented with comprehensive filtering, export functionality, and proper authorization. The only missing component is the Performance submodule which has a frontend page but no backend implementation.
+
+### Missing Functionality
+- **Performance Submodule**: No backend controller, service, or model for performance monitoring
+- **Actions**: No ClearAuditLogsAction, ArchiveAuditLogsAction
+- **Jobs**: No audit log cleanup/archiving jobs
+- **Events**: No AuditLogExported event
+
+### Risks
+- **Medium Risk**: Orphaned Performance frontend page - incomplete feature
+- **Low Risk**: No audit log retention policy - logs could grow indefinitely
+- **Low Risk**: No audit log archiving - could impact database performance
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Admin\AuditLogController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Admin\AuditLogService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\AuditLog.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\AuditLogPolicy.php" />
+- <ref_file file="C:\thelab\car-listings\app\Listeners\RecordAuditLog.php" />
+- <ref_file file="C:\thelab\car-listings\resources\js\pages\Admin\Admin\Performance\Index.tsx" />
+
+---
+
+## Module 2: Analytics
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Analytics/AnalyticsController.php` | Partially Implemented | Only index and show methods - no CRUD operations. |
+| **Services** | `app/Services/Analytics/AnalyticsService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Actions** | N/A | Unreachable | No Analytics-specific actions found. |
+| **Models** | `app/Models/AnalyticsData.php` | Complete | Model with fillable, casts (metadata array, date, decimal), recent scope. |
+| **Form Requests** | `app/Http/Requests/Analytics/StoreAnalyticsDataRequest.php` | Partially Implemented | Minimal validation (only 3 fields, doesn't match model fillable). |
+| **Form Requests** | `app/Http/Requests/Analytics/UpdateAnalyticsDataRequest.php` | Partially Implemented | Minimal validation. |
+| **Policies** | `app/Policies/AnalyticsDataPolicy.php` | Complete | Full policy with extended methods (feature, publish, approve, reject, assign). |
+| **Jobs** | N/A | Unreachable | No Analytics-specific jobs. |
+| **Events** | N/A | Unreachable | No Analytics-specific events. |
+| **Observers** | N/A | Unreachable | No Analytics observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | N/A | Unreachable | No Analytics notifications. |
+
+### Backend Completion: **50%**
+
+### Justification
+Analytics module is significantly incomplete. Controller lacks CRUD operations, service has no custom business logic, and form requests don't match the model's fillable fields. This appears to be a stubbed module awaiting implementation.
+
+### Missing Functionality
+- **Controller**: Missing create, store, edit, update, destroy methods
+- **Service**: No custom business logic (data aggregation, chart generation, metrics calculation)
+- **Form Requests**: Validation doesn't match model fields (metric, dimension, value, recorded_on, metadata)
+- **Actions**: No RecordMetricAction, GenerateReportAction
+- **Jobs**: No scheduled data aggregation jobs
+- **Events**: No AnalyticsRecorded, ReportGenerated events
+
+### Risks
+- **High Risk**: Module is non-functional - can't create or manage analytics data
+- **High Risk**: Form request validation doesn't match model - will fail validation
+- **Medium Risk**: No data aggregation - analytics dashboard will be empty
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Analytics\AnalyticsController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Analytics\AnalyticsService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\AnalyticsData.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\AnalyticsDataPolicy.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\Analytics\StoreAnalyticsDataRequest.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\Analytics\UpdateAnalyticsDataRequest.php" />
+
+---
+
+## Module 3: Blog
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Blog/BlogCategoryController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/Blog/BlogPostController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/Blog/BlogTagController.php` | Complete | Full CRUD with service integration. |
+| **Services** | `app/Services/Blog/BlogCategoryService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/Blog/BlogService.php` | Partially Implemented | Uses ManagesEloquentModels trait + publish method with event dispatch. |
+| **Services** | `app/Services/Blog/BlogTagService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Actions** | `app/Actions/Blog/CreateBlogCategoryAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/Blog/CreateBlogPostAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/Blog/CreateBlogTagAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/Blog/UpdateBlogTagAction.php` | Complete | Wraps service update method. |
+| **Models** | `app/Models/BlogCategory.php` | Complete | Model with fillable, casts, scopes (recent, active), SoftDeletes. |
+| **Models** | `app/Models/BlogPost.php` | Complete | Model with fillable, casts, scopes (recent, published), relationships (category, author), SoftDeletes. |
+| **Models** | `app/Models/BlogTag.php` | Complete | Model with fillable, casts, SoftDeletes. |
+| **Form Requests** | `app/Http/Requests/Blog/StoreBlogCategoryRequest.php` | Complete | Validation for category fields. |
+| **Form Requests** | `app/Http/Requests/Blog/StoreBlogPostRequest.php` | Partially Implemented | Minimal validation (only 3 fields, doesn't match model fillable). |
+| **Form Requests** | `app/Http/Requests/Blog/StoreBlogTagRequest.php` | Complete | Validation for tag fields. |
+| **Form Requests** | `app/Http/Requests/Blog/UpdateBlogCategoryRequest.php` | Complete | Validation for category update. |
+| **Form Requests** | `app/Http/Requests/Blog/UpdateBlogPostRequest.php` | Partially Implemented | Minimal validation. |
+| **Form Requests** | `app/Http/Requests/Blog/UpdateBlogTagRequest.php` | Complete | Validation for tag update. |
+| **Policies** | `app/Policies/BlogCategoryPolicy.php` | Complete | Full policy with role-based checks. |
+| **Policies** | `app/Policies/BlogPostPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/BlogTagPolicy.php` | Complete | Full policy implementation. |
+| **Jobs** | N/A | Unreachable | No Blog-specific jobs. |
+| **Events** | `app/Events/BlogPublished.php` | Complete | Event for blog publication. |
+| **Observers** | N/A | Unreachable | No Blog observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | N/A | Unreachable | No Blog notifications. |
+
+### Backend Completion: **75%**
+
+### Justification
+Blog module has good structure with full CRUD operations and proper event handling for publication. However, services lack custom business logic and BlogPost form request validation is insufficient. Missing actions for tag management and blog scheduling.
+
+### Missing Functionality
+- **Services**: All services lack custom logic (tag usage tracking, category post counts, blog scheduling)
+- **Form Requests**: BlogPost validation doesn't match model fields (blog_category_id, author_id, title, slug, excerpt, body, featured_image_path, status, published_at)
+- **Actions**: Missing UpdateBlogPostAction, UpdateBlogCategoryAction, ScheduleBlogPostAction
+- **Jobs**: No scheduled publishing jobs, no social media sharing jobs
+- **Events**: Missing BlogCreated, BlogUpdated, BlogDeleted events
+- **Notifications**: No blog subscription notifications
+
+### Risks
+- **Medium Risk**: BlogPost validation doesn't match model - will fail validation
+- **Medium Risk**: No scheduled publishing - requires manual intervention
+- **Low Risk**: No tag usage tracking - could lead to unused tags
+- **Low Risk**: No social media integration - manual sharing required
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Blog\BlogCategoryController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Blog\BlogPostController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Blog\BlogTagController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Blog\BlogCategoryService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Blog\BlogService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Blog\BlogTagService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\BlogCategory.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\BlogPost.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\BlogTag.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\Blog\StoreBlogPostRequest.php" />
+- <ref_file file="C:\thelab\car-listings\app\Events\BlogPublished.php" />
+
+---
+
+## Module 4: Branches
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Branches/BranchController.php` | Complete | Full CRUD with index, create, store, show, edit, update, destroy. Uses service properly. |
+| **Services** | `app/Services/Branches/BranchService.php` | Complete | Extends ManagesEloquentModels trait, custom paginate with filters (search, status, city, state). |
+| **Actions** | N/A | Unreachable | No Branch-specific actions found. |
+| **Models** | `app/Models/Branch.php` | Complete | Full model with fillable, casts, scopes (recent, active), relationships (users, vehicles). Uses SoftDeletes. |
+| **Form Requests** | `app/Http/Requests/Branches/StoreBranchRequest.php` | Complete | Comprehensive validation rules for all fields. |
+| **Form Requests** | `app/Http/Requests/Branches/UpdateBranchRequest.php` | Complete | Update request validation. |
+| **Policies** | `app/Policies/BranchPolicy.php` | Complete | All methods implemented with role-based checks (admin/manager for update/delete). |
+| **Jobs** | N/A | Unreachable | No Branch-specific jobs. |
+| **Events** | N/A | Unreachable | No Branch-specific events. |
+| **Observers** | N/A | Unreachable | No Branch observers. |
+| **Resources** | N/A | Unreachable | No API resources found (application uses Inertia, not API resources). |
+| **Notifications** | N/A | Unreachable | No Branch-specific notifications. |
+
+### Backend Completion: **95%**
+
+### Justification
+Branches module is well-implemented with all core CRUD operations, proper service layer, validation, and authorization. The only missing items are actions, events, observers, and notifications which are not typically needed for a simple branches management module.
+
+### Missing Functionality
+- No dedicated Actions (could benefit from AssignBranchManagerAction, ActivateBranchAction)
+- No Observers for automated tasks (e.g., logging branch changes)
+- No Events for branch lifecycle (BranchCreated, BranchUpdated)
+
+### Risks
+- **Low Risk**: Module is functionally complete. No critical issues identified.
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin/Branches\BranchController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Branches\BranchService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Branch.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\BranchPolicy.php" />
+
+---
+
+## Module 5: CMS
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/CMS/CmsPageController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/CMS/FaqController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/CMS/HeroSliderController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/CMS/HomePageSectionController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/CMS/MediaController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/CMS/SeoMetadataController.php` | Complete | Full CRUD with service integration. |
+| **Services** | `app/Services/CMS/CMSService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom paginate or business logic. |
+| **Services** | `app/Services/CMS/FaqService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/CMS/HeroSliderService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/CMS/HomePageSectionService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/CMS/MediaService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/CMS/SeoMetadataService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Actions** | `app/Actions/CMS/CreateFaqAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/CMS/CreateHeroSliderAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/CMS/CreateHomePageSectionAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/CMS/CreateMediaAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/CMS/CreateSeoMetadataAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/CMS/GenerateSeoMetadataAction.php` | Complete | SEO generation logic. |
+| **Actions** | `app/Actions/CMS/UpdateFaqAction.php` | Complete | Wraps service update method. |
+| **Actions** | `app/Actions/CMS/UpdateHeroSliderAction.php` | Complete | Wraps service update method. |
+| **Actions** | `app/Actions/CMS/UpdateHomePageSectionAction.php` | Complete | Wraps service update method. |
+| **Actions** | `app/Actions/CMS/UpdateMediaAction.php` | Complete | Wraps service update method. |
+| **Actions** | `app/Actions/CMS/UpdateSeoMetadataAction.php` | Complete | Wraps service update method. |
+| **Models** | `app/Models/DynamicCmsPage.php` | Complete | Model with fillable, casts, SoftDeletes. |
+| **Models** | `app/Models/Faq.php` | Complete | Model with fillable, casts, scopes (recent, active), SoftDeletes. |
+| **Models** | `app/Models/HeroSlider.php` | Complete | Model with fillable, casts, scopes (recent, active), SoftDeletes. |
+| **Models** | `app/Models/HomePageSection.php` | Complete | Model with fillable, casts, scopes (recent, active), SoftDeletes. |
+| **Models** | `app/Models/Media.php` | Complete | Model with fillable, casts, morphTo relationship, SoftDeletes. |
+| **Models** | `app/Models/SeoMetadata.php` | Complete | Model with fillable, casts (JSON fields). |
+| **Form Requests** | `app/Http/Requests/CMS/StoreCmsPageRequest.php` | Partially Implemented | Minimal validation (only 3 fields, should include slug, body validation). |
+| **Form Requests** | `app/Http/Requests/CMS/UpdateCmsPageRequest.php` | Partially Implemented | Minimal validation. |
+| **Form Requests** | `app/Http/Requests/CMS/StoreFaqRequest.php` | Complete | Validation for FAQ fields. |
+| **Form Requests** | `app/Http/Requests/CMS/UpdateFaqRequest.php` | Complete | Validation for FAQ fields. |
+| **Form Requests** | `app/Http/Requests/CMS/StoreHeroSliderRequest.php` | Complete | Validation for hero slider. |
+| **Form Requests** | `app/Http/Requests/CMS/UpdateHeroSliderRequest.php` | Complete | Validation for hero slider. |
+| **Form Requests** | `app/Http/Requests/CMS/StoreHomePageSectionRequest.php` | Complete | Validation for home page sections. |
+| **Form Requests** | `app/Http/Requests/CMS/UpdateHomePageSectionRequest.php` | Complete | Validation for home page sections. |
+| **Form Requests** | `app/Http/Requests/CMS/StoreMediaRequest.php` | Complete | Validation for media. |
+| **Form Requests** | `app/Http/Requests/CMS/UpdateMediaRequest.php` | Complete | Validation for media. |
+| **Form Requests** | `app/Http/Requests/CMS/StoreSeoMetadataRequest.php` | Complete | Validation for SEO metadata. |
+| **Form Requests** | `app/Http/Requests/CMS/UpdateSeoMetadataRequest.php` | Complete | Validation for SEO metadata. |
+| **Policies** | `app/Policies/DynamicCmsPagePolicy.php` | Complete | Full policy with extended methods (feature, publish, approve, reject, assign). |
+| **Policies** | `app/Policies/FaqPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/HeroSliderPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/HomePageSectionPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/MediaPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/SeoMetadataPolicy.php` | Complete | Full policy implementation. |
+| **Jobs** | N/A | Unreachable | No CMS-specific jobs. |
+| **Events** | N/A | Unreachable | No CMS-specific events. |
+| **Observers** | N/A | Unreachable | No CMS observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | N/A | Unreachable | No CMS notifications. |
+
+### Backend Completion: **75%**
+
+### Justification
+CMS module has all controllers and models properly implemented with good Actions coverage. However, services are minimal (only using the trait) and form requests for CmsPage are insufficient. Missing events for content lifecycle management.
+
+### Missing Functionality
+- **Services**: All CMS services lack custom business logic (pagination, filtering, sorting)
+- **Form Requests**: CmsPageRequest validation is too minimal
+- **Events**: No events for content publishing, updating, deletion
+- **Jobs**: No image processing jobs for media uploads
+- **Observers**: No observers for caching invalidation on content changes
+
+### Risks
+- **Medium Risk**: CmsPage validation is insufficient - could allow invalid data
+- **Medium Risk**: No image optimization for media uploads
+- **Low Risk**: No caching layer for CMS content
+
+---
+
+## Module 6: CRM
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/CRM/ActivityController.php` | Complete | Full CRUD with service integration. Uses CrmFollowUp model. |
+| **Controllers** | `app/Http/Controllers/Admin/CRM/LeadController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/CRM/PipelineController.php` | Partially Implemented | Only index and updateStage methods - missing create, show, edit, destroy. |
+| **Controllers** | `app/Http/Controllers/Admin/CRM/TaskController.php` | Complete | Full CRUD with service integration. |
+| **Services** | `app/Services/CRM/ActivityService.php` | Complete | Custom paginate with filters (search, status, type, lead_id), custom create/update. |
+| **Services** | `app/Services/CRM/LeadService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/CRM/PipelineService.php` | Complete | Custom pipeline logic (getStages, getLeadsByStage, getAllLeadsWithStages, updateLeadStage, getPipelineStats). |
+| **Services** | `app/Services/CRM/TaskService.php` | Complete | Custom paginate with filters (search, status, priority, lead_id), custom create/update. |
+| **Actions** | `app/Actions/CRM/AssignLeadAction.php` | Complete | Assigns lead to user with event dispatch. |
+| **Actions** | `app/Actions/CRM/AdvanceLeadStageAction.php` | Complete | Advances lead through pipeline stages. |
+| **Models** | `app/Models/Lead.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (crmStage, vehicle, assignedUser), SoftDeletes. |
+| **Models** | `app/Models/CrmFollowUp.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (lead, assignedUser). |
+| **Models** | `app/Models/CrmTask.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (lead, assignedUser). |
+| **Models** | `app/Models/CrmStage.php` | Complete | Model for pipeline stages. |
+| **Form Requests** | `app/Http/Requests/CRM/StoreActivityRequest.php` | Complete | Validation for activity fields. |
+| **Form Requests** | `app/Http/Requests/CRM/UpdateActivityRequest.php` | Complete | Validation for activity fields. |
+| **Form Requests** | `app/Http/Requests/CRM/StoreLeadRequest.php` | Partially Implemented | Minimal validation (only 4 fields, missing vehicle_id, budget, source). |
+| **Form Requests** | `app/Http/Requests/CRM/UpdateLeadRequest.php` | Partially Implemented | Minimal validation. |
+| **Form Requests** | `app/Http/Requests/CRM/UpdateLeadStageRequest.php` | Complete | Validation for stage updates. |
+| **Form Requests** | `app/Http/Requests/CRM/StoreTaskRequest.php` | Complete | Validation for task fields. |
+| **Form Requests** | `app/Http/Requests/CRM/UpdateTaskRequest.php` | Complete | Validation for task fields. |
+| **Policies** | `app/Policies/LeadPolicy.php` | Complete | Full policy with branch-aware checks via isAccessibleThrough. |
+| **Policies** | `app/Policies/CrmFollowUpPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/CrmTaskPolicy.php` | Complete | Full policy implementation. |
+| **Jobs** | N/A | Unreachable | No CRM-specific jobs. |
+| **Events** | `app/Events/LeadCreated.php` | Complete | Event for lead creation. |
+| **Events** | `app/Events/LeadAssigned.php` | Complete | Event for lead assignment. |
+| **Observers** | N/A | Unreachable | No CRM observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | `app/Notifications/LeadAssigned.php` | Complete | Notification for lead assignment. |
+
+### Backend Completion: **80%**
+
+### Justification
+CRM module has solid core functionality with good pipeline management. LeadService needs custom logic. PipelineController is incomplete. Missing jobs for automated follow-ups and task reminders.
+
+### Missing Functionality
+- **PipelineController**: Missing create, show, edit, destroy methods for pipeline stages
+- **LeadService**: No custom business logic (lead scoring, duplicate detection)
+- **Jobs**: No automated follow-up reminders, task deadline notifications
+- **Events**: Missing LeadConverted, LeadLost events
+- **Observers**: No observers for automatic follow-up creation
+
+### Risks
+- **Medium Risk**: Lead validation is insufficient - missing critical fields
+- **Medium Risk**: No automated follow-up system - could lead to lost leads
+- **Low Risk**: PipelineController is incomplete - can't manage stages directly
+
+---
+
+## Module 7: Customers
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Customers/CustomerController.php` | Complete | Full CRUD with event dispatch (CustomerRegistered). |
+| **Controllers** | `app/Http/Controllers/Admin/Customers/DocumentController.php` | Complete | Full CRUD with file upload service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/Customers/NoteController.php` | Complete | Full CRUD with user tracking. |
+| **Services** | `app/Services/Customers/CustomerService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/Customers/CustomerDocumentService.php` | Complete | Custom upload and delete methods with file storage. |
+| **Services** | `app/Services/Customers/CustomerNoteService.php` | Complete | Custom paginateForCustomer with filters. |
+| **Actions** | N/A | Unreachable | No Customer-specific actions. |
+| **Models** | `app/Models/Customer.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (documents, notes, user), SoftDeletes. |
+| **Models** | `app/Models/CustomerDocument.php` | Complete | Model with BranchAware trait, fillable, relationship to customer. |
+| **Models** | `app/Models/CustomerNote.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (customer, user). |
+| **Form Requests** | `app/Http/Requests/Customers/StoreCustomerRequest.php` | Partially Implemented | Minimal validation (only 4 fields, missing date_of_birth, preferences). |
+| **Form Requests** | `app/Http/Requests/Customers/UpdateCustomerRequest.php` | Partially Implemented | Minimal validation. |
+| **Form Requests** | `app/Http/Requests/Customers/StoreCustomerDocumentRequest.php` | Complete | Validation for document upload. |
+| **Form Requests** | `app/Http/Requests/Customers/UpdateCustomerDocumentRequest.php` | Complete | Validation for document update. |
+| **Form Requests** | `app/Http/Requests/Customers/StoreCustomerNoteRequest.php` | Complete | Validation for note creation. |
+| **Form Requests** | `app/Http/Requests/Customers/UpdateCustomerNoteRequest.php` | Complete | Validation for note update. |
+| **Policies** | `app/Policies/CustomerPolicy.php` | Complete | Full policy with branch-aware checks. |
+| **Policies** | `app/Policies/CustomerDocumentPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/CustomerNotePolicy.php` | Complete | Full policy implementation. |
+| **Jobs** | N/A | Unreachable | No Customer-specific jobs. |
+| **Events** | `app/Events/CustomerRegistered.php` | Complete | Event dispatched on customer creation. |
+| **Observers** | N/A | Unreachable | No Customer observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | N/A | Unreachable | No Customer-specific notifications (should have Welcome notification). |
+
+### Backend Completion: **78%**
+
+### Justification
+Customers module has good document and note management with file upload capabilities. CustomerService lacks custom logic. Missing welcome notification for new customers.
+
+### Missing Functionality
+- **CustomerService**: No custom logic (customer segmentation, loyalty points)
+- **Actions**: No MergeCustomersAction, DeactivateCustomerAction
+- **Notifications**: No WelcomeCustomer notification
+- **Events**: Missing CustomerUpdated, CustomerDeleted events
+- **Jobs**: No document processing jobs (PDF generation, virus scanning)
+
+### Risks
+- **Medium Risk**: Customer validation is insufficient
+- **Medium Risk**: No document security checks (virus scanning, file type validation beyond extension)
+- **Low Risk**: No customer segmentation or lifecycle management
+
+---
+
+## Module 8: Dashboard
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Dashboard/DashboardController.php` | Partially Implemented | Only index method - no individual widget management. |
+| **Services** | `app/Services/Dashboard/DashboardService.php` | Complete | Comprehensive with summary(), recentActivity(), charts() methods. Optimized queries. |
+| **Actions** | N/A | Unreachable | No Dashboard-specific actions. |
+| **Models** | N/A | Unreachable | Dashboard is aggregate data, no dedicated model. |
+| **Form Requests** | `app/Http/Requests/Dashboard/StoreDashboardWidgetRequest.php` | Unreachable | Exists but not used in controller. |
+| **Form Requests** | `app/Http/Requests/Dashboard/UpdateDashboardWidgetRequest.php` | Unreachable | Exists but not used in controller. |
+| **Policies** | N/A | Unreachable | No Dashboard policy (aggregated data). |
+| **Jobs** | N/A | Unreachable | No Dashboard-specific jobs. |
+| **Events** | N/A | Unreachable | No Dashboard events. |
+| **Observers** | N/A | Unreachable | No Dashboard observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | N/A | Unreachable | No Dashboard notifications. |
+
+### Backend Completion: **60%**
+
+### Justification
+Dashboard has excellent service implementation with optimized queries and comprehensive data aggregation. However, controller is minimal and widget management is not implemented (form requests exist but unused).
+
+### Missing Functionality
+- **DashboardController**: Missing widget CRUD methods
+- **Widget Management**: Form requests exist but no controller methods to use them
+- **Caching**: No caching layer for dashboard data (would improve performance)
+- **Jobs**: No scheduled jobs for data aggregation
+
+### Risks
+- **Medium Risk**: No caching - dashboard queries could be slow with large datasets
+- **Low Risk**: Widget management is incomplete
+- **Low Risk**: Dashboard data is real-time only - no historical comparisons
+
+---
+
+## Module 9: Finance
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Finance/FinanceController.php` | Complete | Full CRUD with event dispatch (FinanceApplicationSubmitted). |
+| **Controllers** | `app/Http/Controllers/Admin/Finance/FinanceDocumentController.php` | Complete | Full CRUD with file upload service integration. |
+| **Services** | `app/Services/Finance/FinanceService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+| **Services** | `app/Services/Finance/FinanceDocumentService.php` | Complete | Custom upload and delete methods with file storage. |
+| **Actions** | `app/Actions/Finance/ApproveFinanceApplicationAction.php` | Complete | Approves application with event dispatch. |
+| **Actions** | `app/Actions/Finance/RejectFinanceApplicationAction.php` | Complete | Rejects application. |
+| **Actions** | `app/Actions/Finance\CalculateLoanAction.php` | Complete | Loan calculation logic. |
+| **Models** | `app/Models/FinanceApplication.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (vehicle, lender, user, documents). |
+| **Models** | `app/Models/FinanceDocument.php` | Complete | Model with BranchAware trait, fillable, relationship to financeApplication. |
+| **Form Requests** | `app/Http/Requests/Finance/StoreFinanceApplicationRequest.php` | Complete | Validation for finance application. |
+| **Form Requests** | `app/Http/Requests/Finance/UpdateFinanceApplicationRequest.php` | Complete | Validation for finance application update. |
+| **Form Requests** | `app/Http/Requests/Finance/StoreFinanceDocumentRequest.php` | Complete | Validation for document upload. |
+| **Form Requests** | `app/Http/Requests/Finance/UpdateFinanceDocumentRequest.php` | Complete | Validation for document update. |
+| **Policies** | `app/Policies/FinanceApplicationPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/FinanceDocumentPolicy.php` | Complete | Full policy implementation. |
+| **Jobs** | N/A | Unreachable | No Finance-specific jobs. |
+| **Events** | `app/Events/FinanceApplicationSubmitted.php` | Complete | Event dispatched on application submission. |
+| **Events** | `app/Events/FinanceApproved.php` | Complete | Event for approval. |
+| **Observers** | N/A | Unreachable | No Finance observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | `app/Notifications/FinanceApproved.php` | Complete | Notification for approval. |
+| **Notifications** | `app/Notifications/FinanceRejected.php` | Complete | Notification for rejection. |
+
+### Backend Completion: **82%**
+
+### Justification
+Finance module has good CRUD operations, proper event handling, and actions for approval/rejection workflows. FinanceService lacks custom business logic. Missing credit check integration and automated loan processing.
+
+### Missing Functionality
+- **FinanceService**: No custom logic (credit scoring, loan approval rules)
+- **Jobs**: No automated credit check jobs, loan payment processing
+- **Events**: Missing FinanceRejected event (notification exists but event not found in events list)
+- **Actions**: No ProcessPaymentAction, GenerateContractAction
+- **Integrations**: No lender API integrations
+
+### Risks
+- **Medium Risk**: No credit check integration - manual approval only
+- **Medium Risk**: No automated payment processing
+- **Low Risk**: FinanceService lacks business logic for approval rules
+
+---
+
+## Module 10: Imports
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Imports/ImportController.php` | Complete | Full CRUD with service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/Imports/ImportDocumentController.php` | Complete | Full CRUD with file upload service integration. |
+| **Controllers** | `app/Http/Controllers/Admin/Imports/ImportPaymentController.php` | Complete | Full CRUD with markAsPaid method. |
+| **Controllers** | `app/Http/Controllers/Admin/Imports/ShipmentController.php` | Complete | Full CRUD with updateTracking and markAsDelivered methods. |
+| **Services** | `app/Services/Imports/ImportService.php` | Complete | Custom paginate with filters, dispatches ImportVehicles job on create. |
+| **Services** | `app/Services/Imports/ImportDocumentService.php` | Complete | Custom upload and delete methods with file storage. |
+| **Services** | `app/Services/Imports/ImportPaymentService.php` | Complete | Custom paginate with filters, markAsPaid method. |
+| **Services** | `app/Services/Imports/ShipmentService.php` | Complete | Custom paginate with filters, updateTracking, markAsDelivered methods. |
+| **Actions** | `app/Actions/Imports/CreateImportRequestAction.php` | Complete | Wraps service create method. |
+| **Actions** | `app/Actions/Imports/UpdateShipmentStatusAction.php` | Complete | Updates shipment status. |
+| **Models** | `app/Models\VehicleImport.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (user, supplier, vehicle, documents, shipments, payments, vehicleMappings), SoftDeletes. |
+| **Models** | `app/Models\ImportDocument.php` | Complete | Model with BranchAware trait, fillable, casts, relationship to vehicleImport. |
+| **Models** | `app/Models\ImportPayment.php` | Complete | Model with BranchAware trait, fillable, casts, relationships (vehicleImport, payment). |
+| **Models** | `app/Models\ImportShipment.php` | Complete | Model with BranchAware trait, fillable, casts, relationship to vehicleImport. |
+| **Form Requests** | `app/Http/Requests/Imports/StoreImportRequest.php` | Complete | Validation for import request. |
+| **Form Requests** | `app/Http/Requests/Imports/UpdateImportRequest.php` | Complete | Validation for import update. |
+| **Form Requests** | `app/Http/Requests/Imports/StoreImportDocumentRequest.php` | Complete | Validation for document upload. |
+| **Form Requests** | `app/Http/Requests/Imports/UpdateImportDocumentRequest.php` | Complete | Validation for document update. |
+| **Form Requests** | `app/Http/Requests/Imports/StoreImportPaymentRequest.php` | Complete | Validation for payment. |
+| **Form Requests** | `app/Http/Requests/Imports/UpdateImportPaymentRequest.php` | Complete | Validation for payment update. |
+| **Form Requests** | `app/Http/Requests/Imports/StoreShipmentRequest.php` | Complete | Validation for shipment. |
+| **Form Requests** | `app/Http/Requests/Imports/UpdateShipmentRequest.php` | Complete | Validation for shipment update. |
+| **Policies** | `app/Policies/ImportDocumentPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/ImportPaymentPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/ImportShipmentPolicy.php` | Complete | Full policy implementation. |
+| **Policies** | `app/Policies/VehicleImportPolicy.php` | Complete | Full policy implementation. |
+| **Jobs** | `app/Jobs/ImportVehicles.php` | Complete | Comprehensive job with validation, transaction handling, retry logic, logging. |
+| **Events** | `app/Events/ImportCompleted.php` | Complete | Event for import completion. |
+| **Observers** | N/A | Unreachable | No Import observers. |
+| **Resources** | N/A | Unreachable | No API resources. |
+| **Notifications** | `app/Notifications\ImportShipmentArrived.php` | Complete | Notification for shipment arrival. |
+
+### Backend Completion: **90%**
+
+### Justification
+Imports module is well-implemented with comprehensive job processing, shipment tracking, payment management, and proper event handling. The only missing items are observers and additional automation.
+
+### Missing Functionality
+- **Observers**: No observers for automatic shipment status updates based on tracking
+- **Jobs**: No tracking update polling job
+- **Events**: Missing ImportStarted, ImportFailed events
+- **Actions**: No CancelImportAction, ProcessPaymentAction
+
+### Risks
+- **Low Risk**: No automatic tracking updates - requires manual intervention
+- **Low Risk**: ImportVehicles job could fail silently for some edge cases
+- **Low Risk**: No import failure notification
+
+---
+
+## SUMMARY
+
+### Overall Module Completion Rankings:
+
+1. **Branches**: 95% - Simple but complete
+2. **Imports**: 90% - Most complete with comprehensive job processing
+3. **Admin (Audit Logs)**: 90% - Well-implemented, orphaned Performance page
+4. **Finance**: 82% - Good workflow, missing integrations
+5. **CRM**: 80% - Solid pipeline, missing automation
+6. **Customers**: 78% - Good document management, missing segmentation
+7. **CMS**: 75% - Good structure, services need customization
+8. **Blog**: 75% - Good structure, validation issues
+9. **Dashboard**: 60% - Great service, incomplete widget management
+10. **Analytics**: 50% - Significantly incomplete, non-functional
+
+### Critical Issues Across All Modules:
+
+1. **No API Resources**: Application uses Inertia (frontend rendering) but has no API resources for potential mobile app or API integration
+2. **Missing Observers**: Only 3 observers exist (User, Setting, Permission) - no module-specific observers for automation
+3. **Insufficient Validation**: Several form requests have minimal validation (Analytics, BlogPost, CmsPage, Lead, Customer)
+4. **No Caching Layer**: Dashboard and CMS data could benefit from caching
+5. **Limited Job Queue**: Only 7 jobs exist - missing automation for follow-ups, notifications, data processing
+6. **Orphaned Frontend Pages**: Performance page exists without backend implementation
+
+### Recommendations:
+
+1. **High Priority**:
+   - Fix Analytics module - implement CRUD operations and proper validation
+   - Enhance form request validation for BlogPost, CmsPage, Lead, and Customer
+   - Implement caching for Dashboard and CMS data
+   - Complete or remove orphaned Performance page
+   - Add observers for automated workflows
+
+2. **Medium Priority**:
+   - Add automated follow-up jobs for CRM
+   - Implement credit check integration for Finance
+   - Add document security scanning for uploads
+   - Complete Dashboard widget management
+   - Add API resources for mobile app support
+
+3. **Low Priority**:
+   - Add module-specific events and notifications
+   - Implement customer segmentation
+   - Add loan payment processing jobs
+   - Create shipment tracking polling job
+   - Add social media integration for Blog
+
+---
+
+## Files Inspected in Phase 3
+
+### Controllers
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Admin\AuditLogController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Analytics\AnalyticsController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Blog\BlogCategoryController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Blog\BlogPostController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Blog\BlogTagController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Branches\BranchController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CMS\CmsPageController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CMS\FaqController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CMS\HeroSliderController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CMS\HomePageSectionController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CMS\MediaController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CMS\SeoMetadataController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CRM\ActivityController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CRM\LeadController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CRM\PipelineController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\CRM\TaskController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Customers\CustomerController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Customers\DocumentController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Customers\NoteController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Dashboard\DashboardController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Finance\FinanceController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Finance\FinanceDocumentController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Imports\ImportController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Imports\ImportDocumentController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Imports\ImportPaymentController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Imports\ShipmentController.php
+
+### Services
+- C:\thelab\car-listings\app\Services\Admin\AuditLogService.php
+- C:\thelab\car-listings\app\Services\Analytics\AnalyticsService.php
+- C:\thelab\car-listings\app\Services\Blog\BlogCategoryService.php
+- C:\thelab\car-listings\app\Services\Blog\BlogService.php
+- C:\thelab\car-listings\app\Services\Blog\BlogTagService.php
+- C:\thelab\car-listings\app\Services\Branches\BranchService.php
+- C:\thelab\car-listings\app\Services\CMS\CMSService.php
+- C:\thelab\car-listings\app\Services\CMS\FaqService.php
+- C:\thelab\car-listings\app\Services\CMS\HeroSliderService.php
+- C:\thelab\car-listings\app\Services\CMS\HomePageSectionService.php
+- C:\thelab\car-listings\app\Services\CMS\MediaService.php
+- C:\thelab\car-listings\app\Services\CMS\SeoMetadataService.php
+- C:\thelab\car-listings\app\Services\CRM\ActivityService.php
+- C:\thelab\car-listings\app\Services\CRM\LeadService.php
+- C:\thelab\car-listings\app\Services\CRM\PipelineService.php
+- C:\thelab\car-listings\app\Services\CRM\TaskService.php
+- C:\thelab\car-listings\app\Services\Customers\CustomerService.php
+- C:\thelab\car-listings\app\Services\Customers\CustomerDocumentService.php
+- C:\thelab\car-listings\app\Services\Customers\CustomerNoteService.php
+- C:\thelab\car-listings\app\Services\Dashboard\DashboardService.php
+- C:\thelab\car-listings\app\Services\Finance\FinanceService.php
+- C:\thelab\car-listings\app\Services\Finance\FinanceDocumentService.php
+- C:\thelab\car-listings\app\Services\Imports\ImportService.php
+- C:\thelab\car-listings\app\Services\Imports\ImportDocumentService.php
+- C:\thelab\car-listings\app\Services\Imports\ImportPaymentService.php
+- C:\thelab\car-listings\app\Services\Imports\ShipmentService.php
+
+### Models
+- C:\thelab\car-listings\app\Models\AuditLog.php
+- C:\thelab\car-listings\app\Models\AnalyticsData.php
+- C:\thelab\car-listings\app\Models\BlogCategory.php
+- C:\thelab\car-listings\app\Models\BlogPost.php
+- C:\thelab\car-listings\app\Models\BlogTag.php
+- C:\thelab\car-listings\app\Models\Branch.php
+- C:\thelab\car-listings\app\Models\DynamicCmsPage.php
+- C:\thelab\car-listings\app\Models\Faq.php
+- C:\thelab\car-listings\app\Models\HeroSlider.php
+- C:\thelab\car-listings\app\Models\HomePageSection.php
+- C:\thelab\car-listings\app\Models\Media.php
+- C:\thelab\car-listings\app\Models\SeoMetadata.php
+- C:\thelab\car-listings\app\Models\Lead.php
+- C:\thelab\car-listings\app\Models\CrmFollowUp.php
+- C:\thelab\car-listings\app\Models\CrmTask.php
+- C:\thelab\car-listings\app\Models\CrmStage.php
+- C:\thelab\car-listings\app\Models\Customer.php
+- C:\thelab\car-listings\app\Models\CustomerDocument.php
+- C:\thelab\car-listings\app\Models\CustomerNote.php
+- C:\thelab\car-listings\app\Models\FinanceApplication.php
+- C:\thelab\car-listings\app\Models\FinanceDocument.php
+- C:\thelab\car-listings\app\Models\VehicleImport.php
+- C:\thelab\car-listings\app\Models\ImportDocument.php
+- C:\thelab\car-listings\app\Models\ImportPayment.php
+- C:\thelab\car-listings\app\Models\ImportShipment.php
+
+### Additional Files
+- C:\thelab\car-listings\app\Services\Concerns\ManagesEloquentModels.php
+- C:\thelab\car-listings\app\Listeners\RecordAuditLog.php
+- C:\thelab\car-listings\resources\js\pages\Admin\Admin\Performance\Index.tsx
+
+---
+
+## Module 11: Payments
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Payments/PaymentController.php` | Complete | Full CRUD operations with proper authorization checks. |
+| **Services** | `app/Services/Payments/PaymentService.php` | Partially Implemented | Uses ManagesEloquentModels trait but lacks custom business logic. |
+| **Actions** | N/A | Unreachable | No payment-specific actions found. |
+| **Models** | `app/Models/Payment.php` | Complete | Has relationships, casts, scopes, helper methods (markAsPaid, markAsFailed, markAsRefunded). |
+| **Form Requests** | `app/Http/Requests/Payments/StorePaymentRequest.php` | Complete | Comprehensive validation rules for all payment fields. |
+| **Form Requests** | `app/Http/Requests/Payments/UpdatePaymentRequest.php` | Complete | Proper validation for updates. |
+| **Policies** | `app/Policies/PaymentPolicy.php` | Complete | All standard methods plus custom methods (feature, publish, approve, reject, assign). |
+| **Jobs** | N/A | Unreachable | No payment-related jobs found. |
+| **Events** | N/A | Unreachable | No payment-related events found. |
+| **Observers** | N/A | Unreachable | No payment observers found. |
+| **Resources** | N/A | Unreachable | No API resources found. |
+| **Notifications** | N/A | Unreachable | No payment-specific notifications. |
+
+### Backend Completion: **45%**
+
+### Justification
+The Payments module has basic CRUD functionality but lacks advanced features typically expected in a payment system. The service layer is minimal, and there are no background jobs for processing payments, no events for payment lifecycle, and no observers for side effects.
+
+### Missing Functionality
+- Payment processing actions (ProcessPaymentAction, RefundPaymentAction)
+- Payment gateway integration logic
+- Payment status change events (PaymentCompleted, PaymentFailed, PaymentRefunded)
+- Background jobs for payment reconciliation
+- Payment notifications to users
+- API resources for external integrations
+- Observers for payment-related side effects (e.g., updating invoice status)
+- Payment method validation rules
+- Transaction reference generation logic
+
+### Risks
+- **High Risk**: No payment processing logic in service layer - critical business logic missing
+- **High Risk**: No payment gateway integration - cannot process actual payments
+- **Medium Risk**: No payment events - cannot trigger side effects or notifications
+- **Medium Risk**: No observers - payment status changes won't automatically update related records
+- **Low Risk**: No API resources - limits external system integration
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Payments\PaymentController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Payments\PaymentService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Payment.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\PaymentPolicy.php" />
+
+---
+
+## Module 12: Promotions
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Promotions/PromotionController.php` | Complete | Full CRUD with event dispatching on create. |
+| **Services** | `app/Services/Promotions/PromotionService.php` | Partially Implemented | Uses ManagesEloquentModels trait, no custom logic. |
+| **Actions** | `app/Actions/Promotions/PublishPromotionAction.php` | Partially Implemented | Only has PublishPromotionAction, missing other actions. |
+| **Models** | `app/Models/Promotion.php` | Complete | Has soft deletes, scopes (recent, active), proper casts. |
+| **Models** | `app/Models/PromotionVehicle.php` | Complete | Pivot model for promotion-vehicle relationships. |
+| **Form Requests** | `app/Http/Requests/Promotions/StorePromotionRequest.php` | Broken | Rules are incomplete - missing type, value, starts_at, ends_at validation. |
+| **Form Requests** | `app/Http/Requests/Promotions/UpdatePromotionRequest.php` | Broken | Same issues as StorePromotionRequest. |
+| **Policies** | `app/Policies/PromotionPolicy.php` | Complete | All standard and custom methods. |
+| **Jobs** | N/A | Unreachable | No promotion-related jobs found. |
+| **Events** | `app/Events/PromotionCreated.php` | Complete | Proper event class. |
+| **Observers** | N/A | Unreachable | No promotion observers found. |
+| **Resources** | N/A | Unreachable | No API resources found. |
+| **Notifications** | N/A | Unreachable | No promotion notifications found. |
+
+### Backend Completion: **40%**
+
+### Justification
+The Promotions module has basic structure but critical validation is broken in form requests. The service layer lacks business logic for promotion validation (e.g., date ranges, value constraints). Missing actions for common promotion operations.
+
+### Missing Functionality
+- Complete form request validation (type, value, date ranges, rules array)
+- Promotion validation actions (ValidatePromotionAction, ApplyPromotionAction)
+- Promotion expiration logic
+- Promotion usage tracking
+- Background jobs for expiring promotions
+- Promotion notifications to customers
+- Observers for promotion lifecycle events
+- API resources for frontend/promotion APIs
+- Promotion vehicle relationship management in service layer
+
+### Risks
+- **Critical Risk**: Form request validation is broken - can create invalid promotions
+- **High Risk**: No date range validation - can create promotions with invalid dates
+- **High Risk**: No value validation - can create promotions with invalid discount values
+- **Medium Risk**: No expiration logic - promotions won't auto-expire
+- **Medium Risk**: No usage tracking - cannot monitor promotion effectiveness
+- **Low Risk**: No observers - promotion changes won't trigger side effects
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Promotions\PromotionController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Promotions\PromotionService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Promotion.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\Promotions\StorePromotionRequest.php" />
+- <ref_file file="C:\thelab\car-listings\app\Events\PromotionCreated.php" />
+
+---
+
+## Module 13: Reports
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Reports/ReportController.php` | Complete | Very comprehensive with sales, inventory, leads, finance reports + export functionality. |
+| **Services** | N/A | Unreachable | No dedicated service - logic embedded in controller. |
+| **Actions** | N/A | Unreachable | No report actions found. |
+| **Models** | `app/Models\Report.php` | Complete | Has proper fields, casts, relationships. |
+| **Form Requests** | N/A | Unreachable | Validation done inline in controller. |
+| **Policies** | `app/Policies/ReportPolicy.php` | Complete | All standard methods with user ownership checks. |
+| **Jobs** | `app/Jobs/GenerateReports.php` | Complete | Comprehensive job for generating multiple report types. |
+| **Events** | N/A | Unreachable | No report events found. |
+| **Observers** | N/A | Unreachable | No report observers found. |
+| **Resources** | N/A | Unreachable | No API resources found. |
+| **Notifications** | N/A | Unreachable | No report notifications found. |
+
+### Backend Completion: **50%**
+
+### Justification
+The Reports module has excellent controller logic and a comprehensive job for background report generation. However, it violates separation of concerns by putting business logic in the controller instead of a service layer. Missing form requests and events for report lifecycle.
+
+### Missing Functionality
+- Dedicated ReportService to extract business logic from controller
+- Form request classes for report creation/validation
+- Report generation actions (GenerateSalesReportAction, etc.)
+- Report completion events (ReportGenerated, ReportExported)
+- Report scheduling logic
+- Report notifications when reports are ready
+- Observers for report lifecycle
+- API resources for report data
+- Report template management
+- Report caching mechanisms
+
+### Risks
+- **Medium Risk**: Business logic in controller - violates SRP, harder to test and reuse
+- **Medium Risk**: No form requests - validation mixed with controller logic
+- **Low Risk**: No events - cannot trigger notifications or side effects when reports complete
+- **Low Risk**: No observers - report changes won't trigger related updates
+- **Low Risk**: No API resources - limits external integrations
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Reports\ReportController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Report.php" />
+- <ref_file file="C:\thelab\car-listings\app\Jobs\GenerateReports.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\ReportPolicy.php" />
+
+---
+
+## Module 14: Reservations
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Reservations/ReservationController.php` | Complete | Full CRUD + custom actions (confirm, cancel, convertToSale). |
+| **Services** | `app/Services/Reservations\ReservationService.php` | Partially Implemented | Uses ManagesEloquentModels trait, no custom logic. |
+| **Actions** | `app/Actions/Reservations/CreateReservationAction.php` | Complete | Creates reservation and dispatches event. |
+| **Actions** | `app/Actions/Reservations/CancelReservationAction.php` | Complete | Cancels reservation. |
+| **Models** | `app/Models\VehicleReservation.php` | Complete | Has relationships, scopes, helper methods (confirm, cancel, expire). |
+| **Form Requests** | `app/Http/Requests/Reservations/StoreReservationRequest.php` | Complete | Proper validation for all fields. |
+| **Form Requests** | `app/Http/Requests/Reservations/UpdateReservationRequest.php` | Complete | Proper validation for updates. |
+| **Policies** | `app/Policies/VehicleReservationPolicy.php` | Complete | All standard and custom methods with branch awareness. |
+| **Jobs** | `app/Jobs/CleanupOldReservations.php` | Complete | Comprehensive cleanup job with configurable parameters. |
+| **Events** | `app/Events/ReservationCreated.php` | Complete | Proper event class. |
+| **Observers** | N/A | Unreachable | No reservation observers found. |
+| **Resources** | N/A | Unreachable | No API resources found. |
+| **Notifications** | `app/Notifications\ReservationConfirmed.php` | Complete | Notification for confirmed reservations. |
+| **Notifications** | `app/Notifications\ReservationCancelled.php` | Complete | Notification for cancelled reservations. |
+
+### Backend Completion: **75%**
+
+### Justification
+The Reservations module is well-implemented with comprehensive CRUD, custom actions, proper events, notifications, and background cleanup jobs. The main gaps are missing observers and API resources.
+
+### Missing Functionality
+- Reservation expiration action (ExpireReservationAction)
+- Reservation observers for side effects
+- API resources for external integrations
+- Reservation reminder notifications (before expiration)
+- Reservation conflict checking logic
+- Reservation capacity management
+- Reservation deposit processing logic in service layer
+
+### Risks
+- **Low Risk**: No observers - reservation changes won't automatically trigger side effects
+- **Low Risk**: No API resources - limits external system integration
+- **Low Risk**: No reminder notifications - customers may forget reservations
+- **Low Risk**: Service layer minimal - business logic in controller actions
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Reservations\ReservationController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Reservations\ReservationService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\VehicleReservation.php" />
+- <ref_file file="C:\thelab\car-listings\app\Actions\Reservations\CreateReservationAction.php" />
+- <ref_file file="C:\thelab\car-listings\app\Jobs\CleanupOldReservations.php" />
+- <ref_file file="C:\thelab\car-listings\app\Events\ReservationCreated.php" />
+
+---
+
+## Module 15: Reviews
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Reviews/ReviewController.php` | Complete | Full CRUD operations with proper authorization. |
+| **Services** | `app/Services/Reviews\ReviewService.php` | Partially Implemented | Uses ManagesEloquentModels trait, no custom logic. |
+| **Actions** | N/A | Unreachable | No review actions found. |
+| **Models** | `app/Models\Review.php` | Complete | Has soft deletes, relationships, scopes, proper casts. |
+| **Form Requests** | `app/Http/Requests/Reviews\StoreReviewRequest.php` | Broken | Rules are incomplete - missing rating, body, vehicle_id validation. |
+| **Form Requests** | `app/Http/Requests/Reviews\UpdateReviewRequest.php` | Broken | Same issues as StoreReviewRequest. |
+| **Policies** | `app/Policies/ReviewPolicy.php` | Complete | All standard and custom methods with branch awareness. |
+| **Jobs** | N/A | Unreachable | No review-related jobs found. |
+| **Events** | N/A | Unreachable | No review events found. |
+| **Observers** | N/A | Unreachable | No review observers found. |
+| **Resources** | N/A | Unreachable | No API resources found. |
+| **Notifications** | N/A | Unreachable | No review notifications found. |
+
+### Backend Completion: **35%**
+
+### Justification
+The Reviews module has basic structure but critical validation is broken in form requests. Missing review approval workflow, moderation actions, and notification system. The service layer lacks business logic for review moderation.
+
+### Missing Functionality
+- Complete form request validation (rating range, body length, vehicle_id required)
+- Review approval actions (ApproveReviewAction, RejectReviewAction)
+- Review moderation logic in service layer
+- Review lifecycle events (ReviewSubmitted, ReviewApproved, ReviewRejected)
+- Review notifications to vehicle owners
+- Background jobs for review moderation
+- Review spam detection
+- Observers for review-related side effects (e.g., updating vehicle rating)
+- API resources for public review APIs
+- Review flagging/reporting system
+
+### Risks
+- **Critical Risk**: Form request validation is broken - can create invalid reviews (missing rating, body)
+- **High Risk**: No approval workflow - reviews may be published without moderation
+- **High Risk**: No rating validation - can submit invalid rating values
+- **Medium Risk**: No events - cannot trigger notifications or side effects
+- **Medium Risk**: No observers - review approval won't update vehicle ratings
+- **Low Risk**: No API resources - limits external integrations
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Reviews\ReviewController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Reviews\ReviewService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Review.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\Reviews\StoreReviewRequest.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\ReviewPolicy.php" />
+
+---
+
+## Module 16: Sales (Invoices, Receipts, Refunds)
+
+### File Classifications
+
+| Category | File | Classification | Justification |
+|----------|------|----------------|---------------|
+| **Controllers** | `app/Http/Controllers/Admin/Sales/InvoiceController.php` | Complete | Full CRUD + custom actions (finalize, cancel). |
+| **Controllers** | `app/Http/Controllers/Admin/Sales\ReceiptController.php` | Complete | Full CRUD operations. |
+| **Controllers** | `app/Http/Controllers/Admin/Sales/RefundController.php` | Complete | Full CRUD + custom action (process). |
+| **Services** | `app/Services/Sales/InvoiceService.php` | Complete | Has custom logic (invoice number generation, vehicle status updates). |
+| **Services** | `app/Services/Sales\ReceiptService.php` | Complete | Has custom logic (receipt number generation). |
+| **Services** | `app/Services/Sales/RefundService.php` | Complete | Has custom logic (refund number generation, payment status updates). |
+| **Actions** | N/A | Unreachable | No sales actions found. |
+| **Models** | `app/Models\Invoice.php` | Complete | Has relationships, scopes, proper casts. |
+| **Models** | `app/Models\Receipt.php` | Complete | Has relationships, scopes, proper casts. |
+| **Models** | `app/Models\Refund.php` | Complete | Has relationships, scopes, proper casts. |
+| **Form Requests** | `app/Http/Requests/Sales/StoreInvoiceRequest.php` | Complete | Comprehensive validation with custom validator. |
+| **Form Requests** | `app/Http/Requests/Sales/UpdateInvoiceRequest.php` | Complete | Proper validation with custom validator. |
+| **Form Requests** | `app/Http/Requests/Sales/StoreReceiptRequest.php` | Complete | Validation with payment amount check. |
+| **Form Requests** | `app/Http/Requests/Sales/UpdateReceiptRequest.php` | Complete | Proper validation. |
+| **Form Requests** | `app/Http/Requests/Sales/StoreRefundRequest.php` | Complete | Validation with payment amount check. |
+| **Form Requests** | `app/Http/Requests/Sales/UpdateRefundRequest.php` | Complete | Proper validation. |
+| **Policies** | `app/Policies/InvoicePolicy.php` | Complete | All standard methods with branch awareness. |
+| **Policies** | `app/Policies\ReceiptPolicy.php` | Complete | All standard methods with branch awareness. |
+| **Policies** | `app/Policies\RefundPolicy.php` | Complete | All standard methods with branch awareness. |
+| **Jobs** | N/A | Unreachable | No sales-related jobs found. |
+| **Events** | N/A | Unreachable | No sales events found. |
+| **Observers** | N/A | Unreachable | No sales observers found. |
+| **Resources** | N/A | Unreachable | No API resources found. |
+| **Notifications** | N/A | Unreachable | No sales notifications found. |
+
+### Backend Completion: **65%**
+
+### Justification
+The Sales module is the most complete with three comprehensive controllers, well-implemented services with custom business logic (number generation, status updates), and complete form requests with custom validation. Main gaps are missing actions, events, jobs, observers, and notifications.
+
+### Missing Functionality
+- Sales actions (FinalizeInvoiceAction, ProcessRefundAction)
+- Invoice generation events (InvoiceCreated, InvoicePaid, InvoiceCancelled)
+- Receipt generation events (ReceiptIssued)
+- Refund processing events (RefundProcessed, RefundFailed)
+- Background jobs for invoice generation, payment reminders
+- Sales notifications to customers (invoice sent, payment received, refund processed)
+- Observers for sales lifecycle (e.g., automatic invoice generation on payment)
+- API resources for external integrations
+- Invoice PDF generation logic
+- Tax calculation logic in service layer
+
+### Risks
+- **Medium Risk**: No events - cannot trigger notifications or side effects
+- **Medium Risk**: No observers - sales changes won't automatically update related records
+- **Medium Risk**: No notifications - customers won't receive invoice/payment confirmations
+- **Low Risk**: No background jobs - large batch operations may block requests
+- **Low Risk**: No API resources - limits external integrations
+- **Low Risk**: No PDF generation - invoices cannot be generated as PDFs
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Sales\InvoiceController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Sales\ReceiptController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Sales\RefundController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Sales\InvoiceService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Sales\ReceiptService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Sales\RefundService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Invoice.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Receipt.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Refund.php" />
+
+---
+
+## UPDATED SUMMARY
+
+### Overall Module Completion Rankings (16 Modules):
+
+1. **Branches**: 95% - Simple but complete
+2. **Imports**: 90% - Most complete with comprehensive job processing
+3. **Admin (Audit Logs)**: 90% - Well-implemented, orphaned Performance page
+4. **Finance**: 82% - Good workflow, missing integrations
+5. **CRM**: 80% - Solid pipeline, missing automation
+6. **Reservations**: 75% - Well-implemented with custom actions and notifications
+7. **Customers**: 78% - Good document management, missing segmentation
+8. **CMS**: 75% - Good structure, services need customization
+9. **Blog**: 75% - Good structure, validation issues
+10. **Sales**: 65% - Best service implementation, missing events/notifications
+11. **Dashboard**: 60% - Great service, incomplete widget management
+12. **Reports**: 50% - Excellent controller, violates SRP
+13. **Analytics**: 50% - Significantly incomplete, non-functional
+14. **Payments**: 45% - No payment processing logic
+15. **Promotions**: 40% - Broken validation, critical issues
+16. **Reviews**: 35% - Broken validation, no approval workflow
+
+### Critical Issues Across All Modules:
+
+1. **Broken Form Request Validation**: Promotions and Reviews modules have critically broken validation
+2. **No Payment Processing**: Payments module lacks payment gateway integration and processing logic
+3. **No API Resources**: Application uses Inertia but has no API resources for mobile app or API integration
+4. **Missing Observers**: Only 3 observers exist - no module-specific observers for automation
+5. **Insufficient Validation**: Several form requests have minimal validation (Analytics, BlogPost, CmsPage, Lead, Customer)
+6. **No Caching Layer**: Dashboard and CMS data could benefit from caching
+7. **Limited Job Queue**: Only 7 jobs exist - missing automation for follow-ups, notifications, data processing
+8. **Orphaned Frontend Pages**: Performance page exists without backend implementation
+9. **SRP Violations**: Reports module has business logic in controller instead of service layer
+
+### Updated Recommendations:
+
+#### Priority 1 (Critical - Fix Immediately)
+1. **Fix Promotions form request validation** - add type, value, starts_at, ends_at, rules validation
+2. **Fix Reviews form request validation** - add rating (1-5), body (required), vehicle_id validation
+3. **Add payment processing logic to PaymentService** - critical for financial operations
+4. **Add payment gateway integration logic** - cannot process actual payments
+5. **Fix Analytics module** - implement CRUD operations and proper validation
+
+#### Priority 2 (High - Important for Production)
+1. **Extract Reports controller logic into ReportService** - fix SRP violation
+2. **Add form request classes for Reports module** - separate validation from controller
+3. **Add review approval workflow with actions** - moderate reviews before publishing
+4. **Add promotion validation actions** - validate date ranges and values
+5. **Add sales events** (InvoiceCreated, InvoicePaid, RefundProcessed)
+6. **Enhance form request validation** for BlogPost, CmsPage, Lead, and Customer
+
+#### Priority 3 (Medium - Enhances Functionality)
+1. **Add observers for all modules** to handle side effects
+2. **Add API resources for mobile app support**
+3. **Add notification classes for all modules**
+4. **Add background jobs for async operations**
+5. **Implement caching for Dashboard and CMS data**
+6. **Complete or remove orphaned Performance page**
+7. **Add automated follow-up jobs for CRM**
+8. **Implement credit check integration for Finance**
+
+#### Priority 4 (Low - Nice to Have)
+1. **Add PDF generation for invoices**
+2. **Add report caching mechanisms**
+3. **Add spam detection for reviews**
+4. **Add reminder notifications for reservations**
+5. **Add promotion usage tracking**
+6. **Add social media integration for Blog**
+7. **Add customer segmentation**
+8. **Add loan payment processing jobs**
+9. **Create shipment tracking polling job**
+
+---
+
+## Additional Files Inspected (Modules 11-16)
+
+### Controllers
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Payments\PaymentController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Promotions\PromotionController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Reports\ReportController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Reservations\ReservationController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Reviews\ReviewController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Sales\InvoiceController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Sales\ReceiptController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Sales\RefundController.php
+
+### Services
+- C:\thelab\car-listings\app\Services\Payments\PaymentService.php
+- C:\thelab\car-listings\app\Services\Promotions\PromotionService.php
+- C:\thelab\car-listings\app\Services\Reservations\ReservationService.php
+- C:\thelab\car-listings\app\Services\Reviews\ReviewService.php
+- C:\thelab\car-listings\app\Services\Sales\InvoiceService.php
+- C:\thelab\car-listings\app\Services\Sales\ReceiptService.php
+- C:\thelab\car-listings\app\Services\Sales\RefundService.php
+
+### Models
+- C:\thelab\car-listings\app\Models\Payment.php
+- C:\thelab\car-listings\app\Models\Promotion.php
+- C:\thelab\car-listings\app\Models\PromotionVehicle.php
+- C:\thelab\car-listings\app\Models\Report.php
+- C:\thelab\car-listings\app\Models\VehicleReservation.php
+- C:\thelab\car-listings\app\Models\Review.php
+- C:\thelab\car-listings\app\Models\Invoice.php
+- C:\thelab\car-listings\app\Models\Receipt.php
+- C:\thelab\car-listings\app\Models\Refund.php
+
+### Additional Files
+- C:\thelab\car-listings\app\Jobs\GenerateReports.php
+- C:\thelab\car-listings\app\Jobs\CleanupOldReservations.php
+- C:\thelab\car-listings\app\Actions\Reservations\CreateReservationAction.php
+- C:\thelab\car-listings\app\Actions\Reservations\CancelReservationAction.php
+- C:\thelab\car-listings\app\Actions\Promotions\PublishPromotionAction.php
+- C:\thelab\car-listings\app\Events\ReservationCreated.php
+- C:\thelab\car-listings\app\Events\PromotionCreated.php
+- C:\thelab\car-listings\app\Notifications\ReservationConfirmed.php
+- C:\thelab\car-listings\app\Notifications\ReservationCancelled.php
+
+---
+
+## Updated Completion Percentage
+- **Phase 3 Backend Module Audit**: 100% complete
+- **Modules Audited**: 16 out of 21 admin modules
+- **Overall Backend Audit Coverage**: 76.2% (16/21 admin modules)
+
+---
+
+## Module 17: Settings
+
+### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Admin/Settings/SettingController.php` | Complete | Full CRUD with service integration. |
+|| **Services** | `app/Services/Settings/SettingService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+|| **Actions** | N/A | Unreachable | No Settings-specific actions found. |
+|| **Models** | `app/Models/Setting.php` | Complete | Model with fillable, casts (boolean), recent scope. |
+|| **Form Requests** | `app/Http/Requests/Settings/StoreSettingRequest.php` | Partially Implemented | Missing is_public validation (model has this field). |
+|| **Form Requests** | `app/Http/Requests/Settings/UpdateSettingRequest.php` | Partially Implemented | Same issues as StoreSettingRequest. |
+|| **Policies** | `app/Policies/SettingPolicy.php` | Complete | Full policy with role-based checks (admin/manager for update/delete). |
+|| **Jobs** | N/A | Unreachable | No Settings-specific jobs. |
+|| **Events** | N/A | Unreachable | No Settings-specific events. |
+|| **Observers** | `app/Observers/SettingObserver.php` | Complete | Excellent audit logging with sensitive data redaction. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | N/A | Unreachable | No Settings notifications. |
+
+### Backend Completion: **75%**
+
+### Justification
+Settings module has solid CRUD implementation with excellent audit logging via observer. Service layer lacks custom business logic. Form requests missing is_public validation. Missing actions for bulk operations and setting cache management.
+
+### Missing Functionality
+- **SettingService**: No custom logic (setting caching, group-based retrieval, type casting)
+- **Form Requests**: Missing is_public field validation
+- **Actions**: No BulkUpdateSettingsAction, ResetSettingsAction
+- **Events**: No SettingChanged, SettingGroupUpdated events
+- **Jobs**: No setting cache refresh jobs
+- **Notifications**: No critical setting change notifications
+
+### Risks
+- **Medium Risk**: No caching layer - settings queries on every request
+- **Low Risk**: Missing is_public validation - could set incorrect visibility
+- **Low Risk**: No bulk operations - manual updates required for multiple settings
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Settings\SettingController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Settings\SettingService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Setting.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\SettingPolicy.php" />
+- <ref_file file="C:\thelab\car-listings\app\Observers\SettingObserver.php" />
+
+---
+
+## Module 18: TradeIns
+
+### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Admin/TradeIns/TradeInController.php` | Complete | Full CRUD + custom actions (approve, reject, convertToInventory). |
+|| **Controllers** | `app/Http/Controllers/Admin/TradeIns/InspectionController.php` | Complete | Full CRUD + complete action. |
+|| **Controllers** | `app/Http/Controllers/Admin/TradeIns/OfferController.php` | Complete | Full CRUD + accept/reject actions. |
+|| **Controllers** | `app/Http/Controllers/Admin/TradeIns/ValuationController.php` | Complete | Full CRUD operations. |
+|| **Services** | `app/Services/TradeIns/TradeInService.php` | Complete | Custom paginate with filters, approve/reject/convertToInventory methods. |
+|| **Services** | `app/Services/TradeIns/InspectionService.php` | Complete | Custom paginate with filters, complete method with status updates. |
+|| **Services** | `app/Services/TradeIns/OfferService.php` | Complete | Custom paginate with filters, accept/reject methods. |
+|| **Services** | `app/Services/TradeIns/ValuationService.php` | Complete | Custom paginate with filters. |
+|| **Actions** | `app/Actions/TradeIns/ApproveTradeInAction.php` | Complete | Approves trade-in with event dispatch. |
+|| **Actions** | `app/Actions/TradeIns/CreateTradeInRequestAction.php` | Complete | Creates trade-in with event dispatch. |
+|| **Actions** | `app/Actions/TradeIns/RejectTradeInAction.php` | Complete | Rejects trade-in. |
+|| **Models** | `app/Models/TradeInRequest.php` | Complete | Model with BranchAware trait, fillable, casts, relationships, multiple status helper methods. |
+|| **Models** | `app/Models/TradeInInspection.php` | Complete | Model with fillable, casts, relationships, status helper methods. |
+|| **Models** | `app/Models/TradeInOffer.php` | Complete | Model with fillable, casts, relationships, status helper methods. |
+|| **Models** | `app/Models/TradeInValuation.php` | Complete | Model with fillable, casts, relationships. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/StoreTradeInRequest.php` | Broken | Uses generic template - missing actual validation for make, model, year, vin, mileage, etc. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/UpdateTradeInRequest.php` | Broken | Same issues as StoreTradeInRequest. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/StoreInspectionRequest.php` | Broken | Uses generic template - missing actual validation. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/UpdateInspectionRequest.php` | Broken | Same issues as StoreInspectionRequest. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/StoreOfferRequest.php` | Broken | Uses generic template - missing actual validation. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/UpdateOfferRequest.php` | Broken | Same issues as StoreOfferRequest. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/StoreValuationRequest.php` | Broken | Uses generic template - missing actual validation. |
+|| **Form Requests** | `app/Http/Requests/TradeIns/UpdateValuationRequest.php` | Broken | Same issues as StoreValuationRequest. |
+|| **Policies** | `app/Policies/TradeInRequestPolicy.php` | Complete | Full policy implementation. |
+|| **Policies** | `app/Policies/TradeInInspectionPolicy.php` | Complete | Full policy implementation. |
+|| **Policies** | `app/Policies/TradeInOfferPolicy.php` | Complete | Full policy implementation. |
+|| **Policies** | `app/Policies/TradeInValuationPolicy.php` | Complete | Full policy implementation. |
+|| **Jobs** | N/A | Unreachable | No TradeIns-specific jobs. |
+|| **Events** | `app/Events/TradeInApproved.php` | Complete | Event for trade-in approval. |
+|| **Events** | `app/Events/TradeInSubmitted.php` | Complete | Event for trade-in submission. |
+|| **Observers** | N/A | Unreachable | No TradeIns observers. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | `app/Notifications/TradeInApproved.php` | Complete | Notification for approval. |
+|| **Notifications** | `app/Notifications/TradeInReceived.php` | Complete | Notification for received trade-in. |
+
+### Backend Completion: **65%**
+
+### Justification
+TradeIns module has excellent controller and service implementation with comprehensive workflow (request → valuation → inspection → offer → approval). However, ALL form requests are broken using generic templates instead of actual validation. Missing jobs for automated workflows and observers for side effects.
+
+### Missing Functionality
+- **Form Requests**: All 8 form requests are broken - need actual validation for all fields
+- **Jobs**: No automated valuation jobs, inspection scheduling jobs, offer expiration jobs
+- **Events**: Missing TradeInRejected, TradeInConverted events
+- **Observers**: No observers for automatic status transitions
+- **Actions**: Missing ScheduleInspectionAction, GenerateValuationAction
+- **Integrations**: No external valuation API integrations (Kelley Blue Book, Edmunds, etc.)
+
+### Risks
+- **Critical Risk**: All form requests are broken - can submit invalid data (missing make, model, year, VIN validation)
+- **High Risk**: No VIN validation - can submit invalid vehicle identification numbers
+- **High Risk**: No mileage validation - can submit invalid mileage values
+- **Medium Risk**: No automated valuation - manual process only
+- **Medium Risk**: No inspection scheduling - manual coordination required
+- **Low Risk**: No observers - status changes won't trigger automated workflows
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\TradeInController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\InspectionController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\OfferController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\ValuationController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\TradeIns\TradeInService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\TradeIns\InspectionService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\TradeIns\OfferService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\TradeIns\ValuationService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\TradeInRequest.php" />
+- <ref_file file="C:\thelab\car-listings\app\Actions\TradeIns\ApproveTradeInAction.php" />
+- <ref_file file="C:\thelab\car-listings\app\Events\TradeInApproved.php" />
+- <ref_file file="C:\thelab\car-listings\app\Notifications\TradeInApproved.php" />
+
+---
+
+## Module 19: Users
+
+### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Admin/Users/UserController.php` | Complete | Full CRUD with role and branch loading. |
+|| **Controllers** | `app/Http/Controllers/Admin/Users/RoleController.php` | Complete | Full CRUD with permission sync. |
+|| **Controllers** | `app/Http/Controllers/Admin/Users/PermissionController.php` | Complete | Full CRUD operations. |
+|| **Services** | `app/Services/Users/UserService.php` | Complete | Custom paginate with filters, custom create/update with role handling. |
+|| **Services** | `app/Services/Users/RoleService.php` | Complete | Custom paginate with filters, custom create/update with permission sync. |
+|| **Services** | `app/Services/Users/PermissionService.php` | Complete | Custom paginate with filters, module-based ordering. |
+|| **Actions** | N/A | Unreachable | No User-specific actions found. |
+|| **Models** | `app/Models/User.php` | Complete | Full model with fillable, casts, relationships, isAdmin helper. |
+|| **Models** | `app/Models/Role.php` | Complete | Model with fillable, many-to-many relationship to permissions. |
+|| **Models** | `app/Models/Permission.php` | Complete | Model with fillable, many-to-many relationship to roles. |
+|| **Form Requests** | `app/Http/Requests/Users/StoreUserRequest.php` | Complete | Comprehensive validation for all user fields. |
+|| **Form Requests** | `app/Http/Requests/Users/UpdateUserRequest.php` | Complete | Proper validation for user updates. |
+|| **Form Requests** | `app/Http/Requests/Users/StoreRoleRequest.php` | Complete | Validation for role creation. |
+|| **Form Requests** | `app/Http/Requests/Users/UpdateRoleRequest.php` | Complete | Validation for role updates. |
+|| **Form Requests** | `app/Http/Requests/Users/StorePermissionRequest.php` | Complete | Validation for permission creation. |
+|| **Form Requests** | `app/Http/Requests/Users/UpdatePermissionRequest.php` | Complete | Validation for permission updates. |
+|| **Policies** | `app/Policies/UserPolicy.php` | Complete | Full policy with role-based checks and self-update allowed. |
+|| **Policies** | `app/Policies/RolePolicy.php` | Complete | Full policy implementation. |
+|| **Policies** | `app/Policies/PermissionPolicy.php` | Complete | Full policy implementation. |
+|| **Jobs** | N/A | Unreachable | No User-specific jobs. |
+|| **Events** | `app/Events/RoleAssigned.php` | Complete | Event for role assignment. |
+|| **Observers** | `app/Observers/UserObserver.php` | Complete | Observer for user lifecycle events. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | N/A | Unreachable | No User-specific notifications (should have welcome, password reset). |
+
+### Backend Completion: **85%**
+
+### Justification
+Users module is well-implemented with comprehensive CRUD, proper role/permission management, and custom service logic. Missing user lifecycle notifications and jobs for user maintenance tasks.
+
+### Missing Functionality
+- **Actions**: No AssignRoleAction, RevokePermissionAction, DeactivateUserAction
+- **Jobs**: No user cleanup jobs, inactive user notification jobs
+- **Events**: Missing UserCreated, UserUpdated, UserDeleted events
+- **Notifications**: No WelcomeUser notification, PasswordReset notification
+- **Observers**: No observer for automatic role assignment on user creation
+- **Integrations**: No LDAP/SSO integration
+
+### Risks
+- **Medium Risk**: No welcome notification - users don't receive onboarding info
+- **Low Risk**: No user cleanup - inactive accounts remain in system
+- **Low Risk**: No LDAP/SSO - manual user management only
+- **Low Risk**: No API resources - limits external integrations
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Users\UserController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Users\RoleController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\Users\PermissionController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Users\UserService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Users\RoleService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\Users\PermissionService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\User.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\UserPolicy.php" />
+- <ref_file file="C:\thelab\car-listings\app\Observers\UserObserver.php" />
+
+---
+
+## Module 20: VehicleFeatures
+
+### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Admin/VehicleFeatures\VehicleFeatureController.php` | Complete | Full CRUD with service integration. |
+|| **Services** | `app/Services/VehicleFeatures\VehicleFeatureService.php` | Partially Implemented | Only uses ManagesEloquentModels trait - no custom logic. |
+|| **Actions** | N/A | Unreachable | No VehicleFeatures-specific actions found. |
+|| **Models** | `app/Models\VehicleFeature.php` | Complete | Model with fillable, casts (boolean), scopes (recent, active). |
+|| **Form Requests** | `app/Http/Requests/VehicleFeatures/StoreVehicleFeatureRequest.php` | Broken | Uses generic template - missing actual validation for name, slug, category, is_active. |
+|| **Form Requests** | `app/Http/Requests/VehicleFeatures/UpdateVehicleFeatureRequest.php` | Broken | Same issues as StoreVehicleFeatureRequest. |
+|| **Policies** | `app/Policies/VehicleFeaturePolicy.php` | Complete | Full policy with role-based checks. |
+|| **Jobs** | N/A | Unreachable | No VehicleFeatures-specific jobs. |
+|| **Events** | N/A | Unreachable | No VehicleFeatures-specific events. |
+|| **Observers** | N/A | Unreachable | No VehicleFeatures observers. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | N/A | Unreachable | No VehicleFeatures notifications. |
+
+### Backend Completion: **40%**
+
+### Justification
+VehicleFeatures module has basic structure but critical validation is broken in form requests. Service layer lacks custom business logic. Missing actions for feature management and no observers for cache invalidation.
+
+### Missing Functionality
+- **Form Requests**: Missing validation for name (required), slug (unique), category (required), is_active (boolean)
+- **Services**: No custom logic (slug generation, category management, feature usage tracking)
+- **Actions**: No GenerateSlugAction, BulkUpdateFeaturesAction
+- **Events**: No FeatureCreated, FeatureUpdated events
+- **Jobs**: No feature cleanup jobs, unused feature detection
+- **Observers**: No observers for cache invalidation
+- **API Resources**: No API resources for feature endpoints
+
+### Risks
+- **Critical Risk**: Form request validation is broken - can create invalid features (missing name, slug, category)
+- **High Risk**: No slug generation - must be manually provided
+- **High Risk**: No slug uniqueness validation - can create duplicate slugs
+- **Medium Risk**: No category validation - can create features with invalid categories
+- **Low Risk**: No feature usage tracking - cannot identify unused features
+- **Low Risk**: No caching - features queried on every request
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\VehicleFeatures\VehicleFeatureController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\VehicleFeatures\VehicleFeatureService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\VehicleFeature.php" />
+- <ref_file file="C:\thelab\car-listings\app\Policies\VehicleFeaturePolicy.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\VehicleFeatures\StoreVehicleFeatureRequest.php" />
+
+---
+
+## Module 21: VehicleGallery
+
+### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Admin/VehicleGallery\VehicleGalleryController.php` | Complete | Full CRUD with service integration. |
+|| **Services** | `app/Services/VehicleGallery\VehicleGalleryService.php` | Complete | Uses trait + custom create with image processing jobs (ProcessVehicleImages, GenerateThumbnails). |
+|| **Actions** | `app/Actions/VehicleGallery/UploadVehicleImagesAction.php` | Complete | Wraps service create method. |
+|| **Models** | `app/Models\VehicleGallery.php` | Complete | Model with BranchAware trait, fillable, casts, relationship to vehicle. |
+|| **Form Requests** | `app/Http/Requests/VehicleGallery/StoreVehicleGalleryRequest.php` | Broken | Uses generic template - missing actual validation for vehicle_id, path, alt_text, is_primary, sort_order. |
+|| **Form Requests** | `app/Http/Requests/VehicleGallery/UpdateVehicleGalleryRequest.php` | Broken | Same issues as StoreVehicleGalleryRequest. |
+|| **Policies** | `app/Policies/VehicleGalleryPolicy.php` | Complete | Full policy with role-based checks. |
+|| **Jobs** | `app/Jobs/ProcessVehicleImages.php` | Complete | Comprehensive image processing job. |
+|| **Jobs** | `app/Jobs/GenerateThumbnails.php` | Complete | Thumbnail generation job. |
+|| **Events** | N/A | Unreachable | No VehicleGallery-specific events. |
+|| **Observers** | N/A | Unreachable | No VehicleGallery observers. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | N/A | Unreachable | No VehicleGallery notifications. |
+
+### Backend Completion: **60%**
+
+### Justification
+VehicleGallery module has excellent service implementation with image processing jobs. However, form requests are broken using generic templates. Missing events for image lifecycle and observers for cache invalidation.
+
+### Missing Functionality
+- **Form Requests**: Missing validation for vehicle_id (required, exists), path (required, image file), alt_text (string), is_primary (boolean), sort_order (integer)
+- **Events**: No ImageUploaded, ImageProcessed, ImageDeleted events
+- **Observers**: No observers for vehicle primary image management
+- **Actions**: No SetPrimaryImageAction, ReorderImagesAction
+- **Notifications**: No image processing failure notifications
+- **API Resources**: No API resources for image endpoints
+
+### Risks
+- **Critical Risk**: Form request validation is broken - can upload invalid images (missing vehicle_id, path validation)
+- **High Risk**: No file type validation - can upload non-image files
+- **High Risk**: No file size validation - can upload excessively large files
+- **Medium Risk**: No primary image enforcement - can have multiple or no primary images
+- **Low Risk**: No events - cannot trigger side effects on image changes
+- **Low Risk**: No observers - image changes won't update vehicle cache
+
+### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Admin\VehicleGallery\VehicleGalleryController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Services\VehicleGallery\VehicleGalleryService.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\VehicleGallery.php" />
+- <ref_file file="C:\thelab\car-listings\app\Actions\VehicleGallery\UploadVehicleImagesAction.php" />
+- <ref_file file="C:\thelab\car-listings\app\Jobs\ProcessVehicleImages.php" />
+- <ref_file file="C:\thelab\car-listings\app\Jobs\GenerateThumbnails.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\VehicleGallery\StoreVehicleGalleryRequest.php" />
+
+---
+
+## FINAL SUMMARY - All 21 Admin Modules
+
+### Overall Module Completion Rankings (21 Modules):
+
+1. **Branches**: 95% - Simple but complete
+2. **Imports**: 90% - Most complete with comprehensive job processing
+3. **Admin (Audit Logs)**: 90% - Well-implemented, orphaned Performance page
+4. **Users**: 85% - Excellent RBAC implementation, missing notifications
+5. **Finance**: 82% - Good workflow, missing integrations
+6. **CRM**: 80% - Solid pipeline, missing automation
+7. **Reservations**: 75% - Well-implemented with custom actions and notifications
+8. **Customers**: 78% - Good document management, missing segmentation
+9. **CMS**: 75% - Good structure, services need customization
+10. **Blog**: 75% - Good structure, validation issues
+11. **Sales**: 65% - Best service implementation, missing events/notifications
+12. **TradeIns**: 65% - Excellent workflow, ALL form requests broken
+13. **Dashboard**: 60% - Great service, incomplete widget management
+14. **VehicleGallery**: 60% - Excellent image processing, form requests broken
+15. **Reports**: 50% - Excellent controller, violates SRP
+16. **Analytics**: 50% - Significantly incomplete, non-functional
+17. **Payments**: 45% - No payment processing logic
+18. **Settings**: 75% - Excellent audit logging, missing caching
+19. **Promotions**: 40% - Broken validation, critical issues
+20. **Reviews**: 35% - Broken validation, no approval workflow
+21. **VehicleFeatures**: 40% - Broken validation, no slug generation
+
+### Critical Issues Across All Modules (Updated):
+
+1. **Broken Form Request Validation**: Promotions, Reviews, TradeIns (8 requests), VehicleFeatures, VehicleGallery - 14 form requests critically broken
+2. **No Payment Processing**: Payments module lacks payment gateway integration and processing logic
+3. **No API Resources**: Application uses Inertia but has no API resources for mobile app or API integration
+4. **Missing Observers**: Only 3 observers exist (User, Setting, Permission) - no module-specific observers for automation
+5. **Insufficient Validation**: Several form requests have minimal validation (Analytics, BlogPost, CmsPage, Lead, Customer)
+6. **No Caching Layer**: Dashboard, CMS, Settings data could benefit from caching
+7. **Limited Job Queue**: Only 7 jobs exist - missing automation for follow-ups, notifications, data processing
+8. **Orphaned Frontend Pages**: Performance page exists without backend implementation
+9. **SRP Violations**: Reports module has business logic in controller instead of service layer
+10. **Missing File Type Validation**: VehicleGallery and document uploads lack proper file validation
+
+### Updated Recommendations:
+
+#### Priority 1 (Critical - Fix Immediately)
+1. **Fix ALL broken form request validations**:
+   - TradeIns: 8 form requests (Store/Update for Request, Inspection, Offer, Valuation)
+   - VehicleFeatures: 2 form requests (missing name, slug, category, is_active)
+   - VehicleGallery: 2 form requests (missing vehicle_id, path, file validation)
+   - Promotions: 2 form requests (missing type, value, starts_at, ends_at)
+   - Reviews: 2 form requests (missing rating, body, vehicle_id)
+2. **Add payment processing logic to PaymentService** - critical for financial operations
+3. **Add payment gateway integration logic** - cannot process actual payments
+4. **Fix Analytics module** - implement CRUD operations and proper validation
+5. **Add file type and size validation** for all upload endpoints (VehicleGallery, documents)
+
+#### Priority 2 (High - Important for Production)
+1. **Extract Reports controller logic into ReportService** - fix SRP violation
+2. **Add form request classes for Reports module** - separate validation from controller
+3. **Add review approval workflow with actions** - moderate reviews before publishing
+4. **Add promotion validation actions** - validate date ranges and values
+5. **Add sales events** (InvoiceCreated, InvoicePaid, RefundProcessed)
+6. **Enhance form request validation** for BlogPost, CmsPage, Lead, and Customer
+7. **Add VIN validation** for TradeIns requests
+8. **Add slug generation logic** for VehicleFeatures
+
+#### Priority 3 (Medium - Enhances Functionality)
+1. **Add observers for all modules** to handle side effects
+2. **Add API resources for mobile app support**
+3. **Add notification classes for all modules** (especially Users welcome notification)
+4. **Add background jobs for async operations**
+5. **Implement caching for Dashboard, CMS, and Settings data**
+6. **Complete or remove orphaned Performance page**
+7. **Add automated follow-up jobs for CRM**
+8. **Implement credit check integration for Finance**
+9. **Add external valuation API integrations** for TradeIns
+
+#### Priority 4 (Low - Nice to Have)
+1. **Add PDF generation for invoices**
+2. **Add report caching mechanisms**
+3. **Add spam detection for reviews**
+4. **Add reminder notifications for reservations**
+5. **Add promotion usage tracking**
+6. **Add social media integration for Blog**
+7. **Add customer segmentation**
+8. **Add loan payment processing jobs**
+9. **Create shipment tracking polling job**
+10. **Add LDAP/SSO integration for Users**
+
+---
+
+## Additional Files Inspected (Modules 17-21)
+
+### Controllers
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Settings\SettingController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\TradeInController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\InspectionController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\OfferController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\TradeIns\ValuationController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Users\UserController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Users\RoleController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\Users\PermissionController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\VehicleFeatures\VehicleFeatureController.php
+- C:\thelab\car-listings\app\Http\Controllers\Admin\VehicleGallery\VehicleGalleryController.php
+
+### Services
+- C:\thelab\car-listings\app\Services\Settings\SettingService.php
+- C:\thelab\car-listings\app\Services\TradeIns\TradeInService.php
+- C:\thelab\car-listings\app\Services\TradeIns\InspectionService.php
+- C:\thelab\car-listings\app\Services\TradeIns\OfferService.php
+- C:\thelab\car-listings\app\Services\TradeIns\ValuationService.php
+- C:\thelab\car-listings\app\Services\Users\UserService.php
+- C:\thelab\car-listings\app\Services\Users\RoleService.php
+- C:\thelab\car-listings\app\Services\Users\PermissionService.php
+- C:\thelab\car-listings\app\Services\VehicleFeatures\VehicleFeatureService.php
+- C:\thelab\car-listings\app\Services\VehicleGallery\VehicleGalleryService.php
+
+### Models
+- C:\thelab\car-listings\app\Models\Setting.php
+- C:\thelab\car-listings\app\Models\TradeInRequest.php
+- C:\thelab\car-listings\app\Models\TradeInInspection.php
+- C:\thelab\car-listings\app\Models\TradeInOffer.php
+- C:\thelab\car-listings\app\Models\TradeInValuation.php
+- C:\thelab\car-listings\app\Models\User.php
+- C:\thelab\car-listings\app\Models\Role.php
+- C:\thelab\car-listings\app\Models\Permission.php
+- C:\thelab\car-listings\app\Models\VehicleFeature.php
+- C:\thelab\car-listings\app\Models\VehicleGallery.php
+
+### Additional Files
+- C:\thelab\car-listings\app\Observers\SettingObserver.php
+- C:\thelab\car-listings\app\Observers\UserObserver.php
+- C:\thelab\car-listings\app\Actions\TradeIns\ApproveTradeInAction.php
+- C:\thelab\car-listings\app\Actions\TradeIns\CreateTradeInRequestAction.php
+- C:\thelab\car-listings\app\Actions\TradeIns\RejectTradeInAction.php
+- C:\thelab\car-listings\app\Actions\VehicleGallery\UploadVehicleImagesAction.php
+- C:\thelab\car-listings\app\Events\TradeInApproved.php
+- C:\thelab\car-listings\app\Events\TradeInSubmitted.php
+- C:\thelab\car-listings\app\Notifications\TradeInApproved.php
+- C:\thelab\car-listings\app\Notifications\TradeInReceived.php
+
+---
+
+## Updated Completion Percentage
+- **Phase 3 Backend Module Audit**: 100% complete
+- **Modules Audited**: 21 out of 21 admin modules
+- **Overall Backend Audit Coverage**: 100% (21/21 admin modules)
+
+---
+
+## Phase 3 Extended - Customer, Public, and Settings Modules
+
+### Module 22: Customer Modules (Dashboard, Booking, RecentlyViewed, Reservation, SavedSearch, Wishlist)
+
+#### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Customer/CustomerController.php` | Complete | Dashboard with aggregated data (wishlist, recentlyViewed, reservations, bookings). |
+|| **Controllers** | `app/Http/Controllers/Customer/BookingController.php` | Complete | Index method to list test drive bookings. |
+|| **Controllers** | `app/Http/Controllers/Customer/RecentlyViewController.php` | Complete | Index, store, destroy methods with inline validation. |
+|| **Controllers** | `app/Http/Controllers/Customer/ReservationController.php` | Complete | Index method to list vehicle reservations. |
+|| **Controllers** | `app/Http/Controllers/Customer/SavedSearchController.php` | Complete | Index, store, destroy methods with inline validation. |
+|| **Controllers** | `app/Http/Controllers/Customer/WishlistController.php` | Complete | Index, store, destroy methods with inline validation. |
+|| **Services** | N/A | Unreachable | No Customer-specific services found. |
+|| **Actions** | N/A | Unreachable | No Customer-specific actions found. |
+|| **Models** | `app/Models/Wishlist.php` | Complete | Model with relationships to user and vehicle. |
+|| **Models** | `app/Models/SavedSearch.php` | Complete | Model with fillable, casts, relationship to user. |
+|| **Models** | `app/Models/RecentlyViewedVehicle.php` | Complete | Model with fillable, casts, relationship to user and vehicle. |
+|| **Models** | `app/Models/TestDriveBooking.php` | Complete | Model referenced in controllers. |
+|| **Form Requests** | N/A | Unreachable | No Customer-specific form requests (validation inline in controllers). |
+|| **Policies** | `app/Policies/SavedSearchPolicy.php` | Complete | Full policy implementation. |
+|| **Policies** | `app/Policies/RecentlyViewedVehiclePolicy.php` | Complete | Full policy implementation. |
+|| **Jobs** | N/A | Unreachable | No Customer-specific jobs. |
+|| **Events** | N/A | Unreachable | No Customer-specific events. |
+|| **Observers** | N/A | Unreachable | No Customer observers. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | N/A | Unreachable | No Customer notifications. |
+
+#### Backend Completion: **70%**
+
+#### Justification
+Customer modules have functional controllers with inline validation and proper data aggregation. However, they lack service layers, dedicated form requests, and proper separation of concerns. Business logic is embedded in controllers instead of services.
+
+#### Missing Functionality
+- **Services**: No dedicated service layer for customer operations
+- **Form Requests**: Validation is inline in controllers - should use form request classes
+- **Actions**: No CreateBookingAction, CancelReservationAction
+- **Events**: No BookingCreated, ReservationCancelled events
+- **Jobs**: No booking reminder jobs, reservation expiration jobs
+- **Notifications**: No booking confirmation notifications, reservation reminders
+- **API Resources**: No API resources for customer data
+
+#### Risks
+- **Medium Risk**: No service layer - business logic in controllers violates SRP
+- **Medium Risk**: Inline validation - harder to test and reuse validation rules
+- **Low Risk**: No booking reminders - customers may miss appointments
+- **Low Risk**: No reservation expiration - stale reservations may persist
+
+#### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Customer\CustomerController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Customer\BookingController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Customer\RecentlyViewController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Customer\ReservationController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Customer\SavedSearchController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Customer\WishlistController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\Wishlist.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\SavedSearch.php" />
+- <ref_file file="C:\thelab\car-listings\app\Models\RecentlyViewedVehicle.php" />
+
+---
+
+### Module 23: Public Modules (About, Blog, Contact, ContactPage, Faq, Home, Import, Search, Testimonial, TradeIn, Vehicle)
+
+#### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Public/HomeController.php` | Complete | Comprehensive home page with featured vehicles, arrivals, hero sliders, testimonials, blogs. |
+|| **Controllers** | `app/Http/Controllers/Public/AboutController.php` | Stubbed | Only renders static page - no CMS integration. |
+|| **Controllers** | `app/Http/Controllers/Public/BlogController.php` | Complete | Index with category filtering, show with related posts. |
+|| **Controllers** | `app/Http/Controllers/Public/ContactController.php` | Complete | Creates lead with event dispatch on contact form submission. |
+|| **Controllers** | `app/Http/Controllers/Public/ContactPageController.php` | Stubbed | Only renders static page - no CMS integration. |
+|| **Controllers** | `app/Http/Controllers/Public/FaqController.php` | Complete | Index with active FAQs from CMS. |
+|| **Controllers** | `app/Http/Controllers/Public/ImportController.php` | Complete | Creates import request and lead with event dispatch. |
+|| **Controllers** | `app/Http/Controllers/Public/SearchController.php` | Complete | Unified search across vehicles and blog posts. |
+|| **Controllers** | `app/Http/Controllers/Public/TestimonialController.php` | Complete | Index with active testimonials from CMS. |
+|| **Controllers** | `app/Http/Controllers/Public/TradeInController.php` | Complete | Creates lead for trade-in request with event dispatch. |
+|| **Controllers** | `app/Http/Controllers/Public/VehicleController.php` | Complete | Comprehensive inventory listing with filters, sorting, pagination; detailed show page. |
+|| **Services** | N/A | Unreachable | No Public-specific services found. |
+|| **Actions** | N/A | Unreachable | No Public-specific actions found. |
+|| **Models** | N/A | Unreachable | Uses existing models (Vehicle, BlogPost, Lead, etc.). |
+|| **Form Requests** | N/A | Unreachable | No Public-specific form requests (validation inline in controllers). |
+|| **Policies** | N/A | Unreachable | No Public policies (public access doesn't require authorization). |
+|| **Jobs** | N/A | Unreachable | No Public-specific jobs. |
+|| **Events** | N/A | Unreachable | Uses existing events (LeadCreated). |
+|| **Observers** | N/A | Unreachable | No Public observers. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | N/A | Unreachable | No Public notifications. |
+
+#### Backend Completion: **75%**
+
+#### Justification
+Public modules have well-implemented controllers with comprehensive functionality (home page, inventory, search, blog). However, About and ContactPage controllers are stubbed with static content. Missing service layers and form requests for better separation of concerns.
+
+#### Missing Functionality
+- **Services**: No dedicated service layer for public operations
+- **Form Requests**: Validation is inline in controllers - should use form request classes
+- **AboutController**: No CMS integration for about page content
+- **ContactPageController**: No CMS integration for contact page (address, hours, map)
+- **Actions**: No SearchIndexAction, ContactFormSubmitAction
+- **Events**: No VehicleViewed, BlogViewed events for analytics
+- **Jobs**: No search indexing jobs, contact form processing jobs
+- **API Resources**: No API resources for public data
+
+#### Risks
+- **Medium Risk**: No service layer - business logic in controllers violates SRP
+- **Medium Risk**: Inline validation - harder to test and reuse validation rules
+- **Low Risk**: Static About/Contact pages - requires code changes to update content
+- **Low Risk**: No view tracking - cannot analyze user behavior
+- **Low Risk**: No search analytics - cannot understand user search patterns
+
+#### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\HomeController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\AboutController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\BlogController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\ContactController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\ContactPageController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\FaqController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\ImportController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\SearchController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\TestimonialController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\TradeInController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Public\VehicleController.php" />
+
+---
+
+### Module 24: Settings Modules (Profile, Security)
+
+#### File Classifications
+
+|| Category | File | Classification | Justification |
+||----------|------|----------------|---------------|
+|| **Controllers** | `app/Http/Controllers/Settings/ProfileController.php` | Complete | Edit, update, destroy methods with proper email verification handling. |
+|| **Controllers** | `app/Http/Controllers/Settings\SecurityController.php` | Complete | Edit with 2FA and passkey support, update password method. |
+|| **Services** | N/A | Unreachable | No Settings-specific services (uses existing SettingService). |
+|| **Actions** | N/A | Unreachable | No Settings-specific actions found. |
+|| **Models** | N/A | Unreachable | Uses existing User model. |
+|| **Form Requests** | `app/Http/Requests/Settings/ProfileUpdateRequest.php` | Complete | Validation for profile updates. |
+|| **Form Requests** | `app/Http/Requests/Settings/ProfileDeleteRequest.php` | Complete | Validation for profile deletion. |
+|| **Form Requests** | `app/Http/Requests/Settings/PasswordUpdateRequest.php` | Complete | Validation for password updates. |
+|| **Form Requests** | `app/Http/Requests/Settings/TwoFactorAuthenticationRequest.php` | Complete | Validation for 2FA. |
+|| **Policies** | N/A | Unreachable | Uses Fortify's built-in authorization. |
+|| **Jobs** | N/A | Unreachable | No Settings-specific jobs. |
+|| **Events** | N/A | Unreachable | No Settings-specific events. |
+|| **Observers** | N/A | Unreachable | Uses existing UserObserver. |
+|| **Resources** | N/A | Unreachable | No API resources. |
+|| **Notifications** | N/A | Unreachable | No Settings notifications (should use Fortify's). |
+
+#### Backend Completion: **85%**
+
+#### Justification
+Settings modules are well-implemented with proper form requests and Fortify integration for authentication features. Controllers handle profile updates, deletion, password changes, and 2FA management correctly. Missing service layer for custom business logic.
+
+#### Missing Functionality
+- **Services**: No dedicated service layer for settings operations
+- **Actions**: No DeleteAccountAction, UpdateProfileAction
+- **Events**: No ProfileUpdated, PasswordChanged, AccountDeleted events
+- **Jobs**: No account cleanup jobs after deletion
+- **Notifications**: Should use Fortify's built-in notifications
+- **API Resources**: No API resources for user settings
+
+#### Risks
+- **Low Risk**: No service layer - minor concern for simple CRUD operations
+- **Low Risk**: No account deletion cleanup - may leave orphaned data
+- **Low Risk**: No API resources - limits external integrations
+
+#### File References
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Settings\ProfileController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Controllers\Settings\SecurityController.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\Settings\ProfileUpdateRequest.php" />
+- <ref_file file="C:\thelab\car-listings\app\Http\Requests\Settings\PasswordUpdateRequest.php" />
+
+---
+
+## FINAL SUMMARY - All 24 Modules (21 Admin + 3 Non-Admin)
+
+### Overall Module Completion Rankings (24 Modules):
+
+1. **Branches**: 95% - Simple but complete
+2. **Imports**: 90% - Most complete with comprehensive job processing
+3. **Admin (Audit Logs)**: 90% - Well-implemented, orphaned Performance page
+4. **Users**: 85% - Excellent RBAC implementation, missing notifications
+5. **Settings (Profile/Security)**: 85% - Well-implemented with Fortify integration
+6. **Finance**: 82% - Good workflow, missing integrations
+7. **CRM**: 80% - Solid pipeline, missing automation
+8. **Reservations**: 75% - Well-implemented with custom actions and notifications
+9. **Customers**: 78% - Good document management, missing segmentation
+10. **CMS**: 75% - Good structure, services need customization
+11. **Blog**: 75% - Good structure, validation issues
+12. **Sales**: 65% - Best service implementation, missing events/notifications
+13. **TradeIns**: 65% - Excellent workflow, ALL form requests broken
+14. **Public Modules**: 75% - Well-implemented, some stubbed controllers
+15. **Customer Modules**: 70% - Functional, missing service layer
+16. **Dashboard**: 60% - Great service, incomplete widget management
+17. **VehicleGallery**: 60% - Excellent image processing, form requests broken
+18. **Reports**: 50% - Excellent controller, violates SRP
+19. **Analytics**: 50% - Significantly incomplete, non-functional
+20. **Payments**: 45% - No payment processing logic
+21. **Settings (Admin)**: 75% - Excellent audit logging, missing caching
+22. **Promotions**: 40% - Broken validation, critical issues
+23. **Reviews**: 35% - Broken validation, no approval workflow
+24. **VehicleFeatures**: 40% - Broken validation, no slug generation
+
+### Critical Issues Across All Modules (Updated):
+
+1. **Broken Form Request Validation**: Promotions, Reviews, TradeIns (8 requests), VehicleFeatures, VehicleGallery - 14 form requests critically broken
+2. **No Payment Processing**: Payments module lacks payment gateway integration and processing logic
+3. **No API Resources**: Application uses Inertia but has no API resources for mobile app or API integration
+4. **Missing Observers**: Only 3 observers exist (User, Setting, Permission) - no module-specific observers for automation
+5. **Insufficient Validation**: Several form requests have minimal validation (Analytics, BlogPost, CmsPage, Lead, Customer)
+6. **No Caching Layer**: Dashboard, CMS, Settings data could benefit from caching
+7. **Limited Job Queue**: Only 7 jobs exist - missing automation for follow-ups, notifications, data processing
+8. **Orphaned Frontend Pages**: Performance page exists without backend implementation
+9. **SRP Violations**: Reports module has business logic in controller instead of service layer
+10. **Missing File Type Validation**: VehicleGallery and document uploads lack proper file validation
+11. **No Service Layers**: Customer and Public modules lack dedicated service layers
+12. **Inline Validation**: Customer and Public modules use inline validation instead of form requests
+
+### Updated Recommendations:
+
+#### Priority 1 (Critical - Fix Immediately)
+1. **Fix ALL broken form request validations**:
+   - TradeIns: 8 form requests (Store/Update for Request, Inspection, Offer, Valuation)
+   - VehicleFeatures: 2 form requests (missing name, slug, category, is_active)
+   - VehicleGallery: 2 form requests (missing vehicle_id, path, file validation)
+   - Promotions: 2 form requests (missing type, value, starts_at, ends_at)
+   - Reviews: 2 form requests (missing rating, body, vehicle_id)
+2. **Add payment processing logic to PaymentService** - critical for financial operations
+3. **Add payment gateway integration logic** - cannot process actual payments
+4. **Fix Analytics module** - implement CRUD operations and proper validation
+5. **Add file type and size validation** for all upload endpoints (VehicleGallery, documents)
+
+#### Priority 2 (High - Important for Production)
+1. **Extract Reports controller logic into ReportService** - fix SRP violation
+2. **Add form request classes for Reports module** - separate validation from controller
+3. **Add review approval workflow with actions** - moderate reviews before publishing
+4. **Add promotion validation actions** - validate date ranges and values
+5. **Add sales events** (InvoiceCreated, InvoicePaid, RefundProcessed)
+6. **Enhance form request validation** for BlogPost, CmsPage, Lead, and Customer
+7. **Add VIN validation** for TradeIns requests
+8. **Add slug generation logic** for VehicleFeatures
+9. **Extract service layers for Customer and Public modules** - improve code organization
+10. **Move inline validation to form request classes** for Customer and Public modules
+
+#### Priority 3 (Medium - Enhances Functionality)
+1. **Add observers for all modules** to handle side effects
+2. **Add API resources for mobile app support**
+3. **Add notification classes for all modules** (especially Users welcome notification)
+4. **Add background jobs for async operations**
+5. **Implement caching for Dashboard, CMS, and Settings data**
+6. **Complete or remove orphaned Performance page**
+7. **Add automated follow-up jobs for CRM**
+8. **Implement credit check integration for Finance**
+9. **Add external valuation API integrations** for TradeIns
+10. **Add CMS integration for About and ContactPage controllers**
+
+#### Priority 4 (Low - Nice to Have)
+1. **Add PDF generation for invoices**
+2. **Add report caching mechanisms**
+3. **Add spam detection for reviews**
+4. **Add reminder notifications for reservations**
+5. **Add promotion usage tracking**
+6. **Add social media integration for Blog**
+7. **Add customer segmentation**
+8. **Add loan payment processing jobs**
+9. **Create shipment tracking polling job**
+10. **Add LDAP/SSO integration for Users**
+11. **Add view tracking analytics for public pages**
+12. **Add search analytics for user behavior**
+
+---
+
+## Additional Files Inspected (Modules 22-24)
+
+### Controllers
+- C:\thelab\car-listings\app\Http\Controllers\Customer\CustomerController.php
+- C:\thelab\car-listings\app\Http\Controllers\Customer\BookingController.php
+- C:\thelab\car-listings\app\Http\Controllers\Customer\RecentlyViewController.php
+- C:\thelab\car-listings\app\Http\Controllers\Customer\ReservationController.php
+- C:\thelab\car-listings\app\Http\Controllers\Customer\SavedSearchController.php
+- C:\thelab\car-listings\app\Http\Controllers\Customer\WishlistController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\HomeController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\AboutController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\BlogController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\ContactController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\ContactPageController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\FaqController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\ImportController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\SearchController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\TestimonialController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\TradeInController.php
+- C:\thelab\car-listings\app\Http\Controllers\Public\VehicleController.php
+- C:\thelab\car-listings\app\Http\Controllers\Settings\ProfileController.php
+- C:\thelab\car-listings\app\Http\Controllers\Settings\SecurityController.php
+
+### Models
+- C:\thelab\car-listings\app\Models\Wishlist.php
+- C:\thelab\car-listings\app\Models\SavedSearch.php
+- C:\thelab\car-listings\app\Models\RecentlyViewedVehicle.php
+- C:\thelab\car-listings\app\Models\TestDriveBooking.php
+
+### Policies
+- C:\thelab\car-listings\app\Policies\SavedSearchPolicy.php
+- C:\thelab\car-listings\app\Policies\RecentlyViewedVehiclePolicy.php
+
+### Form Requests
+- C:\thelab\car-listings\app\Http\Requests\Settings\ProfileUpdateRequest.php
+- C:\thelab\car-listings\app\Http\Requests\Settings\ProfileDeleteRequest.php
+- C:\thelab\car-listings\app\Http\Requests\Settings\PasswordUpdateRequest.php
+- C:\thelab\car-listings\app\Http\Requests\Settings\TwoFactorAuthenticationRequest.php
+
+---
+
+## Updated Completion Percentage
+- **Phase 3 Backend Module Audit**: 100% complete
+- **Modules Audited**: 24 out of 24 modules (21 Admin + 3 Non-Admin)
+- **Overall Backend Audit Coverage**: 100% (24/24 modules)
+
+---
+
+**Phase 3 Complete - All 24 Modules Audited (21 Admin + 3 Non-Admin)**
