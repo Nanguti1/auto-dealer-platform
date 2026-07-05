@@ -7,12 +7,15 @@ namespace App\Observers;
 use App\Models\AuditLog;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class SettingObserver
 {
     public function created(Setting $setting): void
     {
+        $this->clearSettingsCache();
+
         try {
             AuditLog::create([
                 'user_id' => Auth::id(),
@@ -38,6 +41,8 @@ class SettingObserver
 
     public function updated(Setting $setting): void
     {
+        $this->clearSettingsCache();
+
         try {
             $changes = $setting->getDirty();
             unset($changes['updated_at']);
@@ -81,6 +86,8 @@ class SettingObserver
 
     public function deleted(Setting $setting): void
     {
+        $this->clearSettingsCache();
+
         try {
             AuditLog::create([
                 'user_id' => Auth::id(),
@@ -114,5 +121,10 @@ class SettingObserver
         }
 
         return false;
+    }
+
+    protected function clearSettingsCache(): void
+    {
+        Cache::tags(['settings'])->flush();
     }
 }

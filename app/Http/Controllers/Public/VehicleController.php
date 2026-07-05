@@ -11,6 +11,7 @@ use App\Models\Make;
 use App\Models\Vehicle;
 use App\Models\VehicleCondition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -236,41 +237,47 @@ class VehicleController extends Controller
 
     protected function getFilterOptions(): array
     {
-        return [
-            'makes' => Make::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
-                ->orderBy('name')
-                ->get()
-                ->map(fn ($make) => [
-                    'value' => $make->slug,
-                    'label' => $make->name,
-                    'count' => $make->vehicles()->whereNull('sold_at')->whereNotNull('listed_at')->count(),
-                ]),
-            'bodyTypes' => BodyType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
-                ->where('is_active', true)
-                ->orderBy('name')
-                ->get()
-                ->map(fn ($bodyType) => [
-                    'value' => $bodyType->slug,
-                    'label' => $bodyType->name,
-                    'count' => $bodyType->vehicles()->whereNull('sold_at')->whereNotNull('listed_at')->count(),
-                ]),
-            'fuelTypes' => FuelType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
-                ->where('is_active', true)
-                ->orderBy('name')
-                ->get()
-                ->map(fn ($fuelType) => [
-                    'value' => $fuelType->slug,
-                    'label' => $fuelType->name,
-                    'count' => $fuelType->vehicles()->whereNull('sold_at')->whereNotNull('listed_at')->count(),
-                ]),
-            'conditions' => VehicleCondition::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
-                ->orderBy('name')
-                ->get()
-                ->map(fn ($condition) => [
-                    'value' => $condition->slug,
-                    'label' => $condition->name,
-                    'count' => $condition->vehicles()->whereNull('sold_at')->whereNotNull('listed_at')->count(),
-                ]),
-        ];
+        return Cache::tags(['vehicle', 'filters'])->remember('vehicle.filter.options', now()->addHours(6), function () {
+            return [
+                'makes' => Make::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+                    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+                    ->orderBy('name')
+                    ->get()
+                    ->map(fn ($make) => [
+                        'value' => $make->slug,
+                        'label' => $make->name,
+                        'count' => $make->vehicles_count,
+                    ]),
+                'bodyTypes' => BodyType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+                    ->where('is_active', true)
+                    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+                    ->orderBy('name')
+                    ->get()
+                    ->map(fn ($bodyType) => [
+                        'value' => $bodyType->slug,
+                        'label' => $bodyType->name,
+                        'count' => $bodyType->vehicles_count,
+                    ]),
+                'fuelTypes' => FuelType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+                    ->where('is_active', true)
+                    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+                    ->orderBy('name')
+                    ->get()
+                    ->map(fn ($fuelType) => [
+                        'value' => $fuelType->slug,
+                        'label' => $fuelType->name,
+                        'count' => $fuelType->vehicles_count,
+                    ]),
+                'conditions' => VehicleCondition::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
+                    ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
+                    ->orderBy('name')
+                    ->get()
+                    ->map(fn ($condition) => [
+                        'value' => $condition->slug,
+                        'label' => $condition->name,
+                        'count' => $condition->vehicles_count,
+                    ]),
+            ];
+        });
     }
 }

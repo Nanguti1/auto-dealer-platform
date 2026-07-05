@@ -30,6 +30,32 @@ use App\Listeners\RecordAuditLog;
 use App\Listeners\SendNotification;
 use App\Listeners\SyncSearchIndex;
 use App\Listeners\UpdateAnalytics;
+use App\Models\BodyType;
+use App\Models\Customer;
+use App\Models\FinanceApplication;
+use App\Models\FuelType;
+use App\Models\Lead;
+use App\Models\Make;
+use App\Models\Model;
+use App\Models\Setting;
+use App\Models\TradeInRequest;
+use App\Models\Vehicle;
+use App\Models\VehicleCondition;
+use App\Models\VehicleImport;
+use App\Models\VehicleReservation;
+use App\Observers\BodyTypeObserver;
+use App\Observers\CustomerObserver;
+use App\Observers\FinanceApplicationObserver;
+use App\Observers\FuelTypeObserver;
+use App\Observers\LeadObserver;
+use App\Observers\MakeObserver;
+use App\Observers\ModelObserver;
+use App\Observers\SettingObserver;
+use App\Observers\TradeInRequestObserver;
+use App\Observers\VehicleConditionObserver;
+use App\Observers\VehicleImportObserver;
+use App\Observers\VehicleObserver;
+use App\Observers\VehicleReservationObserver;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\PasswordReset;
@@ -163,6 +189,21 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        parent::boot();
+
+        // Register observers for cache invalidation
+        Vehicle::observe(VehicleObserver::class);
+        Lead::observe(LeadObserver::class);
+        Customer::observe(CustomerObserver::class);
+        VehicleReservation::observe(VehicleReservationObserver::class);
+        FinanceApplication::observe(FinanceApplicationObserver::class);
+        TradeInRequest::observe(TradeInRequestObserver::class);
+        VehicleImport::observe(VehicleImportObserver::class);
+        Setting::observe(SettingObserver::class);
+        Make::observe(MakeObserver::class);
+        Model::observe(ModelObserver::class);
+        BodyType::observe(BodyTypeObserver::class);
+        FuelType::observe(FuelTypeObserver::class);
+        VehicleCondition::observe(VehicleConditionObserver::class);
     }
 }
