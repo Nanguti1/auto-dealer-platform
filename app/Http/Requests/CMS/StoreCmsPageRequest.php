@@ -19,9 +19,19 @@ class StoreCmsPageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'title' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:dynamic_cms_pages,slug'],
+            'body' => ['nullable', 'string'],
+            'content' => ['nullable', 'string'],
+            'status' => ['required', 'string', 'in:draft,published,archived'],
+            'published_at' => ['nullable', 'date'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('content') && ! $this->has('body')) {
+            $this->merge(['body' => $this->input('content')]);
+        }
     }
 }

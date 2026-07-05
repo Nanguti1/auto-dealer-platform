@@ -19,15 +19,15 @@ class StoreValuationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'trade_in_request_id' => ['required', 'exists:trade_in_requests,id'],
-            'valuation_source_id' => ['sometimes', 'nullable', 'exists:users,id'],
+            'trade_in_request_id' => ['required', 'integer', 'exists:trade_in_requests,id'],
+            'valuation_source_id' => ['nullable', 'integer', 'exists:users,id'],
             'trade_in_value' => ['required', 'numeric', 'min:0'],
-            'wholesale_value' => ['sometimes', 'nullable', 'numeric', 'min:0'],
-            'retail_value' => ['sometimes', 'nullable', 'numeric', 'min:0'],
-            'valuation_method' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'market_comparables' => ['sometimes', 'nullable', 'array'],
-            'adjustments' => ['sometimes', 'nullable', 'string'],
-            'notes' => ['sometimes', 'nullable', 'string'],
+            'wholesale_value' => ['nullable', 'numeric', 'min:0'],
+            'retail_value' => ['nullable', 'numeric', 'min:0'],
+            'valuation_method' => ['nullable', 'string', 'max:255'],
+            'market_comparables' => ['nullable', 'array'],
+            'adjustments' => ['nullable', 'string'],
+            'notes' => ['nullable', 'string'],
         ];
     }
 }

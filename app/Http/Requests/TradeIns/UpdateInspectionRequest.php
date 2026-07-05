@@ -19,10 +19,10 @@ class UpdateInspectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'trade_in_request_id' => ['sometimes', 'nullable', 'exists:trade_in_requests,id'],
-            'inspector_id' => ['sometimes', 'nullable', 'exists:users,id'],
+            'trade_in_request_id' => ['sometimes', 'nullable', 'integer', 'exists:trade_in_requests,id'],
+            'inspector_id' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],
             'inspection_date' => ['sometimes', 'nullable', 'date'],
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'status' => ['sometimes', 'nullable', 'string', 'max:255'],
             'condition_details' => ['sometimes', 'nullable', 'array'],
             'notes' => ['sometimes', 'nullable', 'string'],
             'estimated_repair_cost' => ['sometimes', 'nullable', 'numeric', 'min:0'],

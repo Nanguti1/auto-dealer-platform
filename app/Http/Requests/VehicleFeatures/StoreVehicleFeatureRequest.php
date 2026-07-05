@@ -19,9 +19,10 @@ class StoreVehicleFeatureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:vehicle_features,slug'],
+            'category' => ['nullable', 'string', 'max:255'],
+            'is_active' => ['nullable', 'boolean'],
         ];
     }
 }

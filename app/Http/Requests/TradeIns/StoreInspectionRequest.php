@@ -19,15 +19,15 @@ class StoreInspectionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'trade_in_request_id' => ['required', 'exists:trade_in_requests,id'],
-            'inspector_id' => ['sometimes', 'nullable', 'exists:users,id'],
-            'inspection_date' => ['sometimes', 'nullable', 'date'],
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'condition_details' => ['sometimes', 'nullable', 'array'],
-            'notes' => ['sometimes', 'nullable', 'string'],
-            'estimated_repair_cost' => ['sometimes', 'nullable', 'numeric', 'min:0'],
-            'repair_recommendations' => ['sometimes', 'nullable', 'string'],
-            'photos' => ['sometimes', 'nullable', 'array'],
+            'trade_in_request_id' => ['required', 'integer', 'exists:trade_in_requests,id'],
+            'inspector_id' => ['nullable', 'integer', 'exists:users,id'],
+            'inspection_date' => ['nullable', 'date'],
+            'status' => ['nullable', 'string', 'max:255'],
+            'condition_details' => ['nullable', 'array'],
+            'notes' => ['nullable', 'string'],
+            'estimated_repair_cost' => ['nullable', 'numeric', 'min:0'],
+            'repair_recommendations' => ['nullable', 'string'],
+            'photos' => ['nullable', 'array'],
         ];
     }
 }
