@@ -24,9 +24,8 @@ export default function Upload({ customer }: { customer?: CustomerRecord }) {
             <div className="space-y-2"><Label htmlFor="title">Document title</Label><Input id="title" name="title" /><InputError message={errors.title} /></div>
             <div className="space-y-2"><Label htmlFor="document_type">Document type</Label><Input id="document_type" name="document_type" placeholder="Driver license, proof of insurance, purchase order…" /><InputError message={errors.document_type} /></div>
             <div className="space-y-2"><Label htmlFor="description">Metadata / notes</Label><Textarea id="description" name="description" rows={4} /><InputError message={errors.description} /></div>
-            <ImageDropzone onFilesSelected={(files) => setItems(files.map((file) => ({ id: `${file.name}-${file.lastModified}`, file, url: URL.createObjectURL(file), alt: file.name })))} multiple={false} accept="image/*,application/pdf" />
+            <ImageDropzone onFilesSelected={(files) => setItems(files.map((file) => ({ id: `${file.name}-${file.lastModified}`, file, url: URL.createObjectURL(file), alt: file.name })))} multiple={false} accept="image/*,application/pdf" error={errors.document} disabled={processing} />
             {items.map((item, index) => <input key={item.id} type="file" name={index === 0 ? 'document' : `documents[${index}]`} className="sr-only" />)}
-            <p className="text-sm text-muted-foreground">Selected: {items[0]?.alt ?? 'No file selected'}</p>
             <Button disabled={processing}><UploadCloud className="mr-2 size-4" />{processing ? 'Uploading…' : 'Upload document'}</Button>
           </>
         )}

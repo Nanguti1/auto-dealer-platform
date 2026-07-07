@@ -75,6 +75,8 @@ export default function SeoMetadataForm({ seoSettings, action, method = 'post' }
         <div className="space-y-2">
           <label htmlFor="og_image" className="text-sm font-medium">Default Open Graph Image</label>
           <ImageDropzone
+            multiple={false}
+            previewUrl={seoSettings?.og_image}
             onFilesSelected={(files) => {
               const input = document.querySelector('input[name="og_image"]') as HTMLInputElement;
 
@@ -87,9 +89,6 @@ export default function SeoMetadataForm({ seoSettings, action, method = 'post' }
             className="mb-2"
           />
           <input id="og_image" name="og_image" type="file" accept="image/*" className="hidden" />
-          {seoSettings?.og_image && (
-            <p className="text-sm text-muted-foreground">Current: {seoSettings.og_image}</p>
-          )}
         </div>
       </FormSection>
 

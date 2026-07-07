@@ -15,54 +15,142 @@ interface ImageDropzoneProps {
     className?: string;
     multiple?: boolean;
     accept?: string;
+    previewUrl?: string;
+    maxSize?: number; // Max file size in bytes
+    error?: string;
+    disabled?: boolean;
 }
 
-function ImageDropzone({ onFilesSelected, className, multiple = true, accept = 'image/*' }: ImageDropzoneProps) {
+function ImageDropzone({ onFilesSelected, className, multiple = true, accept = 'image/*', previewUrl, maxSize = 10 * 1024 * 1024, error, disabled = false }: ImageDropzoneProps) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [dragging, setDragging] = React.useState(false);
+    const [preview, setPreview] = React.useState<string | null>(previewUrl ?? null);
+    const [validationError, setValidationError] = React.useState<string | null>(null);
 
     const handleFiles = (fileList: FileList | null) => {
-        const files = Array.from(fileList ?? []).filter((file) => file.type.startsWith('image/'));
+        setValidationError(null);
+        const files = Array.from(fileList ?? []);
 
-        if (files.length > 0) {
-onFilesSelected(files);
-}
+        // Filter by file type
+        const validFiles = files.filter((file) => {
+            if (accept.startsWith('image/') && !file.type.startsWith('image/')) {
+                setValidationError(`File "${file.name}" is not an image`);
+                return false;
+            }
+            if (accept.includes('application/pdf') && file.type !== 'application/pdf' && !file.type.startsWith('image/')) {
+                setValidationError(`File "${file.name}" is not a valid file type`);
+                return false;
+            }
+            return true;
+        });
+
+        // Filter by file size
+        const sizeValidFiles = validFiles.filter((file) => {
+            if (file.size > maxSize) {
+                setValidationError(`File "${file.name}" exceeds maximum size of ${maxSize / 1024 / 1024}MB`);
+                return false;
+            }
+            return true;
+        });
+
+        if (sizeValidFiles.length > 0) {
+            // Show preview for single file
+            if (!multiple && sizeValidFiles[0]) {
+                setPreview(URL.createObjectURL(sizeValidFiles[0]));
+            }
+            onFilesSelected(sizeValidFiles);
+        }
     };
 
+    const clearPreview = () => {
+        setPreview(null);
+        setValidationError(null);
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+    };
+
+    // Update preview when previewUrl prop changes
+    React.useEffect(() => {
+        if (previewUrl) {
+            setPreview(previewUrl);
+        }
+    }, [previewUrl]);
+
+    // Update validation error when error prop changes
+    React.useEffect(() => {
+        if (error) {
+            setValidationError(error);
+        }
+    }, [error]);
+
+    // If preview exists, show it with option to remove
+    if (preview && !multiple) {
+        return (
+            <div className={cn('relative overflow-hidden rounded-3xl border bg-card', className)}>
+                <img src={preview} alt="Preview" className="h-64 w-full object-cover" />
+                <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    className="absolute right-2 top-2"
+                    onClick={clearPreview}
+                    aria-label="Remove image"
+                >
+                    <Trash2 className="size-4" />
+                </Button>
+            </div>
+        );
+    }
+
     return (
-        <div
-            role="button"
-            tabIndex={0}
-            onClick={() => inputRef.current?.click()}
-            onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
+        <div className="space-y-2">
+            <div
+                role={disabled ? undefined : 'button'}
+                tabIndex={disabled ? undefined : 0}
+                onClick={() => !disabled && inputRef.current?.click()}
+                onKeyDown={(event) => {
+                    if (!disabled && (event.key === 'Enter' || event.key === ' ')) {
 inputRef.current?.click();
 }
-            }}
-            onDragOver={(event) => {
-                event.preventDefault();
-                setDragging(true);
-            }}
-            onDragLeave={() => setDragging(false)}
-            onDrop={(event) => {
-                event.preventDefault();
-                setDragging(false);
-                handleFiles(event.dataTransfer.files);
-            }}
-            className={cn(
-                'group flex cursor-pointer flex-col items-center justify-center rounded-3xl border border-dashed bg-muted/30 p-8 text-center transition-all',
-                'hover:border-primary/60 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-                dragging && 'border-primary bg-primary/10',
-                className,
-            )}
-            aria-label="Upload images"
-        >
-            <input ref={inputRef} type="file" accept={accept} multiple={multiple} className="hidden" onChange={(event) => handleFiles(event.target.files)} />
-            <div className="mb-4 rounded-full bg-background p-4 shadow-sm transition-transform group-hover:scale-105">
-                <UploadCloud className="size-7 text-primary" />
+                }}
+                onDragOver={(event) => {
+                    if (!disabled) {
+                        event.preventDefault();
+                        setDragging(true);
+                    }
+                }}
+                onDragLeave={() => !disabled && setDragging(false)}
+                onDrop={(event) => {
+                    if (!disabled) {
+                        event.preventDefault();
+                        setDragging(false);
+                        handleFiles(event.dataTransfer.files);
+                    }
+                }}
+                className={cn(
+                    'group flex flex-col items-center justify-center rounded-3xl border border-dashed bg-muted/30 p-8 text-center transition-all',
+                    !disabled && 'cursor-pointer hover:border-primary/60 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                    dragging && 'border-primary bg-primary/10',
+                    validationError && 'border-destructive bg-destructive/10',
+                    disabled && 'cursor-not-allowed opacity-50',
+                    className,
+                )}
+                aria-label={disabled ? undefined : 'Upload images'}
+                aria-disabled={disabled}
+            >
+                <input ref={inputRef} type="file" accept={accept} multiple={multiple} disabled={disabled} className="hidden" onChange={(event) => handleFiles(event.target.files)} />
+                <div className={cn('mb-4 rounded-full bg-background p-4 shadow-sm transition-transform', !disabled && 'group-hover:scale-105')}>
+                    <UploadCloud className="size-7 text-primary" />
+                </div>
+                <p className="font-medium">{disabled ? 'Upload disabled' : 'Drop images here or click to browse'}</p>
+                <p className="mt-1 text-sm text-muted-foreground">PNG, JPG, WEBP up to {maxSize / 1024 / 1024}MB</p>
             </div>
-            <p className="font-medium">Drop images here or click to browse</p>
-            <p className="mt-1 text-sm text-muted-foreground">PNG, JPG, WEBP up to your configured upload limit.</p>
+            {validationError && (
+                <p className="text-sm text-destructive" role="alert">
+                    {validationError}
+                </p>
+            )}
         </div>
     );
 }

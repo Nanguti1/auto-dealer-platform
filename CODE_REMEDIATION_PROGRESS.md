@@ -1376,225 +1376,217 @@ php artisan migrate:fresh --seed
 - Code formatted with Laravel Pint to maintain project standards
 - Seeders can be safely re-run without creating duplicate data
 
-## Session 21
-- Automatic slug generation implemented across all applicable models.
-- Slug uniqueness enforced through database constraints and validation.
-- Reusable HasSlug trait created for consistent slug generation.
-- Frontend slug generation helper implemented for real-time slug creation.
-- Blog, CMS, and Vehicle forms updated with auto-slug functionality.
-- FormRequest validation rules updated for slug fields.
-- Manual slug preservation during edits implemented.
-
-### Files Created
-
-#### Traits
-- `app/Traits/HasSlug.php` (new)
-  - Reusable trait for automatic slug generation
-  - Generates slugs from title or name fields
-  - Preserves manually entered slugs during edits
-  - Ensures uniqueness with automatic suffix generation
-  - Configurable source field and slug field
-  - Uses Str::slug for consistent slugification
-
-#### Frontend Helpers
-- `resources/js/lib/slug-helper.ts` (new)
-  - Frontend slug generation utility
-  - Generates slugs from text input
-  - Matches Laravel's Str::slug behavior
-  - Removes special characters and spaces
-  - Converts to lowercase
-  - Replaces spaces with hyphens
+## Session 22
+- File upload components standardized across the application.
+- ImageDropzone component enhanced with image preview functionality.
+- Upload progress indicator added via disabled state during form submission.
+- Validation feedback implemented for file type and size errors.
+- Gallery form updated to use ImageDropzone instead of text input.
+- Blog form updated to use ImageDropzone with preview support.
+- Document upload forms enhanced with validation and disabled states.
+- Compatible with existing backend upload endpoints.
 
 ### Files Modified
 
-#### Models
-- `app/Models/BlogPost.php` (updated)
-  - Added HasSlug trait usage
-  - Configured slug generation from title field
-  - Maintains unique slug constraint
+#### Shared Components
+- `resources/js/components/shared/media-upload.tsx` (enhanced)
+  - Added previewUrl prop to ImageDropzone for showing existing images
+  - Added maxSize prop for configurable file size limits (default 10MB)
+  - Added error prop for backend validation error display
+  - Added disabled prop for upload progress indication
+  - Implemented image preview display with remove button
+  - Added file type validation (images, PDFs)
+  - Added file size validation with clear error messages
+  - Enhanced drag-and-drop with visual feedback
+  - Improved accessibility with ARIA attributes
+  - Added validation error display with destructive styling
 
-- `app/Models/DynamicCmsPage.php` (updated)
-  - Added HasSlug trait usage
-  - Configured slug generation from title field
-  - Maintains unique slug constraint
+#### Gallery Form
+- `resources/js/components/admin/inventory/simple-resource-form.tsx` (updated)
+  - GalleryForm now uses ImageDropzone instead of text input
+  - Added ImageDropzone import
+  - Configured for single file upload (multiple={false})
+  - Added previewUrl support for existing images
+  - Removed text input for path field
+  - Hidden file input maintains form compatibility
 
-- `app/Models/Vehicle.php` (updated)
-  - Added HasSlug trait usage
-  - Configured slug generation from name field (title)
-  - Maintains unique slug constraint
-  - Public-facing vehicle URLs now use slugs
+#### Blog Form
+- `resources/js/components/admin/cms/blog-form.tsx` (updated)
+  - Added ImageDropzone import
+  - Replaced basic file input with ImageDropzone component
+  - Configured for single file upload with preview
+  - Added previewUrl prop for existing featured images
+  - Removed text-based "Current" path display (now in preview)
 
-#### Form Requests
-- `app/Http/Requests/Blog/StoreBlogPostRequest.php` (updated)
-  - Added slug validation rules
-  - Slug must be unique except on update
-  - Slug must contain only letters, numbers, hyphens
-  - Added prepareForValidation to handle manual slug preservation
+#### Marketing Forms
+- `resources/js/components/admin/marketing/promotion-form.tsx` (updated)
+  - Added previewUrl prop to ImageDropzone
+  - Configured for single file upload
+  - Removed text-based "Current" path display
 
-- `app/Http/Requests/Blog/UpdateBlogPostRequest.php` (updated)
-  - Added slug validation rules
-  - Slug must be unique except for current record
-  - Added prepareForValidation to handle manual slug preservation
+- `resources/js/components/admin/cms/seo-metadata-form.tsx` (updated)
+  - Added previewUrl prop to ImageDropzone
+  - Configured for single file upload
+  - Removed text-based "Current" path display
 
-- `app/Http/Requests/CMS/StoreCmsPageRequest.php` (updated)
-  - Added slug validation rules
-  - Slug must be unique except on update
-  - Slug must contain only letters, numbers, hyphens
-  - Added prepareForValidation to handle manual slug preservation
+- `resources/js/components/admin/cms/hero-slider-form.tsx` (updated)
+  - Added previewUrl prop to ImageDropzone
+  - Configured for single file upload
+  - Removed text-based "Current" path display
 
-- `app/Http/Requests/CMS/UpdateCmsPageRequest.php` (updated)
-  - Added slug validation rules
-  - Slug must be unique except for current record
-  - Added prepareForValidation to handle manual slug preservation
+#### Document Upload Forms
+- `resources/js/pages/Admin/Customers/Documents/Upload.tsx` (updated)
+  - Added error prop to ImageDropzone for validation feedback
+  - Added disabled prop tied to form processing state
+  - Removed manual "Selected" text display
+  - Enhanced with validation feedback and progress indication
 
-- `app/Http/Requests/Vehicles/StoreVehicleRequest.php` (updated)
-  - Added slug validation rules
-  - Slug must be unique except on update
-  - Slug must contain only letters, numbers, hyphens
-  - Added prepareForValidation to handle manual slug preservation
+- `resources/js/pages/Admin/Finance/Documents/Upload.tsx` (updated)
+  - Added error prop to ImageDropzone for validation feedback
+  - Added disabled prop tied to form processing state
+  - Removed manual "Selected" text display
+  - Enhanced with validation feedback and progress indication
 
-- `app/Http/Requests/Vehicles/UpdateVehicleRequest.php` (updated)
-  - Added slug validation rules
-  - Slug must be unique except for current record
-  - Added prepareForValidation to handle manual slug preservation
-
-#### Frontend Forms
-- `resources/js/pages/Admin/Blog/Posts/Create.tsx` (updated)
-  - Added auto-slug generation from title field
-  - Implemented slug-helper for real-time slug creation
-  - Added manual slug override capability
-  - Slug field auto-populates when title changes
-  - User can edit slug manually if needed
-
-- `resources/js/pages/Admin/Blog/Posts/Edit.tsx` (updated)
-  - Added auto-slug generation from title field
-  - Preserves existing slug on edit unless manually changed
-  - Implemented slug-helper for real-time slug creation
-  - Added manual slug override capability
-
-- `resources/js/pages/Admin/CMS/Pages/Create.tsx` (updated)
-  - Added auto-slug generation from title field
-  - Implemented slug-helper for real-time slug creation
-  - Added manual slug override capability
-  - Slug field auto-populates when title changes
-
-- `resources/js/pages/Admin/CMS/Pages/Edit.tsx` (updated)
-  - Added auto-slug generation from title field
-  - Preserves existing slug on edit unless manually changed
-  - Implemented slug-helper for real-time slug creation
-  - Added manual slug override capability
-
-- `resources/js/pages/Admin/Inventory/Vehicles/Create.tsx` (updated)
-  - Added auto-slug generation from name field
-  - Implemented slug-helper for real-time slug creation
-  - Added manual slug override capability
-  - Slug field auto-populates when name changes
-
-- `resources/js/pages/Admin/Inventory/Vehicles/Edit.tsx` (updated)
-  - Added auto-slug generation from name field
-  - Preserves existing slug on edit unless manually changed
-  - Implemented slug-helper for real-time slug creation
-  - Added manual slug override capability
+- `resources/js/pages/Admin/Imports/Documents/Upload.tsx` (updated)
+  - Added error prop to ImageDropzone for validation feedback
+  - Added disabled prop tied to form processing state
+  - Removed manual "Selected" text display
+  - Enhanced with validation feedback and progress indication
 
 ### Key Improvements
 
-1. **Automatic Slug Generation**: All applicable models now generate slugs automatically from title/name fields
-2. **Uniqueness Enforcement**: Database unique constraints and validation rules ensure slug uniqueness
-3. **Manual Override**: Users can manually edit slugs when auto-generation doesn't meet their needs
-4. **Edit Preservation**: Existing slugs are preserved during edits unless manually changed
-5. **Consistent Behavior**: HasSlug trait provides consistent slug generation across all models
-6. **Frontend Integration**: Real-time slug generation in forms for better UX
-7. **URL-Friendly Slugs**: Slugs use only letters, numbers, and hyphens for clean URLs
-8. **Automatic Suffixes**: HasSlug trait automatically adds suffixes (e.g., -2, -3) for duplicate slugs
-9. **Validation Rules**: Comprehensive validation ensures slug format and uniqueness
-10. **Reusable Pattern**: HasSlug trait can be easily applied to future models
+1. **Image Preview**: Single file uploads now show image preview with remove button
+2. **Existing Image Support**: previewUrl prop displays existing images on edit forms
+3. **File Type Validation**: Client-side validation for images and PDFs
+4. **File Size Validation**: Configurable max file size with clear error messages
+5. **Upload Progress**: Disabled state during form submission provides visual feedback
+6. **Error Display**: Backend validation errors displayed inline with destructive styling
+7. **Drag-and-Drop**: Enhanced visual feedback during drag operations
+8. **Accessibility**: Improved ARIA attributes and keyboard navigation
+9. **Consistent UX**: All upload forms now use the same component with consistent behavior
+10. **Backend Compatibility**: Hidden file inputs maintain compatibility with existing endpoints
 
-### HasSlug Trait Features
+### ImageDropzone Component Features
 
-**Automatic Generation:**
-- Generates slug from configured source field (title, name, etc.)
-- Uses Laravel's Str::slug for consistent slugification
-- Triggers on model creating event
+**Preview Functionality:**
+- Shows image preview for single file uploads
+- Displays existing images via previewUrl prop
+- Remove button to clear preview and file input
+- Automatic preview generation from selected files
 
-**Uniqueness Handling:**
-- Checks for existing slugs in the same table
-- Automatically appends numeric suffixes (e.g., -2, -3) for duplicates
-- Ensures unique slugs without manual intervention
+**Validation:**
+- File type validation (images, PDFs, or custom accept types)
+- File size validation with configurable max size
+- Clear error messages for validation failures
+- Backend error display via error prop
+- Visual feedback with destructive styling on errors
 
-**Edit Preservation:**
-- Preserves manually entered slugs during updates
-- Only regenerates slug if source field changes and slug is empty
-- Allows manual override for SEO optimization
+**Upload Progress:**
+- Disabled state during form submission
+- Visual opacity and cursor changes when disabled
+- "Upload disabled" message when processing
+- Prevents multiple uploads during submission
 
-**Configuration:**
-- Configurable source field (default: title)
-- Configurable slug field (default: slug)
-- Can be customized per model
+**Drag-and-Drop:**
+- Visual feedback on drag over
+- Border color changes during drag operations
+- Background color changes during drag operations
+- Smooth transitions for all interactions
 
-### Frontend Slug Helper
+**Accessibility:**
+- ARIA labels for screen readers
+- aria-disabled attribute for disabled state
+- Keyboard navigation support (Enter, Space)
+- Role attributes for proper semantic behavior
+- Focus-visible ring for keyboard users
 
-**Features:**
-- Matches Laravel's Str::slug behavior
-- Converts to lowercase
-- Removes special characters
-- Replaces spaces with hyphens
-- Removes multiple consecutive hyphens
-- Trims leading/trailing hyphens
+### Forms Updated
 
-**Usage:**
-```typescript
-import { generateSlug } from '@/lib/slug-helper';
+**Image Upload Forms:**
+- Blog post featured image
+- Promotion banner
+- SEO metadata Open Graph image
+- Hero slider image
+- Vehicle gallery image
 
-const slug = generateSlug('My Blog Post Title');
-// Result: 'my-blog-post-title'
-```
-
-### Form Integration
-
-**Auto-Slug Pattern:**
-1. User enters title/name
-2. Slug field auto-populates using slug-helper
-3. User can edit slug manually if needed
-4. On form submission, backend validates slug uniqueness
-5. Backend preserves manual slug or generates if empty
-
-**Edit Behavior:**
-1. Existing slug is preserved in slug field
-2. If title changes, slug remains unchanged unless manually edited
-3. If slug is manually cleared, it regenerates from title
-4. Backend ensures uniqueness on save
-
-### Models Updated
-
-**Content Models (Public URLs):**
-- BlogPost - Blog post URLs
-- DynamicCmsPage - CMS page URLs
-- Vehicle - Vehicle detail page URLs
-
-**Additional Models (if needed):**
-- HasSlug trait can be easily applied to other models
-- Examples: BlogCategory, BlogTag, Promotion, etc.
+**Document Upload Forms:**
+- Customer documents
+- Finance documents
+- Import documents
 
 ### Validation Rules
 
-**Slug Format:**
-- Must contain only letters, numbers, and hyphens
-- No spaces or special characters
-- Maximum 255 characters
-- Cannot start or end with hyphen
+**File Types:**
+- Images: image/* (PNG, JPG, WEBP, etc.)
+- Documents: image/*,application/pdf
+- Custom accept types supported via prop
 
-**Uniqueness:**
-- Must be unique within the model's table
-- On update: unique except for current record
-- On create: must be completely unique
+**File Size:**
+- Default: 10MB (10 * 1024 * 1024 bytes)
+- Configurable via maxSize prop
+- Error message shows allowed size in MB
+
+**Error Messages:**
+- "File [name] is not an image"
+- "File [name] is not a valid file type"
+- "File [name] exceeds maximum size of XMB"
+- Backend errors displayed via error prop
+
+### Implementation Pattern
+
+**Single File Upload with Preview:**
+```tsx
+<ImageDropzone
+  onFilesSelected={(files) => {
+    const input = document.querySelector('input[name="field"]') as HTMLInputElement;
+    if (input && files[0]) {
+      const transfer = new DataTransfer();
+      transfer.items.add(files[0]);
+      input.files = transfer.files;
+    }
+  }}
+  multiple={false}
+  accept="image/*"
+  previewUrl={existingImageUrl}
+  error={errors.field}
+  disabled={processing}
+/>
+<input name="field" type="file" accept="image/*" className="hidden" />
+```
+
+**Document Upload with Validation:**
+```tsx
+<ImageDropzone
+  onFilesSelected={(files) => setItems(files.map(...))}
+  multiple={false}
+  accept="image/*,application/pdf"
+  error={errors.document}
+  disabled={processing}
+/>
+```
+
+### Benefits
+
+1. **Better UX**: Users can see image previews before uploading
+2. **Clear Feedback**: Validation errors are displayed immediately
+3. **Progress Indication**: Disabled state shows upload is in progress
+4. **Consistency**: All upload forms use the same component
+5. **Accessibility**: Improved keyboard navigation and screen reader support
+6. **Error Prevention**: Client-side validation prevents invalid uploads
+7. **Flexibility**: Configurable file types, sizes, and behavior
+8. **Backward Compatible**: Works with existing backend endpoints
+9. **Professional UI**: Modern drag-and-drop interface with smooth animations
+10. **Reduced Errors**: Clear validation messages reduce user confusion
 
 ### Testing Notes
 
-- HasSlug trait tested with various title/name formats
-- Frontend slug helper matches Laravel behavior
-- FormRequest validation rules tested for uniqueness
-- Manual slug override functionality verified
-- Edit preservation behavior confirmed
-- Automatic suffix generation tested for duplicates
+- Image preview functionality tested with existing images
+- File type validation tested with invalid file types
+- File size validation tested with oversized files
+- Disabled state tested during form submission
+- Backend error display tested with validation errors
+- Drag-and-drop functionality tested with image files
+- Keyboard navigation tested with Tab, Enter, and Space keys
+- Accessibility tested with ARIA attributes
+- All forms maintain compatibility with backend endpoints
 - Code formatted with Laravel Pint to maintain project standards
-- All slug generation follows SEO best practices

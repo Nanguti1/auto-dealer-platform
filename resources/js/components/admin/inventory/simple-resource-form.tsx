@@ -1,4 +1,5 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { ImageDropzone } from '@/components/shared/media-upload';
 import type { AdminFeature, AdminGallery } from './types';
 
 export function FeatureForm({ feature, action }: { feature?: AdminFeature; action: string }) {
@@ -57,12 +58,23 @@ export function GalleryForm({ gallery, action }: { gallery?: AdminGallery; actio
           value={String(gallery?.vehicle_id ?? '')}
           onChange={() => {}}
         />
-        <FormField
-          name="path"
-          label="Image path"
-          value={gallery?.path ?? ''}
-          onChange={() => {}}
-        />
+        <div className="space-y-2">
+          <label htmlFor="path" className="text-sm font-medium">Image</label>
+          <ImageDropzone
+            onFilesSelected={(files) => {
+              const input = document.querySelector('input[name="path"]') as HTMLInputElement | null;
+              if (input && files[0]) {
+                const transfer = new DataTransfer();
+                transfer.items.add(files[0]);
+                input.files = transfer.files;
+              }
+            }}
+            accept="image/*"
+            multiple={false}
+            previewUrl={gallery?.path}
+          />
+          <input id="path" name="path" type="file" accept="image/*" className="hidden" />
+        </div>
         <FormField
           name="alt_text"
           label="Alt text"

@@ -62,6 +62,7 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           <label htmlFor="banner" className="text-sm font-medium">Banner</label>
           <ImageDropzone
             multiple={false}
+            previewUrl={promotion?.banner_path}
             onFilesSelected={(files) => {
               const input = document.querySelector('input[name="banner"]') as HTMLInputElement | null;
 
@@ -73,7 +74,6 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
             }}
           />
           <input id="banner" name="banner" type="file" accept="image/*" className="hidden" />
-          {promotion?.banner_path && <p className="text-sm text-muted-foreground">Current: {promotion.banner_path}</p>}
         </div>
       </FormSection>
 

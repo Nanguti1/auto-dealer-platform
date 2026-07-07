@@ -28,6 +28,8 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
         <div className="space-y-2">
           <label htmlFor="image" className="text-sm font-medium">Hero Image</label>
           <ImageDropzone
+            multiple={false}
+            previewUrl={heroSlider?.image_path}
             onFilesSelected={(files) => {
               const input = document.querySelector('input[name="image"]') as HTMLInputElement;
 
@@ -40,9 +42,6 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
             className="mb-2"
           />
           <input id="image" name="image" type="file" accept="image/*" className="hidden" />
-          {heroSlider?.image_path && (
-            <p className="text-sm text-muted-foreground">Current: {heroSlider.image_path}</p>
-          )}
         </div>
         <FormField
           name="cta_button_text"

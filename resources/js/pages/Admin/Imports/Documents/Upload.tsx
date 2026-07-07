@@ -23,9 +23,8 @@ export default function Upload({ vehicleImport }: { vehicleImport?: ImportReques
           <>
             <div className="space-y-2"><Label htmlFor="name">Document name</Label><Input id="name" name="name" /><InputError message={errors.name} /></div>
             <div className="space-y-2"><Label htmlFor="type">Document type</Label><Input id="type" name="type" placeholder="Invoice, bill of lading, inspection certificate, insurance, customs documents, import permit…" /><InputError message={errors.type} /></div>
-            <ImageDropzone onFilesSelected={(files) => setItems(files.map((file) => ({ id: `${file.name}-${file.lastModified}`, file, url: URL.createObjectURL(file), alt: file.name })))} multiple={false} accept="image/*,application/pdf" />
+            <ImageDropzone onFilesSelected={(files) => setItems(files.map((file) => ({ id: `${file.name}-${file.lastModified}`, file, url: URL.createObjectURL(file), alt: file.name })))} multiple={false} accept="image/*,application/pdf" error={errors.file} disabled={processing} />
             {items.map((item, index) => <input key={item.id} type="file" name="file" className="sr-only" />)}
-            <p className="text-sm text-muted-foreground">Selected: {items[0]?.alt ?? 'No file selected'}</p>
             <Button className="w-fit" disabled={processing}><UploadCloud className="mr-2 size-4" />{processing ? 'Uploading…' : 'Upload document'}</Button>
           </>
         )}

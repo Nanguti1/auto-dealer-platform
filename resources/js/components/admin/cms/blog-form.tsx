@@ -1,4 +1,5 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { ImageDropzone } from '@/components/shared/media-upload';
 import { generateSlug } from '@/lib/slug-utils';
 import * as React from 'react';
 import type { BlogPost } from './types';
@@ -102,8 +103,20 @@ export default function BlogForm({ blogPost, action, method = 'post' }: { blogPo
       <FormSection title="Media" gridCols={1} fullWidth>
         <div className="space-y-2">
           <label htmlFor="featured_image" className="text-sm font-medium">Cover image</label>
-          <input id="featured_image" name="featured_image" type="file" accept="image/*" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
-          {blogPost?.featured_image_path && <p className="text-sm text-muted-foreground">Current: {blogPost.featured_image_path}</p>}
+          <ImageDropzone
+            onFilesSelected={(files) => {
+              const input = document.querySelector('input[name="featured_image"]') as HTMLInputElement | null;
+              if (input && files[0]) {
+                const transfer = new DataTransfer();
+                transfer.items.add(files[0]);
+                input.files = transfer.files;
+              }
+            }}
+            accept="image/*"
+            multiple={false}
+            previewUrl={blogPost?.featured_image_path}
+          />
+          <input id="featured_image" name="featured_image" type="file" accept="image/*" className="hidden" />
         </div>
       </FormSection>
 
