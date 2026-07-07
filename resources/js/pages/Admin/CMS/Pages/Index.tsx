@@ -7,12 +7,15 @@ import type { CmsPage, CmsFilters, Paginated } from '@/components/admin/cms/type
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function Index({ pages, filters = {} }: { pages: Paginated<CmsPage>; filters?: CmsFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const columns: Column<CmsPage>[] = [
     {
@@ -54,13 +57,50 @@ export default function Index({ pages, filters = {} }: { pages: Paginated<CmsPag
     },
   ];
 
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="Static Pages"
+        description="Manage static content pages, SEO, and visibility settings."
+        actions={<Button asChild><Link href={adminRoutes.cmsPages.create().url}>Create Page</Link></Button>}
+      >
+        <LoadingState message="Loading pages..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CmsShell
+        title="Static Pages"
+        description="Manage static content pages, SEO, and visibility settings."
+        actions={<Button asChild><Link href={adminRoutes.cmsPages.create().url}>Create Page</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(adminRoutes.cmsPages.index().url);
+          }}
+        />
+      </CmsShell>
+    );
+  }
+
   return (
     <CmsShell
       title="Static Pages"
       description="Manage static content pages, SEO, and visibility settings."
       actions={<Button asChild><Link href={adminRoutes.cmsPages.create().url}>Create Page</Link></Button>}
     >
-      <AdminDataTable
+      {pages.data.length === 0 ? (
+        <EmptyGeneric
+          title="No static pages"
+          description="Get started by creating your first static page for your website."
+          action={{ label: 'Create Page', onClick: () => router.visit(adminRoutes.cmsPages.create().url) }}
+        />
+      ) : (
+        <AdminDataTable
         rows={pages}
         filters={filters}
         columns={columns}
@@ -106,6 +146,7 @@ export default function Index({ pages, filters = {} }: { pages: Paginated<CmsPag
           </>
         )}
       />
+      )}
     </CmsShell>
   );
 }

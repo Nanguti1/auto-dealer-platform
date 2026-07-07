@@ -7,12 +7,15 @@ import type { BlogTag, CmsFilters, Paginated } from '@/components/admin/cms/type
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function Index({ blogTags, filters = {} }: { blogTags: Paginated<BlogTag>; filters?: CmsFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const columns: Column<BlogTag>[] = [
     {
@@ -67,13 +70,50 @@ export default function Index({ blogTags, filters = {} }: { blogTags: Paginated<
     },
   ];
 
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="Blog Tags"
+        description="Manage blog post tags for content tagging and filtering."
+        actions={<Button asChild><Link href={adminRoutes.blogTags.create().url}>Create Tag</Link></Button>}
+      >
+        <LoadingState message="Loading blog tags..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CmsShell
+        title="Blog Tags"
+        description="Manage blog post tags for content tagging and filtering."
+        actions={<Button asChild><Link href={adminRoutes.blogTags.create().url}>Create Tag</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(adminRoutes.blogTags.index().url);
+          }}
+        />
+      </CmsShell>
+    );
+  }
+
   return (
     <CmsShell
       title="Blog Tags"
       description="Manage blog post tags for content tagging and filtering."
       actions={<Button asChild><Link href={adminRoutes.blogTags.create().url}>Create Tag</Link></Button>}
     >
-      <AdminDataTable
+      {blogTags.data.length === 0 ? (
+        <EmptyGeneric
+          title="No blog tags"
+          description="Get started by creating your first blog tag to categorize your content."
+          action={{ label: 'Create Tag', onClick: () => router.visit(adminRoutes.blogTags.create().url) }}
+        />
+      ) : (
+        <AdminDataTable
         rows={blogTags}
         filters={filters}
         columns={columns}
@@ -119,6 +159,7 @@ export default function Index({ blogTags, filters = {} }: { blogTags: Paginated<
           </>
         )}
       />
+      )}
     </CmsShell>
   );
 }

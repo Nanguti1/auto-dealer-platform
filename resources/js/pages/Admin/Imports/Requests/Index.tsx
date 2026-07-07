@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import { Archive, CheckCircle2, Eye, Pencil, XCircle } from 'lucide-react';
+import * as React from 'react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import { formatCurrency, formatDateTime, importVehicleName, requesterName, supplierName, userName } from '@/components/admin/imports/helpers';
 import ImportShell from '@/components/admin/imports/import-shell';
@@ -7,9 +8,13 @@ import ImportStatusBadge from '@/components/admin/imports/import-status-badge';
 import type { ImportFilters, ImportPagination, ImportRequest } from '@/components/admin/imports/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ imports, filters = {} }: { imports: ImportPagination; filters?: ImportFilters }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
+
   const columns: Column<ImportRequest>[] = [
     { key: 'status', label: 'Status', sortable: true, render: (row) => <ImportStatusBadge status={row.status} /> },
     { key: 'customer', label: 'Customer', render: (row) => <div className="flex items-center gap-3">{row.customer ? <CustomerAvatar customer={row.customer} /> : null}<div><Link href={`/admin/imports/${row.id}`} className="font-medium hover:underline">{requesterName(row)}</Link><p className="text-xs text-muted-foreground">{row.customer?.email ?? row.user?.email ?? 'No contact'}</p></div></div> },
@@ -26,23 +31,53 @@ export default function Index({ imports, filters = {} }: { imports: ImportPagina
     { key: 'updated_at', label: 'Last updated', sortable: true, render: (row) => formatDateTime(row.updated_at) },
   ];
 
+  if (isLoading) {
+    return (
+      <ImportShell title="Import Requests" description="Manage vehicle import requests, suppliers, shipments, tracking, payments, and customs.">
+        <LoadingState message="Loading import requests..." variant="full-page" />
+      </ImportShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <ImportShell title="Import Requests" description="Manage vehicle import requests, suppliers, shipments, tracking, payments, and customs.">
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit('/admin/imports');
+          }}
+        />
+      </ImportShell>
+    );
+  }
+
   return (
     <ImportShell title="Import Requests" description="Manage vehicle import requests, suppliers, shipments, tracking, payments, and customs.">
-      <AdminDataTable
-        rows={imports}
-        filters={filters}
-        columns={columns}
-        baseUrl="/admin/imports"
-        createUrl="/admin/imports/create"
-        createLabel="Create Import"
-        rowActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}`}><Eye className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/imports/${row.id}`)}><Archive className="size-4" /></Button>
-          </div>
-        )}
-      />
+      {imports.data.length === 0 ? (
+        <EmptyGeneric
+          title="No import requests"
+          description="Start importing vehicles by creating your first import request."
+          action={{ label: 'Create Import', onClick: () => router.visit('/admin/imports/create') }}
+        />
+      ) : (
+        <AdminDataTable
+          rows={imports}
+          filters={filters}
+          columns={columns}
+          baseUrl="/admin/imports"
+          createUrl="/admin/imports/create"
+          createLabel="Create Import"
+          rowActions={(row) => (
+            <div className="flex justify-end gap-1">
+              <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}`}><Eye className="size-4" /></Link></Button>
+              <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
+              <Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/imports/${row.id}`)}><Archive className="size-4" /></Button>
+            </div>
+          )}
+        />
+      )}
     </ImportShell>
   );
 }

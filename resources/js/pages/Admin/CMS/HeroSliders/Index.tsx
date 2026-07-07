@@ -7,12 +7,15 @@ import type { HeroSlider, CmsFilters, Paginated } from '@/components/admin/cms/t
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function Index({ heroSliders, filters = {} }: { heroSliders: Paginated<HeroSlider>; filters?: CmsFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const columns: Column<HeroSlider>[] = [
     {
@@ -68,13 +71,50 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
     },
   ];
 
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="Hero Sliders"
+        description="Manage homepage hero sliders and banners."
+        actions={<Button asChild><Link href={adminRoutes.heroSliders.create().url}>Create Slider</Link></Button>}
+      >
+        <LoadingState message="Loading hero sliders..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CmsShell
+        title="Hero Sliders"
+        description="Manage homepage hero sliders and banners."
+        actions={<Button asChild><Link href={adminRoutes.heroSliders.create().url}>Create Slider</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(adminRoutes.heroSliders.index().url);
+          }}
+        />
+      </CmsShell>
+    );
+  }
+
   return (
     <CmsShell
       title="Hero Sliders"
       description="Manage homepage hero sliders and banners."
       actions={<Button asChild><Link href={adminRoutes.heroSliders.create().url}>Create Slider</Link></Button>}
     >
-      <AdminDataTable
+      {heroSliders.data.length === 0 ? (
+        <EmptyGeneric
+          title="No hero sliders"
+          description="Get started by creating your first hero slider for your homepage."
+          action={{ label: 'Create Slider', onClick: () => router.visit(adminRoutes.heroSliders.create().url) }}
+        />
+      ) : (
+        <AdminDataTable
         rows={heroSliders}
         filters={filters}
         columns={columns}
@@ -120,6 +160,7 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
           </>
         )}
       />
+      )}
     </CmsShell>
   );
 }

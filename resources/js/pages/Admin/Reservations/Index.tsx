@@ -1,15 +1,19 @@
 import { Link, router } from '@inertiajs/react';
 import { Calendar, Car, DollarSign, Eye, Pencil, Trash2, User } from 'lucide-react';
+import * as React from 'react';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { customerName, formatCurrency, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
 import ReservationShell from '@/components/admin/reservations/reservation-shell';
 import type { ReservationFilters, ReservationPagination, ReservationRecord } from '@/components/admin/reservations/types';
+import { LoadingState, EmptyReservations, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import admin from '@/routes/admin';
 
 export default function Index({ reservations, filters = {} }: { reservations: ReservationPagination; filters?: ReservationFilters }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
   const columns: Column<ReservationRecord>[] = [
     { 
       key: 'id', 
@@ -87,13 +91,46 @@ export default function Index({ reservations, filters = {} }: { reservations: Re
     },
   ];
 
+  if (isLoading) {
+    return (
+      <ReservationShell 
+        title="Reservations" 
+        description="Manage vehicle reservations, deposits, expiration dates, and customer hold requests." 
+        actions={<Button asChild><Link href={admin.reservations.create().url}>Create Reservation</Link></Button>}
+      >
+        <LoadingState message="Loading reservations..." variant="full-page" />
+      </ReservationShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <ReservationShell 
+        title="Reservations" 
+        description="Manage vehicle reservations, deposits, expiration dates, and customer hold requests." 
+        actions={<Button asChild><Link href={admin.reservations.create().url}>Create Reservation</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(admin.reservations.index().url);
+          }}
+        />
+      </ReservationShell>
+    );
+  }
+
   return (
     <ReservationShell 
       title="Reservations" 
       description="Manage vehicle reservations, deposits, expiration dates, and customer hold requests." 
       actions={<Button asChild><Link href={admin.reservations.create().url}>Create Reservation</Link></Button>}
     >
-      <AdminDataTable 
+      {reservations.data.length === 0 ? (
+        <EmptyReservations onCreate={() => router.visit(admin.reservations.create().url)} />
+      ) : (
+        <AdminDataTable 
         rows={reservations} 
         filters={filters} 
         columns={columns} 

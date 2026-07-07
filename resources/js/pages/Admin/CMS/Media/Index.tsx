@@ -5,6 +5,7 @@ import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { MediaFile, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,6 +16,8 @@ export default function Index({ mediaFiles, filters = {} }: { mediaFiles: Pagina
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const [searchQuery, setSearchQuery] = React.useState(String(filters.search ?? ''));
   const [categoryFilter, setCategoryFilter] = React.useState(String(filters.category ?? 'all'));
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const applyFilters = () => {
     router.get(adminRoutes.media.index().url, {
@@ -35,6 +38,36 @@ return '—';
   };
 
   const isImage = (mimeType?: string) => mimeType?.startsWith('image/');
+
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="Media Library"
+        description="Manage and organize all media files."
+        actions={<Button asChild><Link href="/admin/media/upload">Upload Media</Link></Button>}
+      >
+        <LoadingState message="Loading media files..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CmsShell
+        title="Media Library"
+        description="Manage and organize all media files."
+        actions={<Button asChild><Link href="/admin/media/upload">Upload Media</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(adminRoutes.media.index().url);
+          }}
+        />
+      </CmsShell>
+    );
+  }
 
   return (
     <CmsShell
@@ -127,15 +160,11 @@ return '—';
         </div>
 
         {mediaFiles.data.length === 0 && (
-          <Card>
-            <CardContent className="flex flex-col items-center justify-center py-12">
-              <ImageIcon className="size-12 text-muted-foreground mb-4" />
-              <p className="text-muted-foreground">No media files found</p>
-              <Button asChild className="mt-4">
-                <Link href="/admin/media/create">Upload Media</Link>
-              </Button>
-            </CardContent>
-          </Card>
+          <EmptyGeneric
+            title="No media files"
+            description="Upload your first media file to get started."
+            action={{ label: 'Upload Media', onClick: () => router.visit('/admin/media/upload') }}
+          />
         )}
       </div>
     </CmsShell>

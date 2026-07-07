@@ -7,12 +7,15 @@ import type { BlogCategory, CmsFilters, Paginated } from '@/components/admin/cms
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 export default function Index({ blogCategories, filters = {} }: { blogCategories: Paginated<BlogCategory>; filters?: CmsFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const columns: Column<BlogCategory>[] = [
     {
@@ -60,13 +63,50 @@ export default function Index({ blogCategories, filters = {} }: { blogCategories
     },
   ];
 
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="Blog Categories"
+        description="Manage blog post categories for content organization."
+        actions={<Button asChild><Link href={adminRoutes.blogCategories.create().url}>Create Category</Link></Button>}
+      >
+        <LoadingState message="Loading blog categories..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CmsShell
+        title="Blog Categories"
+        description="Manage blog post categories for content organization."
+        actions={<Button asChild><Link href={adminRoutes.blogCategories.create().url}>Create Category</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(adminRoutes.blogCategories.index().url);
+          }}
+        />
+      </CmsShell>
+    );
+  }
+
   return (
     <CmsShell
       title="Blog Categories"
       description="Manage blog post categories for content organization."
       actions={<Button asChild><Link href={adminRoutes.blogCategories.create().url}>Create Category</Link></Button>}
     >
-      <AdminDataTable
+      {blogCategories.data.length === 0 ? (
+        <EmptyGeneric
+          title="No blog categories"
+          description="Get started by creating your first blog category to organize your content."
+          action={{ label: 'Create Category', onClick: () => router.visit(adminRoutes.blogCategories.create().url) }}
+        />
+      ) : (
+        <AdminDataTable
         rows={blogCategories}
         filters={filters}
         columns={columns}
@@ -112,6 +152,7 @@ export default function Index({ blogCategories, filters = {} }: { blogCategories
           </>
         )}
       />
+      )}
     </CmsShell>
   );
 }

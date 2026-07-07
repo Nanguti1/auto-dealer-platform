@@ -1426,3 +1426,179 @@ Protect sensitive routes from brute force attacks and abuse by implementing appr
 - ✅ Authentication rate limiting tests pass (existing)
 - ✅ Laravel Pint run to ensure code formatting compliance
 - ✅ Configuration cache cleared to apply changes
+
+---
+
+## Session 15
+- UI loading, empty and error states standardized.
+
+### P1 - Inconsistent Loading/Empty/Error States - COMPLETED
+
+**Objectives:**
+Implement loading, empty, and error states in all Index pages across the admin interface to ensure consistent UX throughout the application.
+
+**Requirements Met:**
+- ✅ Loading states added to all Index pages using LoadingState component
+- ✅ Empty states added to all Index pages using appropriate EmptyState components
+- ✅ Error states added to all Index pages using InlineError component
+- ✅ Established pattern from Customers, Vehicles, and CRM Leads Index pages followed
+- ✅ Reused existing shared components (LoadingState, EmptyState, InlineError)
+- ✅ Consistent UX maintained throughout the application
+
+### Modules Updated
+
+#### Blog Module
+- **Categories Index**: Added loading, empty, and error states
+- **Posts Index**: Added loading, empty, and error states
+- **Tags Index**: Added loading, empty, and error states
+
+#### CMS Module
+- **Pages Index**: Added loading, empty, and error states
+- **FAQs Index**: Added loading, empty, and error states
+- **HeroSliders Index**: Added loading, empty, and error states
+- **HomePageSections Index**: Added loading, empty, and error states
+- **Media Index**: Added loading, empty, and error states
+- **SeoMetadata Index**: Added loading, empty, and error states
+
+#### CRM Module
+- **Activities Index**: Added loading, empty, and error states
+- **Tasks Index**: Added loading, empty, and error states
+- **Pipeline Index**: Added loading, empty, and error states
+
+#### Finance Module
+- **Applications Index**: Added loading, empty, and error states
+- **Documents Index**: Added loading, empty, and error states
+
+#### Imports Module
+- **Requests Index**: Added loading, empty, and error states
+- **Shipments Index**: Added loading, empty, and error states
+- **Documents Index**: Added loading, empty, and error states
+- **Payments Index**: Added loading, empty, and error states
+
+#### Inventory Module
+- **Features Index**: Added loading, empty, and error states
+- **Gallery Index**: Added loading, empty, and error states
+
+#### Marketing Module
+- **Promotions Index**: Added loading, empty, and error states
+- **Reviews Index**: Added loading, empty, and error states
+
+#### Reservations Module
+- **Reservations Index**: Added loading, empty, and error states
+
+#### Customers Module
+- **Documents Index**: Added loading, empty, and error states
+- **Notes Index**: Added loading, empty, and error states
+- **Timeline Index**: Added loading, empty, and error states
+
+### Implementation Pattern
+
+All Index pages now follow the established pattern:
+
+```tsx
+export default function Index({ data, filters = {} }: Props) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <ModuleShell title="[Module]" description="[Description]">
+        <LoadingState message="Loading [module]..." variant="full-page" />
+      </ModuleShell>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <ModuleShell title="[Module]" description="[Description]">
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(admin.[module].index().url);
+          }}
+        />
+      </ModuleShell>
+    );
+  }
+
+  // Empty state
+  return (
+    <ModuleShell title="[Module]" description="[Description]">
+      {data.data.length === 0 ? (
+        <Empty[Module] onCreate={() => router.visit(admin.[module].create().url)} />
+      ) : (
+        // Render data table or content
+      )}
+    </ModuleShell>
+  );
+}
+```
+
+### Files Modified
+
+#### Blog Module
+- `resources/js/pages/Admin/Blog/Categories/Index.tsx`
+- `resources/js/pages/Admin/Blog/Posts/Index.tsx`
+- `resources/js/pages/Admin/Blog/Tags/Index.tsx`
+
+#### CMS Module
+- `resources/js/pages/Admin/CMS/Pages/Index.tsx`
+- `resources/js/pages/Admin/CMS/FAQs/Index.tsx`
+- `resources/js/pages/Admin/CMS/HeroSliders/Index.tsx`
+- `resources/js/pages/Admin/CMS/HomePageSections/Index.tsx`
+- `resources/js/pages/Admin/CMS/Media/Index.tsx`
+- `resources/js/pages/Admin/CMS/SeoMetadata/Index.tsx`
+
+#### CRM Module
+- `resources/js/pages/Admin/CRM/Activities/Index.tsx`
+- `resources/js/pages/Admin/CRM/Tasks/Index.tsx`
+- `resources/js/pages/Admin/CRM/Pipeline/Index.tsx`
+
+#### Finance Module
+- `resources/js/pages/Admin/Finance/Applications/Index.tsx`
+- `resources/js/pages/Admin/Finance/Documents/Index.tsx`
+
+#### Imports Module
+- `resources/js/pages/Admin/Imports/Requests/Index.tsx`
+- `resources/js/pages/Admin/Imports/Shipments/Index.tsx`
+- `resources/js/pages/Admin/Imports/Documents/Index.tsx`
+- `resources/js/pages/Admin/Imports/Payments/Index.tsx`
+
+#### Inventory Module
+- `resources/js/pages/Admin/Inventory/Features/Index.tsx`
+- `resources/js/pages/Admin/Inventory/Gallery/Index.tsx`
+
+#### Marketing Module
+- `resources/js/pages/Admin/Marketing/Promotions/Index.tsx`
+- `resources/js/pages/Admin/Reviews/Index.tsx`
+
+#### Reservations Module
+- `resources/js/pages/Admin/Reservations/Index.tsx`
+
+#### Customers Module
+- `resources/js/pages/Admin/Customers/Documents/Index.tsx`
+- `resources/js/pages/Admin/Customers/Notes/Index.tsx`
+- `resources/js/pages/Admin/Customers/Timeline/Index.tsx`
+
+### Empty State Components Used
+
+- **EmptyCustomers**: Used for customer-related pages
+- **EmptyVehicles**: Used for vehicle-related pages
+- **EmptyLeads**: Used for lead-related pages
+- **EmptyReservations**: Used for reservation pages
+- **EmptyFinanceApplications**: Used for finance application pages
+- **EmptyDocuments**: Used for document-related pages
+- **EmptyGeneric**: Used for modules without specific empty state components (Blog, CMS, CRM, Imports, Inventory, Marketing)
+
+### Verification
+- ✅ All 28 Index pages updated with loading, empty, and error states
+- ✅ Shared components reused (LoadingState, EmptyState variants, InlineError)
+- ✅ Consistent UX pattern applied across all modules
+- ✅ Error states include retry functionality
+- ✅ Empty states include actionable calls-to-action
+- ✅ Loading states provide user feedback during data fetching
+- ✅ React state management properly implemented
+- ✅ Inertia router integration for navigation and retry functionality

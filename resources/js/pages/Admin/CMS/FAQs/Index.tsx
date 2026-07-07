@@ -7,6 +7,7 @@ import type { Faq, CmsFilters, Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -14,6 +15,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 export default function Index({ faqs, filters = {} }: { faqs: Paginated<Faq>; filters?: CmsFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const [expandedId, setExpandedId] = React.useState<number | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
 
   const columns: Column<Faq>[] = [
     {
@@ -61,13 +64,50 @@ export default function Index({ faqs, filters = {} }: { faqs: Paginated<Faq>; fi
     },
   ];
 
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="FAQ Management"
+        description="Manage frequently asked questions and their categories."
+        actions={<Button asChild><Link href={adminRoutes.faqs.create().url}>Create FAQ</Link></Button>}
+      >
+        <LoadingState message="Loading FAQs..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CmsShell
+        title="FAQ Management"
+        description="Manage frequently asked questions and their categories."
+        actions={<Button asChild><Link href={adminRoutes.faqs.create().url}>Create FAQ</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(adminRoutes.faqs.index().url);
+          }}
+        />
+      </CmsShell>
+    );
+  }
+
   return (
     <CmsShell
       title="FAQ Management"
       description="Manage frequently asked questions and their categories."
       actions={<Button asChild><Link href={adminRoutes.faqs.create().url}>Create FAQ</Link></Button>}
     >
-      <AdminDataTable
+      {faqs.data.length === 0 ? (
+        <EmptyGeneric
+          title="No FAQs"
+          description="Get started by creating your first FAQ to help your customers."
+          action={{ label: 'Create FAQ', onClick: () => router.visit(adminRoutes.faqs.create().url) }}
+        />
+      ) : (
+        <AdminDataTable
         rows={faqs}
         filters={filters}
         columns={columns}
@@ -113,6 +153,7 @@ export default function Index({ faqs, filters = {} }: { faqs: Paginated<Faq>; fi
           </>
         )}
       />
+      )}
     </CmsShell>
   );
 }

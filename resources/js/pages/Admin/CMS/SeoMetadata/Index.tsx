@@ -1,14 +1,17 @@
-import { Link } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { Eye, Pencil, Search, Globe, Share2 } from 'lucide-react';
 import * as React from 'react';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { SeoSettings, Paginated } from '@/components/admin/cms/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSettings> }) {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
   const columns: Column<SeoSettings>[] = [
     {
       key: 'site_name',
@@ -52,13 +55,49 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
     },
   ];
 
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="SEO Metadata"
+        description="Manage global SEO settings, Open Graph, and structured data."
+        actions={null}
+      >
+        <LoadingState message="Loading SEO settings..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CmsShell
+        title="SEO Metadata"
+        description="Manage global SEO settings, Open Graph, and structured data."
+        actions={null}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit('/admin/seo-metadata');
+          }}
+        />
+      </CmsShell>
+    );
+  }
+
   return (
     <CmsShell
       title="SEO Metadata"
       description="Manage global SEO settings, Open Graph, and structured data."
       actions={null}
     >
-      <AdminDataTable
+      {seoSettings.data.length === 0 ? (
+        <EmptyGeneric
+          title="No SEO settings"
+          description="Configure your SEO settings to improve your website's visibility."
+        />
+      ) : (
+        <AdminDataTable
         rows={seoSettings}
         columns={columns}
         baseUrl="/admin/seo-metadata"
@@ -79,6 +118,7 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
           </div>
         )}
       />
+      )}
     </CmsShell>
   );
 }

@@ -10,10 +10,14 @@ import type { CrmActivity, CrmFilters } from '@/components/admin/crm/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import type { Paginated } from '@/components/admin/inventory/types';
+import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ activities, filters = {} }: { activities: Paginated<CrmActivity>; filters?: CrmFilters }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
+
   const columns: Column<CrmActivity>[] = [
     { key: 'type', label: 'Type', sortable: true, render: (activity) => activity.type ?? 'follow-up' },
     { key: 'lead', label: 'Lead', render: (activity) => activity.lead ? <Link className="hover:underline" href={adminRoutes.leads.show(activity.lead.id).url}>{leadName(activity.lead)}</Link> : '—' },
@@ -23,5 +27,79 @@ export default function Index({ activities, filters = {} }: { activities: Pagina
     { key: 'assigned_user', label: 'Assigned user', render: (activity) => activity.assigned_user?.name ?? 'Unassigned' },
   ];
 
-  return <CrmShell title="CRM Activities" description="Manage calls, meetings, emails, follow-ups, and notes." actions={<Button asChild><Link href={adminRoutes.activities.create().url}>Create Activity</Link></Button>}><AdminDataTable rows={activities} filters={filters} columns={columns} baseUrl={adminRoutes.activities.index().url} createUrl={adminRoutes.activities.create().url} createLabel="Create Activity" rowActions={(activity) => <div className="flex justify-end gap-1"><Button variant="ghost" size="icon" asChild><Link href={adminRoutes.activities.edit(activity.id).url}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon" onClick={() => setDeleteId(activity.id)}><Trash2 className="size-4" /></Button><ConfirmationDialog open={deleteId === activity.id} onOpenChange={(open) => !open && setDeleteId(null)} title="Delete activity?" description="This removes the activity from the CRM timeline." trigger={<span />} confirmLabel="Delete" onConfirm={() => router.delete(`/admin/crm/activities/${activity.id}`, { onFinish: () => setDeleteId(null) })} /></div>} /></CrmShell>;
+  if (isLoading) {
+    return (
+      <CrmShell
+        title="CRM Activities"
+        description="Manage calls, meetings, emails, follow-ups, and notes."
+        actions={<Button asChild><Link href={adminRoutes.activities.create().url}>Create Activity</Link></Button>}
+      >
+        <LoadingState message="Loading activities..." variant="full-page" />
+      </CrmShell>
+    );
+  }
+
+  if (error) {
+    return (
+      <CrmShell
+        title="CRM Activities"
+        description="Manage calls, meetings, emails, follow-ups, and notes."
+        actions={<Button asChild><Link href={adminRoutes.activities.create().url}>Create Activity</Link></Button>}
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.visit(adminRoutes.activities.index().url);
+          }}
+        />
+      </CrmShell>
+    );
+  }
+
+  return (
+    <CrmShell
+      title="CRM Activities"
+      description="Manage calls, meetings, emails, follow-ups, and notes."
+      actions={<Button asChild><Link href={adminRoutes.activities.create().url}>Create Activity</Link></Button>}
+    >
+      {activities.data.length === 0 ? (
+        <EmptyGeneric
+          title="No activities"
+          description="Track your CRM interactions by creating your first activity."
+          action={{ label: 'Create Activity', onClick: () => router.visit(adminRoutes.activities.create().url) }}
+        />
+      ) : (
+        <AdminDataTable
+          rows={activities}
+          filters={filters}
+          columns={columns}
+          baseUrl={adminRoutes.activities.index().url}
+          createUrl={adminRoutes.activities.create().url}
+          createLabel="Create Activity"
+          rowActions={(activity) => (
+            <div className="flex justify-end gap-1">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={adminRoutes.activities.edit(activity.id).url}>
+                  <Pencil className="size-4" />
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" onClick={() => setDeleteId(activity.id)}>
+                <Trash2 className="size-4" />
+              </Button>
+              <ConfirmationDialog
+                open={deleteId === activity.id}
+                onOpenChange={(open) => !open && setDeleteId(null)}
+                title="Delete activity?"
+                description="This removes the activity from the CRM timeline."
+                trigger={<span />}
+                confirmLabel="Delete"
+                onConfirm={() => router.delete(`/admin/crm/activities/${activity.id}`, { onFinish: () => setDeleteId(null) })}
+              />
+            </div>
+          )}
+        />
+      )}
+    </CrmShell>
+  );
 }
