@@ -6,7 +6,6 @@ export { LoadingState, TableLoading, CardLoading, ChartLoading } from './Loading
 export { ErrorBoundary, InlineError } from './ErrorBoundary';
 export { default as ModuleShell } from './ModuleShell';
 export { default as StatusBadge } from './StatusBadge';
-export { default as PerformanceMonitor } from './PerformanceMonitor';
 export { default as ForeignSelector } from './ForeignSelector';
 export { default as AsyncForeignSelector } from './AsyncForeignSelector';
 export { RowActionsDropdown } from './RowActionsDropdown';

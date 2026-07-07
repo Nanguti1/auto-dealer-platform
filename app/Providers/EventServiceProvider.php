@@ -6,15 +6,12 @@ namespace App\Providers;
 
 use App\Events\BlogPublished;
 use App\Events\CustomerRegistered;
-use App\Events\DataExported;
 use App\Events\FinanceApplicationSubmitted;
 use App\Events\FinanceApproved;
-use App\Events\ImportCompleted;
 use App\Events\LeadAssigned;
 use App\Events\LeadCreated;
 use App\Events\PromotionCreated;
 use App\Events\ReservationCreated;
-use App\Events\RoleAssigned;
 use App\Events\TradeInApproved;
 use App\Events\TradeInSubmitted;
 use App\Events\VehicleCreated;
@@ -152,19 +149,6 @@ class EventServiceProvider extends ServiceProvider
         PromotionCreated::class => [
             UpdateAnalytics::class,
             SendNotification::class,
-            RecordAuditLog::class,
-        ],
-
-        // Role & Permission Events
-        RoleAssigned::class => [
-            RecordAuditLog::class,
-        ],
-
-        // Import/Export Events
-        ImportCompleted::class => [
-            RecordAuditLog::class,
-        ],
-        DataExported::class => [
             RecordAuditLog::class,
         ],
 

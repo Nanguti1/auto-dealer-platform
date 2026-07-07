@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
-use App\Events\DataExported;
-use App\Events\ImportCompleted;
-use App\Events\RoleAssigned;
 use App\Models\AuditLog;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
@@ -61,25 +58,6 @@ class RecordAuditLog implements ShouldQueue
                 } elseif (str_ends_with($eventName, 'Approved') || str_ends_with($eventName, 'Rejected')) {
                     $newValues = $this->getModelAttributes($auditable);
                 }
-            } elseif ($event instanceof RoleAssigned) {
-                $newValues = [
-                    'role' => $event->role,
-                    'assigned' => $event->assigned,
-                ];
-                $auditable = $event->user;
-            } elseif ($event instanceof ImportCompleted) {
-                $newValues = [
-                    'shipment_id' => $event->shipment->id,
-                    'status' => $event->shipment->status,
-                ];
-                $auditable = $event->shipment;
-            } elseif ($event instanceof DataExported) {
-                $newValues = [
-                    'export_type' => $event->exportType,
-                    'record_count' => $event->recordCount,
-                    'file_name' => $event->fileName,
-                ];
-                // No auditable model for DataExported
             }
 
             // Create audit log entry
