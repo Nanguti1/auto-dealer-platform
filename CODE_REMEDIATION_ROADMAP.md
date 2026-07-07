@@ -627,7 +627,7 @@ Missing indexes on frequently filtered fields (vehicles.status, sort_order field
 
 ---
 
-### 23. Inconsistent Cascade Rules
+### P2 - Inconsistent Cascade Rules - COMPLETED
 
 **Title:** Review and Standardize Foreign Key Cascade Rules
 
@@ -650,6 +650,8 @@ Inconsistent cascade rules may cause unexpected data loss. For example, vehicles
 5. Document cascade strategy
 
 **Estimated implementation effort:** Medium (1-2 days)
+
+**Implementation completed in Session 18**
 
 ---
 
@@ -1828,3 +1830,149 @@ Both foreign keys already have index constraints from the foreign key definition
 
 **Reference Data Tables:**
 All reference data tables (makes, models, body_types, fuel_types, etc.) already have indexes on `is_active` and `sort_order` as part of their original migrations. These were not modified as they were already optimized.
+
+---
+
+## Session 18
+- Foreign key cascade rules standardized.
+
+### P2 - Inconsistent Cascade Rules - COMPLETED
+
+**Objectives:**
+Review all foreign key cascade rules in migrations and update them to use appropriate cascade behavior (CASCADE, RESTRICT, NULL, NO ACTION) to prevent destructive behavior and data loss.
+
+**Requirements Met:**
+- ✅ Reviewed all foreign key cascade rules in migrations
+- ✅ Determined appropriate cascade behavior for each relationship
+- ✅ Updated migrations to use correct cascade rules
+- ✅ Migration is safe and reversible
+- ✅ No destructive cascade rules introduced
+
+### Analysis Findings
+
+**Cascade Rule Categories:**
+
+1. **CASCADE (Appropriate for pivot/junction tables):**
+   - Pivot tables: `vehicle_feature_mappings`, `blog_post_tags`, `promotion_vehicles`, `coupon_usages`
+   - Parent-child relationships where child cannot exist without parent: `wishlists`, `vehicle_reservations`, `comparison_items`
+   - Import/workflow relationships: `import_vehicle_mappings`, `import_shipments`, `import_payments`
+   - Trade-in workflow: `trade_in_valuations`, `trade_in_offers`
+   - Correctly used in 20+ relationships
+
+2. **RESTRICT (Appropriate for reference data that should not be deleted):**
+   - `vehicles.make_id` → Already using `restrictOnDelete` ✅
+   - `vehicles.model_id` → Already using `restrictOnDelete` ✅
+   - These are correctly preventing deletion of makes/models with vehicles
+
+3. **CASCADE (Problematic - too aggressive):**
+   - `vehicles.branch_id` → Using `cascadeOnDelete` ❌ **PROBLEMATIC**
+   - `branches.company_id` → Using `cascadeOnDelete` ❌ **PROBLEMATIC**
+   - `models.make_id` → Using `cascadeOnDelete` ❌ **PROBLEMATIC**
+   - `trim_levels.model_id` → Using `cascadeOnDelete` ❌ **PROBLEMATIC**
+
+4. **NULL (Appropriate for optional relationships):**
+   - `finance_applications.vehicle_id` → Using `nullOnDelete` ✅
+   - `finance_applications.user_id` → Using `nullOnDelete` ✅
+   - `payments.user_id` → Using `nullOnDelete` ✅
+   - `leads.vehicle_id` → Using `nullOnDelete` ✅
+   - Correctly used in 30+ nullable foreign key relationships
+
+### Changes Made
+
+**Migration Created:**
+`2026_07_07_180646_update_foreign_key_cascade_rules_to_prevent_destructive_behavior.php`
+
+**Updated Foreign Keys:**
+
+1. **vehicles.branch_id**: Changed from `cascadeOnDelete` to `restrictOnDelete`
+   - **Reason**: Deleting a branch should not delete all vehicles in that branch
+   - **Impact**: Prevents accidental mass deletion of vehicles
+   - **Business Logic**: Vehicles should be reassigned to another branch or archived
+
+2. **branches.company_id**: Changed from `cascadeOnDelete` to `restrictOnDelete`
+   - **Reason**: Deleting a company should not delete all branches
+   - **Impact**: Prevents accidental mass deletion of branches
+   - **Business Logic**: Branches should be reassigned or company deletion should be prevented
+
+3. **models.make_id**: Changed from `cascadeOnDelete` to `restrictOnDelete`
+   - **Reason**: Deleting a make should not delete all models under that make
+   - **Impact**: Prevents accidental mass deletion of models
+   - **Business Logic**: Makes with models should not be deletable, or models should be reassigned
+
+4. **trim_levels.model_id**: Changed from `cascadeOnDelete` to `restrictOnDelete`
+   - **Reason**: Deleting a model should not delete all trim levels under that model
+   - **Impact**: Prevents accidental mass deletion of trim levels
+   - **Business Logic**: Models with trim levels should not be deletable, or trim levels should be reassigned
+
+### Cascade Strategy
+
+**When to Use CASCADE:**
+- Pivot/junction tables (many-to-many relationships)
+- Child records that cannot exist without parent (e.g., reservation without vehicle)
+- Workflow-dependent records (e.g., import mappings without import)
+- Trade-in workflow records (valuations, offers tied to requests)
+
+**When to Use RESTRICT:**
+- Reference data that may have dependent records (makes, models, branches)
+- Core business entities that shouldn't cascade delete (vehicles, branches)
+- Parent-child relationships where child has independent value
+
+**When to Use NULL:**
+- Optional relationships (nullable foreign keys)
+- Records that can exist without parent (finance applications without vehicle)
+- User/assignee relationships (tasks, leads without assigned user)
+
+**When to Use NO ACTION:**
+- Default behavior (same as RESTRICT in most databases)
+- When you want database to handle constraint violation at transaction end
+
+### Unchanged Cascade Rules
+
+**Correctly Kept as CASCADE:**
+- Pivot tables: `vehicle_feature_mappings`, `blog_post_tags`, `promotion_vehicles`
+- User-owned entities: `wishlists`, `vehicle_reservations`
+- Import workflow: `import_vehicle_mappings`, `import_shipments`, `import_payments`
+- Trade-in workflow: `trade_in_valuations`, `trade_in_offers`
+- Price history: `price_histories` (historical records tied to vehicles)
+
+**Correctly Kept as RESTRICT:**
+- `vehicles.make_id` and `vehicles.model_id` (already correct)
+- These prevent deletion of reference data with dependent vehicles
+
+**Correctly Kept as NULL:**
+- All nullable foreign key relationships across 30+ tables
+- Finance applications, payments, leads, trade-in requests with optional parents
+
+### Benefits
+
+1. **Data Safety**: Prevents accidental mass deletion of critical business data
+2. **Business Logic**: Enforces proper data management practices
+3. **Recovery**: Gives opportunity to reassign or archive records before deletion
+4. **Consistency**: Aligns cascade behavior with business requirements
+5. **Predictability**: Clear rules for which operations are allowed
+
+### Verification
+
+- ✅ Migration created with proper up() and down() methods
+- ✅ Only 4 problematic cascade rules changed
+- ✅ All other cascade rules reviewed and deemed appropriate
+- ✅ Migration is reversible with exact reverse operations
+- ✅ Laravel Pint compliance maintained
+- ✅ No destructive cascade rules introduced
+- ✅ Cascade strategy documented for future reference
+
+### Notes
+
+**Original Audit Concern:**
+The audit noted that `vehicles.branch_id` using `cascadeOnDelete` "may be too aggressive if vehicles should be reassigned instead of deleted." This session addresses that concern by changing it to `restrictOnDelete`.
+
+**Database Constraint Handling:**
+With `restrictOnDelete`, attempting to delete a branch/company/make/model with dependent records will throw a database constraint violation. This forces application logic to handle the reassignment or archive process explicitly.
+
+**Alternative Approaches:**
+Instead of `restrictOnDelete`, could also use:
+- `nullOnDelete` if foreign key is nullable (not applicable for non-nullable keys)
+- Application-level soft deletes and cleanup jobs
+- Custom archive/delete workflows
+
+The chosen approach (`restrictOnDelete`) provides the strongest data protection while being simple to implement and understand.
