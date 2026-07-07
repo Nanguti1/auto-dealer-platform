@@ -5,6 +5,7 @@ import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { formatCurrency, formatDateTime } from '@/components/admin/trade-ins/helpers';
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import type { TradeInValuation, ValuationPagination, TradeInFilters } from '@/components/admin/trade-ins/types';
+import { RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ valuations, filters = {} }: { valuations: ValuationPagination; filters?: TradeInFilters }) {
@@ -27,21 +28,27 @@ export default function Index({ valuations, filters = {} }: { valuations: Valuat
         createUrl="/admin/valuations/create"
         createLabel="Create Valuation"
         rowActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild>
-              <Link href={`/admin/valuations/${row.id}`}>
-                <Eye className="size-4" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link href={`/admin/valuations/${row.id}/edit`}>
-                <Pencil className="size-4" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/valuations/${row.id}`)}>
-              <Trash2 className="size-4" />
-            </Button>
-          </div>
+          <RowActionsDropdown
+            ariaLabel={`Actions for valuation ${row.id}`}
+            actions={[
+              {
+                label: 'View',
+                icon: <Eye />,
+                href: `/admin/valuations/${row.id}`,
+              },
+              {
+                label: 'Edit',
+                icon: <Pencil />,
+                href: `/admin/valuations/${row.id}/edit`,
+              },
+              {
+                label: 'Delete',
+                icon: <Trash2 />,
+                destructive: true,
+                onClick: () => router.delete(`/admin/valuations/${row.id}`),
+              },
+            ]}
+          />
         )}
       />
     </TradeInShell>

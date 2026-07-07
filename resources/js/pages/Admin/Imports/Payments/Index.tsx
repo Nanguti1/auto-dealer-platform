@@ -7,7 +7,7 @@ import ImportStatusBadge from '@/components/admin/imports/import-status-badge';
 import type { ImportFilters, PaymentPagination, ImportPayment } from '@/components/admin/imports/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ importPayments, filters = {} }: { importPayments: PaymentPagination; filters?: ImportFilters }) {
@@ -64,11 +64,26 @@ export default function Index({ importPayments, filters = {} }: { importPayments
           createUrl="/admin/import-payments/create"
           createLabel="Create Payment"
           rowActions={(row) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild><Link href={`/admin/import-payments/${row.id}`}><Eye className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" asChild><Link href={`/admin/import-payments/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/import-payments/${row.id}/mark-as-paid`)}><CheckCircle2 className="size-4" /></Button>
-            </div>
+            <RowActionsDropdown
+              ariaLabel={`Actions for payment ${row.id}`}
+              actions={[
+                {
+                  label: 'View',
+                  icon: <Eye />,
+                  href: `/admin/import-payments/${row.id}`,
+                },
+                {
+                  label: 'Edit',
+                  icon: <Pencil />,
+                  href: `/admin/import-payments/${row.id}/edit`,
+                },
+                {
+                  label: 'Mark as Paid',
+                  icon: <CheckCircle2 />,
+                  onClick: () => router.patch(`/admin/import-payments/${row.id}/mark-as-paid`),
+                },
+              ]}
+            />
           )}
         />
       )}

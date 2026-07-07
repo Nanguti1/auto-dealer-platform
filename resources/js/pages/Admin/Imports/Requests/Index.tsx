@@ -8,7 +8,7 @@ import ImportStatusBadge from '@/components/admin/imports/import-status-badge';
 import type { ImportFilters, ImportPagination, ImportRequest } from '@/components/admin/imports/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ imports, filters = {} }: { imports: ImportPagination; filters?: ImportFilters }) {
@@ -70,11 +70,27 @@ export default function Index({ imports, filters = {} }: { imports: ImportPagina
           createUrl="/admin/imports/create"
           createLabel="Create Import"
           rowActions={(row) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}`}><Eye className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" asChild><Link href={`/admin/imports/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/imports/${row.id}`)}><Archive className="size-4" /></Button>
-            </div>
+            <RowActionsDropdown
+              ariaLabel={`Actions for import ${row.id}`}
+              actions={[
+                {
+                  label: 'View',
+                  icon: <Eye />,
+                  href: `/admin/imports/${row.id}`,
+                },
+                {
+                  label: 'Edit',
+                  icon: <Pencil />,
+                  href: `/admin/imports/${row.id}/edit`,
+                },
+                {
+                  label: 'Delete',
+                  icon: <Archive />,
+                  destructive: true,
+                  onClick: () => router.delete(`/admin/imports/${row.id}`),
+                },
+              ]}
+            />
           )}
         />
       )}

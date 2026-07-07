@@ -6,7 +6,7 @@ import { formatCurrency, formatDate, tradeInVehicleName } from '@/components/adm
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInStatusBadge from '@/components/admin/trade-ins/trade-in-status-badge';
 import type { OfferPagination, TradeInFilters, TradeInOffer } from '@/components/admin/trade-ins/types';
-import { Button } from '@/components/ui/button';
+import { RowActionsDropdown } from '@/components/admin/shared';
 
 export default function Index({ offers, filters = {} }: { offers: OfferPagination; filters?: TradeInFilters }) {
   const columns: Column<TradeInOffer>[] = [
@@ -18,5 +18,5 @@ export default function Index({ offers, filters = {} }: { offers: OfferPaginatio
     { key: 'created_at', label: 'Created', sortable: true, render: (offer) => formatDate(offer.created_at) },
   ];
 
-  return <TradeInShell title="Trade-In Offers" description="Create, review, approve, and track customer trade-in offers."><AdminDataTable rows={offers} filters={filters} columns={columns} baseUrl="/admin/offers" createUrl="/admin/offers/create" createLabel="Create Offer" rowActions={(offer) => <div className="flex justify-end gap-1"><Button variant="ghost" size="icon" asChild><Link href={`/admin/offers/${offer.id}`}><Eye className="size-4" /></Link></Button><Button variant="ghost" size="icon" asChild><Link href={`/admin/offers/${offer.id}/edit`}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/offers/${offer.id}/accept`)}><CheckCircle2 className="size-4" /></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/offers/${offer.id}/reject`)}><XCircle className="size-4" /></Button></div>} /></TradeInShell>;
+  return <TradeInShell title="Trade-In Offers" description="Create, review, approve, and track customer trade-in offers."><AdminDataTable rows={offers} filters={filters} columns={columns} baseUrl="/admin/offers" createUrl="/admin/offers/create" createLabel="Create Offer" rowActions={(offer) => <RowActionsDropdown ariaLabel={`Actions for offer ${offer.id}`} actions={[{ label: 'View', icon: <Eye />, href: `/admin/offers/${offer.id}` }, { label: 'Edit', icon: <Pencil />, href: `/admin/offers/${offer.id}/edit` }, { label: 'Accept', icon: <CheckCircle2 />, onClick: () => router.patch(`/admin/offers/${offer.id}/accept`) }, { label: 'Reject', icon: <XCircle />, onClick: () => router.patch(`/admin/offers/${offer.id}/reject`) }]} />} /></TradeInShell>;
 }

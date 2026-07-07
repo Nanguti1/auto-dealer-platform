@@ -8,7 +8,7 @@ import type { CrmFilters, LeadPagination, LeadRecord } from '@/components/admin/
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyLeads, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyLeads, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import admin from '@/routes/admin';
@@ -64,24 +64,31 @@ export default function Index({ leads, filters = {} }: { leads: LeadPagination; 
           createUrl={admin.leads.create().url}
           createLabel="Create Lead"
           rowActions={(lead) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={admin.leads.show(lead.id).url} aria-label={`View lead ${lead.id}`}>
-                  <Eye className="size-4" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={admin.leads.edit(lead.id).url} aria-label={`Edit lead ${lead.id}`}>
-                  <Pencil className="size-4" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => router.post(`/admin/leads/${lead.id}/convert`)} aria-label={`Convert lead ${lead.id}`}>
-                <Repeat className="size-4" aria-hidden="true" />
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/leads/${lead.id}/archive`)} aria-label={`Archive lead ${lead.id}`}>
-                <Archive className="size-4" aria-hidden="true" />
-              </Button>
-            </div>
+            <RowActionsDropdown
+              ariaLabel={`Actions for lead ${lead.id}`}
+              actions={[
+                {
+                  label: 'View',
+                  icon: <Eye />,
+                  href: admin.leads.show(lead.id).url,
+                },
+                {
+                  label: 'Edit',
+                  icon: <Pencil />,
+                  href: admin.leads.edit(lead.id).url,
+                },
+                {
+                  label: 'Convert',
+                  icon: <Repeat />,
+                  onClick: () => router.post(`/admin/leads/${lead.id}/convert`),
+                },
+                {
+                  label: 'Archive',
+                  icon: <Archive />,
+                  onClick: () => router.patch(`/admin/leads/${lead.id}/archive`),
+                },
+              ]}
+            />
           )}
         />
       )}

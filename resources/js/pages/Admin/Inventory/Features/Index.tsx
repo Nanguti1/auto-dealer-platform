@@ -6,7 +6,7 @@ import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import InventoryShell from '@/components/admin/inventory/inventory-shell';
 import type { AdminFeature, Filters, Paginated } from '@/components/admin/inventory/types';
-import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import admin from '@/routes/admin';
@@ -63,10 +63,28 @@ export default function Index({ vehicleFeatures, filters = {} }: { vehicleFeatur
           createUrl={admin.vehicleFeatures.create().url}
           createLabel="Create Feature"
           rowActions={(f) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild><Link href={admin.vehicleFeatures.show(f.id).url}><Eye className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" asChild><Link href={admin.vehicleFeatures.edit(f.id).url}><Pencil className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" onClick={() => setDeleteId(f.id)}><Trash2 className="size-4" /></Button>
+            <>
+              <RowActionsDropdown
+                ariaLabel={`Actions for feature ${f.id}`}
+                actions={[
+                  {
+                    label: 'View',
+                    icon: <Eye />,
+                    href: admin.vehicleFeatures.show(f.id).url,
+                  },
+                  {
+                    label: 'Edit',
+                    icon: <Pencil />,
+                    href: admin.vehicleFeatures.edit(f.id).url,
+                  },
+                  {
+                    label: 'Delete',
+                    icon: <Trash2 />,
+                    destructive: true,
+                    onClick: () => setDeleteId(f.id),
+                  },
+                ]}
+              />
               <ConfirmationDialog
                 open={deleteId === f.id}
                 onOpenChange={(open) => !open && setDeleteId(null)}
@@ -76,7 +94,7 @@ export default function Index({ vehicleFeatures, filters = {} }: { vehicleFeatur
                 confirmLabel="Delete"
                 onConfirm={() => router.delete(admin.vehicleFeatures.destroy(f.id).url, { onFinish: () => setDeleteId(null) })}
               />
-            </div>
+            </>
           )}
         />
       )}

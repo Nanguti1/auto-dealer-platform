@@ -6,7 +6,7 @@ import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { customerName, formatCurrency, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
 import ReservationShell from '@/components/admin/reservations/reservation-shell';
 import type { ReservationFilters, ReservationPagination, ReservationRecord } from '@/components/admin/reservations/types';
-import { LoadingState, EmptyReservations, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyReservations, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import admin from '@/routes/admin';
@@ -138,29 +138,31 @@ export default function Index({ reservations, filters = {} }: { reservations: Re
         createUrl={admin.reservations.create().url} 
         createLabel="Create Reservation" 
         rowActions={(reservation) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild>
-              <Link href={admin.reservations.show(reservation.id).url}>
-                <Eye className="size-4" />
-              </Link>
-            </Button>
-            <Button variant="ghost" size="icon" asChild>
-              <Link href={admin.reservations.edit(reservation.id).url}>
-                <Pencil className="size-4" />
-              </Link>
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => {
-                if (confirm('Are you sure you want to delete this reservation?')) {
-                  router.delete(admin.reservations.destroy(reservation.id).url);
-                }
-              }}
-            >
-              <Trash2 className="size-4" />
-            </Button>
-          </div>
+          <RowActionsDropdown
+            ariaLabel={`Actions for reservation ${reservation.id}`}
+            actions={[
+              {
+                label: 'View',
+                icon: <Eye />,
+                href: admin.reservations.show(reservation.id).url,
+              },
+              {
+                label: 'Edit',
+                icon: <Pencil />,
+                href: admin.reservations.edit(reservation.id).url,
+              },
+              {
+                label: 'Delete',
+                icon: <Trash2 />,
+                destructive: true,
+                onClick: () => {
+                  if (confirm('Are you sure you want to delete this reservation?')) {
+                    router.delete(admin.reservations.destroy(reservation.id).url);
+                  }
+                },
+              },
+            ]}
+          />
         )} 
       />
     </ReservationShell>

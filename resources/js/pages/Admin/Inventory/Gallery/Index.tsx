@@ -7,7 +7,7 @@ import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { imageUrl, vehicleName } from '@/components/admin/inventory/helpers';
 import InventoryShell from '@/components/admin/inventory/inventory-shell';
 import type { AdminGallery, Filters, Paginated } from '@/components/admin/inventory/types';
-import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import admin from '@/routes/admin';
@@ -64,10 +64,28 @@ export default function Index({ vehicleGalleries, filters = {} }: { vehicleGalle
           createUrl={admin.vehicleGalleries.create().url}
           createLabel="Upload"
           rowActions={(g) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild><Link href={admin.vehicleGalleries.show(g.id).url}><Eye className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" asChild><Link href={admin.vehicleGalleries.edit(g.id).url}><Pencil className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" onClick={() => setDeleteId(g.id)}><Trash2 className="size-4" /></Button>
+            <>
+              <RowActionsDropdown
+                ariaLabel={`Actions for gallery image ${g.id}`}
+                actions={[
+                  {
+                    label: 'View',
+                    icon: <Eye />,
+                    href: admin.vehicleGalleries.show(g.id).url,
+                  },
+                  {
+                    label: 'Edit',
+                    icon: <Pencil />,
+                    href: admin.vehicleGalleries.edit(g.id).url,
+                  },
+                  {
+                    label: 'Delete',
+                    icon: <Trash2 />,
+                    destructive: true,
+                    onClick: () => setDeleteId(g.id),
+                  },
+                ]}
+              />
               <ConfirmationDialog
                 open={deleteId === g.id}
                 onOpenChange={(open) => !open && setDeleteId(null)}
@@ -77,7 +95,7 @@ export default function Index({ vehicleGalleries, filters = {} }: { vehicleGalle
                 confirmLabel="Delete"
                 onConfirm={() => router.delete(admin.vehicleGalleries.destroy(g.id).url, { onFinish: () => setDeleteId(null) })}
               />
-            </div>
+            </>
           )}
         />
       )}

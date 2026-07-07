@@ -7,6 +7,7 @@ import { formatCurrency, formatDateTime, userName } from '@/components/admin/pay
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
 import type { RefundFilters, RefundPagination, Refund } from '@/components/admin/payments/types';
+import { RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ refunds, filters = {} }: { refunds: RefundPagination; filters?: RefundFilters }) {
@@ -29,10 +30,21 @@ export default function Index({ refunds, filters = {} }: { refunds: RefundPagina
         columns={columns}
         baseUrl="/admin/refunds"
         rowActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/refunds/${row.id}`}><Eye className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/payments/${row.payment_id}`}><RotateCcw className="size-4" /></Link></Button>
-          </div>
+          <RowActionsDropdown
+            ariaLabel={`Actions for refund ${row.id}`}
+            actions={[
+              {
+                label: 'View',
+                icon: <Eye />,
+                href: `/admin/refunds/${row.id}`,
+              },
+              {
+                label: 'View Payment',
+                icon: <RotateCcw />,
+                href: `/admin/payments/${row.payment_id}`,
+              },
+            ]}
+          />
         )}
       />
     </PaymentShell>

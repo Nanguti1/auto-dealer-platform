@@ -10,7 +10,7 @@ import type { CrmActivity, CrmFilters } from '@/components/admin/crm/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import type { Paginated } from '@/components/admin/inventory/types';
-import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ activities, filters = {} }: { activities: Paginated<CrmActivity>; filters?: CrmFilters }) {
@@ -78,15 +78,23 @@ export default function Index({ activities, filters = {} }: { activities: Pagina
           createUrl={adminRoutes.activities.create().url}
           createLabel="Create Activity"
           rowActions={(activity) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={adminRoutes.activities.edit(activity.id).url}>
-                  <Pencil className="size-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => setDeleteId(activity.id)}>
-                <Trash2 className="size-4" />
-              </Button>
+            <>
+              <RowActionsDropdown
+                ariaLabel={`Actions for activity ${activity.id}`}
+                actions={[
+                  {
+                    label: 'Edit',
+                    icon: <Pencil />,
+                    href: adminRoutes.activities.edit(activity.id).url,
+                  },
+                  {
+                    label: 'Delete',
+                    icon: <Trash2 />,
+                    destructive: true,
+                    onClick: () => setDeleteId(activity.id),
+                  },
+                ]}
+              />
               <ConfirmationDialog
                 open={deleteId === activity.id}
                 onOpenChange={(open) => !open && setDeleteId(null)}
@@ -96,7 +104,7 @@ export default function Index({ activities, filters = {} }: { activities: Pagina
                 confirmLabel="Delete"
                 onConfirm={() => router.delete(`/admin/crm/activities/${activity.id}`, { onFinish: () => setDeleteId(null) })}
               />
-            </div>
+            </>
           )}
         />
       )}

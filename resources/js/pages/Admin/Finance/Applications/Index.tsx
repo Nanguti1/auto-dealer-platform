@@ -8,7 +8,7 @@ import { applicantName, deposit, formatCurrency, formatDateTime, monthlyPayment,
 import type { FinanceApplication, FinanceApplicationPagination, FinanceFilters } from '@/components/admin/finance/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyFinanceApplications, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyFinanceApplications, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ financeApplications, filters = {} }: { financeApplications: FinanceApplicationPagination; filters?: FinanceFilters }) {
@@ -58,13 +58,38 @@ export default function Index({ financeApplications, filters = {} }: { financeAp
         <EmptyFinanceApplications onCreate={() => router.visit('/admin/finance-applications/create')} />
       ) : (
         <AdminDataTable rows={financeApplications} filters={filters} columns={columns} baseUrl="/admin/finance-applications" rowActions={(application) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/finance-applications/${application.id}`}><Eye className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/finance-applications/${application.id}/edit`}><Pencil className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/finance-applications/${application.id}`, { status: 'approved', approval_status: 'approved' })}><CheckCircle2 className="size-4" /></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/finance-applications/${application.id}`, { status: 'rejected', approval_status: 'rejected' })}><XCircle className="size-4" /></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/finance-applications/${application.id}`)}><Archive className="size-4" /></Button>
-          </div>
+          <RowActionsDropdown
+            ariaLabel={`Actions for finance application ${application.id}`}
+            actions={[
+              {
+                label: 'View',
+                icon: <Eye />,
+                href: `/admin/finance-applications/${application.id}`,
+              },
+              {
+                label: 'Edit',
+                icon: <Pencil />,
+                href: `/admin/finance-applications/${application.id}/edit`,
+              },
+              {
+                label: 'Approve',
+                icon: <CheckCircle2 />,
+                onClick: () => router.patch(`/admin/finance-applications/${application.id}`, { status: 'approved', approval_status: 'approved' }),
+              },
+              {
+                label: 'Reject',
+                icon: <XCircle />,
+                destructive: true,
+                onClick: () => router.patch(`/admin/finance-applications/${application.id}`, { status: 'rejected', approval_status: 'rejected' }),
+              },
+              {
+                label: 'Delete',
+                icon: <Archive />,
+                destructive: true,
+                onClick: () => router.delete(`/admin/finance-applications/${application.id}`),
+              },
+            ]}
+          />
         )} />
       )}
     </FinanceShell>

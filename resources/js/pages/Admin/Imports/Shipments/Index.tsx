@@ -7,7 +7,7 @@ import ImportStatusBadge from '@/components/admin/imports/import-status-badge';
 import type { ImportFilters, ShipmentPagination, Shipment } from '@/components/admin/imports/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ shipments, filters = {} }: { shipments: ShipmentPagination; filters?: ImportFilters }) {
@@ -65,12 +65,31 @@ export default function Index({ shipments, filters = {} }: { shipments: Shipment
           createUrl="/admin/shipments/create"
           createLabel="Create Shipment"
           rowActions={(row) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild><Link href={`/admin/shipments/${row.id}`}><Eye className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" asChild><Link href={`/admin/shipments/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
-              <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/shipments/${row.id}/update-tracking`)}><Truck className="size-4" /></Button>
-              <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/shipments/${row.id}/mark-as-delivered`)}><CheckCircle2 className="size-4" /></Button>
-            </div>
+            <RowActionsDropdown
+              ariaLabel={`Actions for shipment ${row.id}`}
+              actions={[
+                {
+                  label: 'View',
+                  icon: <Eye />,
+                  href: `/admin/shipments/${row.id}`,
+                },
+                {
+                  label: 'Edit',
+                  icon: <Pencil />,
+                  href: `/admin/shipments/${row.id}/edit`,
+                },
+                {
+                  label: 'Update Tracking',
+                  icon: <Truck />,
+                  onClick: () => router.patch(`/admin/shipments/${row.id}/update-tracking`),
+                },
+                {
+                  label: 'Mark as Delivered',
+                  icon: <CheckCircle2 />,
+                  onClick: () => router.patch(`/admin/shipments/${row.id}/mark-as-delivered`),
+                },
+              ]}
+            />
           )}
         />
       )}

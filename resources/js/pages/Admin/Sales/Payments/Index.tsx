@@ -7,6 +7,7 @@ import { formatCurrency, formatDateTime, customerNameFromPayment, vehicleName, u
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
 import type { PaymentFilters, PaymentPagination, Payment } from '@/components/admin/payments/types';
+import { RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ payments, filters = {} }: { payments: PaymentPagination; filters?: PaymentFilters }) {
@@ -32,13 +33,37 @@ export default function Index({ payments, filters = {} }: { payments: PaymentPag
         columns={columns}
         baseUrl="/admin/payments"
         rowActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/payments/${row.id}`}><Eye className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/payments/${row.id}/edit`}><Pencil className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/payments/${row.id}/receipt`}><Receipt className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.post(`/admin/payments/${row.id}/refund`)}><RotateCcw className="size-4" /></Button>
-            <Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/payments/${row.id}`)}><Archive className="size-4" /></Button>
-          </div>
+          <RowActionsDropdown
+            ariaLabel={`Actions for payment ${row.id}`}
+            actions={[
+              {
+                label: 'View',
+                icon: <Eye />,
+                href: `/admin/payments/${row.id}`,
+              },
+              {
+                label: 'Edit',
+                icon: <Pencil />,
+                href: `/admin/payments/${row.id}/edit`,
+              },
+              {
+                label: 'Receipt',
+                icon: <Receipt />,
+                href: `/admin/payments/${row.id}/receipt`,
+              },
+              {
+                label: 'Refund',
+                icon: <RotateCcw />,
+                onClick: () => router.post(`/admin/payments/${row.id}/refund`),
+              },
+              {
+                label: 'Delete',
+                icon: <Archive />,
+                destructive: true,
+                onClick: () => router.delete(`/admin/payments/${row.id}`),
+              },
+            ]}
+          />
         )}
       />
     </PaymentShell>

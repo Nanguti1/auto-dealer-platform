@@ -9,3 +9,4 @@ export { default as StatusBadge } from './StatusBadge';
 export { default as PerformanceMonitor } from './PerformanceMonitor';
 export { default as ForeignSelector } from './ForeignSelector';
 export { default as AsyncForeignSelector } from './AsyncForeignSelector';
+export { RowActionsDropdown } from './RowActionsDropdown';

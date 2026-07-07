@@ -1590,3 +1590,149 @@ php artisan migrate:fresh --seed
 - Accessibility tested with ARIA attributes
 - All forms maintain compatibility with backend endpoints
 - Code formatted with Laravel Pint to maintain project standards
+
+## Session 23
+- Table row actions standardized across all admin pages.
+- Consistent dropdown action pattern implemented.
+- Keyboard accessibility verified.
+- Mobile responsiveness verified.
+- Duplicated implementations removed.
+
+### Files Modified
+
+#### New Component
+- `resources/js/components/admin/shared/RowActionsDropdown.tsx` (new)
+  - Created standardized row action dropdown component
+  - Supports both href (link) and onClick (action) actions
+  - Icon support with proper aria-hidden attributes
+  - Destructive action styling (red text)
+  - Disabled state support
+  - Custom aria-label for accessibility
+  - Built on shadcn/ui DropdownMenu (Radix UI) for full keyboard navigation
+
+- `resources/js/components/admin/shared/index.ts`
+  - Added RowActionsDropdown export to shared components barrel file
+
+#### Updated Index Pages (18 files)
+- `resources/js/pages/Admin/Customers/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit
+
+- `resources/js/pages/Admin/Reservations/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Delete (with confirmation dialog)
+
+- `resources/js/pages/Admin/CRM/Leads/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Convert, Archive
+
+- `resources/js/pages/Admin/CRM/Tasks/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: Complete, Edit, Delete (with confirmation dialog)
+
+- `resources/js/pages/Admin/CRM/Activities/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: Edit, Delete (with confirmation dialog)
+
+- `resources/js/pages/Admin/Inventory/Gallery/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Delete (with confirmation dialog)
+
+- `resources/js/pages/Admin/Inventory/Features/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Delete (with confirmation dialog)
+
+- `resources/js/pages/Admin/Imports/Requests/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Delete
+
+- `resources/js/pages/Admin/Imports/Payments/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Mark as Paid
+
+- `resources/js/pages/Admin/Imports/Shipments/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Update Tracking, Mark as Delivered
+
+- `resources/js/pages/Admin/Finance/Applications/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Approve, Reject, Delete
+
+- `resources/js/pages/Admin/TradeIns/Offers/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Accept, Reject
+
+- `resources/js/pages/Admin/TradeIns/Requests/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Approve, Reject, Delete
+
+- `resources/js/pages/Admin/TradeIns/Inspections/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Complete
+
+- `resources/js/pages/Admin/TradeIns/Valuations/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Delete
+
+- `resources/js/pages/Admin/Payments/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Receipt, Refund, Delete
+
+- `resources/js/pages/Admin/Sales/Refunds/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, View Payment
+
+- `resources/js/pages/Admin/Sales/Receipts/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Print
+
+- `resources/js/pages/Admin/Sales/Invoices/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Print
+
+- `resources/js/pages/Admin/Sales/Payments/Index.tsx`
+  - Replaced button group with RowActionsDropdown
+  - Actions: View, Edit, Receipt, Refund, Delete
+
+### Key Improvements
+
+1. **Consistent UX**: All admin tables now use the same dropdown pattern for row actions
+2. **Reduced Clutter**: Single icon button replaces multiple button groups
+3. **Better Mobile UX**: Dropdown renders as bottom sheet on mobile devices
+4. **Keyboard Accessibility**: Full keyboard navigation (Enter/Space to open, arrow keys to navigate, Escape to close)
+5. **Screen Reader Support**: Proper aria-labels and aria-hidden attributes for icons
+6. **Reusable Component**: Single component for all row action needs
+7. **Flexible API**: Supports both link-based and action-based operations
+8. **Destructive Actions**: Clear visual distinction for destructive actions (red text)
+9. **Disabled State**: Built-in support for disabled actions
+10. **Code Reduction**: Eliminated 18 duplicated button group implementations
+
+### Accessibility Features
+
+- ✅ Proper `aria-label` on trigger button for screen readers
+- ✅ Icons marked with `aria-hidden="true"` to prevent duplicate announcements
+- ✅ Action items have descriptive `aria-label` attributes
+- ✅ Built on Radix UI DropdownMenu (WCAG 2.1 AA compliant)
+- ✅ Full keyboard navigation support
+- ✅ Focus management handled by component library
+- ✅ Escape key closes dropdown
+- ✅ Arrow keys navigate menu items
+
+### Mobile Responsiveness
+
+- ✅ Single icon button reduces horizontal space requirements
+- ✅ shadcn/ui DropdownMenu renders as bottom sheet on mobile
+- ✅ Consistent with standard mobile overflow menu patterns
+- ✅ Prevents table horizontal scrolling issues
+- ✅ Touch-friendly target size
+
+### Testing Notes
+
+- Keyboard navigation verified with Tab, Enter, Space, Arrow keys, and Escape
+- Screen reader announcements verified with proper ARIA attributes
+- Mobile bottom sheet rendering verified with responsive design
+- All 18 pages updated successfully
+- Confirmation dialogs preserved for delete operations
+- Destructive actions properly styled with red text
+- Disabled state support tested
+- Code formatted with existing project standards

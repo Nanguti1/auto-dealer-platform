@@ -7,7 +7,7 @@ import { desiredVehicle, formatCurrency, formatDateTime, formatNumber, requester
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInStatusBadge from '@/components/admin/trade-ins/trade-in-status-badge';
 import type { TradeInFilters, TradeInPagination, TradeInRequest } from '@/components/admin/trade-ins/types';
-import { Button } from '@/components/ui/button';
+import { RowActionsDropdown } from '@/components/admin/shared';
 
 export default function Index({ tradeIns, filters = {} }: { tradeIns: TradeInPagination; filters?: TradeInFilters }) {
   const columns: Column<TradeInRequest>[] = [
@@ -21,5 +21,5 @@ export default function Index({ tradeIns, filters = {} }: { tradeIns: TradeInPag
     { key: 'updated_at', label: 'Last updated', sortable: true, render: (row) => formatDateTime(row.updated_at) },
   ];
 
-  return <TradeInShell title="Trade-In Requests" description="Manage trade-in intake, valuation, inspection, assignment, approvals, and follow-up."><AdminDataTable rows={tradeIns} filters={filters} columns={columns} baseUrl="/admin/trade-ins" rowActions={(row) => <div className="flex justify-end gap-1"><Button variant="ghost" size="icon" asChild><Link href={`/admin/trade-ins/${row.id}`}><Eye className="size-4" /></Link></Button><Button variant="ghost" size="icon" asChild><Link href={`/admin/trade-ins/${row.id}/edit`}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/trade-ins/${row.id}/approve`)}><CheckCircle2 className="size-4" /></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/trade-ins/${row.id}/reject`)}><XCircle className="size-4" /></Button><Button variant="ghost" size="icon" onClick={() => router.delete(`/admin/trade-ins/${row.id}`)}><Archive className="size-4" /></Button></div>} /></TradeInShell>;
+  return <TradeInShell title="Trade-In Requests" description="Manage trade-in intake, valuation, inspection, assignment, approvals, and follow-up."><AdminDataTable rows={tradeIns} filters={filters} columns={columns} baseUrl="/admin/trade-ins" rowActions={(row) => <RowActionsDropdown ariaLabel={`Actions for trade-in ${row.id}`} actions={[{ label: 'View', icon: <Eye />, href: `/admin/trade-ins/${row.id}` }, { label: 'Edit', icon: <Pencil />, href: `/admin/trade-ins/${row.id}/edit` }, { label: 'Approve', icon: <CheckCircle2 />, onClick: () => router.patch(`/admin/trade-ins/${row.id}/approve`) }, { label: 'Reject', icon: <XCircle />, onClick: () => router.patch(`/admin/trade-ins/${row.id}/reject`) }, { label: 'Delete', icon: <Archive />, destructive: true, onClick: () => router.delete(`/admin/trade-ins/${row.id}`) }]} />} /></TradeInShell>;
 }

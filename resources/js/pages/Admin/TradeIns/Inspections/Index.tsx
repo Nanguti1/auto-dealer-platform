@@ -7,7 +7,7 @@ import { formatDateTime, requesterName, tradeInVehicleName } from '@/components/
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInStatusBadge from '@/components/admin/trade-ins/trade-in-status-badge';
 import type { InspectionPagination, TradeInFilters, TradeInInspection } from '@/components/admin/trade-ins/types';
-import { Button } from '@/components/ui/button';
+import { RowActionsDropdown } from '@/components/admin/shared';
 
 export default function Index({ inspections, filters = {} }: { inspections: InspectionPagination; filters?: TradeInFilters }) {
   const columns: Column<TradeInInspection>[] = [
@@ -20,5 +20,5 @@ export default function Index({ inspections, filters = {} }: { inspections: Insp
     { key: 'updated_at', label: 'Last updated', sortable: true, render: (row) => formatDateTime(row.updated_at) },
   ];
 
-  return <TradeInShell title="Vehicle Inspections" description="View and manage trade-in vehicle inspections and condition reports."><AdminDataTable rows={inspections} filters={filters} columns={columns} baseUrl="/admin/inspections" rowActions={(row) => <div className="flex justify-end gap-1"><Button variant="ghost" size="icon" asChild><Link href={`/admin/inspections/${row.id}`}><Eye className="size-4" /></Link></Button><Button variant="ghost" size="icon" asChild><Link href={`/admin/inspections/${row.id}/edit`}><Pencil className="size-4" /></Link></Button><Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/inspections/${row.id}/complete`)}><CheckCircle2 className="size-4" /></Button></div>} /></TradeInShell>;
+  return <TradeInShell title="Vehicle Inspections" description="View and manage trade-in vehicle inspections and condition reports."><AdminDataTable rows={inspections} filters={filters} columns={columns} baseUrl="/admin/inspections" rowActions={(row) => <RowActionsDropdown ariaLabel={`Actions for inspection ${row.id}`} actions={[{ label: 'View', icon: <Eye />, href: `/admin/inspections/${row.id}` }, { label: 'Edit', icon: <Pencil />, href: `/admin/inspections/${row.id}/edit` }, { label: 'Complete', icon: <CheckCircle2 />, onClick: () => router.patch(`/admin/inspections/${row.id}/complete`) }]} />} /></TradeInShell>;
 }

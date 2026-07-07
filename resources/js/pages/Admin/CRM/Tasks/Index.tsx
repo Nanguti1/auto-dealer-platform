@@ -10,7 +10,7 @@ import type { CrmFilters, CrmTask } from '@/components/admin/crm/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import type { Paginated } from '@/components/admin/inventory/types';
-import { LoadingState, EmptyGeneric, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
@@ -79,18 +79,28 @@ export default function Index({ tasks, filters = {} }: { tasks: Paginated<CrmTas
           createUrl={adminRoutes.tasks.create().url}
           createLabel="Create Task"
           rowActions={(task) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" onClick={() => router.patch(`/admin/crm/tasks/${task.id}/complete`)}>
-                <CheckCircle2 className="size-4" />
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={adminRoutes.tasks.edit(task.id).url}>
-                  <Pencil className="size-4" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" onClick={() => setDeleteId(task.id)}>
-                <Trash2 className="size-4" />
-              </Button>
+            <>
+              <RowActionsDropdown
+                ariaLabel={`Actions for task ${task.id}`}
+                actions={[
+                  {
+                    label: 'Complete',
+                    icon: <CheckCircle2 />,
+                    onClick: () => router.patch(`/admin/crm/tasks/${task.id}/complete`),
+                  },
+                  {
+                    label: 'Edit',
+                    icon: <Pencil />,
+                    href: adminRoutes.tasks.edit(task.id).url,
+                  },
+                  {
+                    label: 'Delete',
+                    icon: <Trash2 />,
+                    destructive: true,
+                    onClick: () => setDeleteId(task.id),
+                  },
+                ]}
+              />
               <ConfirmationDialog
                 open={deleteId === task.id}
                 onOpenChange={(open) => !open && setDeleteId(null)}
@@ -100,7 +110,7 @@ export default function Index({ tasks, filters = {} }: { tasks: Paginated<CrmTas
                 confirmLabel="Delete"
                 onConfirm={() => router.delete(adminRoutes.tasks.destroy(task.id).url, { onFinish: () => setDeleteId(null) })}
               />
-            </div>
+            </>
           )}
         />
       )}

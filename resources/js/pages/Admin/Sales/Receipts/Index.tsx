@@ -7,6 +7,7 @@ import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { formatCurrency, formatDateTime } from '@/components/admin/payments/helpers';
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import type { ReceiptFilters, ReceiptPagination, Receipt } from '@/components/admin/payments/types';
+import { RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ receipts, filters = {} }: { receipts: ReceiptPagination; filters?: ReceiptFilters }) {
@@ -27,10 +28,21 @@ export default function Index({ receipts, filters = {} }: { receipts: ReceiptPag
         columns={columns}
         baseUrl="/admin/receipts"
         rowActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/receipts/${row.id}`}><Eye className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/receipts/${row.id}/print`}><Printer className="size-4" /></Link></Button>
-          </div>
+          <RowActionsDropdown
+            ariaLabel={`Actions for receipt ${row.id}`}
+            actions={[
+              {
+                label: 'View',
+                icon: <Eye />,
+                href: `/admin/receipts/${row.id}`,
+              },
+              {
+                label: 'Print',
+                icon: <Printer />,
+                href: `/admin/receipts/${row.id}/print`,
+              },
+            ]}
+          />
         )}
       />
     </PaymentShell>

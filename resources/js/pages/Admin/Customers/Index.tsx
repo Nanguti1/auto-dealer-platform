@@ -7,7 +7,7 @@ import { customerName, formatDate } from '@/components/admin/customers/helpers';
 import type { CustomerFilters, CustomerPagination, CustomerRecord } from '@/components/admin/customers/types';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
-import { LoadingState, EmptyCustomers, InlineError } from '@/components/admin/shared';
+import { LoadingState, EmptyCustomers, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import admin from '@/routes/admin';
@@ -74,18 +74,21 @@ const Index = React.memo(function Index({ customers, filters = {} }: { customers
           columns={columns}
           baseUrl={admin.customers.index().url}
           rowActions={(customer) => (
-            <div className="flex justify-end gap-1">
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={admin.customers.show(customer.id).url} aria-label={`View customer ${customer.id}`}>
-                  <Eye className="size-4" aria-hidden="true" />
-                </Link>
-              </Button>
-              <Button variant="ghost" size="icon" asChild>
-                <Link href={admin.customers.edit(customer.id).url} aria-label={`Edit customer ${customer.id}`}>
-                  <Pencil className="size-4" aria-hidden="true" />
-                </Link>
-              </Button>
-            </div>
+            <RowActionsDropdown
+              ariaLabel={`Actions for customer ${customer.id}`}
+              actions={[
+                {
+                  label: 'View',
+                  icon: <Eye />,
+                  href: admin.customers.show(customer.id).url,
+                },
+                {
+                  label: 'Edit',
+                  icon: <Pencil />,
+                  href: admin.customers.edit(customer.id).url,
+                },
+              ]}
+            />
           )}
         />
       )}

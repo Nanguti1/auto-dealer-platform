@@ -8,6 +8,7 @@ import { formatCurrency, formatDateTime, vehicleName } from '@/components/admin/
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
 import type { InvoiceFilters, InvoicePagination, Invoice } from '@/components/admin/payments/types';
+import { RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ invoices, filters = {} }: { invoices: InvoicePagination; filters?: InvoiceFilters }) {
@@ -31,10 +32,21 @@ export default function Index({ invoices, filters = {} }: { invoices: InvoicePag
         columns={columns}
         baseUrl="/admin/invoices"
         rowActions={(row) => (
-          <div className="flex justify-end gap-1">
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/invoices/${row.id}`}><Eye className="size-4" /></Link></Button>
-            <Button variant="ghost" size="icon" asChild><Link href={`/admin/invoices/${row.id}/print`}><FileText className="size-4" /></Link></Button>
-          </div>
+          <RowActionsDropdown
+            ariaLabel={`Actions for invoice ${row.id}`}
+            actions={[
+              {
+                label: 'View',
+                icon: <Eye />,
+                href: `/admin/invoices/${row.id}`,
+              },
+              {
+                label: 'Print',
+                icon: <FileText />,
+                href: `/admin/invoices/${row.id}/print`,
+              },
+            ]}
+          />
         )}
       />
     </PaymentShell>
