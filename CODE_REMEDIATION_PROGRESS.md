@@ -1032,3 +1032,184 @@ public function update(User $user, Vehicle $model): bool
 - All 48 policies remain unchanged and functional
 - Code formatted with Laravel Pint to maintain project standards
 - Migration includes reversible down() method for safety
+
+## Session 13
+- Company isolation architecture reviewed and analyzed.
+- Single-tenant architecture confirmed as the intended design.
+- Branch-level isolation provides sufficient multi-location support.
+- Company model documented as informational/configuration only.
+- company_id field made nullable to align with single-tenant design.
+- Comprehensive documentation added to all company-related models.
+
+### Files Modified
+
+#### Models
+- `app/Models/Company.php` (updated)
+  - Added comprehensive documentation explaining single-tenant architecture
+  - Documents that Company is for informational/configuration purposes only
+  - Explains that branch-level isolation provides multi-location support
+  - Lists Company model purpose and why no company-level isolation exists
+
+- `app/Models/Branch.php` (updated)
+  - Added comprehensive documentation explaining single-tenant with branch-level multi-location
+  - Documents that company_id is for organizational hierarchy, not tenant isolation
+  - Explains branch-level isolation via BranchAware trait
+  - Clarifies that company_id is used for informational purposes only
+
+- `app/Models\CompanyInformation.php` (updated)
+  - Added comprehensive documentation explaining single-tenant architecture
+  - Documents that company information is for configuration purposes only
+  - Added company() relationship method
+  - Added BelongsTo import
+
+- `app/Models\SocialMediaLink.php` (updated)
+  - Added comprehensive documentation explaining single-tenant architecture
+  - Documents that social media links are for company-wide branding only
+  - Added company() relationship method
+  - Added BelongsTo import
+
+- `app/Models\OpeningHour.php` (updated)
+  - Added comprehensive documentation explaining branch-level isolation
+  - Documents that it uses BranchAware trait, not company-level isolation
+  - Clarifies that each branch has its own opening hours
+  - Explains branch-level isolation strategy
+
+#### Form Requests
+- `app/Http/Requests/Branches/StoreBranchRequest.php` (updated)
+  - Changed company_id from required to nullable
+  - Aligns with single-tenant architecture where company is optional
+
+- `app/Http/Requests/Branches/UpdateBranchRequest.php` (updated)
+  - Changed company_id from required to nullable
+  - Aligns with single-tenant architecture where company is optional
+
+#### Database Migrations
+- `database/migrations/2026_07_07_143056_make_company_id_nullable_in_branches_table.php` (new)
+  - Makes company_id nullable in branches table
+  - Drops company_id,slug unique constraint
+  - Adds slug unique constraint (company-wide)
+  - Changes foreign key to nullOnDelete instead of cascadeOnDelete
+  - Includes reversible down() method for rollback
+  - Documents rationale for the change
+
+### Key Findings
+
+1. **Single-Tenant Architecture**: Application is designed as single-tenant with branch-level multi-location support
+2. **No Company Controllers**: No company controllers, routes, or web interface exist
+3. **No Company Policy**: No CompanyPolicy exists, confirming company is not used for authorization
+4. **No CompanyAware Trait**: No CompanyAware trait exists, confirming no company-level isolation
+5. **Branch-Level Isolation**: BranchAware trait provides sufficient multi-location support
+6. **Company as Informational**: Company model serves as organization profile/configuration data only
+7. **company_id Purpose**: Used for organizational hierarchy and reporting, not tenant isolation
+
+### Architecture Decision
+
+**Chosen Option: Document Single-Tenancy (Option B)**
+
+**Rationale:**
+1. **Existing Pattern**: Branch-level isolation already implemented via BranchAware trait
+2. **No Company Isolation**: No CompanyAware trait, CompanyPolicy, or company filtering exists
+3. **Sufficient Isolation**: Branch-level isolation provides adequate multi-location support
+4. **Simplicity**: Single-tenant architecture is simpler and fits current needs
+5. **Efficiency**: 1-2 days documentation vs 3-5 days for multi-tenancy implementation
+6. **No Business Requirement**: No requirement for multi-tenant support exists
+
+**Why Not Option A (Implement Multi-Tenancy):**
+- Would require creating CompanyAware trait similar to BranchAware
+- Would require implementing CompanyPolicy with proper authorization
+- Would require implementing forCompany scope across all models
+- Would require adding company isolation in services and policies
+- Would require adding company middleware for enforcement
+- Branch-level isolation already provides sufficient multi-location support
+- No business requirement for tenant-level isolation
+
+### Current Architecture
+
+**Single-Tenant with Branch-Level Multi-Location:**
+
+**Isolation Strategy:**
+- **Company Level**: No isolation (single-tenant application)
+- **Branch Level**: Isolation via BranchAware trait
+- **User Access**: Admins/managers see all branches, regular users see their branch only
+
+**Company Model Purpose:**
+- Stores company profile information (name, legal name, contact details)
+- Stores company-wide settings and configuration
+- Provides company branding (logo, website)
+- Links to company information (settings key-value pairs)
+- Links to social media links
+- Links to branches (locations)
+
+**Branch Model Purpose:**
+- Represents physical locations (dealerships, showrooms, service centers)
+- Provides branch-level data isolation using BranchAware trait
+- Links users to specific branches for access control
+- Links vehicles to specific branches for inventory management
+- Associates with company for organizational hierarchy
+
+**company_id Field Purpose:**
+- Links branch to company for organizational structure
+- Enables company-wide reporting and aggregation
+- NOT used for tenant isolation (single-tenant application)
+- Used for informational/hierarchical purposes only
+- Now nullable to allow simpler single-tenant deployments
+
+### Benefits of Single-Tenant Architecture
+
+1. **Simplicity**: Reduces complexity of tenant isolation logic
+2. **Performance**: No tenant filtering overhead in queries
+3. **Maintainability**: Easier to understand and maintain
+4. **Cost**: Lower infrastructure and operational costs
+5. **Branch Support**: Branch-level isolation provides sufficient multi-location support
+6. **Alignment**: Aligns with actual application architecture and usage patterns
+
+### Migration Strategy
+
+**For Development:**
+- Run migration: `php artisan migrate`
+- Makes company_id nullable in branches table
+- No data loss (existing branches with company_id remain valid)
+- New branches can be created without company association
+
+**For Production:**
+- Run migration: `php artisan migrate`
+- Safe to make nullable (existing company associations remain valid)
+- Rollback available if needed via migration down() method
+- No breaking changes to existing functionality
+
+### Isolation Comparison
+
+**Multi-Tenant (Not Implemented):**
+- Company-level isolation across all data
+- CompanyAware trait for all models
+- CompanyPolicy for authorization
+- Company middleware for enforcement
+- Complex tenant filtering in queries
+- Higher infrastructure costs
+
+**Single-Tenant with Branch-Level (Current):**
+- No company-level isolation
+- Branch-level isolation via BranchAware trait
+- BranchPolicy for authorization
+- No company middleware needed
+- Simple branch filtering in queries
+- Lower infrastructure costs
+- Sufficient for multi-location support
+
+### Documentation Updates
+
+All company-related models now include comprehensive documentation:
+- Single-tenant architecture explanation
+- Model purpose and usage
+- Why no company-level isolation exists
+- Relationship to branch-level isolation
+- company_id field purpose and usage
+
+### Testing Notes
+
+- No tests needed for architecture documentation
+- Branch-level isolation tests continue to work with BranchAware trait
+- All existing functionality remains unchanged
+- company_id nullable change is backward compatible
+- Code formatted with Laravel Pint to maintain project standards
+- Migration includes reversible down() method for safety

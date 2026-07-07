@@ -10,6 +10,34 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * Branch Model
+ *
+ * SINGLE-TENANT APPLICATION WITH BRANCH-LEVEL MULTI-LOCATION SUPPORT
+ *
+ * This application is designed as a single-tenant system where branches represent
+ * physical locations of the same company. Branch-level isolation provides
+ * multi-location support without the complexity of multi-tenancy.
+ *
+ * Branch Model Purpose:
+ * - Represents physical locations (dealerships, showrooms, service centers)
+ * - Provides branch-level data isolation using BranchAware trait
+ * - Links users to specific branches for access control
+ * - Links vehicles to specific branches for inventory management
+ * - Associates with company for organizational hierarchy
+ *
+ * company_id Field Purpose:
+ * - Links branch to company for organizational structure
+ * - Enables company-wide reporting and aggregation
+ * - NOT used for tenant isolation (single-tenant application)
+ * - Used for informational/hierarchical purposes only
+ *
+ * Isolation Strategy:
+ * - Branch-level isolation via BranchAware trait (users, vehicles, etc.)
+ * - No company-level isolation (single-tenant application)
+ * - Admins/managers can see all branches
+ * - Regular users can only see their assigned branch
+ */
 class Branch extends Model
 {
     use HasFactory, SoftDeletes;
