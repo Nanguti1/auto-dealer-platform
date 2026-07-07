@@ -14,7 +14,6 @@ import { Textarea } from '@/components/ui/textarea';
 import {
     VehicleGallery,
     VehicleVideoSection,
-    Vehicle360Viewer,
     VehicleSpecsPanel,
     FinanceCalculator,
     VehicleInquiryForm,
@@ -195,13 +194,6 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
                                     </div>
                                 ))}
                             </div>
-
-                            {vehicle.has360 && (
-                                <div>
-                                    <h2 className="mb-4 text-2xl font-bold">360° View</h2>
-                                    <Vehicle360Viewer imageUrl={vehicle.image} />
-                                </div>
-                            )}
 
                             <VehicleVideoSection videos={vehicle.videos ?? []} />
 

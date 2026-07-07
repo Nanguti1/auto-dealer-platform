@@ -63,7 +63,6 @@ export const mockVehicles: VehicleDetail[] = [
             { id: 3, name: 'Heated Seats', category: 'Comfort' },
             { id: 4, name: 'Glass Roof', category: 'Exterior' },
         ],
-        has360: true,
     },
     {
         id: 2,
@@ -110,7 +109,6 @@ export const mockVehicles: VehicleDetail[] = [
             { id: 5, name: 'Panoramic Roof', category: 'Exterior' },
             { id: 6, name: 'Navigation', category: 'Technology' },
         ],
-        has360: false,
     },
     {
         id: 3,
@@ -140,7 +138,6 @@ export const mockVehicles: VehicleDetail[] = [
         videos: [],
         specifications: [],
         features: [{ id: 7, name: 'MBUX', category: 'Technology' }],
-        has360: true,
     },
     {
         id: 4,
@@ -169,7 +166,6 @@ export const mockVehicles: VehicleDetail[] = [
         videos: [{ id: 2, title: '911 Walkaround', url: 'https://www.youtube.com/embed/title', provider: 'youtube' }],
         specifications: [{ group: 'Performance', items: [{ name: '0-60 mph', value: '3.8', unit: 'sec' }] }],
         features: [{ id: 8, name: 'Sport Chrono', category: 'Performance' }],
-        has360: true,
     },
     {
         id: 5,
@@ -194,7 +190,6 @@ export const mockVehicles: VehicleDetail[] = [
         videos: [],
         specifications: [],
         features: [],
-        has360: false,
     },
     {
         id: 6,
@@ -220,7 +215,6 @@ export const mockVehicles: VehicleDetail[] = [
         videos: [],
         specifications: [],
         features: [{ id: 9, name: 'Terrain Response', category: 'Capability' }],
-        has360: true,
     },
 ];
 
@@ -255,7 +249,7 @@ export const mockFilterOptions: FilterOptions = {
 };
 
 export function toSummary(vehicle: VehicleDetail): VehicleSummary {
-    const { galleries, videos, specifications, features, description, stockNumber, vin, msrp, color, interiorColor, driveType, engineType, trim, listedAt, has360, ...summary } = vehicle;
+    const { galleries, videos, specifications, features, description, stockNumber, vin, msrp, color, interiorColor, driveType, engineType, trim, listedAt, ...summary } = vehicle;
 
     return summary;
 }

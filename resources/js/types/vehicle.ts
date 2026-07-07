@@ -66,7 +66,6 @@ export interface VehicleDetail extends VehicleSummary {
     videos: VehicleVideo[];
     specifications: VehicleSpecificationGroup[];
     features: VehicleFeature[];
-    has360?: boolean;
 }
 
 export interface FilterOption {

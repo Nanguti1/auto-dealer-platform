@@ -37,13 +37,12 @@ const rows: Row[] = [
     { label: 'Exterior Color', getValue: (v) => v.color ?? '—' },
     { label: 'Interior Color', getValue: (v) => v.interiorColor ?? '—' },
     { label: 'Seats', getValue: (v) => v.seats },
-    { label: '360° View', getValue: (v) => v.has360 ?? false },
 ];
 
 export default function VehicleComparisonTable({ vehicles, onRemove, className }: VehicleComparisonTableProps) {
     if (vehicles.length === 0) {
-return null;
-}
+        return null;
+    }
 
     return (
         <div className={cn('overflow-x-auto rounded-xl border', className)}>

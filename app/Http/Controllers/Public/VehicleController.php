@@ -226,7 +226,6 @@ class VehicleController extends Controller
                     'unit' => $spec->unit ?? '',
                 ]),
             ])->values(),
-            'has360' => false, // TODO: Implement when 360 view is available
         ];
 
         return Inertia::render('inventory/show', [
