@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Permission;
 use App\Models\Setting;
 use App\Models\User;
-use App\Observers\PermissionObserver;
 use App\Observers\SettingObserver;
 use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
@@ -44,7 +42,6 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         Setting::observe(SettingObserver::class);
-        Permission::observe(PermissionObserver::class);
     }
 
     /**

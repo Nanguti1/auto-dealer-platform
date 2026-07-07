@@ -40,7 +40,6 @@ use App\Http\Controllers\Admin\TradeIns\InspectionController;
 use App\Http\Controllers\Admin\TradeIns\OfferController;
 use App\Http\Controllers\Admin\TradeIns\TradeInController;
 use App\Http\Controllers\Admin\TradeIns\ValuationController;
-use App\Http\Controllers\Admin\Users\PermissionController;
 use App\Http\Controllers\Admin\Users\RoleController;
 use App\Http\Controllers\Admin\Users\UserController;
 use App\Http\Controllers\Admin\VehicleFeatures\VehicleFeatureController;
@@ -228,7 +227,6 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::resource('settings', SettingController::class);
         Route::resource('users', UserController::class);
         Route::resource('roles', RoleController::class);
-        Route::resource('permissions', PermissionController::class);
         Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
         Route::get('audit-logs/export', [AuditLogController::class, 'export'])->name('audit-logs.export');
     });
