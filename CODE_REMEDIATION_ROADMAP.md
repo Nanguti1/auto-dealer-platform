@@ -1742,3 +1742,89 @@ No service layer updates were required.
 - ✅ Service layer already supports restore via ManagesEloquentModels trait
 - ✅ Laravel Pint compliance maintained
 - ✅ Consistent pattern applied across all financial modules
+
+---
+
+## Session 17
+- Database indexes optimized.
+
+### P2 - Missing Indexes on Frequently Filtered Fields - COMPLETED
+
+**Objectives:**
+Add indexes to frequently filtered fields (sort_order fields, is_active fields) to improve query performance on large datasets while avoiding duplicate indexes.
+
+**Requirements Met:**
+- ✅ Reviewed existing migrations to identify missing indexes
+- ✅ Added indexes to sort_order fields in CMS tables
+- ✅ Added indexes to is_active fields in CMS tables
+- ✅ Verified no duplicate indexes were created
+- ✅ Migrations are safe and reversible
+
+### Analysis Findings
+
+**Existing Indexes:**
+- **Vehicles table**: Already has indexes on `year`, `sale_price`, `is_featured`, and composite indexes on `[branch_id, sale_price]` and `[make_id, model_id, year]`
+- **Status fields**: All status fields across 20+ tables already have indexes
+- **Reference data tables**: Most reference data tables (makes, models, body_types, etc.) already have indexes on `is_active` and `sort_order`
+
+**Missing Indexes Identified:**
+- **CMS tables**: `hero_sliders`, `home_page_sections`, `faqs`, `social_media_links`, `testimonials`, `blog_categories` were missing indexes on `sort_order` and `is_active`
+
+### Migration Created
+
+**File**: `2026_07_07_174650_add_indexes_to_sort_order_fields.php`
+
+**Tables Updated:**
+1. **hero_sliders**: Added index on `sort_order` and `is_active`
+2. **home_page_sections**: Added index on `sort_order` and `is_active`
+3. **faqs**: Added index on `sort_order` and `is_active`
+4. **social_media_links**: Added index on `sort_order` and `is_active`
+5. **testimonials**: Added index on `sort_order` and `is_active`
+6. **blog_categories**: Added index on `sort_order` and `is_active`
+
+### Index Strategy
+
+**Why These Indexes:**
+- **sort_order**: Used for ordering content in CMS and blog sections
+- **is_active**: Used for filtering active/inactive content in public-facing queries
+
+**Avoided Duplicate Indexes:**
+- Verified existing indexes before adding new ones
+- Reference data tables already had appropriate indexes
+- Financial tables already had status indexes
+- No duplicate indexes were created
+
+### Performance Impact
+
+**Expected Improvements:**
+- Faster ORDER BY queries on sort_order fields
+- Faster WHERE clauses filtering by is_active status
+- Improved performance for CMS content queries
+- Better performance for blog category queries
+
+**Index Maintenance:**
+- Minimal overhead for write operations
+- Significant benefit for read-heavy CMS operations
+- Appropriate for content management use cases
+
+### Verification
+
+- ✅ No duplicate indexes created
+- ✅ All existing indexes preserved
+- ✅ Migration is reversible with proper down() method
+- ✅ Indexes added only where beneficial
+- ✅ Composite indexes considered where appropriate
+- ✅ Reference data tables already properly indexed
+- ✅ Status fields already properly indexed across application
+
+### Notes
+
+**Vehicles Table Status:**
+The vehicles table does not have a direct `status` field. Instead, it uses:
+- `vehicle_status_id` (foreign key to vehicle_statuses table)
+- `inventory_status_id` (foreign key to inventory_statuses table)
+
+Both foreign keys already have index constraints from the foreign key definition, and the reference tables themselves have indexes on their status-related fields. No additional indexes were needed for the vehicles table.
+
+**Reference Data Tables:**
+All reference data tables (makes, models, body_types, fuel_types, etc.) already have indexes on `is_active` and `sort_order` as part of their original migrations. These were not modified as they were already optimized.
