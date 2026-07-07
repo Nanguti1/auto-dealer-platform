@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Tests\Feature;
 
 use App\Events\VehicleCreated;
-use App\Events\VehicleUpdated;
+use App\Listeners\RecordAuditLog;
 use App\Models\AuditLog;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Services\Admin\AuditLogService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 
 class AuditLogTest extends TestCase
@@ -47,7 +46,7 @@ class AuditLogTest extends TestCase
             'email' => 'john@example.com',
         ];
 
-        $listener = new \App\Listeners\RecordAuditLog();
+        $listener = new RecordAuditLog;
         $reflection = new \ReflectionClass($listener);
         $method = $reflection->getMethod('filterSensitiveData');
         $method->setAccessible(true);
@@ -76,7 +75,7 @@ class AuditLogTest extends TestCase
             'user_agent' => 'Test Agent',
         ]);
 
-        $service = new \App\Services\Admin\AuditLogService();
+        $service = new AuditLogService;
         $results = $service->paginate(['user_id' => $user->id]);
 
         $this->assertCount(1, $results);
@@ -99,7 +98,7 @@ class AuditLogTest extends TestCase
             'user_agent' => 'Test Agent',
         ]);
 
-        $service = new \App\Services\Admin\AuditLogService();
+        $service = new AuditLogService;
         $results = $service->paginate(['search' => 'Test']);
 
         $this->assertGreaterThanOrEqual(1, $results->count());

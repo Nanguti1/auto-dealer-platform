@@ -1602,3 +1602,143 @@ export default function Index({ data, filters = {} }: Props) {
 - ✅ Loading states provide user feedback during data fetching
 - ✅ React state management properly implemented
 - ✅ Inertia router integration for navigation and retry functionality
+
+---
+
+## Session 16
+- Financial soft deletes implemented.
+
+### P2 - Missing Soft Deletes on Financial Tables - COMPLETED
+
+**Objectives:**
+Add soft deletes to financial tables (Payments, Invoices, Receipts, Refunds, FinanceApplications) to enable recovery of accidentally deleted financial records and maintain audit trails for financial compliance.
+
+**Requirements Met:**
+- ✅ Created migrations to add softDeletes() to all financial tables
+- ✅ Added SoftDeletes trait to all financial models
+- ✅ Updated controllers to handle restore and forceDelete operations
+- ✅ Policies already had restore and forceDelete methods in place
+- ✅ Service layer already includes restore method via ManagesEloquentModels trait
+
+### Tables Updated
+
+#### Payments Table
+- **Migration**: `2026_07_07_172819_add_soft_deletes_to_payments_table.php`
+- **Model**: Added `SoftDeletes` trait to `Payment` model
+- **Controller**: Added `restore()` and `forceDelete()` methods to `PaymentController`
+
+#### Invoices Table
+- **Migration**: `2026_07_07_172843_add_soft_deletes_to_invoices_table.php`
+- **Model**: Added `SoftDeletes` trait to `Invoice` model
+- **Controller**: Added `restore()` and `forceDelete()` methods to `InvoiceController`
+
+#### Receipts Table
+- **Migration**: `2026_07_07_172848_add_soft_deletes_to_receipts_table.php`
+- **Model**: Added `SoftDeletes` trait to `Receipt` model
+- **Controller**: Added `restore()` and `forceDelete()` methods to `ReceiptController`
+
+#### Refunds Table
+- **Migration**: `2026_07_07_172854_add_soft_deletes_to_refunds_table.php`
+- **Model**: Added `SoftDeletes` trait to `Refund` model
+- **Controller**: Added `restore()` and `forceDelete()` methods to `RefundController`
+
+#### Finance Applications Table
+- **Migration**: `2026_07_07_172858_add_soft_deletes_to_finance_applications_table.php`
+- **Model**: Added `SoftDeletes` trait to `FinanceApplication` model
+- **Controller**: Added `restore()` and `forceDelete()` methods to `FinanceController`
+
+### Migration Details
+
+All migrations follow the same pattern:
+- `up()` method: Adds `deleted_at` timestamp column using `$table->softDeletes()`
+- `down()` method: Removes `deleted_at` column using `$table->dropSoftDeletes()`
+
+### Model Updates
+
+All financial models now include:
+- Import: `use Illuminate\Database\Eloquent\SoftDeletes;`
+- Trait usage: `use BranchAware, HasFactory, SoftDeletes;`
+
+### Controller Updates
+
+All financial controllers now include additional methods:
+
+```php
+public function restore(Model $model): RedirectResponse
+{
+    $this->authorize('restore', $model);
+    $model->restore();
+
+    return redirect()->route('admin.model.index')->with('success', 'Restored successfully.');
+}
+
+public function forceDelete(Model $model): RedirectResponse
+{
+    $this->authorize('forceDelete', $model);
+    $model->forceDelete();
+
+    return redirect()->route('admin.model.index')->with('success', 'Permanently deleted.');
+}
+```
+
+### Policy Status
+
+All financial policies already had `restore()` and `forceDelete()` methods implemented:
+- **PaymentPolicy**: Already includes restore and forceDelete methods
+- **InvoicePolicy**: Already includes restore and forceDelete methods
+- **ReceiptPolicy**: Already includes restore and forceDelete methods
+- **RefundPolicy**: Already includes restore and forceDelete methods
+- **FinanceApplicationPolicy**: Already includes restore and forceDelete methods
+
+No policy updates were required as they were already properly configured for soft delete operations.
+
+### Service Layer
+
+The `ManagesEloquentModels` trait already includes a `restore()` method that:
+- Checks if the model has a restore method
+- Calls restore within a database transaction
+- Returns the refreshed model
+
+No service layer updates were required.
+
+### Files Created
+
+#### Migrations
+- `database/migrations/2026_07_07_172819_add_soft_deletes_to_payments_table.php`
+- `database/migrations/2026_07_07_172843_add_soft_deletes_to_invoices_table.php`
+- `database/migrations/2026_07_07_172848_add_soft_deletes_to_receipts_table.php`
+- `database/migrations/2026_07_07_172854_add_soft_deletes_to_refunds_table.php`
+- `database/migrations/2026_07_07_172858_add_soft_deletes_to_finance_applications_table.php`
+
+### Files Modified
+
+#### Models
+- `app/Models/Payment.php`
+- `app/Models/Invoice.php`
+- `app/Models/Receipt.php`
+- `app/Models/Refund.php`
+- `app/Models/FinanceApplication.php`
+
+#### Controllers
+- `app/Http/Controllers/Admin/Payments/PaymentController.php`
+- `app/Http/Controllers/Admin/Sales/InvoiceController.php`
+- `app/Http/Controllers/Admin/Sales/ReceiptController.php`
+- `app/Http/Controllers/Admin/Sales/RefundController.php`
+- `app/Http/Controllers/Admin/Finance/FinanceController.php`
+
+### Benefits
+
+1. **Audit Trail**: Financial records can be recovered if accidentally deleted
+2. **Compliance**: Supports financial compliance requirements for record retention
+3. **Data Integrity**: Prevents permanent loss of critical financial data
+4. **Recovery**: Admin users can restore soft-deleted records via controller methods
+5. **Cleanup**: Force delete capability for permanent removal when needed
+
+### Verification
+- ✅ All 5 migrations created with proper up/down methods
+- ✅ All 5 models updated with SoftDeletes trait
+- ✅ All 5 controllers updated with restore and forceDelete methods
+- ✅ All 5 policies already had restore and forceDelete methods
+- ✅ Service layer already supports restore via ManagesEloquentModels trait
+- ✅ Laravel Pint compliance maintained
+- ✅ Consistent pattern applied across all financial modules

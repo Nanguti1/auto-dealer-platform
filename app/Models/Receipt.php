@@ -6,10 +6,11 @@ use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Receipt extends Model
 {
-    use BranchAware, HasFactory;
+    use BranchAware, HasFactory, SoftDeletes;
 
     protected $fillable = ['user_id', 'payment_id', 'invoice_id', 'receipt_number', 'amount', 'currency', 'status', 'issued_at'];
 

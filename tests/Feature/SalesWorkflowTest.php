@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Branch;
-use App\Models\Invoice;
 use App\Models\InventoryStatus;
+use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Receipt;
 use App\Models\Refund;
@@ -22,8 +22,11 @@ class SalesWorkflowTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     protected User $admin;
+
     protected User $customer;
+
     protected Vehicle $vehicle;
+
     protected Branch $branch;
 
     protected function setUp(): void
@@ -119,7 +122,7 @@ class SalesWorkflowTest extends TestCase
             'payment_id' => $payment->id,
             'user_id' => $this->customer->id,
             'branch_id' => $this->branch->id,
-            'invoice_number' => 'INV-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'invoice_number' => 'INV-'.$this->faker->unique()->numberBetween(1000, 9999),
             'subtotal' => 25000.00,
             'tax_total' => 2000.00,
             'total' => 27000.00,
@@ -155,7 +158,7 @@ class SalesWorkflowTest extends TestCase
         $receiptData = [
             'payment_id' => $payment->id,
             'user_id' => $this->customer->id,
-            'receipt_number' => 'REC-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'receipt_number' => 'REC-'.$this->faker->unique()->numberBetween(1000, 9999),
             'amount' => 500.00,
             'payment_method' => 'credit_card',
             'status' => 'issued',
@@ -188,7 +191,7 @@ class SalesWorkflowTest extends TestCase
         $refundData = [
             'payment_id' => $payment->id,
             'user_id' => $this->customer->id,
-            'refund_number' => 'REF-' . $this->faker->unique()->numberBetween(1000, 9999),
+            'refund_number' => 'REF-'.$this->faker->unique()->numberBetween(1000, 9999),
             'amount' => 500.00,
             'reason' => 'Customer request',
             'status' => 'pending',

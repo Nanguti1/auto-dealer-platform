@@ -82,4 +82,20 @@ class RefundController extends Controller
 
         return redirect()->route('admin.refunds.index')->with('success', 'Refund deleted successfully.');
     }
+
+    public function restore(Refund $refund): RedirectResponse
+    {
+        $this->authorize('restore', $refund);
+        $refund->restore();
+
+        return redirect()->route('admin.refunds.index')->with('success', 'Restored successfully.');
+    }
+
+    public function forceDelete(Refund $refund): RedirectResponse
+    {
+        $this->authorize('forceDelete', $refund);
+        $refund->forceDelete();
+
+        return redirect()->route('admin.refunds.index')->with('success', 'Permanently deleted.');
+    }
 }

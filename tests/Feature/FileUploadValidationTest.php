@@ -9,6 +9,7 @@ use App\Models\CustomerDocument;
 use App\Models\FinanceApplication;
 use App\Models\FinanceDocument;
 use App\Models\ImportDocument;
+use App\Models\User;
 use App\Models\VehicleImport;
 use App\Services\Customers\CustomerDocumentService;
 use App\Services\Finance\FinanceDocumentService;
@@ -170,7 +171,7 @@ class FileUploadValidationTest extends TestCase
 
     public function test_finance_document_service_sanitizes_filename(): void
     {
-        $service = new FinanceDocumentService();
+        $service = new FinanceDocumentService;
         $document = FinanceDocument::factory()->create();
         $file = UploadedFile::fake()->create('My Document (2024).pdf', 1000);
 
@@ -184,7 +185,7 @@ class FileUploadValidationTest extends TestCase
 
     public function test_import_document_service_sanitizes_filename(): void
     {
-        $service = new ImportDocumentService();
+        $service = new ImportDocumentService;
         $document = ImportDocument::factory()->create();
         $file = UploadedFile::fake()->create('Import@#$File.csv', 1000);
 
@@ -198,7 +199,7 @@ class FileUploadValidationTest extends TestCase
 
     public function test_customer_document_service_sanitizes_filename(): void
     {
-        $service = new CustomerDocumentService();
+        $service = new CustomerDocumentService;
         $document = CustomerDocument::factory()->create();
         $file = UploadedFile::fake()->create('Customer ID - Copy.jpg', 1000);
 
@@ -253,6 +254,6 @@ class FileUploadValidationTest extends TestCase
 
     protected function createUser()
     {
-        return \App\Models\User::factory()->create();
+        return User::factory()->create();
     }
 }

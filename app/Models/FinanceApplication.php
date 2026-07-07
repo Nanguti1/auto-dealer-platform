@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class FinanceApplication extends Model
 {
-    use BranchAware, HasFactory;
+    use BranchAware, HasFactory, SoftDeletes;
 
     protected $fillable = ['vehicle_id', 'user_id', 'lender_id', 'requested_amount', 'down_payment', 'term_months', 'interest_rate', 'estimated_monthly_payment', 'status', 'applicant_data'];
 

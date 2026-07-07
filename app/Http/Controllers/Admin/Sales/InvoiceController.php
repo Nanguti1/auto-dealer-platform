@@ -90,4 +90,20 @@ class InvoiceController extends Controller
 
         return back()->with('success', 'Invoice cancelled successfully.');
     }
+
+    public function restore(Invoice $invoice): RedirectResponse
+    {
+        $this->authorize('restore', $invoice);
+        $invoice->restore();
+
+        return redirect()->route('admin.invoices.index')->with('success', 'Restored successfully.');
+    }
+
+    public function forceDelete(Invoice $invoice): RedirectResponse
+    {
+        $this->authorize('forceDelete', $invoice);
+        $invoice->forceDelete();
+
+        return redirect()->route('admin.invoices.index')->with('success', 'Permanently deleted.');
+    }
 }

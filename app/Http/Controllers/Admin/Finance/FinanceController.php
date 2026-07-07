@@ -84,4 +84,20 @@ class FinanceController extends Controller
 
         return redirect()->route('admin.finance-applications.index')->with('success', 'Deleted successfully.');
     }
+
+    public function restore(FinanceApplication $financeApplication): RedirectResponse
+    {
+        $this->authorize('restore', $financeApplication);
+        $financeApplication->restore();
+
+        return redirect()->route('admin.finance-applications.index')->with('success', 'Restored successfully.');
+    }
+
+    public function forceDelete(FinanceApplication $financeApplication): RedirectResponse
+    {
+        $this->authorize('forceDelete', $financeApplication);
+        $financeApplication->forceDelete();
+
+        return redirect()->route('admin.finance-applications.index')->with('success', 'Permanently deleted.');
+    }
 }

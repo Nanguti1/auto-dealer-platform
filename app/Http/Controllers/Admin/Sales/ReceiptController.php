@@ -74,4 +74,20 @@ class ReceiptController extends Controller
 
         return redirect()->route('admin.receipts.index')->with('success', 'Receipt deleted successfully.');
     }
+
+    public function restore(Receipt $receipt): RedirectResponse
+    {
+        $this->authorize('restore', $receipt);
+        $receipt->restore();
+
+        return redirect()->route('admin.receipts.index')->with('success', 'Restored successfully.');
+    }
+
+    public function forceDelete(Receipt $receipt): RedirectResponse
+    {
+        $this->authorize('forceDelete', $receipt);
+        $receipt->forceDelete();
+
+        return redirect()->route('admin.receipts.index')->with('success', 'Permanently deleted.');
+    }
 }

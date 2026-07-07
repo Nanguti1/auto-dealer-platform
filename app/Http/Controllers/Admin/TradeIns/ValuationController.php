@@ -62,8 +62,8 @@ class ValuationController extends Controller
 
         return Inertia::render('Admin/TradeIns/Valuations/Edit', [
             'valuation' => $valuation->load(['tradeInRequest', 'valuationSource']),
-            'tradeInRequests' => \App\Models\TradeInRequest::select('id', 'make', 'model', 'year')->get(),
-            'users' => \App\Models\User::select('id', 'name', 'email')->get(),
+            'tradeInRequests' => TradeInRequest::select('id', 'make', 'model', 'year')->get(),
+            'users' => User::select('id', 'name', 'email')->get(),
         ]);
     }
 

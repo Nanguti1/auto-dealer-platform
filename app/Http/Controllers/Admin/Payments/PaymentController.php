@@ -74,4 +74,20 @@ class PaymentController extends Controller
 
         return redirect()->route('admin.payments.index')->with('success', 'Deleted successfully.');
     }
+
+    public function restore(Payment $payment): RedirectResponse
+    {
+        $this->authorize('restore', $payment);
+        $payment->restore();
+
+        return redirect()->route('admin.payments.index')->with('success', 'Restored successfully.');
+    }
+
+    public function forceDelete(Payment $payment): RedirectResponse
+    {
+        $this->authorize('forceDelete', $payment);
+        $payment->forceDelete();
+
+        return redirect()->route('admin.payments.index')->with('success', 'Permanently deleted.');
+    }
 }
