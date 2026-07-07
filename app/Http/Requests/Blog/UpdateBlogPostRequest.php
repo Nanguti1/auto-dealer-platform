@@ -18,10 +18,19 @@ class UpdateBlogPostRequest extends FormRequest
      */
     public function rules(): array
     {
+        $blogPost = $this->route('blog_post');
+
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'blog_category_id' => ['sometimes', 'nullable', 'integer', 'exists:blog_categories,id'],
+            'author_id' => ['sometimes', 'nullable', 'integer', 'exists:users,id'],
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:blog_posts,slug,'.$blogPost],
+            'excerpt' => ['sometimes', 'nullable', 'string'],
+            'body' => ['sometimes', 'nullable', 'string'],
+            'featured_image' => ['sometimes', 'nullable', 'image', 'max:10240'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:draft,published,scheduled,archived'],
+            'published_at' => ['sometimes', 'nullable', 'date'],
+            'is_featured' => ['sometimes', 'nullable', 'boolean'],
         ];
     }
 }

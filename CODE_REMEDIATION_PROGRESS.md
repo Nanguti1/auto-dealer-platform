@@ -1375,3 +1375,226 @@ php artisan migrate:fresh --seed
 - Settings provide sensible defaults for application configuration
 - Code formatted with Laravel Pint to maintain project standards
 - Seeders can be safely re-run without creating duplicate data
+
+## Session 21
+- Automatic slug generation implemented across all applicable models.
+- Slug uniqueness enforced through database constraints and validation.
+- Reusable HasSlug trait created for consistent slug generation.
+- Frontend slug generation helper implemented for real-time slug creation.
+- Blog, CMS, and Vehicle forms updated with auto-slug functionality.
+- FormRequest validation rules updated for slug fields.
+- Manual slug preservation during edits implemented.
+
+### Files Created
+
+#### Traits
+- `app/Traits/HasSlug.php` (new)
+  - Reusable trait for automatic slug generation
+  - Generates slugs from title or name fields
+  - Preserves manually entered slugs during edits
+  - Ensures uniqueness with automatic suffix generation
+  - Configurable source field and slug field
+  - Uses Str::slug for consistent slugification
+
+#### Frontend Helpers
+- `resources/js/lib/slug-helper.ts` (new)
+  - Frontend slug generation utility
+  - Generates slugs from text input
+  - Matches Laravel's Str::slug behavior
+  - Removes special characters and spaces
+  - Converts to lowercase
+  - Replaces spaces with hyphens
+
+### Files Modified
+
+#### Models
+- `app/Models/BlogPost.php` (updated)
+  - Added HasSlug trait usage
+  - Configured slug generation from title field
+  - Maintains unique slug constraint
+
+- `app/Models/DynamicCmsPage.php` (updated)
+  - Added HasSlug trait usage
+  - Configured slug generation from title field
+  - Maintains unique slug constraint
+
+- `app/Models/Vehicle.php` (updated)
+  - Added HasSlug trait usage
+  - Configured slug generation from name field (title)
+  - Maintains unique slug constraint
+  - Public-facing vehicle URLs now use slugs
+
+#### Form Requests
+- `app/Http/Requests/Blog/StoreBlogPostRequest.php` (updated)
+  - Added slug validation rules
+  - Slug must be unique except on update
+  - Slug must contain only letters, numbers, hyphens
+  - Added prepareForValidation to handle manual slug preservation
+
+- `app/Http/Requests/Blog/UpdateBlogPostRequest.php` (updated)
+  - Added slug validation rules
+  - Slug must be unique except for current record
+  - Added prepareForValidation to handle manual slug preservation
+
+- `app/Http/Requests/CMS/StoreCmsPageRequest.php` (updated)
+  - Added slug validation rules
+  - Slug must be unique except on update
+  - Slug must contain only letters, numbers, hyphens
+  - Added prepareForValidation to handle manual slug preservation
+
+- `app/Http/Requests/CMS/UpdateCmsPageRequest.php` (updated)
+  - Added slug validation rules
+  - Slug must be unique except for current record
+  - Added prepareForValidation to handle manual slug preservation
+
+- `app/Http/Requests/Vehicles/StoreVehicleRequest.php` (updated)
+  - Added slug validation rules
+  - Slug must be unique except on update
+  - Slug must contain only letters, numbers, hyphens
+  - Added prepareForValidation to handle manual slug preservation
+
+- `app/Http/Requests/Vehicles/UpdateVehicleRequest.php` (updated)
+  - Added slug validation rules
+  - Slug must be unique except for current record
+  - Added prepareForValidation to handle manual slug preservation
+
+#### Frontend Forms
+- `resources/js/pages/Admin/Blog/Posts/Create.tsx` (updated)
+  - Added auto-slug generation from title field
+  - Implemented slug-helper for real-time slug creation
+  - Added manual slug override capability
+  - Slug field auto-populates when title changes
+  - User can edit slug manually if needed
+
+- `resources/js/pages/Admin/Blog/Posts/Edit.tsx` (updated)
+  - Added auto-slug generation from title field
+  - Preserves existing slug on edit unless manually changed
+  - Implemented slug-helper for real-time slug creation
+  - Added manual slug override capability
+
+- `resources/js/pages/Admin/CMS/Pages/Create.tsx` (updated)
+  - Added auto-slug generation from title field
+  - Implemented slug-helper for real-time slug creation
+  - Added manual slug override capability
+  - Slug field auto-populates when title changes
+
+- `resources/js/pages/Admin/CMS/Pages/Edit.tsx` (updated)
+  - Added auto-slug generation from title field
+  - Preserves existing slug on edit unless manually changed
+  - Implemented slug-helper for real-time slug creation
+  - Added manual slug override capability
+
+- `resources/js/pages/Admin/Inventory/Vehicles/Create.tsx` (updated)
+  - Added auto-slug generation from name field
+  - Implemented slug-helper for real-time slug creation
+  - Added manual slug override capability
+  - Slug field auto-populates when name changes
+
+- `resources/js/pages/Admin/Inventory/Vehicles/Edit.tsx` (updated)
+  - Added auto-slug generation from name field
+  - Preserves existing slug on edit unless manually changed
+  - Implemented slug-helper for real-time slug creation
+  - Added manual slug override capability
+
+### Key Improvements
+
+1. **Automatic Slug Generation**: All applicable models now generate slugs automatically from title/name fields
+2. **Uniqueness Enforcement**: Database unique constraints and validation rules ensure slug uniqueness
+3. **Manual Override**: Users can manually edit slugs when auto-generation doesn't meet their needs
+4. **Edit Preservation**: Existing slugs are preserved during edits unless manually changed
+5. **Consistent Behavior**: HasSlug trait provides consistent slug generation across all models
+6. **Frontend Integration**: Real-time slug generation in forms for better UX
+7. **URL-Friendly Slugs**: Slugs use only letters, numbers, and hyphens for clean URLs
+8. **Automatic Suffixes**: HasSlug trait automatically adds suffixes (e.g., -2, -3) for duplicate slugs
+9. **Validation Rules**: Comprehensive validation ensures slug format and uniqueness
+10. **Reusable Pattern**: HasSlug trait can be easily applied to future models
+
+### HasSlug Trait Features
+
+**Automatic Generation:**
+- Generates slug from configured source field (title, name, etc.)
+- Uses Laravel's Str::slug for consistent slugification
+- Triggers on model creating event
+
+**Uniqueness Handling:**
+- Checks for existing slugs in the same table
+- Automatically appends numeric suffixes (e.g., -2, -3) for duplicates
+- Ensures unique slugs without manual intervention
+
+**Edit Preservation:**
+- Preserves manually entered slugs during updates
+- Only regenerates slug if source field changes and slug is empty
+- Allows manual override for SEO optimization
+
+**Configuration:**
+- Configurable source field (default: title)
+- Configurable slug field (default: slug)
+- Can be customized per model
+
+### Frontend Slug Helper
+
+**Features:**
+- Matches Laravel's Str::slug behavior
+- Converts to lowercase
+- Removes special characters
+- Replaces spaces with hyphens
+- Removes multiple consecutive hyphens
+- Trims leading/trailing hyphens
+
+**Usage:**
+```typescript
+import { generateSlug } from '@/lib/slug-helper';
+
+const slug = generateSlug('My Blog Post Title');
+// Result: 'my-blog-post-title'
+```
+
+### Form Integration
+
+**Auto-Slug Pattern:**
+1. User enters title/name
+2. Slug field auto-populates using slug-helper
+3. User can edit slug manually if needed
+4. On form submission, backend validates slug uniqueness
+5. Backend preserves manual slug or generates if empty
+
+**Edit Behavior:**
+1. Existing slug is preserved in slug field
+2. If title changes, slug remains unchanged unless manually edited
+3. If slug is manually cleared, it regenerates from title
+4. Backend ensures uniqueness on save
+
+### Models Updated
+
+**Content Models (Public URLs):**
+- BlogPost - Blog post URLs
+- DynamicCmsPage - CMS page URLs
+- Vehicle - Vehicle detail page URLs
+
+**Additional Models (if needed):**
+- HasSlug trait can be easily applied to other models
+- Examples: BlogCategory, BlogTag, Promotion, etc.
+
+### Validation Rules
+
+**Slug Format:**
+- Must contain only letters, numbers, and hyphens
+- No spaces or special characters
+- Maximum 255 characters
+- Cannot start or end with hyphen
+
+**Uniqueness:**
+- Must be unique within the model's table
+- On update: unique except for current record
+- On create: must be completely unique
+
+### Testing Notes
+
+- HasSlug trait tested with various title/name formats
+- Frontend slug helper matches Laravel behavior
+- FormRequest validation rules tested for uniqueness
+- Manual slug override functionality verified
+- Edit preservation behavior confirmed
+- Automatic suffix generation tested for duplicates
+- Code formatted with Laravel Pint to maintain project standards
+- All slug generation follows SEO best practices

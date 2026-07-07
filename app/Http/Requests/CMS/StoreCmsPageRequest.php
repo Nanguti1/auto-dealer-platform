@@ -20,7 +20,7 @@ class StoreCmsPageRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:dynamic_cms_pages,slug'],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:dynamic_cms_pages,slug'],
             'body' => ['nullable', 'string'],
             'content' => ['nullable', 'string'],
             'status' => ['required', 'string', 'in:draft,published,archived'],

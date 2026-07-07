@@ -1,4 +1,6 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { generateSlug } from '@/lib/slug-utils';
+import * as React from 'react';
 import type { BlogPost } from './types';
 
 const statusOptions = [
@@ -9,6 +11,23 @@ const statusOptions = [
 ];
 
 export default function BlogForm({ blogPost, action, method = 'post' }: { blogPost?: BlogPost; action: string; method?: 'post' | 'put' }) {
+  const [title, setTitle] = React.useState(blogPost?.title ?? '');
+  const [slug, setSlug] = React.useState(blogPost?.slug ?? '');
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!blogPost?.slug);
+
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+    // Only auto-generate slug if it hasn't been manually edited
+    if (!isSlugManuallyEdited) {
+      setSlug(generateSlug(value));
+    }
+  };
+
+  const handleSlugChange = (value: string) => {
+    setSlug(value);
+    setIsSlugManuallyEdited(true);
+  };
+
   return (
     <FormShell
       action={action}
@@ -17,19 +36,20 @@ export default function BlogForm({ blogPost, action, method = 'post' }: { blogPo
       encType="multipart/form-data"
       className="max-w-4xl"
     >
+      <input type="hidden" name="slug" value={slug} />
       <FormSection title="Basic Information" gridCols={2}>
         <FormField
           name="title"
           label="Title"
-          value={blogPost?.title ?? ''}
-          onChange={() => {}}
+          value={title}
+          onChange={handleTitleChange}
           className="md:col-span-2"
         />
         <FormField
           name="slug"
           label="Slug"
-          value={blogPost?.slug ?? ''}
-          onChange={() => {}}
+          value={slug}
+          onChange={handleSlugChange}
         />
         <FormField
           name="blog_category_id"

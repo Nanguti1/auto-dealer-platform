@@ -22,7 +22,7 @@ class StoreBlogPostRequest extends FormRequest
             'blog_category_id' => ['required', 'integer', 'exists:blog_categories,id'],
             'author_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255', 'unique:blog_posts,slug'],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:blog_posts,slug'],
             'excerpt' => ['nullable', 'string'],
             'body' => ['required', 'string'],
             'featured_image' => ['nullable', 'image', 'max:10240'],

@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class HomePageSection extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasSlug, SoftDeletes;
+
+    protected string $slugSourceField = 'name';
 
     protected $fillable = ['name', 'slug', 'type', 'content', 'is_active', 'sort_order'];
 

@@ -26,7 +26,7 @@ class StoreVehicleRequest extends FormRequest
             'vin' => ['required', 'string', 'max:255'],
             'year' => ['required', 'integer', 'between:1900,2030'],
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255'],
+            'slug' => ['nullable', 'string', 'max:255', 'unique:vehicles,slug'],
             'sale_price' => ['required', 'numeric', 'min:0'],
         ];
     }

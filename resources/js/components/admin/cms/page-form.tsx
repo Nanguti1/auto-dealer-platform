@@ -1,4 +1,6 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { generateSlug } from '@/lib/slug-utils';
+import * as React from 'react';
 import type { CmsPage } from './types';
 
 const statusOptions = [
@@ -8,6 +10,23 @@ const statusOptions = [
 ];
 
 export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage?: CmsPage; action: string; method?: 'post' | 'put' }) {
+  const [title, setTitle] = React.useState(cmsPage?.title ?? '');
+  const [slug, setSlug] = React.useState(cmsPage?.slug ?? '');
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!cmsPage?.slug);
+
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+    // Only auto-generate slug if it hasn't been manually edited
+    if (!isSlugManuallyEdited) {
+      setSlug(generateSlug(value));
+    }
+  };
+
+  const handleSlugChange = (value: string) => {
+    setSlug(value);
+    setIsSlugManuallyEdited(true);
+  };
+
   return (
     <FormShell
       action={action}
@@ -15,19 +34,20 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
       submitLabel="Save page"
       className="max-w-4xl"
     >
+      <input type="hidden" name="slug" value={slug} />
       <FormSection title="Basic Information" gridCols={2}>
         <FormField
           name="title"
           label="Title"
-          value={cmsPage?.title ?? ''}
-          onChange={() => {}}
+          value={title}
+          onChange={handleTitleChange}
           className="md:col-span-2"
         />
         <FormField
           name="slug"
           label="Slug"
-          value={cmsPage?.slug ?? ''}
-          onChange={() => {}}
+          value={slug}
+          onChange={handleSlugChange}
         />
         <FormField
           name="status"
