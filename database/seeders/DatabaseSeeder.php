@@ -23,7 +23,22 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
+            // Reference Data Seeders
+            RoleSeeder::class,
+            VehicleStatusSeeder::class,
+            VehicleConditionSeeder::class,
             InventoryStatusSeeder::class,
+            VehicleCategorySeeder::class,
+            BodyTypeSeeder::class,
+            FuelTypeSeeder::class,
+            TransmissionTypeSeeder::class,
+            DriveTypeSeeder::class,
+            ColorSeeder::class,
+            InteriorColorSeeder::class,
+            EngineTypeSeeder::class,
+            CrmStageSeeder::class,
+            // Configuration Seeders
+            SettingsSeeder::class,
         ]);
     }
 }
