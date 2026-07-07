@@ -4,8 +4,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { RichTextEditor } from '@/components/ui/rich-text-editor';
 
-export type FieldType = 'text' | 'email' | 'number' | 'password' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time' | 'textarea' | 'select' | 'switch' | 'checkbox';
+export type FieldType = 'text' | 'email' | 'number' | 'password' | 'tel' | 'url' | 'date' | 'datetime-local' | 'time' | 'textarea' | 'richtext' | 'select' | 'switch' | 'checkbox';
 
 interface FormFieldProps {
   name: string;
@@ -68,6 +69,16 @@ export default function FormField({
             value={String(value ?? '')}
             onChange={(e) => onChange?.(e.target.value)}
             className={hasError ? 'border-destructive' : ''}
+          />
+        );
+
+      case 'richtext':
+        return (
+          <RichTextEditor
+            {...baseProps}
+            value={String(value ?? '')}
+            onChange={(content) => onChange?.(content)}
+            error={hasError}
           />
         );
 

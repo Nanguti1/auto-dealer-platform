@@ -50,7 +50,7 @@ export default function TaskForm({ task, action, leadId }: { task?: CrmTask; act
         <FormField
           name="description"
           label="Description"
-          type="textarea"
+          type="richtext"
           value={task?.description ?? ''}
           onChange={() => {}}
         />

@@ -42,7 +42,7 @@ export default function ActivityForm({ activity, action, leadId }: { activity?: 
         <FormField
           name="notes"
           label="Notes"
-          type="textarea"
+          type="richtext"
           value={activity?.notes ?? ''}
           onChange={() => {}}
         />

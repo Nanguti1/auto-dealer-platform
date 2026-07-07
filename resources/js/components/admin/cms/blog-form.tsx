@@ -73,7 +73,7 @@ export default function BlogForm({ blogPost, action, method = 'post' }: { blogPo
         <FormField
           name="body"
           label="Content"
-          type="textarea"
+          type="richtext"
           value={blogPost?.body ?? ''}
           onChange={() => {}}
         />

@@ -26,7 +26,7 @@ export default function NoteForm({ note, action, customerId }: { note?: Customer
         <FormField
           name="body"
           label="Note"
-          type="textarea"
+          type="richtext"
           value={note?.body ?? note?.note ?? ''}
           onChange={() => {}}
         />

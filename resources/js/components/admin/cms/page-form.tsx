@@ -57,7 +57,7 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
         <FormField
           name="content"
           label="Content"
-          type="textarea"
+          type="richtext"
           value={cmsPage?.content ?? ''}
           onChange={() => {}}
         />
