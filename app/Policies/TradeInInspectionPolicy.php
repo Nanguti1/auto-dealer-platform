@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\TradeInInspection;
 use App\Models\User;
 
@@ -21,26 +22,26 @@ class TradeInInspectionPolicy
 
     public function create(User $user): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function update(User $user, TradeInInspection $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, TradeInInspection $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, TradeInInspection $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, TradeInInspection $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

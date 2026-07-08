@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\CustomerNote;
 use App\Models\User;
 
@@ -26,21 +27,21 @@ class CustomerNotePolicy
 
     public function update(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && ($user->role?->name === 'admin' || $user->role?->name === 'manager' || $user->id === $model->user_id);
+        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && (in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true) || $user->id === $model->user_id);
     }
 
     public function delete(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && ($user->role?->name === 'admin' || $user->role?->name === 'manager' || $user->id === $model->user_id);
+        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && (in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true) || $user->id === $model->user_id);
     }
 
     public function restore(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\CrmTask;
 use App\Models\User;
 
@@ -26,21 +27,21 @@ class CrmTaskPolicy
 
     public function update(User $user, CrmTask $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, CrmTask $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, CrmTask $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, CrmTask $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

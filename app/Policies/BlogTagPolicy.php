@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\BlogTag;
 use App\Models\User;
 
@@ -26,21 +27,21 @@ class BlogTagPolicy
 
     public function update(User $user, BlogTag $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, BlogTag $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, BlogTag $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, BlogTag $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

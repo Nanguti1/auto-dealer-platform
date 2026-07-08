@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\RoleEnum;
 use App\Models\Media;
 use App\Models\User;
 
@@ -26,21 +27,21 @@ class MediaPolicy
 
     public function update(User $user, Media $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, Media $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, Media $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, Media $model): bool
     {
-        return $user !== null && ($user->role?->name === 'admin' || $user->role?->name === 'manager');
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }
