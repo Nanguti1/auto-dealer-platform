@@ -13,7 +13,6 @@ use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -72,11 +71,7 @@ class ReportController extends Controller
 
         $salesData = Payment::forBranchThrough($user, 'vehicle')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->select(
-                DB::raw('DATE(created_at) as date'),
-                DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(amount) as total')
-            )
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count, SUM(amount) as total')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -85,7 +80,7 @@ class ReportController extends Controller
             ->whereBetween('payments.created_at', [$startDate, $endDate])
             ->join('vehicles', 'payments.vehicle_id', '=', 'vehicles.id')
             ->join('makes', 'vehicles.make_id', '=', 'makes.id')
-            ->select('vehicles.make_id', 'makes.name as make_name', DB::raw('COUNT(*) as count'))
+            ->selectRaw('vehicles.make_id, makes.name as make_name, COUNT(*) as count')
             ->groupBy('vehicles.make_id', 'makes.name')
             ->get();
 
@@ -107,19 +102,19 @@ class ReportController extends Controller
 
         $inventoryData = Vehicle::forBranch($user)
             ->join('inventory_statuses', 'vehicles.inventory_status_id', '=', 'inventory_statuses.id')
-            ->select('inventory_status_id', 'inventory_statuses.name as status_name', DB::raw('COUNT(*) as count'), DB::raw('AVG(sale_price) as avg_price'))
+            ->selectRaw('inventory_status_id, inventory_statuses.name as status_name, COUNT(*) as count, AVG(sale_price) as avg_price')
             ->groupBy('inventory_status_id', 'inventory_statuses.name')
             ->get();
 
         $inventoryByMake = Vehicle::forBranch($user)
             ->join('makes', 'vehicles.make_id', '=', 'makes.id')
-            ->select('make_id', 'makes.name as make_name', DB::raw('COUNT(*) as count'))
+            ->selectRaw('make_id, makes.name as make_name, COUNT(*) as count')
             ->groupBy('make_id', 'makes.name')
             ->get();
 
         $inventoryByBodyType = Vehicle::forBranch($user)
             ->join('body_types', 'vehicles.body_type_id', '=', 'body_types.id')
-            ->select('body_type_id', 'body_types.name as body_type_name', DB::raw('COUNT(*) as count'))
+            ->selectRaw('body_type_id, body_types.name as body_type_name, COUNT(*) as count')
             ->groupBy('body_type_id', 'body_types.name')
             ->get();
 
@@ -145,23 +140,19 @@ class ReportController extends Controller
 
         $leadsByStage = Lead::forBranchThrough($user, 'vehicle')
             ->join('crm_stages', 'leads.crm_stage_id', '=', 'crm_stages.id')
-            ->select('crm_stage_id', 'crm_stages.name as stage_name', DB::raw('COUNT(*) as count'))
+            ->selectRaw('crm_stage_id, crm_stages.name as stage_name, COUNT(*) as count')
             ->groupBy('crm_stage_id', 'crm_stages.name')
             ->get();
 
         $leadsBySource = Lead::forBranchThrough($user, 'vehicle')
-            ->select('source', DB::raw('COUNT(*) as count'))
+            ->selectRaw('source, COUNT(*) as count')
             ->whereNotNull('source')
             ->groupBy('source')
             ->get();
 
         $conversionData = Lead::forBranchThrough($user, 'vehicle')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->select(
-                DB::raw('DATE(created_at) as date'),
-                DB::raw('COUNT(*) as total'),
-                DB::raw('SUM(CASE WHEN status = "converted" THEN 1 ELSE 0 END) as converted')
-            )
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as total, SUM(CASE WHEN status = "converted" THEN 1 ELSE 0 END) as converted')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -187,24 +178,19 @@ class ReportController extends Controller
 
         $financeData = FinanceApplication::forBranchThrough($user, 'vehicle')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->select(
-                DB::raw('DATE(created_at) as date'),
-                DB::raw('COUNT(*) as count'),
-                DB::raw('SUM(requested_amount) as total_requested'),
-                DB::raw('SUM(approved_amount) as total_approved')
-            )
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count, SUM(requested_amount) as total_requested, SUM(approved_amount) as total_approved')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
 
         $financeByStatus = FinanceApplication::forBranchThrough($user, 'vehicle')
-            ->select('status', DB::raw('COUNT(*) as count'))
+            ->selectRaw('status, COUNT(*) as count')
             ->groupBy('status')
             ->get();
 
         $financeByLender = FinanceApplication::forBranchThrough($user, 'vehicle')
             ->join('lenders', 'finance_applications.lender_id', '=', 'lenders.id')
-            ->select('lender_id', 'lenders.name as lender_name', DB::raw('COUNT(*) as count'))
+            ->selectRaw('lender_id, lenders.name as lender_name, COUNT(*) as count')
             ->groupBy('lender_id', 'lenders.name')
             ->get();
 
