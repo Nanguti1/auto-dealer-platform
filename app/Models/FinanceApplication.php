@@ -13,7 +13,7 @@ class FinanceApplication extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['vehicle_id', 'user_id', 'lender_id', 'requested_amount', 'down_payment', 'term_months', 'interest_rate', 'estimated_monthly_payment', 'status', 'applicant_data'];
+    protected $fillable = ['branch_id','vehicle_id', 'user_id', 'lender_id', 'requested_amount', 'down_payment', 'term_months', 'interest_rate', 'estimated_monthly_payment', 'status', 'applicant_data'];
 
     protected function casts(): array
     {

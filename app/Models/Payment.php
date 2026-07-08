@@ -12,7 +12,7 @@ class Payment extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'vehicle_id', 'vehicle_reservation_id', 'invoice_id', 'amount', 'currency', 'method', 'status', 'transaction_reference', 'paid_at', 'metadata'];
+    protected $fillable = ['branch_id', 'user_id', 'vehicle_id', 'vehicle_reservation_id', 'invoice_id', 'amount', 'currency', 'method', 'status', 'transaction_reference', 'paid_at', 'metadata'];
 
     protected function casts(): array
     {

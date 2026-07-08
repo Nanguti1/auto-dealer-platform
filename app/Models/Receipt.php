@@ -12,7 +12,7 @@ class Receipt extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'payment_id', 'invoice_id', 'receipt_number', 'amount', 'currency', 'status', 'issued_at'];
+    protected $fillable = ['branch_id','user_id', 'payment_id', 'invoice_id', 'receipt_number', 'amount', 'currency', 'status', 'issued_at'];
 
     protected function casts(): array
     {
