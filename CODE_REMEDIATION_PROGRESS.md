@@ -1984,3 +1984,138 @@ php artisan migrate:fresh --seed
 - No user-facing functionality lost
 - Code formatted with Laravel Pint to maintain project standards
 - TypeScript types now accurately reflect backend data structure
+
+## Session 26
+- Composite indexes added for common query patterns.
+- Vehicle query patterns reviewed and optimized.
+- Lead query patterns reviewed and optimized.
+- Payment query patterns reviewed and optimized.
+- Invoice query patterns reviewed and optimized.
+- Existing indexes checked for redundancy.
+- Safe migration created with reversible down() method.
+- All indexes target measurable performance improvements.
+
+### Files Modified
+
+#### Migration
+- `database/migrations/2026_07_08_064406_add_composite_indexes_for_performance.php` (new)
+  - Vehicles: 3 composite indexes for dashboard, featured filtering, and recent arrivals
+  - Leads: 4 composite indexes for pipeline, assignment, time-based, and vehicle-specific queries
+  - Payments: 4 composite indexes for vehicle history, user history, reports, and sales data
+  - Invoices: 4 composite indexes for user filtering, vehicle filtering, payment relationships, and reports
+  - All indexes have descriptive names for easy identification
+  - Reversible down() method removes all added indexes
+
+### Composite Indexes Added
+
+#### Vehicles Table
+- `vehicles_branch_inventory_status_index` - [branch_id, inventory_status_id]
+  - Optimizes dashboard inventory by status queries
+  - Used in ReportController for inventory data aggregation
+- `vehicles_featured_sales_listed_index` - [is_featured, sold_at, listed_at]
+  - Optimizes featured vehicles filtering
+  - Used in HomeController for featured vehicles display
+- `vehicles_listed_sold_index` - [listed_at, sold_at]
+  - Optimizes recent arrivals filtering
+  - Used in HomeController for latest arrivals display
+
+#### Leads Table
+- `leads_stage_status_index` - [crm_stage_id, status]
+  - Optimizes pipeline stage queries
+  - Used in ReportController for leads by stage
+- `leads_assigned_status_index` - [assigned_user_id, status]
+  - Optimizes user assignment queries
+  - Used in CRM for user-specific lead lists
+- `leads_created_status_index` - [created_at, status]
+  - Optimizes time-based lead reports
+  - Used in ReportController for conversion data
+- `leads_vehicle_status_index` - [vehicle_id, status]
+  - Optimizes vehicle-specific lead queries
+  - Used in CRM for vehicle lead history
+
+#### Payments Table
+- `payments_vehicle_status_index` - [vehicle_id, status]
+  - Optimizes vehicle payment history
+  - Used in ReportController for sales by make
+- `payments_user_status_index` - [user_id, status]
+  - Optimizes user payment history
+  - Used in customer payment views
+- `payments_created_status_index` - [created_at, status]
+  - Optimizes time-based payment reports
+  - Used in ReportController for sales data
+- `payments_vehicle_created_index` - [vehicle_id, created_at]
+  - Optimizes vehicle sales data
+  - Used in ReportController for payment exports
+
+#### Invoices Table
+- `invoices_user_status_index` - [user_id, status]
+  - Optimizes user invoice filtering
+  - Used in customer invoice views
+- `invoices_vehicle_status_index` - [vehicle_id, status]
+  - Optimizes vehicle invoice filtering
+  - Used in vehicle invoice history
+- `invoices_payment_status_index` - [payment_id, status]
+  - Optimizes payment-invoice relationship
+  - Used in finance workflows
+- `invoices_issued_status_index` - [issued_at, status]
+  - Optimizes time-based invoice reports
+  - Used in financial reporting
+
+### Query Pattern Analysis
+
+#### Vehicles
+- Dashboard queries filter by branch and inventory status frequently
+- Featured vehicles filter by is_featured, sold_at, and listed_at
+- Recent arrivals filter by listed_at and sold_at
+- Existing indexes: branch_id, sale_price, make_id/model_id/year already present
+
+#### Leads
+- Pipeline queries filter by crm_stage_id and status
+- User assignment queries filter by assigned_user_id and status
+- Time-based reports filter by created_at and status
+- Vehicle-specific queries filter by vehicle_id and status
+- Existing indexes: source, status, email already present
+
+#### Payments
+- Vehicle payment history filters by vehicle_id and status
+- User payment history filters by user_id and status
+- Time-based reports filter by created_at and status
+- Sales data queries filter by vehicle_id and created_at
+- Existing indexes: method, status already present
+
+#### Invoices
+- User invoice filtering by user_id and status
+- Vehicle invoice filtering by vehicle_id and status
+- Payment-invoice relationship by payment_id and status
+- Time-based reports by issued_at and status
+- Existing indexes: status already present
+
+### Key Improvements
+
+1. **Performance Optimization**: Composite indexes target specific query patterns identified in controllers
+2. **Dashboard Speed**: Inventory and sales reports will be faster with branch/status composite indexes
+3. **CRM Efficiency**: Lead pipeline and assignment queries optimized with composite indexes
+4. **Financial Reports**: Payment and invoice reporting queries now have composite indexes
+5. **No Redundancy**: All new indexes add value without duplicating existing single-column indexes
+6. **Measurable Benefit**: Each index targets a specific, frequently-executed query pattern
+7. **Safe Migration**: Reversible down() method allows rollback if needed
+8. **Descriptive Names**: Index names clearly indicate their purpose for maintenance
+9. **Query Coverage**: Covers dashboard, CRM, reporting, and filtering use cases
+10. **Existing Preserved**: No existing indexes were removed, only new ones added
+
+### Index Strategy
+
+- **Composite Indexes**: Used when multiple columns are frequently queried together
+- **Leftmost Prefix**: Indexes follow leftmost prefix rule for optimal query performance
+- **Selectivity**: Leading columns have higher selectivity (branch_id, vehicle_id, user_id)
+- **Query Patterns**: Indexes match actual query patterns found in controllers
+- **Avoid Over-indexing**: Limited to indexes with measurable performance benefit
+- **Maintenance**: Descriptive names make future index management easier
+
+### Testing Notes
+
+- No functional tests needed for index additions
+- Indexes are schema-only changes, not business logic
+- Migration can be tested with `php artisan migrate:rollback`
+- Code formatted with Laravel Pint to maintain project standards
+- Migration follows Laravel best practices for reversible migrations
