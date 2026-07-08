@@ -24,4 +24,56 @@ class RoleFactory extends Factory
             'is_system' => false,
         ];
     }
+
+    /**
+     * Indicate that the role is admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'admin',
+            'display_name' => 'Administrator',
+            'description' => 'Full system access',
+            'is_system' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the role is manager.
+     */
+    public function manager(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'manager',
+            'display_name' => 'Manager',
+            'description' => 'Manager with limited access',
+            'is_system' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the role is staff.
+     */
+    public function staff(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'staff',
+            'display_name' => 'Staff',
+            'description' => 'Staff member with basic access',
+            'is_system' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the role is customer.
+     */
+    public function customer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => 'customer',
+            'display_name' => 'Customer',
+            'description' => 'Customer with limited access',
+            'is_system' => true,
+        ]);
+    }
 }

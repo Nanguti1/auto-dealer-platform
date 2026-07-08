@@ -11,18 +11,37 @@ class BlogPostFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
             'blog_category_id' => BlogCategory::factory(),
+            'author_id' => User::factory(),
             'title' => fake()->sentence(),
             'slug' => fake()->slug(),
             'excerpt' => fake()->sentence(),
-            'content' => fake()->paragraphs(5, true),
-            'featured_image' => fake()->imageUrl(),
-            'meta_title' => fake()->sentence(),
-            'meta_description' => fake()->sentence(),
-            'is_published' => fake()->boolean(),
-            'published_at' => fake()->optional()->date(),
-            'view_count' => fake()->numberBetween(0, 10000),
+            'body' => fake()->paragraphs(5, true),
+            'featured_image_path' => fake()->imageUrl(),
+            'status' => fake()->randomElement(['draft', 'published']),
+            'published_at' => fake()->optional()->dateTime(),
         ];
+    }
+
+    /**
+     * Indicate that the blog post is published.
+     */
+    public function published(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'published',
+            'published_at' => fake()->dateTime(),
+        ]);
+    }
+
+    /**
+     * Indicate that the blog post is in draft status.
+     */
+    public function draft(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'draft',
+            'published_at' => null,
+        ]);
     }
 }

@@ -57,4 +57,45 @@ class VehicleFactory extends Factory
             'metadata' => [],
         ];
     }
+
+    /**
+     * Indicate that the vehicle is featured.
+     */
+    public function featured(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_featured' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the vehicle is certified.
+     */
+    public function certified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_certified' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the vehicle is sold.
+     */
+    public function sold(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'sold_at' => fake()->date(),
+        ]);
+    }
+
+    /**
+     * Indicate that the vehicle is listed (not sold).
+     */
+    public function listed(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'listed_at' => fake()->date(),
+            'sold_at' => null,
+        ]);
+    }
 }

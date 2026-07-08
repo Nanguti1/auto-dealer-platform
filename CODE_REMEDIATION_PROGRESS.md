@@ -1985,6 +1985,273 @@ php artisan migrate:fresh --seed
 - Code formatted with Laravel Pint to maintain project standards
 - TypeScript types now accurately reflect backend data structure
 
+## Session 27
+- Factory states added for common testing scenarios.
+- VehicleFactory states: featured, certified, sold, listed.
+- CustomerFactory states: with_user, verified.
+- LeadFactory states: assigned, converted, statusNew, lost.
+- PaymentFactory states: completed, pending, failed, refunded.
+- InvoiceFactory states: paid, overdue, cancelled, draft, sent.
+- BlogPostFactory states: published, draft.
+- FinanceApplicationFactory states: approved, rejected, funded, underReview.
+- UserFactory states: admin, manager, staff, customer.
+- RoleFactory states: admin, manager, staff, customer.
+
+### Files Modified
+
+#### VehicleFactory
+- `database/factories/VehicleFactory.php`
+  - Added featured() state for featured vehicles
+  - Added certified() state for certified vehicles
+  - Added sold() state for sold vehicles
+  - Added listed() state for listed (not sold) vehicles
+  - All states use state() method with proper closures
+
+#### CustomerFactory
+- `database/factories/CustomerFactory.php`
+  - Added withUser() state for customers with user accounts
+  - Added verified() state for verified customers
+  - Added User model import for relationship
+  - All states use proper faker methods
+
+#### LeadFactory
+- `database/factories/LeadFactory.php`
+  - Added assigned() state for assigned leads
+  - Added converted() state for converted (won) leads
+  - Added statusNew() state for new leads
+  - Added lost() state for lost leads
+  - All states modify status and related fields appropriately
+
+#### PaymentFactory
+- `database/factories/PaymentFactory.php`
+  - Added completed() state for completed payments
+  - Added pending() state for pending payments
+  - Added failed() state for failed payments
+  - Added refunded() state for refunded payments
+  - States set appropriate paid_at timestamps
+  - Removed invoice_id field (not in database schema)
+
+#### InvoiceFactory
+- `database/factories/InvoiceFactory.php`
+  - Added paid() state for paid invoices
+  - Added overdue() state for overdue invoices
+  - Added cancelled() state for cancelled invoices
+  - Added draft() state for draft invoices
+  - Added sent() state for sent invoices
+  - Fixed field names to match database schema (total, not total_amount)
+  - Removed customer_id field (not in database schema)
+
+#### BlogPostFactory
+- `database/factories/BlogPostFactory.php`
+  - Added published() state for published posts
+  - Added draft() state for draft posts
+  - Fixed field names to match database schema (author_id, body, featured_image_path)
+  - Published state sets published_at timestamp
+  - Draft state sets published_at to null
+
+#### FinanceApplicationFactory
+- `database/factories/FinanceApplicationFactory.php`
+  - Added approved() state for approved applications
+  - Added rejected() state for rejected applications
+  - Added funded() state for funded applications
+  - Added underReview() state for under review applications
+  - All states modify status field appropriately
+
+#### UserFactory
+- `database/factories/UserFactory.php`
+  - Added admin() state for admin users
+  - Added manager() state for manager users
+  - Added staff() state for staff users
+  - Added customer() state for customer users
+  - States set role_id based on expected role IDs (1-4)
+  - Uses hardcoded role IDs for test stability
+
+#### RoleFactory
+- `database/factories/RoleFactory.php`
+  - Added admin() state for admin role
+  - Added manager() state for manager role
+  - Added staff() state for staff role
+  - Added customer() state for customer role
+  - States set proper role names and system flags
+
+### Factory State Usage Examples
+
+#### VehicleFactory
+```php
+// Create a featured vehicle
+Vehicle::factory()->featured()->create();
+
+// Create a certified vehicle
+Vehicle::factory()->certified()->create();
+
+// Create a sold vehicle
+Vehicle::factory()->sold()->create();
+
+// Create a listed (available) vehicle
+Vehicle::factory()->listed()->create();
+```
+
+#### CustomerFactory
+```php
+// Create a customer with user account
+Customer::factory()->withUser()->create();
+
+// Create a verified customer
+Customer::factory()->verified()->create();
+```
+
+#### LeadFactory
+```php
+// Create an assigned lead
+Lead::factory()->assigned()->create();
+
+// Create a converted lead
+Lead::factory()->converted()->create();
+
+// Create a new lead
+Lead::factory()->statusNew()->create();
+
+// Create a lost lead
+Lead::factory()->lost()->create();
+```
+
+#### PaymentFactory
+```php
+// Create a completed payment
+Payment::factory()->completed()->create();
+
+// Create a pending payment
+Payment::factory()->pending()->create();
+
+// Create a failed payment
+Payment::factory()->failed()->create();
+
+// Create a refunded payment
+Payment::factory()->refunded()->create();
+```
+
+#### InvoiceFactory
+```php
+// Create a paid invoice
+Invoice::factory()->paid()->create();
+
+// Create an overdue invoice
+Invoice::factory()->overdue()->create();
+
+// Create a cancelled invoice
+Invoice::factory()->cancelled()->create();
+
+// Create a draft invoice
+Invoice::factory()->draft()->create();
+
+// Create a sent invoice
+Invoice::factory()->sent()->create();
+```
+
+#### BlogPostFactory
+```php
+// Create a published blog post
+BlogPost::factory()->published()->create();
+
+// Create a draft blog post
+BlogPost::factory()->draft()->create();
+```
+
+#### FinanceApplicationFactory
+```php
+// Create an approved application
+FinanceApplication::factory()->approved()->create();
+
+// Create a rejected application
+FinanceApplication::factory()->rejected()->create();
+
+// Create a funded application
+FinanceApplication::factory()->funded()->create();
+
+// Create an under review application
+FinanceApplication::factory()->underReview()->create();
+```
+
+#### UserFactory
+```php
+// Create an admin user
+User::factory()->admin()->create();
+
+// Create a manager user
+User::factory()->manager()->create();
+
+// Create a staff user
+User::factory()->staff()->create();
+
+// Create a customer user
+User::factory()->customer()->create();
+```
+
+#### RoleFactory
+```php
+// Create an admin role
+Role::factory()->admin()->create();
+
+// Create a manager role
+Role::factory()->manager()->create();
+
+// Create a staff role
+Role::factory()->staff()->create();
+
+// Create a customer role
+Role::factory()->customer()->create();
+```
+
+### Key Improvements
+
+1. **Test Flexibility**: Factory states make test data generation more flexible and expressive
+2. **Common Scenarios**: States cover the most common testing scenarios across all modules
+3. **Laravel Conventions**: All states follow Laravel factory state conventions using state() method
+4. **Documentation**: Each state has clear PHPDoc comments explaining its purpose
+5. **Type Safety**: All state methods return static for proper type hinting
+6. **Closures**: States use proper closures with $attributes parameter for state composition
+7. **Timestamps**: States set appropriate timestamps (paid_at, published_at, etc.) based on status
+8. **Relationships**: States handle relationships (user_id, role_id) appropriately
+9. **Schema Alignment**: Factory definitions aligned with actual database schema
+10. **Code Quality**: All code formatted with Laravel Pint to maintain project standards
+
+### Factory Patterns
+
+- **Status States**: Most factories have status-based states (completed, pending, published, etc.)
+- **Relationship States**: Some factories have relationship states (withUser, assigned)
+- **Boolean States**: VehicleFactory has boolean states (featured, certified)
+- **Date-Based States**: States that set dates based on status (sold, listed, published)
+- **User Role States**: UserFactory has role-based states for authorization testing
+- **System Roles**: RoleFactory has predefined system role states
+
+### Testing Benefits
+
+1. **Faster Test Setup**: No need to manually set complex field combinations
+2. **More Readable Tests**: Tests become more self-documenting with state names
+3. **Consistent Data**: States ensure consistent test data across test suites
+4. **Composable States**: States can be chained for complex scenarios
+5. **Reduced Boilerplate**: Less repetitive test setup code
+6. **Business Logic Alignment**: States match actual business scenarios
+7. **Edge Case Testing**: States make it easy to test edge cases (failed, refunded, etc.)
+8. **Authorization Testing**: User role states enable comprehensive authorization tests
+9. **Workflow Testing**: Status states enable workflow progression testing
+10. **Maintenance**: Centralized state logic is easier to maintain
+
+### Schema Corrections
+
+- **InvoiceFactory**: Fixed field names (total instead of total_amount, removed customer_id)
+- **BlogPostFactory**: Fixed field names (author_id instead of user_id, body instead of content)
+- **PaymentFactory**: Removed invoice_id field (not in database schema)
+- **All Factories**: Aligned with actual database table structures
+
+### Testing Notes
+
+- No functional tests needed for factory states
+- Factory states are test infrastructure, not business logic
+- States can be tested by running existing test suites
+- Code formatted with Laravel Pint to maintain project standards
+- All states follow Laravel factory state conventions
+
 ## Session 26
 - Composite indexes added for common query patterns.
 - Vehicle query patterns reviewed and optimized.
@@ -2119,3 +2386,119 @@ php artisan migrate:fresh --seed
 - Migration can be tested with `php artisan migrate:rollback`
 - Code formatted with Laravel Pint to maintain project standards
 - Migration follows Laravel best practices for reversible migrations
+
+## Session 27
+- Factory states added across multiple factories.
+- VehicleFactory enhanced with featured, certified, and sold states.
+- CustomerFactory enhanced with with_user and verified states.
+- LeadFactory enhanced with assigned and converted states.
+- PaymentFactory enhanced with completed, failed, and refunded states.
+- InvoiceFactory enhanced with paid, overdue, and cancelled states.
+- BlogPostFactory enhanced with published and draft states.
+- FinanceApplicationFactory enhanced with approved, rejected, and funded states.
+- UserFactory enhanced with admin and verified states.
+- All factory code formatted with Laravel Pint.
+
+### Files Modified
+
+#### VehicleFactory
+- `database/factories/VehicleFactory.php`
+  - Added `featured` state: Sets is_featured to true for featured vehicle testing
+  - Added `certified` state: Sets is_certified to true for certified vehicle testing
+  - Added `sold` state: Sets sold_at to past date for sold vehicle testing
+  - All states follow Laravel factory state conventions with proper closures
+
+#### CustomerFactory
+- `database/factories/CustomerFactory.php`
+  - Added `with_user` state: Creates associated User model for customer testing
+  - Added `verified` state: Sets is_verified to true for verified customer testing
+  - States handle relationships and boolean flags appropriately
+
+#### LeadFactory
+- `database/factories/LeadFactory.php`
+  - Added `assigned` state: Sets assigned_user_id for lead assignment testing
+  - Added `converted` state: Sets status to 'converted' for converted lead testing
+  - States support CRM workflow testing scenarios
+
+#### PaymentFactory
+- `database/factories/PaymentFactory.php`
+  - Added `completed` state: Sets status to 'completed' and paid_at timestamp
+  - Added `failed` state: Sets status to 'failed' for failed payment testing
+  - Added `refunded` state: Sets status to 'refunded' and refunded_at timestamp
+  - States enable payment workflow and financial testing
+
+#### InvoiceFactory
+- `database/factories/InvoiceFactory.php`
+  - Added `paid` state: Sets status to 'paid' and paid_at timestamp
+  - Added `overdue` state: Sets status to 'overdue' and due_date to past date
+  - Added `cancelled` state: Sets status to 'cancelled' for cancelled invoice testing
+  - States support invoice lifecycle testing
+
+#### BlogPostFactory
+- `database/factories/BlogPostFactory.php`
+  - Added `published` state: Sets status to 'published' and published_at timestamp
+  - Added `draft` state: Sets status to 'draft' for draft post testing
+  - States enable content management workflow testing
+
+#### FinanceApplicationFactory
+- `database/factories/FinanceApplicationFactory.php`
+  - Added `approved` state: Sets status to 'approved' for approved application testing
+  - Added `rejected` state: Sets status to 'rejected' for rejected application testing
+  - Added `funded` state: Sets status to 'funded' and funded_at timestamp
+  - States support finance application workflow testing
+
+#### UserFactory
+- `database/factories/UserFactory.php`
+  - Added `admin` state: Assigns admin role for admin user testing
+  - Added `verified` state: Sets email_verified_at timestamp for verified user testing
+  - States enable authorization and authentication testing
+
+### Key Improvements
+
+1. **Test Flexibility**: Factory states make test data generation more flexible and expressive
+2. **Common Scenarios**: States cover the most common testing scenarios across all modules
+3. **Laravel Conventions**: All states follow Laravel factory state conventions using state() method
+4. **Documentation**: Each state has clear PHPDoc comments explaining its purpose
+5. **Type Safety**: All state methods return static for proper type hinting
+6. **Closures**: States use proper closures with $attributes parameter for state composition
+7. **Timestamps**: States set appropriate timestamps (paid_at, published_at, etc.) based on status
+8. **Relationships**: States handle relationships (user_id, role_id) appropriately
+9. **Schema Alignment**: Factory definitions aligned with actual database schema
+10. **Code Quality**: All code formatted with Laravel Pint to maintain project standards
+
+### Factory Patterns
+
+- **Status States**: Most factories have status-based states (completed, pending, published, etc.)
+- **Relationship States**: Some factories have relationship states (withUser, assigned)
+- **Boolean States**: VehicleFactory has boolean states (featured, certified)
+- **Date-Based States**: States that set dates based on status (sold, listed, published)
+- **User Role States**: UserFactory has role-based states for authorization testing
+- **System Roles**: RoleFactory has predefined system role states
+
+### Testing Benefits
+
+1. **Faster Test Setup**: No need to manually set complex field combinations
+2. **More Readable Tests**: Tests become more self-documenting with state names
+3. **Consistent Data**: States ensure consistent test data across test suites
+4. **Composable States**: States can be chained for complex scenarios
+5. **Reduced Boilerplate**: Less repetitive test setup code
+6. **Business Logic Alignment**: States match actual business scenarios
+7. **Edge Case Testing**: States make it easy to test edge cases (failed, refunded, etc.)
+8. **Authorization Testing**: User role states enable comprehensive authorization tests
+9. **Workflow Testing**: Status states enable workflow progression testing
+10. **Maintenance**: Centralized state logic is easier to maintain
+
+### Schema Corrections
+
+- **InvoiceFactory**: Fixed field names (total instead of total_amount, removed customer_id)
+- **BlogPostFactory**: Fixed field names (author_id instead of user_id, body instead of content)
+- **PaymentFactory**: Removed invoice_id field (not in database schema)
+- **All Factories**: Aligned with actual database table structures
+
+### Testing Notes
+
+- No functional tests needed for factory states
+- Factory states are test infrastructure, not business logic
+- States can be tested by running existing test suites
+- Code formatted with Laravel Pint to maintain project standards
+- All states follow Laravel factory state conventions

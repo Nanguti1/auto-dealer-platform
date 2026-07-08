@@ -25,4 +25,45 @@ class LeadFactory extends Factory
             'last_contacted_at' => fake()->dateTime(),
         ];
     }
+
+    /**
+     * Indicate that the lead is assigned to a user.
+     */
+    public function assigned(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'assigned_user_id' => User::factory(),
+        ]);
+    }
+
+    /**
+     * Indicate that the lead is converted (won).
+     */
+    public function converted(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'won',
+            'last_contacted_at' => fake()->dateTime(),
+        ]);
+    }
+
+    /**
+     * Indicate that the lead is new (status: new).
+     */
+    public function statusNew(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'new',
+        ]);
+    }
+
+    /**
+     * Indicate that the lead is lost.
+     */
+    public function lost(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'lost',
+        ]);
+    }
 }

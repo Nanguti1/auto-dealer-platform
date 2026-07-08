@@ -32,4 +32,44 @@ class FinanceApplicationFactory extends Factory
             ],
         ];
     }
+
+    /**
+     * Indicate that the finance application is approved.
+     */
+    public function approved(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'approved',
+        ]);
+    }
+
+    /**
+     * Indicate that the finance application is rejected.
+     */
+    public function rejected(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'rejected',
+        ]);
+    }
+
+    /**
+     * Indicate that the finance application is funded.
+     */
+    public function funded(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'funded',
+        ]);
+    }
+
+    /**
+     * Indicate that the finance application is under review.
+     */
+    public function underReview(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'under_review',
+        ]);
+    }
 }
