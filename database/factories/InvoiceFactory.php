@@ -12,7 +12,7 @@ class InvoiceFactory extends Factory
         return [
             'user_id' => User::factory(),
             'vehicle_id' => null,
-            'payment_id' => null,
+            
             'invoice_number' => fake()->bothify('INV-####'),
             'subtotal' => fake()->randomFloat(2, 1000, 100000),
             'tax_total' => fake()->randomFloat(2, 0, 10000),

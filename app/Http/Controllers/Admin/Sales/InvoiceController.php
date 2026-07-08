@@ -47,7 +47,7 @@ class InvoiceController extends Controller
         $this->authorize('view', $invoice);
 
         return Inertia::render('Admin/Sales/Invoices/Show', [
-            'invoice' => $invoice->load(['vehicle', 'payment', 'user', 'receipts', 'refunds']),
+            'invoice' => $invoice->load(['vehicle', 'payments', 'user', 'receipts', 'refunds']),
         ]);
     }
 
@@ -56,7 +56,7 @@ class InvoiceController extends Controller
         $this->authorize('update', $invoice);
 
         return Inertia::render('Admin/Sales/Invoices/Edit', [
-            'invoice' => $invoice->load(['vehicle', 'payment', 'user']),
+            'invoice' => $invoice->load(['vehicle', 'payments', 'user']),
         ]);
     }
 

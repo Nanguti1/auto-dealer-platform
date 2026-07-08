@@ -22,7 +22,7 @@ class InvoiceService
 
     public function paginate(array $filters = []): LengthAwarePaginator
     {
-        $query = Invoice::query()->with(['vehicle', 'payment', 'user']);
+        $query = Invoice::query()->with(['vehicle', 'payments', 'user']);
 
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {
@@ -67,6 +67,14 @@ class InvoiceService
 
         return DB::transaction(function () use ($data): Invoice {
             $invoice = Invoice::query()->create($data);
+
+            // If caller supplied a payment_id for legacy compatibility, attach that payment to this invoice
+            if (isset($data['payment_id']) && $data['payment_id']) {
+                $payment = \App\Models\Payment::find($data['payment_id']);
+                if ($payment) {
+                    $payment->update(['invoice_id' => $invoice->id]);
+                }
+            }
 
             if (isset($data['vehicle_id']) && isset($data['user_id'])) {
                 $vehicle = Vehicle::find($data['vehicle_id']);
