@@ -25,7 +25,7 @@ class BlogController extends Controller
             $query->whereHas('category', fn ($q) => $q->where('slug', $category));
         }
 
-        $posts = $query->paginate(12);
+        $posts = $query->paginate(15);
 
         $categories = BlogCategory::where('is_active', true)
             ->orderBy('sort_order')

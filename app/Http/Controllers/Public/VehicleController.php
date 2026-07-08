@@ -90,7 +90,7 @@ class VehicleController extends Controller
         };
 
         // Pagination
-        $vehicles = $query->paginate(12)->withQueryString();
+        $vehicles = $query->paginate(15)->withQueryString();
 
         // Transform to match frontend expectations
         $transformedVehicles = collect($vehicles->items())->map(fn ($vehicle) => [
