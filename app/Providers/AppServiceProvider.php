@@ -2,10 +2,24 @@
 
 namespace App\Providers;
 
+use App\Models\FinanceApplication;
+use App\Models\ImportPayment;
+use App\Models\Invoice;
+use App\Models\Payment;
+use App\Models\Receipt;
+use App\Models\Refund;
 use App\Models\Setting;
 use App\Models\User;
+use App\Models\VehicleReservation;
+use App\Observers\FinanceApplicationObserver;
+use App\Observers\ImportPaymentObserver;
+use App\Observers\InvoiceObserver;
+use App\Observers\PaymentObserver;
+use App\Observers\ReceiptObserver;
+use App\Observers\RefundObserver;
 use App\Observers\SettingObserver;
 use App\Observers\UserObserver;
+use App\Observers\VehicleReservationObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
@@ -42,6 +56,15 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         Setting::observe(SettingObserver::class);
+
+        // Financial audit trail observers
+        Payment::observe(PaymentObserver::class);
+        Receipt::observe(ReceiptObserver::class);
+        Refund::observe(RefundObserver::class);
+        Invoice::observe(InvoiceObserver::class);
+        FinanceApplication::observe(FinanceApplicationObserver::class);
+        VehicleReservation::observe(VehicleReservationObserver::class);
+        ImportPayment::observe(ImportPaymentObserver::class);
     }
 
     /**
