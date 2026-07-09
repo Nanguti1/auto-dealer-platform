@@ -17,7 +17,7 @@ class ImportShipmentPolicy
 
     public function view(User $user, ImportShipment $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicleImport');
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicleImport'));
     }
 
     public function create(User $user): bool
@@ -27,21 +27,21 @@ class ImportShipmentPolicy
 
     public function update(User $user, ImportShipment $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicleImport') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicleImport')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, ImportShipment $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicleImport') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicleImport')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, ImportShipment $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicleImport') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicleImport')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, ImportShipment $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicleImport') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicleImport')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

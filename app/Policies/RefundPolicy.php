@@ -17,7 +17,7 @@ class RefundPolicy
 
     public function view(User $user, Refund $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'payment');
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'payment'));
     }
 
     public function create(User $user): bool
@@ -27,21 +27,21 @@ class RefundPolicy
 
     public function update(User $user, Refund $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'payment') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'payment')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, Refund $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'payment') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'payment')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, Refund $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'payment') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'payment')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, Refund $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'payment') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'payment')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

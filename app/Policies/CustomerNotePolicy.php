@@ -17,7 +17,7 @@ class CustomerNotePolicy
 
     public function view(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user');
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'customer.user'));
     }
 
     public function create(User $user): bool
@@ -27,21 +27,21 @@ class CustomerNotePolicy
 
     public function update(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && (in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true) || $user->id === $model->user_id);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'customer.user')) && (in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true) || $user->id === $model->user_id);
     }
 
     public function delete(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && (in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true) || $user->id === $model->user_id);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'customer.user')) && (in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true) || $user->id === $model->user_id);
     }
 
     public function restore(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'customer.user')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, CustomerNote $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'customer.user') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'customer.user')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

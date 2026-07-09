@@ -17,7 +17,7 @@ class CustomerPolicy
 
     public function view(User $user, Customer $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'user');
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'user'));
     }
 
     public function create(User $user): bool

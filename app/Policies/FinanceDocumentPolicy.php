@@ -17,7 +17,7 @@ class FinanceDocumentPolicy
 
     public function view(User $user, FinanceDocument $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'financeApplication');
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'financeApplication'));
     }
 
     public function create(User $user): bool
@@ -27,21 +27,21 @@ class FinanceDocumentPolicy
 
     public function update(User $user, FinanceDocument $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'financeApplication') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'financeApplication')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, FinanceDocument $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'financeApplication') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'financeApplication')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, FinanceDocument $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'financeApplication') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'financeApplication')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, FinanceDocument $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'financeApplication') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'financeApplication')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

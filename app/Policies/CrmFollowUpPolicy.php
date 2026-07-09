@@ -17,7 +17,7 @@ class CrmFollowUpPolicy
 
     public function view(User $user, CrmFollowUp $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead');
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'lead'));
     }
 
     public function create(User $user): bool
@@ -27,21 +27,21 @@ class CrmFollowUpPolicy
 
     public function update(User $user, CrmFollowUp $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'lead')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, CrmFollowUp $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'lead')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, CrmFollowUp $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'lead')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, CrmFollowUp $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'lead') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'lead')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }
