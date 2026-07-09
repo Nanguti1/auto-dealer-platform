@@ -13,7 +13,7 @@ class Promotion extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
-    protected string $slugSourceField = 'name';
+    protected ?string $slugSourceField = 'name';
 
     protected $fillable = ['name', 'slug', 'type', 'value', 'starts_at', 'ends_at', 'is_active', 'rules'];
 

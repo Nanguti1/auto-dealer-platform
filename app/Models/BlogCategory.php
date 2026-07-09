@@ -12,7 +12,7 @@ class BlogCategory extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
-    protected string $slugSourceField = 'name';
+    protected ?string $slugSourceField = 'name';
 
     protected $fillable = ['name', 'slug', 'description', 'is_active', 'sort_order'];
 

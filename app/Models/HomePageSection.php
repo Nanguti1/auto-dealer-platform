@@ -11,7 +11,7 @@ class HomePageSection extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
-    protected string $slugSourceField = 'name';
+    protected ?string $slugSourceField = 'name';
 
     protected $fillable = ['name', 'slug', 'type', 'content', 'is_active', 'sort_order'];
 

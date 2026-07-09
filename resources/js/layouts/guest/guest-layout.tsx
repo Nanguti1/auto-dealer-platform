@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Head } from '@inertiajs/react';
 import SeoHead from '@/components/seo-head';
 import { cn } from '@/lib/utils';
 

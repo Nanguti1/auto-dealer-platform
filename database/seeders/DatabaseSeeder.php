@@ -17,10 +17,10 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Nanguti - SA',
-            'email' => 'g.nanguti@gmail.com',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'g.nanguti@gmail.com'],
+            ['name' => 'Nanguti - SA']
+        );
 
         $this->call([
             // Reference Data Seeders
@@ -40,5 +40,9 @@ class DatabaseSeeder extends Seeder
             // Configuration Seeders
             SettingsSeeder::class,
         ]);
+
+        // Create sample vehicles for the homepage
+        \App\Models\Vehicle::factory(10)->listed()->create();
+        \App\Models\Vehicle::factory(3)->listed()->featured()->create();
     }
 }

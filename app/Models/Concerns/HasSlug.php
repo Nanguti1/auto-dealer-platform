@@ -10,11 +10,6 @@ use Illuminate\Support\Str;
 trait HasSlug
 {
     /**
-     * The field to generate the slug from.
-     */
-    protected string $slugSourceField = 'title';
-
-    /**
      * Boot the trait.
      */
     protected static function bootHasSlug(): void
@@ -35,7 +30,7 @@ trait HasSlug
      */
     protected function getSlugSourceField(): string
     {
-        return property_exists($this, 'slugSourceField') ? $this->slugSourceField : 'title';
+        return $this->slugSourceField ?? 'title';
     }
 
     /**

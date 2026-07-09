@@ -12,7 +12,7 @@ class BlogTag extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
-    protected string $slugSourceField = 'name';
+    protected ?string $slugSourceField = 'name';
 
     protected $fillable = ['name', 'slug', 'color', 'usage_count'];
 
