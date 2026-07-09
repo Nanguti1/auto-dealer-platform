@@ -130,13 +130,13 @@ export default function Index({ reservations, filters = {} }: { reservations: Re
       {reservations.data.length === 0 ? (
         <EmptyReservations onCreate={() => router.visit(admin.reservations.create().url)} />
       ) : (
-        <AdminDataTable 
-        rows={reservations} 
-        filters={filters} 
-        columns={columns} 
-        baseUrl={admin.reservations.index().url} 
-        createUrl={admin.reservations.create().url} 
-        createLabel="Create Reservation" 
+        <AdminDataTable
+        rows={reservations}
+        filters={filters}
+        columns={columns}
+        baseUrl={admin.reservations.index().url}
+        createUrl={admin.reservations.create().url}
+        createLabel="Create Reservation"
         rowActions={(reservation) => (
           <RowActionsDropdown
             ariaLabel={`Actions for reservation ${reservation.id}`}
@@ -163,8 +163,9 @@ export default function Index({ reservations, filters = {} }: { reservations: Re
               },
             ]}
           />
-        )} 
+        )}
       />
+      )}
     </ReservationShell>
   );
 }

@@ -259,7 +259,6 @@ return 'A';
           children: [
             { name: 'Users', href: adminRoutes.users.index().url, icon: Users },
             { name: 'Roles', href: adminRoutes.roles.index().url, icon: Shield },
-            { name: 'Permissions', href: adminRoutes.permissions.index().url, icon: FileCheck },
           ],
         },
         {
