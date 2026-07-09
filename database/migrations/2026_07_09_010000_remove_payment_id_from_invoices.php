@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -35,33 +35,10 @@ return new class extends Migration
                 }
             });
 
-            // Drop any indexes on invoices.payment_id if present
+            // Drop foreign key and column - Laravel will handle associated indexes
             Schema::table('invoices', function (Blueprint $table) {
-                // Defensive: drop index by name if exists
-                try {
-                    $table->dropIndex(['payment_id', 'status']);
-                } catch (\Throwable $e) {
-                    // ignore if index does not exist
-                }
-
-                try {
-                    $table->dropIndex(['payment_id']);
-                } catch (\Throwable $e) {
-                    // ignore
-                }
-
-                // Drop foreign and column
-                try {
-                    $table->dropForeign(['payment_id']);
-                } catch (\Throwable $e) {
-                    // ignore
-                }
-
-                try {
-                    $table->dropColumn('payment_id');
-                } catch (\Throwable $e) {
-                    // ignore
-                }
+                $table->dropForeign(['payment_id']);
+                $table->dropColumn('payment_id');
             });
         }
     }
@@ -75,7 +52,7 @@ return new class extends Migration
             });
 
             // Backfill invoices.payment_id from payments.invoice_id where possible (if a payment points to an invoice)
-            DB::table('payments')->orderBy('id')->select(['id','invoice_id'])->chunkById(500, function ($payments) {
+            DB::table('payments')->orderBy('id')->select(['id', 'invoice_id'])->chunkById(500, function ($payments) {
                 foreach ($payments as $p) {
                     if ($p->invoice_id) {
                         // Only set if invoice.payment_id is null to avoid overwriting

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->dropForeign(['company_id']);
             $table->dropUnique(['company_id', 'slug']);
             $table->foreignId('company_id')->nullable()->change();
-            $table->foreign('company_id')->constrained()->nullOnDelete();
+            $table->foreign('company_id')->references('id')->on('companies')->nullOnDelete();
             $table->unique(['slug']);
         });
     }
@@ -36,7 +36,7 @@ return new class extends Migration
             $table->dropForeign(['company_id']);
             $table->dropUnique(['slug']);
             $table->foreignId('company_id')->nullable(false)->change();
-            $table->foreign('company_id')->constrained()->cascadeOnDelete();
+            $table->foreign('company_id')->references('id')->on('companies')->cascadeOnDelete();
             $table->unique(['company_id', 'slug']);
         });
     }
