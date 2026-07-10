@@ -233,7 +233,6 @@ return 'A';
           children: [
             { name: 'Requests', href: adminRoutes.imports.index().url, icon: FileCheck },
             { name: 'Shipments', href: adminRoutes.shipments.index().url, icon: Truck },
-            { name: 'Documents', href: adminRoutes.importDocuments.index().url, icon: FileText },
             { name: 'Payments', href: adminRoutes.importPayments.index().url, icon: CreditCard },
           ],
         },

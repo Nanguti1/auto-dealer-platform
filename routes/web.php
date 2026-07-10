@@ -89,7 +89,6 @@ Route::middleware(['throttle:leads'])->group(function (): void {
 });
 
 Route::middleware(['auth', 'verified'])->group(function (): void {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
     Route::get('customer/dashboard', [App\Http\Controllers\Customer\CustomerController::class, 'dashboard'])->name('customer.dashboard');
     Route::get('customer/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist');
     Route::middleware(['throttle:customer-actions'])->group(function (): void {

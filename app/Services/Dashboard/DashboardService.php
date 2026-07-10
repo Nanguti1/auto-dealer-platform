@@ -28,7 +28,7 @@ class DashboardService
         $user = auth()->user();
         $cacheKey = "dashboard.summary.{$user->id}";
 
-        return Cache::tags(['dashboard', 'summary'])->remember($cacheKey, now()->addMinutes(15), function () use ($user) {
+        return Cache::remember($cacheKey, now()->addMinutes(15), function () use ($user) {
             // Optimize with single aggregated queries
             $vehicleStats = Vehicle::forBranch($user)
                 ->selectRaw('
@@ -58,7 +58,7 @@ class DashboardService
         $user = auth()->user();
         $cacheKey = "dashboard.activity.{$user->id}.{$limit}";
 
-        return Cache::tags(['dashboard', 'activity'])->remember($cacheKey, now()->addMinutes(5), function () use ($user, $limit) {
+        return Cache::remember($cacheKey, now()->addMinutes(5), function () use ($user, $limit) {
             // Optimize by selecting only needed columns
             $leadActivities = Lead::forBranchThrough($user, 'vehicle')
                 ->select('id', 'first_name', 'last_name', 'created_at')
@@ -104,14 +104,14 @@ class DashboardService
         $user = auth()->user();
         $cacheKey = "dashboard.charts.{$user->id}";
 
-        return Cache::tags(['dashboard', 'charts'])->remember($cacheKey, now()->addMinutes(30), function () use ($user) {
+        return Cache::remember($cacheKey, now()->addMinutes(30), function () use ($user) {
             // Sales trend over the last 6 months - optimized with database aggregation
             $salesTrend = Vehicle::forBranch($user)
                 ->whereNotNull('sold_at')
                 ->where('sold_at', '>=', now()->subMonths(6))
-                ->selectRaw('DATE_FORMAT(sold_at, "%b") as month, COUNT(*) as count')
+                ->selectRaw('DATE_FORMAT(sold_at, "%b") as month, COUNT(*) as count, MIN(sold_at) as min_sold_at')
                 ->groupBy('month')
-                ->orderBy('sold_at')
+                ->orderBy('min_sold_at')
                 ->get()
                 ->map(fn ($item) => ['name' => $item->month, 'value' => $item->count])
                 ->toArray();

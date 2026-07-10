@@ -9,9 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AdminLayout from '@/layouts/admin/admin-layout';
 import adminRoutes from '@/routes/admin';
 
-// Lazy load chart components
-const AreaChartComponent = React.lazy(() => import('@/components/design-system/chart').then(m => ({ default: m.AreaChartComponent })));
-const PieChartComponent = React.lazy(() => import('@/components/design-system/chart').then(m => ({ default: m.PieChartComponent })));
+// Import chart components directly for now to debug
+import { AreaChartComponent, PieChartComponent } from '@/components/design-system/chart';
 
 interface SummaryMetrics {
   totalVehicles: number;
@@ -51,6 +50,17 @@ interface AdminDashboardProps {
 }
 
 export default function AdminDashboard({ summary, recentActivity, charts }: AdminDashboardProps) {
+  // Add error boundary for data issues
+  if (!summary || !charts) {
+    return (
+      <PageWrapper>
+        <Head title="Admin Dashboard" />
+        <div className="p-8">
+          <p className="text-red-500">Error: Missing required dashboard data</p>
+        </div>
+      </PageWrapper>
+    );
+  }
   const statItems = React.useMemo(() => [
     {
       icon: Layers,
@@ -154,9 +164,7 @@ export default function AdminDashboard({ summary, recentActivity, charts }: Admi
               </div>
             </CardHeader>
             <CardContent>
-              <React.Suspense fallback={<ChartLoading height={260} />}>
-                <AreaChartComponent data={charts.sales} height={260} />
-              </React.Suspense>
+              <AreaChartComponent data={charts.sales} height={260} />
             </CardContent>
           </Card>
 
@@ -166,9 +174,7 @@ export default function AdminDashboard({ summary, recentActivity, charts }: Admi
                 <CardTitle>Inventory distribution</CardTitle>
               </CardHeader>
               <CardContent>
-                <React.Suspense fallback={<ChartLoading height={240} />}>
-                  <PieChartComponent data={charts.distribution} height={240} />
-                </React.Suspense>
+                <PieChartComponent data={charts.distribution} height={240} />
               </CardContent>
             </Card>
 

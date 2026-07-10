@@ -19,6 +19,8 @@ createInertiaApp({
                 return AuthLayout;
             case name.startsWith('settings/'):
                 return [AppLayout, SettingsLayout];
+            case name && name.includes('Admin'):
+                return undefined;
             case name.startsWith('inventory/'):
             case name.startsWith('finance/'):
             case name.startsWith('trade-in/'):
