@@ -122,11 +122,11 @@ class VehicleController extends Controller
             'msrp' => $vehicle->msrp ? (float) $vehicle->msrp : null,
             'color' => $vehicle->color->name ?? '',
             'interiorColor' => $vehicle->interiorColor->name ?? '',
-        ]);
+        ])->toArray();
 
         return Inertia::render('inventory/index', [
             'vehicles' => [
-                'data' => $transformedVehicles->toArray(),
+                'data' => $transformedVehicles,
                 'links' => $vehicles->toArray()['links'],
                 'current_page' => $vehicles->currentPage(),
                 'last_page' => $vehicles->lastPage(),
@@ -199,7 +199,7 @@ class VehicleController extends Controller
                 'msrp' => $v->msrp ? (float) $v->msrp : null,
                 'color' => $v->color->name ?? '',
                 'interiorColor' => $v->interiorColor->name ?? '',
-            ]);
+            ])->toArray();
 
         $transformedVehicle = [
             'id' => $vehicle->id,
@@ -231,25 +231,25 @@ class VehicleController extends Controller
                 'path' => $gallery->path,
                 'alt' => $gallery->alt ?? $vehicle->title,
                 'isPrimary' => $gallery->is_primary ?? false,
-            ]),
+            ])->toArray(),
             'features' => $vehicle->features->map(fn ($feature) => [
                 'id' => $feature->id,
                 'name' => $feature->name,
                 'category' => $feature->category ?? 'General',
-            ]),
+            ])->toArray(),
             'specifications' => $vehicle->specifications->groupBy('group')->map(fn ($specs, $group) => [
                 'group' => $group,
                 'items' => $specs->map(fn ($spec) => [
                     'name' => $spec->name,
                     'value' => $spec->value,
                     'unit' => $spec->unit ?? '',
-                ]),
-            ])->values(),
+                ])->toArray(),
+            ])->values()->toArray(),
         ];
 
         return Inertia::render('inventory/show', [
             'vehicle' => $transformedVehicle,
-            'related' => $related->toArray(),
+            'related' => $related,
         ]);
     }
 
