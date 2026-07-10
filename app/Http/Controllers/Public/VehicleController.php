@@ -126,7 +126,7 @@ class VehicleController extends Controller
 
         return Inertia::render('inventory/index', [
             'vehicles' => [
-                'data' => $transformedVehicles,
+                'data' => $transformedVehicles->toArray(),
                 'links' => $vehicles->toArray()['links'],
                 'current_page' => $vehicles->currentPage(),
                 'last_page' => $vehicles->lastPage(),
