@@ -249,7 +249,7 @@ class VehicleController extends Controller
 
         return Inertia::render('inventory/show', [
             'vehicle' => $transformedVehicle,
-            'related' => $related,
+            'related' => $related->toArray(),
         ]);
     }
 
@@ -265,7 +265,7 @@ class VehicleController extends Controller
                         'value' => $make->slug,
                         'label' => $make->name,
                         'count' => $make->vehicles_count,
-                    ]),
+                    ])->toArray(),
                 'bodyTypes' => BodyType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
                     ->where('is_active', true)
                     ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
@@ -275,7 +275,7 @@ class VehicleController extends Controller
                         'value' => $bodyType->slug,
                         'label' => $bodyType->name,
                         'count' => $bodyType->vehicles_count,
-                    ]),
+                    ])->toArray(),
                 'fuelTypes' => FuelType::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
                     ->where('is_active', true)
                     ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
@@ -285,7 +285,7 @@ class VehicleController extends Controller
                         'value' => $fuelType->slug,
                         'label' => $fuelType->name,
                         'count' => $fuelType->vehicles_count,
-                    ]),
+                    ])->toArray(),
                 'conditions' => VehicleCondition::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
                     ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
                     ->orderBy('name')
@@ -294,7 +294,7 @@ class VehicleController extends Controller
                         'value' => $condition->slug,
                         'label' => $condition->name,
                         'count' => $condition->vehicles_count,
-                    ]),
+                    ])->toArray(),
             ];
         });
     }
