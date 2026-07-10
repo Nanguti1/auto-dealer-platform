@@ -79,6 +79,7 @@ export default function VehicleForm({
   const [selectedBranch, setSelectedBranch] = React.useState<number | null>((vehicle?.branch_id as number) ?? null);
   const [selectedMake, setSelectedMake] = React.useState<number | null>((vehicle?.make_id as number) ?? null);
   const [selectedModel, setSelectedModel] = React.useState<number | null>((vehicle?.model_id as number) ?? null);
+  const [description, setDescription] = React.useState(vehicle?.description ?? '');
 
   const filteredModels = React.useMemo(() => {
     if (!selectedMake) return models;
@@ -149,7 +150,12 @@ export default function VehicleForm({
 
               <div className="md:col-span-2 space-y-2">
                 <Label htmlFor="description">Description</Label>
-                <RichTextEditor id="description" name="description" value={String(vehicle?.description ?? '')} />
+                <RichTextEditor
+                  id="description"
+                  name="description"
+                  value={description}
+                  onChange={setDescription}
+                />
                 <InputError message={errors.description} />
               </div>
             </TabsContent>
