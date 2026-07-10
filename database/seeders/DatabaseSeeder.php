@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'g.nanguti@gmail.com'],
             ['name' => 'Nanguti - SA',
-             'password' => Hash::make('password'),
+                'password' => Hash::make('password'),
             ]
         );
 
@@ -40,12 +40,13 @@ class DatabaseSeeder extends Seeder
             InteriorColorSeeder::class,
             EngineTypeSeeder::class,
             CrmStageSeeder::class,
+            // Vehicle Reference Data
+            MakeSeeder::class,
+            ModelSeeder::class,
             // Configuration Seeders
             SettingsSeeder::class,
+            // Sample Data
+            VehicleSeeder::class,
         ]);
-
-        // Create sample vehicles for the homepage
-        \App\Models\Vehicle::factory(10)->listed()->create();
-        \App\Models\Vehicle::factory(3)->listed()->featured()->create();
     }
 }

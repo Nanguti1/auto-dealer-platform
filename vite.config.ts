@@ -72,56 +72,8 @@ export default defineConfig({
                         return 'vendor';
                     }
 
-                    // Admin module chunks
-                    if (id.includes('resources/js/pages/Admin')) {
-                        // Split by module
-                        if (id.includes('/Dashboard/')) {
-                            return 'admin-dashboard';
-                        }
-                        if (id.includes('/Inventory/')) {
-                            return 'admin-inventory';
-                        }
-                        if (id.includes('/Customers/')) {
-                            return 'admin-customers';
-                        }
-                        if (id.includes('/CRM/')) {
-                            return 'admin-crm';
-                        }
-                        if (id.includes('/Finance/')) {
-                            return 'admin-finance';
-                        }
-                        if (id.includes('/Reservations/')) {
-                            return 'admin-reservations';
-                        }
-                        if (id.includes('/Payments/')) {
-                            return 'admin-payments';
-                        }
-                        if (id.includes('/Trade-Ins/')) {
-                            return 'admin-tradeins';
-                        }
-                        if (id.includes('/Imports/')) {
-                            return 'admin-imports';
-                        }
-                        if (id.includes('/CMS/')) {
-                            return 'admin-cms';
-                        }
-                        if (id.includes('/Blog/')) {
-                            return 'admin-blog';
-                        }
-                        if (id.includes('/Marketing/')) {
-                            return 'admin-marketing';
-                        }
-                        if (id.includes('/Settings/')) {
-                            return 'admin-settings';
-                        }
-                        if (id.includes('/Analytics/')) {
-                            return 'admin-analytics';
-                        }
-                        if (id.includes('/Reviews/')) {
-                            return 'admin-reviews';
-                        }
-                        return 'admin';
-                    }
+                    // Note: Admin pages are handled by Inertia plugin code splitting
+                    // Do not manually chunk pages as it conflicts with Inertia's resolution
 
                     // Component chunks
                     if (id.includes('resources/js/components')) {

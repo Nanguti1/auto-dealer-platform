@@ -24,7 +24,7 @@ function RichTextEditor({
   value = '',
   onChange,
   error = false,
-  apiKey = 'no-api-key',
+  apiKey = import.meta.env.VITE_TINYMCE_API_KEY || 't9fy7iififee9ttby4i4ojv9xwg43uxgfawv2fzmw3nsm7es',
   height = 400,
   menubar = true,
   toolbar = defaultToolbar,

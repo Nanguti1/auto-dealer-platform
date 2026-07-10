@@ -94,7 +94,7 @@ class VehicleController extends Controller
     public function markSold(Vehicle $vehicle): RedirectResponse
     {
         $this->authorize('update', $vehicle);
-        $this->service->markSold($vehicle);
+        $this->service->markSold($vehicle, auth()->user());
 
         return back()->with('success', 'Vehicle marked as sold.');
     }
