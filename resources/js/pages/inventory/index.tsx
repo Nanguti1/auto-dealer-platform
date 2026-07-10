@@ -59,7 +59,7 @@ return 'grid';
     }, [viewMode]);
 
     const vehicles: VehicleSummary[] = React.useMemo(() => {
-        const data = serverVehicles?.data ?? [];
+        const data = Array.isArray(serverVehicles?.data) ? serverVehicles.data : [];
 
         return data.map((v) => ({
             ...v,
