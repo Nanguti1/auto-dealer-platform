@@ -89,8 +89,18 @@ class VehicleController extends Controller
             default => $query->orderBy('listed_at', 'desc'),
         };
 
-        // Pagination
-        $vehicles = $query->paginate(15)->withQueryString();
+        // Pagination with eager loading to prevent N+1 queries
+        $vehicles = $query->with([
+            'make',
+            'vehicleModel',
+            'fuelType',
+            'transmissionType',
+            'bodyType',
+            'galleries',
+            'vehicleCondition',
+            'color',
+            'interiorColor',
+        ])->paginate(15)->withQueryString();
 
         // Transform to match frontend expectations
         $transformedVehicles = collect($vehicles->items())->map(fn ($vehicle) => [
@@ -236,7 +246,7 @@ class VehicleController extends Controller
 
     protected function getFilterOptions(): array
     {
-        return Cache::tags(['vehicle', 'filters'])->remember('vehicle.filter.options', now()->addHours(6), function () {
+        return Cache::remember('vehicle.filter.options', now()->addHours(6), function () {
             return [
                 'makes' => Make::whereHas('vehicles', fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at'))
                     ->withCount(['vehicles' => fn ($q) => $q->whereNull('sold_at')->whereNotNull('listed_at')])
