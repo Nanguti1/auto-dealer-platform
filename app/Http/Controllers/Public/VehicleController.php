@@ -20,7 +20,6 @@ class VehicleController extends Controller
     public function index(Request $request): Response
     {
         $query = Vehicle::query()
-            ->with(['make', 'vehicleModel', 'bodyType', 'fuelType', 'transmissionType', 'color', 'interiorColor', 'galleries'])
             ->whereNull('sold_at')
             ->whereNotNull('listed_at');
 
@@ -163,7 +162,17 @@ class VehicleController extends Controller
             ->firstOrFail();
 
         // Get related vehicles (same make, different vehicle)
-        $related = Vehicle::with(['make', 'vehicleModel', 'bodyType', 'galleries'])
+        $related = Vehicle::with([
+            'make',
+            'vehicleModel',
+            'bodyType',
+            'fuelType',
+            'transmissionType',
+            'vehicleCondition',
+            'color',
+            'interiorColor',
+            'galleries',
+        ])
             ->where('make_id', $vehicle->make_id)
             ->where('id', '!=', $vehicle->id)
             ->whereNull('sold_at')
