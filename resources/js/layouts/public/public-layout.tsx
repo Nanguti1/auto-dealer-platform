@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Head } from '@inertiajs/react';
 import Footer from '@/components/navigation/footer';
 import StickyNav from '@/components/navigation/sticky-nav';
 import SeoHead from '@/components/seo-head';

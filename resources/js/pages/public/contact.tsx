@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
-import { H1, H2, P } from '@/components/design-system/typography';
+import { H1, H2, H3, P } from '@/components/design-system/typography';
 import Footer from '@/components/navigation/footer';
 import StickyNav from '@/components/navigation/sticky-nav';
 import { Button } from '@/components/ui/button';

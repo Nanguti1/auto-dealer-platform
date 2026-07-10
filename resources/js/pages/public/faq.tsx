@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { H1, H2, P, H3 } from '@/components/design-system/typography';
 import Footer from '@/components/navigation/footer';
 import StickyNav from '@/components/navigation/sticky-nav';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Collapsible,
