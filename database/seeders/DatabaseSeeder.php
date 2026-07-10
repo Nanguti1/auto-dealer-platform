@@ -44,6 +44,7 @@ class DatabaseSeeder extends Seeder
             MakeSeeder::class,
             ModelSeeder::class,
             // Location Data
+            CompanySeeder::class,
             BranchSeeder::class,
             // Configuration Seeders
             SettingsSeeder::class,
