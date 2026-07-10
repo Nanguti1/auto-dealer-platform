@@ -43,6 +43,8 @@ class DatabaseSeeder extends Seeder
             // Vehicle Reference Data
             MakeSeeder::class,
             ModelSeeder::class,
+            // Location Data
+            BranchSeeder::class,
             // Configuration Seeders
             SettingsSeeder::class,
             // Sample Data
