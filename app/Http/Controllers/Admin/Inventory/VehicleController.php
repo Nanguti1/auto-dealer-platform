@@ -32,7 +32,21 @@ class VehicleController extends Controller
     {
         $this->authorize('create', Vehicle::class);
 
-        return Inertia::render('Admin/Inventory/Vehicles/Create');
+        return Inertia::render('Admin/Inventory/Vehicles/Create', [
+            'branches' => \App\Models\Branch::active()->get()->map(fn ($branch) => [
+                'value' => $branch->id,
+                'label' => $branch->name,
+            ]),
+            'makes' => \App\Models\Make::active()->get()->map(fn ($make) => [
+                'value' => $make->id,
+                'label' => $make->name,
+            ]),
+            'models' => \App\Models\Model::active()->get()->map(fn ($model) => [
+                'value' => $model->id,
+                'label' => $model->name,
+                'make_id' => $model->make_id,
+            ]),
+        ]);
     }
 
     public function store(StoreVehicleRequest $request): RedirectResponse
@@ -57,6 +71,19 @@ class VehicleController extends Controller
 
         return Inertia::render('Admin/Inventory/Vehicles/Edit', [
             'vehicle' => $vehicle,
+            'branches' => \App\Models\Branch::active()->get()->map(fn ($branch) => [
+                'value' => $branch->id,
+                'label' => $branch->name,
+            ]),
+            'makes' => \App\Models\Make::active()->get()->map(fn ($make) => [
+                'value' => $make->id,
+                'label' => $make->name,
+            ]),
+            'models' => \App\Models\Model::active()->get()->map(fn ($model) => [
+                'value' => $model->id,
+                'label' => $model->name,
+                'make_id' => $model->make_id,
+            ]),
         ]);
     }
 

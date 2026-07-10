@@ -24,7 +24,7 @@ class VehicleGalleryService
      */
     public function create(array $data): VehicleGallery
     {
-        $gallery = parent::create($data);
+        $gallery = $this->createModel($data);
 
         // Dispatch image processing jobs asynchronously
         Bus::chain([
@@ -33,5 +33,13 @@ class VehicleGalleryService
         ])->dispatch();
 
         return $gallery;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    protected function createModel(array $data): VehicleGallery
+    {
+        return \Illuminate\Support\Facades\DB::transaction(fn (): VehicleGallery => VehicleGallery::query()->create($data));
     }
 }

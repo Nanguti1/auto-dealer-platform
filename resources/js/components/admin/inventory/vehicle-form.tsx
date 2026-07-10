@@ -25,10 +25,79 @@ function Field({ name, label, type = 'text', value, error }: { name: string; lab
   );
 }
 
-export default function VehicleForm({ vehicle, action, method = 'post' }: { vehicle?: AdminVehicle; action: string; method?: 'post' | 'put' | 'patch' }) {
+function SelectField({ name, label, value, error, options, placeholder = 'Select...', onChange }: { name: string; label: string; value?: string | number; error?: string; options: { value: string | number; label: string }[]; placeholder?: string; onChange?: (value: string) => void }) {
+  const [internalValue, setInternalValue] = React.useState(String(value ?? ''));
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newValue = e.target.value;
+    setInternalValue(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={name}>{label}</Label>
+      <select
+        id={name}
+        name={name}
+        value={internalValue}
+        onChange={handleChange}
+        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <option value="">{placeholder}</option>
+        {options.map((option) => (
+          <option key={option.value} value={String(option.value)}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      <InputError message={error} />
+    </div>
+  );
+}
+
+export default function VehicleForm({
+  vehicle,
+  action,
+  method = 'post',
+  branches = [],
+  makes = [],
+  models = [],
+}: {
+  vehicle?: AdminVehicle;
+  action: string;
+  method?: 'post' | 'put' | 'patch';
+  branches?: Array<{ value: number; label: string }>;
+  makes?: Array<{ value: number; label: string }>;
+  models?: Array<{ value: number; label: string; make_id: number }>;
+}) {
   const [title, setTitle] = React.useState(vehicle?.title ?? '');
   const [slug, setSlug] = React.useState(vehicle?.slug ?? '');
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!vehicle?.slug);
+  const [selectedBranch, setSelectedBranch] = React.useState<number | null>((vehicle?.branch_id as number) ?? null);
+  const [selectedMake, setSelectedMake] = React.useState<number | null>((vehicle?.make_id as number) ?? null);
+  const [selectedModel, setSelectedModel] = React.useState<number | null>((vehicle?.model_id as number) ?? null);
+
+  const filteredModels = React.useMemo(() => {
+    if (!selectedMake) return models;
+    return models.filter((model) => model.make_id === selectedMake);
+  }, [selectedMake, models]);
+
+  const handleBranchChange = (value: string) => {
+    setSelectedBranch(parseInt(value));
+  };
+
+  const handleMakeChange = (value: string) => {
+    const makeId = parseInt(value);
+    setSelectedMake(makeId);
+    setSelectedModel(null); // Reset model when make changes
+  };
+
+  const handleModelChange = (value: string) => {
+    setSelectedModel(parseInt(value));
+  };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -74,9 +143,9 @@ export default function VehicleForm({ vehicle, action, method = 'post' }: { vehi
               <Field name="stock_number" label="Stock number" value={vehicle?.stock_number} error={errors.stock_number} />
               <Field name="vin" label="VIN" value={vehicle?.vin} error={errors.vin} />
               <Field name="year" label="Year" type="number" value={vehicle?.year} error={errors.year} />
-              <Field name="branch_id" label="Branch ID" type="number" value={(vehicle?.branch_id as number) ?? ''} error={errors.branch_id} />
-              <Field name="make_id" label="Make ID" type="number" value={(vehicle?.make_id as number) ?? ''} error={errors.make_id} />
-              <Field name="model_id" label="Model ID" type="number" value={(vehicle?.model_id as number) ?? ''} error={errors.model_id} />
+              <SelectField name="branch_id" label="Branch" value={vehicle?.branch_id} error={errors.branch_id} options={branches} placeholder="Select branch" onChange={handleBranchChange} />
+              <SelectField name="make_id" label="Make" value={vehicle?.make_id} error={errors.make_id} options={makes} placeholder="Select make" onChange={handleMakeChange} />
+              <SelectField name="model_id" label="Model" value={vehicle?.model_id} error={errors.model_id} options={filteredModels} placeholder="Select model" onChange={handleModelChange} />
 
               <div className="md:col-span-2 space-y-2">
                 <Label htmlFor="description">Description</Label>
