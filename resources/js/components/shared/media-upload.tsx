@@ -196,13 +196,16 @@ return;
 }
 
 interface MediaUploadProps {
+    name?: string;
     value?: MediaUploadItem[];
     onChange?: (items: MediaUploadItem[]) => void;
+    existingMedia?: any[];
     className?: string;
 }
 
-function MediaUpload({ value = [], onChange, className }: MediaUploadProps) {
-    const [items, setItems] = React.useState(value);
+function MediaUpload({ name = 'media', value = [], onChange, existingMedia = [], className }: MediaUploadProps) {
+    const [items, setItems] = React.useState<MediaUploadItem[]>(value);
+    const inputRef = React.useRef<HTMLInputElement>(null);
 
     const update = (next: MediaUploadItem[]) => {
         setItems(next);
@@ -210,14 +213,46 @@ function MediaUpload({ value = [], onChange, className }: MediaUploadProps) {
     };
 
     const addFiles = (files: File[]) => {
-        update([
-            ...items,
-            ...files.map((file) => ({ id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`, file, url: URL.createObjectURL(file), alt: file.name })),
-        ]);
+        const newItems = files.map((file) => ({ 
+            id: `${file.name}-${file.lastModified}-${crypto.randomUUID()}`, 
+            file, 
+            url: URL.createObjectURL(file), 
+            alt: file.name 
+        }));
+        update([...items, ...newItems]);
     };
+
+    const handleFormSubmit = () => {
+        // Create a hidden file input to append files to the form
+        if (items.length > 0 && inputRef.current) {
+            const dataTransfer = new DataTransfer();
+            items.forEach((item) => {
+                if (item.file) {
+                    dataTransfer.items.add(item.file);
+                }
+            });
+            inputRef.current.files = dataTransfer.files;
+        }
+    };
+
+    // Handle form submission by attaching to parent form
+    React.useEffect(() => {
+        const form = document.querySelector('form');
+        if (form) {
+            form.addEventListener('submit', handleFormSubmit);
+            return () => form.removeEventListener('submit', handleFormSubmit);
+        }
+    }, [items]);
 
     return (
         <div className={cn('space-y-4', className)}>
+            <input 
+                ref={inputRef} 
+                type="file" 
+                name={name} 
+                multiple 
+                className="hidden" 
+            />
             <ImageDropzone onFilesSelected={addFiles} />
             {items.length > 0 ? <ImageSortableGrid items={items} onChange={update} /> : (
                 <div className="flex items-center justify-center gap-2 rounded-2xl border bg-card p-4 text-sm text-muted-foreground">

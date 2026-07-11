@@ -7,7 +7,7 @@ namespace App\Services;
 use App\Models\BodyType;
 use App\Models\FuelType;
 use App\Models\Make;
-use App\Models\Model;
+use App\Models\Model as VehicleModel;
 use App\Models\VehicleCondition;
 use Illuminate\Support\Facades\Cache;
 
@@ -18,7 +18,7 @@ class ReferenceDataService
      */
     public function getMakes(): array
     {
-        return Cache::tags(['reference', 'makes'])->remember('reference.makes.all', now()->addDay(), function () {
+        return Cache::remember('reference.makes.all', now()->addDay(), function () {
             return Make::orderBy('name')
                 ->get()
                 ->map(fn ($make) => [
@@ -35,8 +35,8 @@ class ReferenceDataService
      */
     public function getModelsByMake(int $makeId): array
     {
-        return Cache::tags(['reference', 'models'])->remember("reference.models.make.{$makeId}", now()->addDay(), function () use ($makeId) {
-            return Model::where('make_id', $makeId)
+        return Cache::remember("reference.models.make.{$makeId}", now()->addDay(), function () use ($makeId) {
+            return VehicleModel::where('make_id', $makeId)
                 ->orderBy('name')
                 ->get()
                 ->map(fn ($model) => [
@@ -53,7 +53,7 @@ class ReferenceDataService
      */
     public function getBodyTypes(): array
     {
-        return Cache::tags(['reference', 'bodyTypes'])->remember('reference.bodyTypes.all', now()->addDay(), function () {
+        return Cache::remember('reference.bodyTypes.all', now()->addDay(), function () {
             return BodyType::where('is_active', true)
                 ->orderBy('name')
                 ->get()
@@ -71,7 +71,7 @@ class ReferenceDataService
      */
     public function getFuelTypes(): array
     {
-        return Cache::tags(['reference', 'fuelTypes'])->remember('reference.fuelTypes.all', now()->addDay(), function () {
+        return Cache::remember('reference.fuelTypes.all', now()->addDay(), function () {
             return FuelType::where('is_active', true)
                 ->orderBy('name')
                 ->get()
@@ -89,7 +89,7 @@ class ReferenceDataService
      */
     public function getVehicleConditions(): array
     {
-        return Cache::tags(['reference', 'conditions'])->remember('reference.conditions.all', now()->addDay(), function () {
+        return Cache::remember('reference.conditions.all', now()->addDay(), function () {
             return VehicleCondition::orderBy('name')
                 ->get()
                 ->map(fn ($condition) => [
@@ -106,6 +106,14 @@ class ReferenceDataService
      */
     public function clearCache(): void
     {
-        Cache::tags(['reference'])->flush();
+        Cache::forget('reference.makes.all');
+        Cache::forget('reference.bodyTypes.all');
+        Cache::forget('reference.fuelTypes.all');
+        Cache::forget('reference.conditions.all');
+        // Clear all model caches
+        $makes = Make::all();
+        foreach ($makes as $make) {
+            Cache::forget("reference.models.make.{$make->id}");
+        }
     }
 }

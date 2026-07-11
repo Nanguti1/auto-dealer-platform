@@ -15,7 +15,7 @@ class ConfigurationService
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        return Cache::tags(['config'])->remember("config.{$key}", now()->addHour(), function () use ($key, $default) {
+        return Cache::remember("config.{$key}", now()->addHour(), function () use ($key, $default) {
             return Config::get($key, $default);
         });
     }
@@ -73,6 +73,6 @@ class ConfigurationService
      */
     public function clearCache(): void
     {
-        Cache::tags(['config'])->flush();
+        Cache::flush();
     }
 }

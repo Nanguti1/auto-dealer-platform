@@ -41,6 +41,6 @@ class VehicleReservationObserver
 
     protected function clearDashboardCache(): void
     {
-        Cache::tags(['dashboard', 'summary', 'activity', 'charts'])->flush();
+        Cache::flush();
     }
 }

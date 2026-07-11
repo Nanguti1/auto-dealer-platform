@@ -26,6 +26,6 @@ class VehicleImportObserver
 
     protected function clearDashboardCache(): void
     {
-        Cache::tags(['dashboard', 'summary', 'charts'])->flush();
+        Cache::flush();
     }
 }

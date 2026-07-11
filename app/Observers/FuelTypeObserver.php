@@ -26,6 +26,6 @@ class FuelTypeObserver
 
     protected function clearReferenceCache(): void
     {
-        Cache::tags(['reference', 'fuelTypes', 'filters'])->flush();
+        Cache::flush();
     }
 }

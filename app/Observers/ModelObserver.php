@@ -26,6 +26,6 @@ class ModelObserver
 
     protected function clearReferenceCache(): void
     {
-        Cache::tags(['reference', 'models'])->flush();
+        Cache::flush();
     }
 }

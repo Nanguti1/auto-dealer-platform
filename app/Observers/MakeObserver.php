@@ -26,6 +26,6 @@ class MakeObserver
 
     protected function clearReferenceCache(): void
     {
-        Cache::tags(['reference', 'makes', 'filters'])->flush();
+        Cache::flush();
     }
 }

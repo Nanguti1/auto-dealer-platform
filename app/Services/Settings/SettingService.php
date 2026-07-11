@@ -22,7 +22,7 @@ class SettingService
      */
     public function getAllGrouped(): array
     {
-        return Cache::tags(['settings'])->remember('settings.all.grouped', now()->addHours(1), function () {
+        return Cache::remember('settings.all.grouped', now()->addHours(1), function () {
             return Setting::all()
                 ->groupBy('group')
                 ->map(fn ($group) => $group->pluck('value', 'key'))
@@ -35,7 +35,7 @@ class SettingService
      */
     public function getByGroup(string $group): array
     {
-        return Cache::tags(['settings'])->remember("settings.group.{$group}", now()->addHours(1), function () use ($group) {
+        return Cache::remember("settings.group.{$group}", now()->addHours(1), function () use ($group) {
             return Setting::where('group', $group)
                 ->pluck('value', 'key')
                 ->toArray();
@@ -47,7 +47,7 @@ class SettingService
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        return Cache::tags(['settings'])->remember("settings.key.{$key}", now()->addHours(1), function () use ($key, $default) {
+        return Cache::remember("settings.key.{$key}", now()->addHours(1), function () use ($key, $default) {
             $setting = Setting::where('key', $key)->first();
 
             return $setting?->value ?? $default;

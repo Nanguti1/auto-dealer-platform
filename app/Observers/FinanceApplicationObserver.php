@@ -41,6 +41,6 @@ class FinanceApplicationObserver
 
     protected function clearDashboardCache(): void
     {
-        Cache::tags(['dashboard', 'summary', 'charts'])->flush();
+        Cache::flush();
     }
 }

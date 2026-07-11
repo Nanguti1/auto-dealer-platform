@@ -125,6 +125,6 @@ class SettingObserver
 
     protected function clearSettingsCache(): void
     {
-        Cache::tags(['settings'])->flush();
+        Cache::flush();
     }
 }

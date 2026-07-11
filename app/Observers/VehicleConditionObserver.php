@@ -26,6 +26,6 @@ class VehicleConditionObserver
 
     protected function clearReferenceCache(): void
     {
-        Cache::tags(['reference', 'conditions', 'filters'])->flush();
+        Cache::flush();
     }
 }

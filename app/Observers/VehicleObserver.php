@@ -26,6 +26,6 @@ class VehicleObserver
 
     protected function clearVehicleCache(): void
     {
-        Cache::tags(['vehicle', 'filters'])->flush();
+        Cache::flush();
     }
 }

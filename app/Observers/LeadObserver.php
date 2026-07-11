@@ -26,6 +26,6 @@ class LeadObserver
 
     protected function clearDashboardCache(): void
     {
-        Cache::tags(['dashboard', 'summary', 'activity'])->flush();
+        Cache::flush();
     }
 }

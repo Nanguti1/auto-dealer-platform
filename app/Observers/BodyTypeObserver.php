@@ -26,6 +26,6 @@ class BodyTypeObserver
 
     protected function clearReferenceCache(): void
     {
-        Cache::tags(['reference', 'bodyTypes', 'filters'])->flush();
+        Cache::flush();
     }
 }
