@@ -19,9 +19,10 @@ interface ImageDropzoneProps {
     maxSize?: number; // Max file size in bytes
     error?: string;
     disabled?: boolean;
+    name?: string;
 }
 
-function ImageDropzone({ onFilesSelected, className, multiple = true, accept = 'image/*', previewUrl, maxSize = 10 * 1024 * 1024, error, disabled = false }: ImageDropzoneProps) {
+function ImageDropzone({ onFilesSelected, className, multiple = true, accept = 'image/*', previewUrl, maxSize = 10 * 1024 * 1024, error, disabled = false, name = 'media' }: ImageDropzoneProps) {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [dragging, setDragging] = React.useState(false);
     const [preview, setPreview] = React.useState<string | null>(previewUrl ?? null);
@@ -139,7 +140,7 @@ inputRef.current?.click();
                 aria-label={disabled ? undefined : 'Upload images'}
                 aria-disabled={disabled}
             >
-                <input ref={inputRef} type="file" accept={accept} multiple={multiple} disabled={disabled} className="hidden" onChange={(event) => handleFiles(event.target.files)} />
+                <input ref={inputRef} type="file" accept={accept} multiple={multiple} disabled={disabled} className="hidden" name={name} onChange={(event) => handleFiles(event.target.files)} />
                 <div className={cn('mb-4 rounded-full bg-background p-4 shadow-sm transition-transform', !disabled && 'group-hover:scale-105')}>
                     <UploadCloud className="size-7 text-primary" />
                 </div>
@@ -205,7 +206,6 @@ interface MediaUploadProps {
 
 function MediaUpload({ name = 'media', value = [], onChange, existingMedia = [], className }: MediaUploadProps) {
     const [items, setItems] = React.useState<MediaUploadItem[]>(value);
-    const inputRef = React.useRef<HTMLInputElement>(null);
 
     const update = (next: MediaUploadItem[]) => {
         setItems(next);
@@ -222,38 +222,9 @@ function MediaUpload({ name = 'media', value = [], onChange, existingMedia = [],
         update([...items, ...newItems]);
     };
 
-    const handleFormSubmit = () => {
-        // Create a hidden file input to append files to the form
-        if (items.length > 0 && inputRef.current) {
-            const dataTransfer = new DataTransfer();
-            items.forEach((item) => {
-                if (item.file) {
-                    dataTransfer.items.add(item.file);
-                }
-            });
-            inputRef.current.files = dataTransfer.files;
-        }
-    };
-
-    // Handle form submission by attaching to parent form
-    React.useEffect(() => {
-        const form = document.querySelector('form');
-        if (form) {
-            form.addEventListener('submit', handleFormSubmit);
-            return () => form.removeEventListener('submit', handleFormSubmit);
-        }
-    }, [items]);
-
     return (
         <div className={cn('space-y-4', className)}>
-            <input 
-                ref={inputRef} 
-                type="file" 
-                name={name} 
-                multiple 
-                className="hidden" 
-            />
-            <ImageDropzone onFilesSelected={addFiles} />
+            <ImageDropzone onFilesSelected={addFiles} name={name} />
             {items.length > 0 ? <ImageSortableGrid items={items} onChange={update} /> : (
                 <div className="flex items-center justify-center gap-2 rounded-2xl border bg-card p-4 text-sm text-muted-foreground">
                     <ImagePlus className="size-4" /> No media selected yet.
