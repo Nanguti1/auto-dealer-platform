@@ -1,4 +1,3 @@
-import { Link } from '@inertiajs/react';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -16,21 +15,25 @@ export default function PartnerCard({ partner, className }: PartnerCardProps) {
   const content = (
     <div
       className={cn(
-        'flex items-center justify-center p-6 bg-muted/50 rounded-lg transition-all hover:bg-muted hover:shadow-md',
+        'group relative h-32 w-full rounded-lg border bg-card transition-all hover:shadow-lg hover:border-primary cursor-pointer overflow-hidden',
         className
       )}
     >
       <img
         src={partner.logo}
         alt={partner.name}
-        className="h-12 w-auto object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all"
+        className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110"
       />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+        <h3 className="font-semibold text-lg">{partner.name}</h3>
+      </div>
     </div>
   );
 
   if (partner.website) {
     return (
-      <a href={partner.website} target="_blank" rel="noopener noreferrer">
+      <a href={partner.website} target="_blank" rel="noopener noreferrer" className="block">
         {content}
       </a>
     );

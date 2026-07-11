@@ -74,6 +74,11 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
 
     const formatMileage = (mileage: number) => new Intl.NumberFormat('en-US').format(mileage);
 
+    const toSummary = (vehicle: VehicleDetail) => {
+        const { galleries, videos, specifications, features, description, stockNumber, vin, msrp, color, interiorColor, driveType, engineType, trim, listedAt, ...summary } = vehicle;
+        return summary;
+    };
+
     if (!vehicle) {
         return (
             <PublicLayout title="Vehicle Not Found" description="The requested vehicle could not be found.">

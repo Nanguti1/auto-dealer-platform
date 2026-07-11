@@ -127,6 +127,7 @@ export default function Welcome({ featuredVehicles, latestArrivals, heroSliders,
     { id: 2, name: 'BMW Financial', logo: '/images/partners/BMW_Bank.png' },
     { id: 3, name: 'Mercedes-Benz Financial', logo: '/images/partners/Mercedes-benz.jpg' },
     { id: 4, name: 'Standard Bank', logo: '/images/partners/Standard-Bank-Logo-1024x538.jpg' },
+    { id: 5, name: 'Chase Auto Finance', logo: '/images/partners/Toyota_Financial_Services_Logo.jpg' },
   ];
 
   const heroSlider = heroSliders?.[0] || {
