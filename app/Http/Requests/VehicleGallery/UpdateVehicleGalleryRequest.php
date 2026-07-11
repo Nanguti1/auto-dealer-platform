@@ -19,9 +19,12 @@ class UpdateVehicleGalleryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'vehicle_id' => ['sometimes', 'nullable', 'integer', 'exists:vehicles,id'],
+            'path' => ['sometimes', 'nullable', 'file', 'image', 'max:10240'],
+            'alt_text' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'is_primary' => ['sometimes', 'nullable', 'boolean'],
+            'sort_order' => ['sometimes', 'nullable', 'integer'],
+            'metadata' => ['sometimes', 'nullable', 'array'],
         ];
     }
 }
