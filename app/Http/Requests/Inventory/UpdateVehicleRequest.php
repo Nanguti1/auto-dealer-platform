@@ -28,7 +28,7 @@ class UpdateVehicleRequest extends FormRequest
             'vin' => ['sometimes', 'nullable', 'string', 'max:255'],
             'year' => ['sometimes', 'nullable', 'integer', 'between:1900,2030'],
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:vehicles,slug,'.$vehicle],
+            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:vehicles,slug,'.$vehicle->id],
             'sale_price' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'cost_price' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'msrp' => ['sometimes', 'nullable', 'numeric', 'min:0'],
