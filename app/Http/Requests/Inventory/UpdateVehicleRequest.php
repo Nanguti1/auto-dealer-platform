@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Requests\Inventory;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\UploadedFile;
 
 class UpdateVehicleRequest extends FormRequest
 {
@@ -57,6 +58,8 @@ class UpdateVehicleRequest extends FormRequest
             'vehicle_condition_id' => ['sometimes', 'nullable', 'integer', 'exists:vehicle_conditions,id'],
             'vehicle_status_id' => ['sometimes', 'nullable', 'integer', 'exists:vehicle_statuses,id'],
             'inventory_status_id' => ['sometimes', 'nullable', 'integer', 'exists:inventory_statuses,id'],
+            'media' => ['sometimes', 'nullable', 'array'],
+            'media.*' => ['sometimes', 'nullable', 'file', 'image', 'max:10240'],
         ];
     }
 
@@ -84,5 +87,15 @@ class UpdateVehicleRequest extends FormRequest
                 $this->merge([$field => array_values($this->input($field))]);
             }
         }
+    }
+
+    /**
+     * Get the media files from the request.
+     *
+     * @return array<int, UploadedFile>
+     */
+    public function getMediaFiles(): array
+    {
+        return array_filter($this->file('media', []), fn ($file) => $file instanceof UploadedFile);
     }
 }

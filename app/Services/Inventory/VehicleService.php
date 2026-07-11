@@ -8,7 +8,9 @@ use App\Events\VehicleSold;
 use App\Exceptions\VehicleAlreadySoldException;
 use App\Models\User;
 use App\Models\Vehicle;
+use App\Models\VehicleGallery;
 use App\Services\Concerns\ManagesEloquentModels;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
 class VehicleService
@@ -114,5 +116,41 @@ class VehicleService
     public function syncTags(Vehicle $vehicle, array $tags): Vehicle
     {
         return $this->update($vehicle, ['metadata' => array_merge($vehicle->metadata ?? [], ['tags' => $tags])]);
+    }
+
+    /**
+     * Handle media uploads for a vehicle.
+     *
+     * @param  array<int, UploadedFile>  $mediaFiles
+     */
+    public function handleMediaUploads(Vehicle $vehicle, array $mediaFiles): Vehicle
+    {
+        if (empty($mediaFiles)) {
+            return $vehicle;
+        }
+
+        return DB::transaction(function () use ($vehicle, $mediaFiles): Vehicle {
+            $galleryItems = [];
+
+            foreach ($mediaFiles as $index => $file) {
+                $path = $file->store('vehicles/'.$vehicle->id, 'public');
+
+                $galleryItems[] = [
+                    'vehicle_id' => $vehicle->id,
+                    'path' => $path,
+                    'alt_text' => $file->getClientOriginalName(),
+                    'is_primary' => $index === 0 && $vehicle->galleries()->count() === 0,
+                    'sort_order' => $vehicle->galleries()->count() + $index,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+
+            if (! empty($galleryItems)) {
+                VehicleGallery::insert($galleryItems);
+            }
+
+            return $vehicle->refresh();
+        });
     }
 }

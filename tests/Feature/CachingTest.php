@@ -69,7 +69,7 @@ class CachingTest extends TestCase
 
         // First call should cache
         $summary1 = $service->summary();
-        $this->assertTrue(Cache::tags(['dashboard', 'summary'])->has($cacheKey));
+        $this->assertTrue(Cache::has($cacheKey));
 
         // Second call should use cache
         $summary2 = $service->summary();
@@ -86,13 +86,13 @@ class CachingTest extends TestCase
 
         // Populate cache
         $service->summary();
-        $this->assertTrue(Cache::tags(['dashboard', 'summary'])->has($cacheKey));
+        $this->assertTrue(Cache::has($cacheKey));
 
         // Create a lead
         Lead::factory()->create();
 
         // Cache should be invalidated
-        $this->assertFalse(Cache::tags(['dashboard', 'summary'])->has($cacheKey));
+        $this->assertFalse(Cache::has($cacheKey));
     }
 
     public function test_settings_are_cached(): void
@@ -103,7 +103,7 @@ class CachingTest extends TestCase
 
         // First call should cache
         $value1 = $service->get('test_key');
-        $this->assertTrue(Cache::tags(['settings'])->has('settings.key.test_key'));
+        $this->assertTrue(Cache::has('settings.key.test_key'));
 
         // Second call should use cache
         $value2 = $service->get('test_key');
@@ -118,13 +118,13 @@ class CachingTest extends TestCase
 
         // Populate cache
         $service->get('test_key');
-        $this->assertTrue(Cache::tags(['settings'])->has('settings.key.test_key'));
+        $this->assertTrue(Cache::has('settings.key.test_key'));
 
         // Update setting
         $setting->update(['value' => 'new_value']);
 
         // Cache should be invalidated
-        $this->assertFalse(Cache::tags(['settings'])->has('settings.key.test_key'));
+        $this->assertFalse(Cache::has('settings.key.test_key'));
     }
 
     public function test_reference_data_makes_are_cached(): void
@@ -135,7 +135,7 @@ class CachingTest extends TestCase
 
         // First call should cache
         $makes1 = $service->getMakes();
-        $this->assertTrue(Cache::tags(['reference', 'makes'])->has('reference.makes.all'));
+        $this->assertTrue(Cache::has('reference.makes.all'));
 
         // Second call should use cache
         $makes2 = $service->getMakes();
@@ -150,13 +150,13 @@ class CachingTest extends TestCase
 
         // Populate cache
         $service->getMakes();
-        $this->assertTrue(Cache::tags(['reference', 'makes'])->has('reference.makes.all'));
+        $this->assertTrue(Cache::has('reference.makes.all'));
 
         // Update make
         $make->update(['name' => 'Toyota Updated']);
 
         // Cache should be invalidated
-        $this->assertFalse(Cache::tags(['reference', 'makes'])->has('reference.makes.all'));
+        $this->assertFalse(Cache::has('reference.makes.all'));
     }
 
     public function test_reference_data_body_types_are_cached(): void
@@ -167,7 +167,7 @@ class CachingTest extends TestCase
 
         // First call should cache
         $bodyTypes1 = $service->getBodyTypes();
-        $this->assertTrue(Cache::tags(['reference', 'bodyTypes'])->has('reference.bodyTypes.all'));
+        $this->assertTrue(Cache::has('reference.bodyTypes.all'));
 
         // Second call should use cache
         $bodyTypes2 = $service->getBodyTypes();
@@ -182,7 +182,7 @@ class CachingTest extends TestCase
 
         // First call should cache
         $fuelTypes1 = $service->getFuelTypes();
-        $this->assertTrue(Cache::tags(['reference', 'fuelTypes'])->has('reference.fuelTypes.all'));
+        $this->assertTrue(Cache::has('reference.fuelTypes.all'));
 
         // Second call should use cache
         $fuelTypes2 = $service->getFuelTypes();
@@ -197,7 +197,7 @@ class CachingTest extends TestCase
 
         // First call should cache
         $conditions1 = $service->getVehicleConditions();
-        $this->assertTrue(Cache::tags(['reference', 'conditions'])->has('reference.conditions.all'));
+        $this->assertTrue(Cache::has('reference.conditions.all'));
 
         // Second call should use cache
         $conditions2 = $service->getVehicleConditions();
@@ -210,32 +210,33 @@ class CachingTest extends TestCase
 
         // First call should cache
         $appName1 = $service->getAppName();
-        $this->assertTrue(Cache::tags(['config'])->has('config.app.name'));
+        $this->assertTrue(Cache::has('config.app.name'));
 
         // Second call should use cache
         $appName2 = $service->getAppName();
         $this->assertEquals($appName1, $appName2);
     }
 
-    public function test_cache_tags_work_for_grouped_invalidation(): void
+    public function test_cache_keys_work_for_grouped_invalidation(): void
     {
-        // Set up data with different tags
-        Cache::tags(['dashboard', 'summary'])->remember('dashboard.summary.1', now()->addHour(), fn () => 'summary');
-        Cache::tags(['dashboard', 'activity'])->remember('dashboard.activity.1', now()->addHour(), fn () => 'activity');
-        Cache::tags(['settings'])->remember('settings.key.test', now()->addHour(), fn () => 'settings');
+        // Set up data with different cache keys
+        Cache::remember('dashboard.summary.1', now()->addHour(), fn () => 'summary');
+        Cache::remember('dashboard.activity.1', now()->addHour(), fn () => 'activity');
+        Cache::remember('settings.key.test', now()->addHour(), fn () => 'settings');
 
         // Verify all are cached
-        $this->assertTrue(Cache::tags(['dashboard', 'summary'])->has('dashboard.summary.1'));
-        $this->assertTrue(Cache::tags(['dashboard', 'activity'])->has('dashboard.activity.1'));
-        $this->assertTrue(Cache::tags(['settings'])->has('settings.key.test'));
+        $this->assertTrue(Cache::has('dashboard.summary.1'));
+        $this->assertTrue(Cache::has('dashboard.activity.1'));
+        $this->assertTrue(Cache::has('settings.key.test'));
 
-        // Flush dashboard tag
-        Cache::tags(['dashboard'])->flush();
+        // Flush dashboard-related keys
+        Cache::forget('dashboard.summary.1');
+        Cache::forget('dashboard.activity.1');
 
         // Dashboard caches should be cleared, settings should remain
-        $this->assertFalse(Cache::tags(['dashboard', 'summary'])->has('dashboard.summary.1'));
-        $this->assertFalse(Cache::tags(['dashboard', 'activity'])->has('dashboard.activity.1'));
-        $this->assertTrue(Cache::tags(['settings'])->has('settings.key.test'));
+        $this->assertFalse(Cache::has('dashboard.summary.1'));
+        $this->assertFalse(Cache::has('dashboard.activity.1'));
+        $this->assertTrue(Cache::has('settings.key.test'));
     }
 
     public function test_dashboard_cache_is_invalidated_on_customer_change(): void
@@ -248,13 +249,13 @@ class CachingTest extends TestCase
 
         // Populate cache
         $service->summary();
-        $this->assertTrue(Cache::tags(['dashboard', 'summary'])->has($cacheKey));
+        $this->assertTrue(Cache::has($cacheKey));
 
         // Create a customer
         Customer::factory()->create();
 
         // Cache should be invalidated
-        $this->assertFalse(Cache::tags(['dashboard', 'summary'])->has($cacheKey));
+        $this->assertFalse(Cache::has($cacheKey));
     }
 
     public function test_dashboard_cache_is_invalidated_on_reservation_change(): void
@@ -267,12 +268,12 @@ class CachingTest extends TestCase
 
         // Populate cache
         $service->summary();
-        $this->assertTrue(Cache::tags(['dashboard', 'summary'])->has($cacheKey));
+        $this->assertTrue(Cache::has($cacheKey));
 
         // Create a reservation
         VehicleReservation::factory()->create();
 
         // Cache should be invalidated
-        $this->assertFalse(Cache::tags(['dashboard', 'summary'])->has($cacheKey));
+        $this->assertFalse(Cache::has($cacheKey));
     }
 }

@@ -7,6 +7,9 @@ namespace App\Http\Controllers\Admin\Inventory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreVehicleRequest;
 use App\Http\Requests\Inventory\UpdateVehicleRequest;
+use App\Models\Branch;
+use App\Models\Make;
+use App\Models\Model;
 use App\Models\Vehicle;
 use App\Services\Inventory\VehicleService;
 use Illuminate\Http\RedirectResponse;
@@ -33,15 +36,15 @@ class VehicleController extends Controller
         $this->authorize('create', Vehicle::class);
 
         return Inertia::render('Admin/Inventory/Vehicles/Create', [
-            'branches' => \App\Models\Branch::active()->get()->map(fn ($branch) => [
+            'branches' => Branch::active()->get()->map(fn ($branch) => [
                 'value' => $branch->id,
                 'label' => $branch->name,
             ]),
-            'makes' => \App\Models\Make::active()->get()->map(fn ($make) => [
+            'makes' => Make::active()->get()->map(fn ($make) => [
                 'value' => $make->id,
                 'label' => $make->name,
             ]),
-            'models' => \App\Models\Model::active()->get()->map(fn ($model) => [
+            'models' => Model::active()->get()->map(fn ($model) => [
                 'value' => $model->id,
                 'label' => $model->name,
                 'make_id' => $model->make_id,
@@ -51,7 +54,13 @@ class VehicleController extends Controller
 
     public function store(StoreVehicleRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $vehicle = $this->service->create($request->validated());
+
+        // Handle media uploads
+        $mediaFiles = $request->getMediaFiles();
+        if (! empty($mediaFiles)) {
+            $this->service->handleMediaUploads($vehicle, $mediaFiles);
+        }
 
         return redirect()->route('admin.vehicles.index')->with('success', 'Created successfully.');
     }
@@ -71,15 +80,15 @@ class VehicleController extends Controller
 
         return Inertia::render('Admin/Inventory/Vehicles/Edit', [
             'vehicle' => $vehicle,
-            'branches' => \App\Models\Branch::active()->get()->map(fn ($branch) => [
+            'branches' => Branch::active()->get()->map(fn ($branch) => [
                 'value' => $branch->id,
                 'label' => $branch->name,
             ]),
-            'makes' => \App\Models\Make::active()->get()->map(fn ($make) => [
+            'makes' => Make::active()->get()->map(fn ($make) => [
                 'value' => $make->id,
                 'label' => $make->name,
             ]),
-            'models' => \App\Models\Model::active()->get()->map(fn ($model) => [
+            'models' => Model::active()->get()->map(fn ($model) => [
                 'value' => $model->id,
                 'label' => $model->name,
                 'make_id' => $model->make_id,
@@ -90,6 +99,12 @@ class VehicleController extends Controller
     public function update(UpdateVehicleRequest $request, Vehicle $vehicle): RedirectResponse
     {
         $this->service->update($vehicle, $request->validated());
+
+        // Handle media uploads
+        $mediaFiles = $request->getMediaFiles();
+        if (! empty($mediaFiles)) {
+            $this->service->handleMediaUploads($vehicle, $mediaFiles);
+        }
 
         return back()->with('success', 'Updated successfully.');
     }
