@@ -1,6 +1,5 @@
 import { Link } from '@inertiajs/react';
 import * as React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 interface BrandCardProps {
@@ -16,28 +15,27 @@ interface BrandCardProps {
 export default function BrandCard({ brand, className }: BrandCardProps) {
   return (
     <Link href={`/inventory?brand=${brand.id}`}>
-      <Card
+      <div
         className={cn(
-          'group transition-all hover:shadow-lg hover:border-primary cursor-pointer',
+          'group relative h-40 w-full rounded-lg border bg-card transition-all hover:shadow-lg hover:border-primary cursor-pointer overflow-hidden',
           className
         )}
       >
-        <CardContent className="flex flex-col items-center justify-center p-6">
-          <div className="relative h-20 w-20 mb-4">
-            <img
-              src={brand.logo}
-              alt={brand.name}
-              className="h-full w-full object-contain transition-transform group-hover:scale-110"
-            />
-          </div>
+        <img
+          src={brand.logo}
+          alt={brand.name}
+          className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
           <h3 className="font-semibold text-lg mb-1">{brand.name}</h3>
           {brand.vehicleCount !== undefined && (
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-white/80">
               {brand.vehicleCount} vehicles
             </p>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </Link>
   );
 }

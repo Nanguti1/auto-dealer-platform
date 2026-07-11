@@ -7,10 +7,22 @@ import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
 interface HeroSectionProps {
+  title?: string;
+  subtitle?: string;
+  image?: string;
+  ctaLabel?: string;
+  ctaUrl?: string;
   className?: string;
 }
 
-export default function HeroSection({ className }: HeroSectionProps) {
+export default function HeroSection({
+  title = 'Find Your Perfect Vehicle',
+  subtitle = 'Discover our curated collection of premium vehicles',
+  image = '/images/hero/2027-Mercedes-AMG-CLA45.jpg',
+  ctaLabel = 'Browse Inventory',
+  ctaUrl = '/inventory',
+  className
+}: HeroSectionProps) {
   return (
     <section
       className={cn(
@@ -22,7 +34,7 @@ export default function HeroSection({ className }: HeroSectionProps) {
       <div className="absolute inset-0 bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
         <img
-          src="/images/hero-bg.jpg"
+          src={image}
           alt="Luxury vehicles"
           className="w-full h-full object-cover"
         />
@@ -36,14 +48,11 @@ export default function HeroSection({ className }: HeroSectionProps) {
           </Badge>
           
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
-            Find Your Perfect
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-              Vehicle
-            </span>
+            {title}
           </h1>
 
           <p className="text-xl md:text-2xl text-white/80 max-w-2xl mx-auto">
-            Discover our curated collection of premium vehicles. From luxury sedans to powerful SUVs, find the car that matches your lifestyle.
+            {subtitle}
           </p>
 
           {/* Search Bar */}
@@ -65,8 +74,8 @@ export default function HeroSection({ className }: HeroSectionProps) {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button size="lg" className="rounded-full group">
-              <Link href="/inventory">
-                Browse Inventory
+              <Link href={ctaUrl}>
+                {ctaLabel}
                 <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>

@@ -105,12 +105,12 @@ interface WelcomeProps {
 export default function Welcome({ featuredVehicles, latestArrivals, heroSliders, testimonials, latestBlogs }: WelcomeProps) {
 
   const brands = [
-    { id: 1, name: 'Tesla', logo: '/images/brands/tesla.png', vehicleCount: 45 },
-    { id: 2, name: 'BMW', logo: '/images/brands/bmw.png', vehicleCount: 38 },
-    { id: 3, name: 'Mercedes-Benz', logo: '/images/brands/mercedes.png', vehicleCount: 52 },
-    { id: 4, name: 'Audi', logo: '/images/brands/audi.png', vehicleCount: 41 },
-    { id: 5, name: 'Porsche', logo: '/images/brands/porsche.png', vehicleCount: 23 },
-    { id: 6, name: 'Land Rover', logo: '/images/brands/land-rover.png', vehicleCount: 31 },
+    { id: 1, name: 'Tesla', logo: '/images/brands/2025-Tesla-Model-Y-001-1080.jpg', vehicleCount: 45 },
+    { id: 2, name: 'BMW', logo: '/images/brands/2025-BMW-M135-xDrive-005-1080.jpg', vehicleCount: 38 },
+    { id: 3, name: 'Mercedes-Benz', logo: '/images/brands/2023-Mercedes-AMG-A45-S-005-1080.jpg', vehicleCount: 52 },
+    { id: 4, name: 'Audi', logo: '/images/brands/2025-Audi-RS3-Sedan-005-1080.jpg', vehicleCount: 41 },
+    { id: 5, name: 'Porsche', logo: '/images/brands/2025-Porsche-911-GT3-005-1080.jpg', vehicleCount: 23 },
+    { id: 6, name: 'Land Rover', logo: '/images/brands/2025-Land-Rover-Defender-Octa-003-1080.jpg', vehicleCount: 31 },
   ];
 
   const bodyTypes = [
@@ -123,17 +123,16 @@ export default function Welcome({ featuredVehicles, latestArrivals, heroSliders,
   ];
 
   const partners = [
-    { id: 1, name: 'Toyota Financial', logo: '/images/partners/toyota.png' },
-    { id: 2, name: 'BMW Financial', logo: '/images/partners/bmw.png' },
-    { id: 3, name: 'Mercedes-Benz Financial', logo: '/images/partners/mercedes.png' },
-    { id: 4, name: 'Chase Auto', logo: '/images/partners/chase.png' },
-    { id: 5, name: 'Bank of America', logo: '/images/partners/boa.png' },
+    { id: 1, name: 'Toyota Financial', logo: '/images/partners/Toyota_Financial_Services_Logo.jpg' },
+    { id: 2, name: 'BMW Financial', logo: '/images/partners/BMW_Bank.png' },
+    { id: 3, name: 'Mercedes-Benz Financial', logo: '/images/partners/Mercedes-benz.jpg' },
+    { id: 4, name: 'Standard Bank', logo: '/images/partners/Standard-Bank-Logo-1024x538.jpg' },
   ];
 
   const heroSlider = heroSliders?.[0] || {
     title: 'Find Your Dream Vehicle',
     subtitle: 'Browse our premium selection of quality vehicles',
-    image: '/images/hero/default.jpg',
+    image: '/images/hero/2027-Mercedes-AMG-CLA45.jpg',
     ctaLabel: 'Browse Inventory',
     ctaUrl: '/inventory',
   };

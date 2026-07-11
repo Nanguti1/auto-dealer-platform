@@ -7,7 +7,7 @@ import AuthLayout from '@/layouts/auth-layout';
 import GuestLayout from '@/layouts/guest/guest-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Nanguti - DMS';
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
