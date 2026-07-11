@@ -3,14 +3,17 @@ import { Archive, Eye, Pencil, Receipt, RotateCcw } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { formatCurrency, formatDateTime, customerNameFromPayment, vehicleName, userName } from '@/components/admin/payments/helpers';
+import { formatDateTime, customerNameFromPayment, vehicleName, userName } from '@/components/admin/payments/helpers';
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
 import type { PaymentFilters, PaymentPagination, Payment } from '@/components/admin/payments/types';
 import { RowActionsDropdown } from '@/components/admin/shared';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ payments, filters = {} }: { payments: PaymentPagination; filters?: PaymentFilters }) {
+  const formatCurrency = useFormatCurrency();
+  
   const columns: Column<Payment>[] = [
     { key: 'status', label: 'Status', sortable: true, render: (row) => <PaymentStatusBadge status={row.status} /> },
     { key: 'customer', label: 'Customer', render: (row) => <div className="flex items-center gap-3">{row.customer ? <CustomerAvatar customer={row.customer} /> : null}<div><Link href={`/admin/payments/${row.id}`} className="font-medium hover:underline">{customerNameFromPayment(row)}</Link><p className="text-xs text-muted-foreground">{row.customer?.email ?? row.user?.email ?? 'No contact'}</p></div></div> },

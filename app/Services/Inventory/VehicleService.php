@@ -79,7 +79,11 @@ class VehicleService
     /** @param array<int, int> $featureIds */
     public function syncFeatures(Vehicle $vehicle, array $featureIds): Vehicle
     {
-        DB::transaction(fn (): array => $vehicle->features()->sync($featureIds));
+        // Filter out non-integer values and ensure all values are valid integers
+        $validFeatureIds = array_filter($featureIds, fn ($id) => is_numeric($id) && $id > 0);
+        $validFeatureIds = array_map('intval', $validFeatureIds);
+
+        DB::transaction(fn (): array => $vehicle->features()->sync($validFeatureIds));
 
         return $vehicle->refresh();
     }

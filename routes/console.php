@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\ExchangeRateRefreshJob;
 use App\Jobs\GenerateReports;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -31,3 +32,8 @@ Schedule::call(function () {
 Schedule::command('queue:monitor')
     ->everySixHours()
     ->description('Monitor queue health');
+
+// Schedule exchange rate refresh (daily at midnight)
+Schedule::job(new ExchangeRateRefreshJob)
+    ->dailyAt('00:00')
+    ->description('Refresh exchange rates from external API');

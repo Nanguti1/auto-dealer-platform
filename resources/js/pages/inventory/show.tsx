@@ -25,6 +25,7 @@ import { useCompare } from '@/hooks/use-compare';
 import { useRecentlyViewed } from '@/hooks/use-recently-viewed';
 import { useWishlist } from '@/hooks/use-wishlist';
 import PublicLayout from '@/layouts/public/public-layout';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import type { VehicleDetail } from '@/types/vehicle';
 
 interface InventoryShowProps {
@@ -39,6 +40,7 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
     const { toggle: toggleWishlist, isWishlisted } = useWishlist();
     const { toggle: toggleCompare, isInCompare, maxReached } = useCompare();
     const { record } = useRecentlyViewed();
+    const formatPrice = useFormatCurrency();
     const [shareCopied, setShareCopied] = React.useState(false);
     const shouldReduceMotion = useReducedMotion();
 
@@ -68,9 +70,6 @@ export default function InventoryShow({ vehicle: serverVehicle, related: serverR
             record(vehicle.id);
         }
     }, [vehicle?.id, record]);
-
-    const formatPrice = (price: number) =>
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
 
     const formatMileage = (mileage: number) => new Intl.NumberFormat('en-US').format(mileage);
 

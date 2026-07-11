@@ -6,14 +6,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
-
-const applications = [
-    { id: 'FA-2208', vehicle: '2024 Tesla Model S Plaid', status: 'under review', updated: 'Mar 6, 2024', amount: '$89,990', history: ['Application submitted', 'Credit review', 'Lender matching'] },
-    { id: 'FA-2171', vehicle: '2023 BMW X5 xDrive45e', status: 'pre-approved', updated: 'Feb 22, 2024', amount: '$65,990', history: ['Submitted', 'Approved', 'Documents requested'] },
-];
+import { useCurrency } from '@/hooks/use-currency';
 
 export default function FinanceApplicationsPage() {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
+    const { formatPrice } = useCurrency();
+
+    const applications = [
+        { id: 'FA-2208', vehicle: '2024 Tesla Model S Plaid', status: 'under review', updated: 'Mar 6, 2024', amountUSD: 89990, history: ['Application submitted', 'Credit review', 'Lender matching'] },
+        { id: 'FA-2171', vehicle: '2023 BMW X5 xDrive45e', status: 'pre-approved', updated: 'Feb 22, 2024', amountUSD: 65990, history: ['Submitted', 'Approved', 'Documents requested'] },
+    ];
 
     return (
         <DashboardLayout title="Finance Applications" user={auth?.user}>
@@ -29,7 +31,7 @@ export default function FinanceApplicationsPage() {
             <div className="overflow-hidden rounded-2xl border bg-card">
                 {applications.map((application) => (
                     <div key={application.id} className="grid gap-4 border-b p-5 last:border-b-0 lg:grid-cols-[1fr_220px_auto] lg:items-center">
-                        <div><div className="flex flex-wrap items-center gap-2"><h3 className="font-semibold">{application.vehicle}</h3><Badge className="capitalize">{application.status}</Badge></div><p className="mt-1 text-sm text-muted-foreground">{application.id} • Requested {application.amount} • Updated {application.updated}</p></div>
+                        <div><div className="flex flex-wrap items-center gap-2"><h3 className="font-semibold">{application.vehicle}</h3><Badge className="capitalize">{application.status}</Badge></div><p className="mt-1 text-sm text-muted-foreground">{application.id} • Requested {formatPrice(application.amountUSD)} • Updated {application.updated}</p></div>
                         <div className="space-y-1 text-xs text-muted-foreground">{application.history.map((item) => <p key={item}>• {item}</p>)}</div>
                         <Button variant="outline">Upload Documents</Button>
                     </div>

@@ -6,14 +6,16 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
-
-const requests = [
-    { id: 'TR-1042', vehicle: '2021 BMW 330i', status: 'inspection scheduled', updated: 'Mar 4, 2024', estimate: '$28,500', timeline: ['Submitted', 'Valuation', 'Inspection'] },
-    { id: 'TR-1018', vehicle: '2019 Audi Q5', status: 'offer sent', updated: 'Feb 18, 2024', estimate: '$24,200', timeline: ['Submitted', 'Valuation', 'Offer'] },
-];
+import { useCurrency } from '@/hooks/use-currency';
 
 export default function TradeInsPage() {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
+    const { formatPrice } = useCurrency();
+
+    const requests = [
+        { id: 'TR-1042', vehicle: '2021 BMW 330i', status: 'inspection scheduled', updated: 'Mar 4, 2024', estimateUSD: 28500, timeline: ['Submitted', 'Valuation', 'Inspection'] },
+        { id: 'TR-1018', vehicle: '2019 Audi Q5', status: 'offer sent', updated: 'Feb 18, 2024', estimateUSD: 24200, timeline: ['Submitted', 'Valuation', 'Offer'] },
+    ];
 
     return (
         <DashboardLayout title="Trade-In Requests" user={auth?.user}>
@@ -32,7 +34,7 @@ export default function TradeInsPage() {
                         <CardContent className="grid gap-5 p-5 lg:grid-cols-[1fr_260px_auto] lg:items-center">
                             <div>
                                 <div className="flex flex-wrap items-center gap-2"><h3 className="font-semibold">{request.vehicle}</h3><Badge className="capitalize">{request.status}</Badge></div>
-                                <p className="mt-1 text-sm text-muted-foreground">{request.id} • Updated {request.updated} • Estimated value {request.estimate}</p>
+                                <p className="mt-1 text-sm text-muted-foreground">{request.id} • Updated {request.updated} • Estimated value {formatPrice(request.estimateUSD)}</p>
                             </div>
                             <ol className="flex gap-2 text-xs text-muted-foreground">
                                 {request.timeline.map((step) => <li key={step} className="rounded-full bg-muted px-3 py-1">{step}</li>)}

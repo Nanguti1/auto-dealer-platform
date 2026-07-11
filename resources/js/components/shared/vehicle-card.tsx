@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import CompareButton from '@/components/vehicles/compare-button';
 import WishlistButton from '@/components/vehicles/wishlist-button';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { cn } from '@/lib/utils';
 import type { VehicleSummary } from '@/types/vehicle';
 
@@ -25,8 +26,7 @@ export default function VehicleCard({
   onCompareToggle,
   compareDisabled = false,
 }: VehicleCardProps) {
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
+  const formatPrice = useFormatCurrency();
 
   const formatMileage = (mileage: number) => new Intl.NumberFormat('en-US').format(mileage);
 

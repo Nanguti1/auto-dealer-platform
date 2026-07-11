@@ -30,6 +30,59 @@ class UpdateVehicleRequest extends FormRequest
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
             'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:vehicles,slug,'.$vehicle],
             'sale_price' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'cost_price' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'msrp' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'mileage' => ['sometimes', 'nullable', 'integer', 'min:0'],
+            'description' => ['sometimes', 'nullable', 'string'],
+            'features' => ['sometimes', 'nullable', 'array'],
+            'features.*' => ['sometimes', 'nullable', 'integer', 'exists:vehicle_features,id'],
+            'specifications' => ['sometimes', 'nullable', 'array'],
+            'specifications.*.name' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'specifications.*.value' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'metadata' => ['sometimes', 'nullable', 'array'],
+            'is_featured' => ['sometimes', 'nullable', 'boolean'],
+            'is_certified' => ['sometimes', 'nullable', 'boolean'],
+            'acquired_at' => ['sometimes', 'nullable', 'date'],
+            'listed_at' => ['sometimes', 'nullable', 'date'],
+            'sold_at' => ['sometimes', 'nullable', 'date'],
+            'vehicle_category_id' => ['sometimes', 'nullable', 'integer', 'exists:vehicle_categories,id'],
+            'trim_level_id' => ['sometimes', 'nullable', 'integer', 'exists:trim_levels,id'],
+            'body_type_id' => ['sometimes', 'nullable', 'integer', 'exists:body_types,id'],
+            'fuel_type_id' => ['sometimes', 'nullable', 'integer', 'exists:fuel_types,id'],
+            'transmission_type_id' => ['sometimes', 'nullable', 'integer', 'exists:transmission_types,id'],
+            'drive_type_id' => ['sometimes', 'nullable', 'integer', 'exists:drive_types,id'],
+            'engine_type_id' => ['sometimes', 'nullable', 'integer', 'exists:engine_types,id'],
+            'color_id' => ['sometimes', 'nullable', 'integer', 'exists:colors,id'],
+            'interior_color_id' => ['sometimes', 'nullable', 'integer', 'exists:interior_colors,id'],
+            'vehicle_condition_id' => ['sometimes', 'nullable', 'integer', 'exists:vehicle_conditions,id'],
+            'vehicle_status_id' => ['sometimes', 'nullable', 'integer', 'exists:vehicle_statuses,id'],
+            'inventory_status_id' => ['sometimes', 'nullable', 'integer', 'exists:inventory_statuses,id'],
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        // Convert comma-separated features string to array
+        if ($this->has('features') && is_string($this->input('features'))) {
+            $features = array_filter(array_map('trim', explode(',', $this->input('features'))));
+            // Reindex array to ensure sequential keys for validation
+            $features = array_values($features);
+            $this->merge(['features' => $features]);
+        }
+
+        // Ensure array fields are arrays
+        $arrayFields = ['features', 'specifications', 'metadata'];
+        foreach ($arrayFields as $field) {
+            if ($this->has($field) && ! is_array($this->input($field))) {
+                $this->merge([$field => []]);
+            }
+            // Reindex array fields to ensure sequential keys for validation
+            if ($this->has($field) && is_array($this->input($field))) {
+                $this->merge([$field => array_values($this->input($field))]);
+            }
+        }
     }
 }

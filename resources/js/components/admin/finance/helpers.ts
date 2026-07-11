@@ -4,7 +4,8 @@ import { formatDate, formatDateTime } from '@/lib/date-utils';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { FinanceApplication, FinanceUser, FinanceVehicle, PaymentInstallment } from './types';
 
-export { formatDate, formatDateTime, formatCurrency, formatNumber, sharedUserName as userName, sharedVehicleName as vehicleName };
+export { formatDate, formatDateTime, formatNumber, sharedUserName as userName, sharedVehicleName as vehicleName };
+export { formatCurrency };
 
 export function applicantName(application: FinanceApplication): string {
   return application.customer ? customerName(application.customer) : userName(application.user);

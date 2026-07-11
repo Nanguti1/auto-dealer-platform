@@ -2,13 +2,16 @@ import { Link, router } from '@inertiajs/react';
 import { Pencil, Eye, Trash2 } from 'lucide-react';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { formatCurrency, formatDateTime } from '@/components/admin/trade-ins/helpers';
+import { formatDateTime } from '@/components/admin/trade-ins/helpers';
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import type { TradeInValuation, ValuationPagination, TradeInFilters } from '@/components/admin/trade-ins/types';
 import { RowActionsDropdown } from '@/components/admin/shared';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ valuations, filters = {} }: { valuations: ValuationPagination; filters?: TradeInFilters }) {
+  const formatCurrency = useFormatCurrency();
+  
   const columns: Column<TradeInValuation>[] = [
     { key: 'trade_in_request_id', label: 'Trade-In Request', sortable: true, render: (row) => <Link href={`/admin/trade-ins/${row.trade_in_request_id}`} className="font-medium hover:underline">#{row.trade_in_request_id}</Link> },
     { key: 'trade_in_value', label: 'Trade-In Value', sortable: true, render: (row) => formatCurrency(row.trade_in_value) },

@@ -5,7 +5,8 @@ import { formatDate, formatDateTime } from '@/lib/date-utils';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { TradeInRequest, TradeInUser, TradeInVehicle } from './types';
 
-export { formatDate, formatDateTime, formatCurrency, formatNumber, imageUrl, sharedUserName as userName, sharedVehicleName as vehicleName };
+export { formatDate, formatDateTime, formatNumber, imageUrl, sharedUserName as userName, sharedVehicleName as vehicleName };
+export { formatCurrency };
 
 export function tradeInVehicleName(request?: TradeInRequest): string {
   return [request?.year, request?.make, request?.model].filter(Boolean).join(' ') || 'Trade-in vehicle';

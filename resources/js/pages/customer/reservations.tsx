@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import { useCurrency } from '@/hooks/use-currency';
 
 interface Vehicle {
     id: number;
@@ -29,9 +30,7 @@ interface ReservationsProps {
 
 export default function ReservationsPage({ reservations }: ReservationsProps) {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
-
-    const formatPrice = (n: number) =>
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
+    const { formatPrice } = useCurrency();
 
     return (
         <DashboardLayout title="Reservations" user={auth?.user}>

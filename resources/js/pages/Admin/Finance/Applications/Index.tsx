@@ -4,16 +4,18 @@ import * as React from 'react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import FinanceShell from '@/components/admin/finance/finance-shell';
 import FinanceStatusBadge from '@/components/admin/finance/finance-status-badge';
-import { applicantName, deposit, formatCurrency, formatDateTime, monthlyPayment, officerName, term, vehicleName } from '@/components/admin/finance/helpers';
+import { applicantName, deposit, formatDateTime, monthlyPayment, officerName, term, vehicleName } from '@/components/admin/finance/helpers';
 import type { FinanceApplication, FinanceApplicationPagination, FinanceFilters } from '@/components/admin/finance/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { LoadingState, EmptyFinanceApplications, InlineError, RowActionsDropdown } from '@/components/admin/shared';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ financeApplications, filters = {} }: { financeApplications: FinanceApplicationPagination; filters?: FinanceFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
+  const formatCurrency = useFormatCurrency();
 
   const columns: Column<FinanceApplication>[] = [
     { key: 'customer', label: 'Customer', render: (application) => <div className="flex items-center gap-3">{application.customer ? <CustomerAvatar customer={application.customer} /> : null}<div><Link href={`/admin/finance-applications/${application.id}`} className="font-medium hover:underline">{applicantName(application)}</Link><p className="text-xs text-muted-foreground">{application.customer?.email ?? application.user?.email ?? 'No contact'}</p></div></div> },

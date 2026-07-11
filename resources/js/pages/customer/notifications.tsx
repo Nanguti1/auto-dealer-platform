@@ -6,6 +6,7 @@ import { H2 } from '@/components/design-system/typography';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import DashboardLayout from '@/layouts/dashboard/dashboard-layout';
+import { useCurrency } from '@/hooks/use-currency';
 import type { CustomerNotification } from '@/types/vehicle';
 
 interface NotificationsProps {
@@ -14,11 +15,12 @@ interface NotificationsProps {
 
 export default function NotificationsPage({ notifications = [] }: NotificationsProps) {
     const { auth } = usePage().props as { auth?: { user?: { name?: string; email?: string } } };
+    const { formatPrice } = useCurrency();
 
     const items: CustomerNotification[] = notifications.length
         ? notifications
         : [
-              { id: 1, title: 'Price Drop Alert', message: 'Tesla Model S price reduced by $2,000', read: false, createdAt: '2024-03-01T10:00:00Z' },
+              { id: 1, title: 'Price Drop Alert', message: `Tesla Model S price reduced by ${formatPrice(2000)}`, read: false, createdAt: '2024-03-01T10:00:00Z' },
               { id: 2, title: 'New Match Found', message: 'A BMW X5 matching your saved search is now available.', read: false, createdAt: '2024-02-28T14:30:00Z' },
               { id: 3, title: 'Reservation Confirmed', message: 'Your reservation for the Porsche 911 has been confirmed.', read: true, createdAt: '2024-02-25T09:00:00Z' },
           ];

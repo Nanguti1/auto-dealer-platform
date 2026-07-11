@@ -4,14 +4,17 @@ import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import { customerName } from '@/components/admin/customers/helpers';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { formatCurrency, formatDateTime, vehicleName } from '@/components/admin/payments/helpers';
+import { formatDateTime, vehicleName } from '@/components/admin/payments/helpers';
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
 import type { InvoiceFilters, InvoicePagination, Invoice } from '@/components/admin/payments/types';
 import { RowActionsDropdown } from '@/components/admin/shared';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ invoices, filters = {} }: { invoices: InvoicePagination; filters?: InvoiceFilters }) {
+  const formatCurrency = useFormatCurrency();
+  
   const columns: Column<Invoice>[] = [
     { key: 'status', label: 'Status', sortable: true, render: (row) => <PaymentStatusBadge status={row.status} /> },
     { key: 'invoice_number', label: 'Invoice #', sortable: true, render: (row) => row.invoice_number ?? `INV-${row.id}` },

@@ -3,14 +3,17 @@ import { Eye, RotateCcw } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { formatCurrency, formatDateTime, userName } from '@/components/admin/payments/helpers';
+import { formatDateTime, userName } from '@/components/admin/payments/helpers';
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import PaymentStatusBadge from '@/components/admin/payments/payment-status-badge';
 import type { RefundFilters, RefundPagination, Refund } from '@/components/admin/payments/types';
 import { RowActionsDropdown } from '@/components/admin/shared';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ refunds, filters = {} }: { refunds: RefundPagination; filters?: RefundFilters }) {
+  const formatCurrency = useFormatCurrency();
+  
   const columns: Column<Refund>[] = [
     { key: 'status', label: 'Status', sortable: true, render: (row) => <PaymentStatusBadge status={row.status} /> },
     { key: 'payment', label: 'Original payment', sortable: true, render: (row) => <div><Link href={`/admin/payments/${row.payment_id}`} className="font-medium hover:underline">Payment #{row.payment_id}</Link><p className="text-xs text-muted-foreground">{formatCurrency(row.original_payment?.amount)}</p></div> },

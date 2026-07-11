@@ -19,6 +19,7 @@ import { useCompare } from '@/hooks/use-compare';
 import { useSavedSearches } from '@/hooks/use-saved-searches';
 import { useWishlist } from '@/hooks/use-wishlist';
 import PublicLayout from '@/layouts/public/public-layout';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import type { FilterOptions, InventoryFilters, PaginatedVehicles, VehicleSummary } from '@/types/vehicle';
 
 interface InventoryIndexProps {
@@ -45,6 +46,7 @@ return 'grid';
     const { toggle: toggleWishlist, isWishlisted } = useWishlist();
     const { toggle: toggleCompare, isInCompare, ids: compareIds, maxReached } = useCompare();
     const { save: saveSearch } = useSavedSearches();
+    const formatPrice = useFormatCurrency();
 
     React.useEffect(() => {
         if (typeof window !== 'undefined') {
@@ -203,7 +205,7 @@ return 'grid';
                                                         <Badge variant="secondary" className="capitalize">{vehicle.condition ?? 'available'}</Badge>
                                                         <h3 className="text-xl font-semibold group-hover:text-primary"><Link href={`/inventory/${vehicle.slug}`}>{vehicle.name}</Link></h3>
                                                         <p className="text-sm text-muted-foreground">{vehicle.year} • {vehicle.mileage.toLocaleString()} mi • {vehicle.fuelType} • {vehicle.transmission}</p>
-                                                        <p className="text-2xl font-bold">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(vehicle.price)}</p>
+                                                        <p className="text-2xl font-bold">{formatPrice(vehicle.price)}</p>
                                                     </div>
                                                     <div className="flex items-center gap-2 md:flex-col md:justify-center">
                                                         <Button asChild><Link href={`/inventory/${vehicle.slug}`}>View Details</Link></Button>

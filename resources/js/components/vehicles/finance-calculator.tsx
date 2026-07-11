@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { cn } from '@/lib/utils';
 
 interface FinanceCalculatorProps {
@@ -11,6 +12,7 @@ interface FinanceCalculatorProps {
 }
 
 export default function FinanceCalculator({ defaultPrice = 50000, className }: FinanceCalculatorProps) {
+    const { formatPrice } = useCurrency();
     const [price, setPrice] = React.useState(defaultPrice);
     const [downPayment, setDownPayment] = React.useState(Math.round(defaultPrice * 0.1));
     const [rate, setRate] = React.useState(5.9);
@@ -24,9 +26,6 @@ export default function FinanceCalculator({ defaultPrice = 50000, className }: F
             : (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, term)) / (Math.pow(1 + monthlyRate, term) - 1);
     const totalPayment = monthlyPayment * term;
     const totalInterest = totalPayment - loanAmount;
-
-    const format = (n: number) =>
-        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
 
     return (
         <Card className={cn(className)}>
@@ -57,18 +56,18 @@ export default function FinanceCalculator({ defaultPrice = 50000, className }: F
 
                 <div className="rounded-xl bg-primary/5 p-5 text-center">
                     <p className="text-sm text-muted-foreground">Estimated Monthly Payment</p>
-                    <p className="text-3xl font-bold tracking-tight text-primary">{format(monthlyPayment)}</p>
+                    <p className="text-3xl font-bold tracking-tight text-primary">{formatPrice(monthlyPayment)}</p>
                     <p className="mt-1 text-xs text-muted-foreground">per month for {term} months</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <p className="text-muted-foreground">Loan Amount</p>
-                        <p className="font-semibold">{format(loanAmount)}</p>
+                        <p className="font-semibold">{formatPrice(loanAmount)}</p>
                     </div>
                     <div>
                         <p className="text-muted-foreground">Total Interest</p>
-                        <p className="font-semibold">{format(totalInterest)}</p>
+                        <p className="font-semibold">{formatPrice(totalInterest)}</p>
                     </div>
                 </div>
 

@@ -87,7 +87,47 @@ trait ManagesEloquentModels
      */
     public function create(array $data): EloquentModel
     {
-        return DB::transaction(fn (): EloquentModel => $this->modelClass()::query()->create($data));
+        return DB::transaction(function () use ($data): EloquentModel {
+            // Separate relationship data from model data
+            $modelData = $data;
+            $features = null;
+            $specifications = null;
+
+            if (isset($data['features']) && is_array($data['features'])) {
+                $features = $data['features'];
+                unset($modelData['features']);
+            }
+
+            if (isset($data['specifications']) && is_array($data['specifications'])) {
+                $specifications = $data['specifications'];
+                unset($modelData['specifications']);
+            }
+
+            $model = $this->modelClass()::query()->create($modelData);
+
+            // Handle features array for Vehicle model
+            if ($model instanceof Vehicle && $features !== null) {
+                // Filter and validate feature IDs
+                $validFeatureIds = array_filter($features, fn ($id) => is_numeric($id) && $id > 0);
+                $validFeatureIds = array_map('intval', $validFeatureIds);
+
+                if (! empty($validFeatureIds)) {
+                    $model->features()->sync($validFeatureIds);
+                }
+            }
+
+            // Handle specifications array for Vehicle model
+            if ($model instanceof Vehicle && $specifications !== null) {
+                // Reindex specifications to ensure sequential keys
+                $specifications = array_values($specifications);
+
+                if (! empty($specifications)) {
+                    $model->specifications()->createMany($specifications);
+                }
+            }
+
+            return $model->refresh();
+        });
     }
 
     /**
@@ -96,6 +136,30 @@ trait ManagesEloquentModels
     public function update(EloquentModel $model, array $data): EloquentModel
     {
         return DB::transaction(function () use ($model, $data): EloquentModel {
+            // Handle features array for Vehicle model
+            if ($model instanceof Vehicle && isset($data['features']) && is_array($data['features'])) {
+                $features = $data['features'];
+                unset($data['features']);
+
+                // Filter and validate feature IDs
+                $validFeatureIds = array_filter($features, fn ($id) => is_numeric($id) && $id > 0);
+                $validFeatureIds = array_map('intval', $validFeatureIds);
+
+                $model->features()->sync($validFeatureIds);
+            }
+
+            // Handle specifications array for Vehicle model
+            if ($model instanceof Vehicle && isset($data['specifications']) && is_array($data['specifications'])) {
+                $specifications = $data['specifications'];
+                unset($data['specifications']);
+
+                // Reindex specifications to ensure sequential keys
+                $specifications = array_values($specifications);
+
+                $model->specifications()->delete();
+                $model->specifications()->createMany($specifications);
+            }
+
             $model->update($data);
 
             return $model->refresh();

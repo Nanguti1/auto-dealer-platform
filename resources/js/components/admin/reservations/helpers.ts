@@ -3,7 +3,8 @@ import { formatDate, formatDateTime } from '@/lib/date-utils';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
 import type { ReservationRecord } from './types';
 
-export { formatDate, formatDateTime, formatCurrency, formatNumber, sharedVehicleName as vehicleName };
+export { formatDate, formatDateTime, formatNumber, sharedVehicleName as vehicleName };
+export { formatCurrency };
 
 export function reservationVehicleName(reservation?: ReservationRecord): string {
   if (!reservation?.vehicle) {

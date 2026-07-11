@@ -3,10 +3,11 @@ import { Calendar, Car, DollarSign, Eye, Pencil, Trash2, User } from 'lucide-rea
 import * as React from 'react';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { customerName, formatCurrency, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
+import { customerName, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
 import ReservationShell from '@/components/admin/reservations/reservation-shell';
 import type { ReservationFilters, ReservationPagination, ReservationRecord } from '@/components/admin/reservations/types';
 import { LoadingState, EmptyReservations, InlineError, RowActionsDropdown } from '@/components/admin/shared';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import admin from '@/routes/admin';
@@ -14,6 +15,8 @@ import admin from '@/routes/admin';
 export default function Index({ reservations, filters = {} }: { reservations: ReservationPagination; filters?: ReservationFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
+  const formatCurrency = useFormatCurrency();
+  
   const columns: Column<ReservationRecord>[] = [
     { 
       key: 'id', 

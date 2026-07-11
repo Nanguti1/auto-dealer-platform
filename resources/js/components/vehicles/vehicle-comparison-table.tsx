@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { Check, Minus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useCurrency } from '@/hooks/use-currency';
 import { cn } from '@/lib/utils';
 import type { VehicleDetail } from '@/types/vehicle';
 
@@ -10,21 +11,17 @@ interface VehicleComparisonTableProps {
     className?: string;
 }
 
-function formatPrice(price: number): string {
-    return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(price);
-}
-
 function formatMileage(mileage: number): string {
     return new Intl.NumberFormat('en-US').format(mileage);
 }
 
 type Row = {
     label: string;
-    getValue: (v: VehicleDetail) => string | number | boolean | null | undefined;
+    getValue: (v: VehicleDetail, formatPrice: (price: number) => string) => string | number | boolean | null | undefined;
     highlight?: boolean;
 };
 
-const rows: Row[] = [
+const getRows = (formatPrice: (price: number) => string): Row[] => [
     { label: 'Price', getValue: (v) => formatPrice(v.price), highlight: true },
     { label: 'Year', getValue: (v) => v.year },
     { label: 'Mileage', getValue: (v) => `${formatMileage(v.mileage)} mi` },
@@ -40,6 +37,9 @@ const rows: Row[] = [
 ];
 
 export default function VehicleComparisonTable({ vehicles, onRemove, className }: VehicleComparisonTableProps) {
+    const { formatPrice } = useCurrency();
+    const rows = getRows(formatPrice);
+
     if (vehicles.length === 0) {
         return null;
     }
@@ -84,7 +84,7 @@ export default function VehicleComparisonTable({ vehicles, onRemove, className }
                                 {row.label}
                             </td>
                             {vehicles.map((vehicle) => {
-                                const value = row.getValue(vehicle);
+                                const value = row.getValue(vehicle, formatPrice);
 
                                 return (
                                     <td

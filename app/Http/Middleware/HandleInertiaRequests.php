@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Currency\CurrencyService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,6 +36,8 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $currencyService = app(CurrencyService::class);
+
         return [
             ...parent::share($request),
             'name' => config('app.name'),
@@ -42,6 +45,12 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'currency' => [
+                'country' => $currencyService->getCountry(),
+                'currency' => $currencyService->getCurrentCurrency(),
+                'currencySymbol' => $currencyService->getCurrentSymbol(),
+                'exchangeRate' => $currencyService->getCurrentExchangeRate(),
+            ],
         ];
     }
 }

@@ -4,13 +4,16 @@ import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import { customerName } from '@/components/admin/customers/helpers';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { formatCurrency, formatDateTime } from '@/components/admin/payments/helpers';
+import { formatDateTime } from '@/components/admin/payments/helpers';
 import PaymentShell from '@/components/admin/payments/payment-shell';
 import type { ReceiptFilters, ReceiptPagination, Receipt } from '@/components/admin/payments/types';
 import { RowActionsDropdown } from '@/components/admin/shared';
+import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
 
 export default function Index({ receipts, filters = {} }: { receipts: ReceiptPagination; filters?: ReceiptFilters }) {
+  const formatCurrency = useFormatCurrency();
+  
   const columns: Column<Receipt>[] = [
     { key: 'receipt_number', label: 'Receipt #', sortable: true, render: (row) => row.receipt_number ?? `RCP-${row.id}` },
     { key: 'customer', label: 'Customer', render: (row) => <div className="flex items-center gap-3">{row.customer ? <CustomerAvatar customer={row.customer} /> : null}<div><Link href={`/admin/receipts/${row.id}`} className="font-medium hover:underline">{customerName(row.customer)}</Link><p className="text-xs text-muted-foreground">{row.customer?.email ?? 'No contact'}</p></div></div> },

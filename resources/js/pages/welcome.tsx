@@ -30,6 +30,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import GuestLayout from '@/layouts/guest/guest-layout';
+import { useCurrency } from '@/hooks/use-currency';
 
 interface WelcomeProps {
   featuredVehicles: Array<{
@@ -103,6 +104,12 @@ interface WelcomeProps {
 }
 
 export default function Welcome({ featuredVehicles, latestArrivals, heroSliders, testimonials, latestBlogs }: WelcomeProps) {
+  const { getSymbol, getCurrencyCode } = useCurrency();
+  const currencySymbol = getSymbol();
+  const currencyCode = getCurrencyCode();
+
+  // Only get currency symbol on client side to avoid build issues
+  const displayCurrencySymbol = typeof window !== 'undefined' ? currencySymbol : '$';
 
   const brands = [
     { id: 1, name: 'Tesla', logo: '/images/brands/2025-Tesla-Model-Y-001-1080.jpg', vehicleCount: 45 },
@@ -180,10 +187,10 @@ export default function Welcome({ featuredVehicles, latestArrivals, heroSliders,
                     <Label>Price Range</Label>
                     <select className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
                       <option value="">Any Price</option>
-                      <option value="0-30000">Under $30,000</option>
-                      <option value="30000-50000">$30,000 - $50,000</option>
-                      <option value="50000-75000">$50,000 - $75,000</option>
-                      <option value="75000+">$75,000+</option>
+                      <option value="0-30000">Under {currencySymbol}30,000</option>
+                      <option value="30000-50000">{currencySymbol}30,000 - {currencySymbol}50,000</option>
+                      <option value="50000-75000">{currencySymbol}50,000 - {currencySymbol}75,000</option>
+                      <option value="75000+">{currencySymbol}75,000+</option>
                     </select>
                   </div>
                   <div className="flex items-end">
