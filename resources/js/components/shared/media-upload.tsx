@@ -19,11 +19,12 @@ interface ImageDropzoneProps {
     maxSize?: number; // Max file size in bytes
     error?: string;
     disabled?: boolean;
-    name?: string;
+    inputRef?: React.RefObject<HTMLInputElement>;
 }
 
-function ImageDropzone({ onFilesSelected, className, multiple = true, accept = 'image/*', previewUrl, maxSize = 10 * 1024 * 1024, error, disabled = false, name = 'media' }: ImageDropzoneProps) {
-    const inputRef = React.useRef<HTMLInputElement>(null);
+function ImageDropzone({ onFilesSelected, className, multiple = true, accept = 'image/*', previewUrl, maxSize = 10 * 1024 * 1024, error, disabled = false, inputRef }: ImageDropzoneProps) {
+    const internalInputRef = React.useRef<HTMLInputElement>(null);
+    const actualInputRef = inputRef || internalInputRef;
     const [dragging, setDragging] = React.useState(false);
     const [preview, setPreview] = React.useState<string | null>(previewUrl ?? null);
     const [validationError, setValidationError] = React.useState<string | null>(null);
@@ -66,8 +67,8 @@ function ImageDropzone({ onFilesSelected, className, multiple = true, accept = '
     const clearPreview = () => {
         setPreview(null);
         setValidationError(null);
-        if (inputRef.current) {
-            inputRef.current.value = '';
+        if (actualInputRef.current) {
+            actualInputRef.current.value = '';
         }
     };
 
@@ -109,10 +110,10 @@ function ImageDropzone({ onFilesSelected, className, multiple = true, accept = '
             <div
                 role={disabled ? undefined : 'button'}
                 tabIndex={disabled ? undefined : 0}
-                onClick={() => !disabled && inputRef.current?.click()}
+                onClick={() => !disabled && actualInputRef.current?.click()}
                 onKeyDown={(event) => {
                     if (!disabled && (event.key === 'Enter' || event.key === ' ')) {
-inputRef.current?.click();
+actualInputRef.current?.click();
 }
                 }}
                 onDragOver={(event) => {
@@ -140,7 +141,7 @@ inputRef.current?.click();
                 aria-label={disabled ? undefined : 'Upload images'}
                 aria-disabled={disabled}
             >
-                <input ref={inputRef} type="file" accept={accept} multiple={multiple} disabled={disabled} className="hidden" name={name} onChange={(event) => handleFiles(event.target.files)} />
+                {inputRef ? null : <input ref={actualInputRef} type="file" accept={accept} multiple={multiple} disabled={disabled} className="hidden" onChange={(event) => handleFiles(event.target.files)} />}
                 <div className={cn('mb-4 rounded-full bg-background p-4 shadow-sm transition-transform', !disabled && 'group-hover:scale-105')}>
                     <UploadCloud className="size-7 text-primary" />
                 </div>
@@ -207,6 +208,10 @@ interface MediaUploadProps {
 function MediaUpload({ name = 'media', value = [], onChange, existingMedia = [], className }: MediaUploadProps) {
     const [items, setItems] = React.useState<MediaUploadItem[]>(value);
 
+    React.useEffect(() => {
+        setItems(value);
+    }, [value]);
+
     const update = (next: MediaUploadItem[]) => {
         setItems(next);
         onChange?.(next);
@@ -224,7 +229,7 @@ function MediaUpload({ name = 'media', value = [], onChange, existingMedia = [],
 
     return (
         <div className={cn('space-y-4', className)}>
-            <ImageDropzone onFilesSelected={addFiles} name={name} />
+            <ImageDropzone onFilesSelected={addFiles} />
             {items.length > 0 ? <ImageSortableGrid items={items} onChange={update} /> : (
                 <div className="flex items-center justify-center gap-2 rounded-2xl border bg-card p-4 text-sm text-muted-foreground">
                     <ImagePlus className="size-4" /> No media selected yet.

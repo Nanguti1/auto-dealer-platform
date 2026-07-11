@@ -2,7 +2,7 @@ import { Form } from '@inertiajs/react';
 import { Save } from 'lucide-react';
 import * as React from 'react';
 import InputError from '@/components/input-error';
-import { MediaUpload } from '@/components/shared/media-upload';
+import { MediaUpload, MediaUploadItem } from '@/components/shared/media-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -116,7 +116,14 @@ export default function VehicleForm({
 
   return (
     <Form action={action} method="post" encType="multipart/form-data" className="space-y-6">
-      {({ errors, processing }) => (
+      {({ errors, processing, data, setData }) => {
+        const handleMediaChange = (items: MediaUploadItem[]) => {
+          const files = items.map(item => item.file).filter((file): file is File => file !== undefined);
+          // Update Inertia form data with the files
+          setData('media', files);
+        };
+
+        return (
         <>
           <input type="hidden" name="_method" value={method === 'post' ? 'post' : 'put'} />
           <input type="hidden" name="slug" value={slug} />
@@ -183,7 +190,11 @@ export default function VehicleForm({
             <TabsContent value="Media" className="grid gap-4 rounded-xl border bg-card p-4">
               <div className="space-y-2">
                 <Label htmlFor="media">Media</Label>
-                <MediaUpload name="media" existingMedia={vehicle?.media} />
+                <MediaUpload 
+                  name="media" 
+                  existingMedia={vehicle?.media} 
+                  onChange={handleMediaChange}
+                />
                 <InputError message={errors.media} />
               </div>
             </TabsContent>
@@ -223,7 +234,8 @@ export default function VehicleForm({
             </Button>
           </div>
         </>
-      )}
+        );
+      }}
     </Form>
   );
 }
