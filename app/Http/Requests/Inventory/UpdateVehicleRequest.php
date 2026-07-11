@@ -87,6 +87,14 @@ class UpdateVehicleRequest extends FormRequest
                 $this->merge([$field => array_values($this->input($field))]);
             }
         }
+
+        // Handle media files - ensure they're always an array
+        if ($this->hasFile('media')) {
+            $mediaFiles = $this->file('media');
+            if (! is_array($mediaFiles)) {
+                $this->merge(['media' => [$mediaFiles]]);
+            }
+        }
     }
 
     /**
