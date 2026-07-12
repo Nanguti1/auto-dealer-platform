@@ -1,5 +1,5 @@
 import InventoryShell, { BackButton } from '@/components/admin/inventory/inventory-shell';
-import type { AdminVehicle } from '@/components/admin/inventory/types';
+import type { AdminVehicle, AdminFeature } from '@/components/admin/inventory/types';
 import VehicleForm from '@/components/admin/inventory/vehicle-form';
 import admin from '@/routes/admin';
 
@@ -20,6 +20,7 @@ interface EditProps {
   vehicleConditions: Array<{ value: number; label: string }>;
   vehicleStatuses: Array<{ value: number; label: string }>;
   inventoryStatuses: Array<{ value: number; label: string }>;
+  features: AdminFeature[];
 }
 
 export default function Edit({
@@ -39,6 +40,7 @@ export default function Edit({
   vehicleConditions,
   vehicleStatuses,
   inventoryStatuses,
+  features,
 }: EditProps) {
   return (
     <InventoryShell title="Edit Vehicle" description="Update inventory details and publication settings." actions={<BackButton href={admin.vehicles.show(vehicle.id).url} />}>
@@ -61,6 +63,7 @@ export default function Edit({
         vehicleConditions={vehicleConditions}
         vehicleStatuses={vehicleStatuses}
         inventoryStatuses={inventoryStatuses}
+        features={features}
       />
     </InventoryShell>
   );

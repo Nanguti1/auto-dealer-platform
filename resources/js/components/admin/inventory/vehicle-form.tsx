@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
 import { RichTextEditor } from '@/components/ui/rich-text-editor';
 import { generateSlug } from '@/lib/slug-utils';
-import type { AdminVehicle } from './types';
+import type { AdminVehicle, AdminFeature } from './types';
 
 const tabs = ['Basic Information', 'Specifications', 'Features', 'Pricing', 'Media', 'SEO', 'Publication'];
 
@@ -73,6 +73,7 @@ export default function VehicleForm({
   vehicleConditions = [],
   vehicleStatuses = [],
   inventoryStatuses = [],
+  features = [],
 }: {
   vehicle?: AdminVehicle;
   action: string;
@@ -92,6 +93,7 @@ export default function VehicleForm({
   vehicleConditions?: Array<{ value: number; label: string }>;
   vehicleStatuses?: Array<{ value: number; label: string }>;
   inventoryStatuses?: Array<{ value: number; label: string }>;
+  features?: AdminFeature[];
 }) {
   const [currentTab, setCurrentTab] = React.useState(tabs[0]);
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!vehicle?.slug);
@@ -120,7 +122,7 @@ export default function VehicleForm({
     vehicle_condition_id: vehicle?.vehicle_condition_id ?? '',
     vehicle_status_id: vehicle?.vehicle_status_id ?? '',
     inventory_status_id: vehicle?.inventory_status_id ?? '',
-    features: vehicle?.features?.join(', ') ?? '',
+    features: vehicle?.features ?? [],
     cost_price: vehicle?.cost_price ?? '',
     sale_price: vehicle?.sale_price ?? '',
     msrp: vehicle?.msrp ?? '',
@@ -160,6 +162,15 @@ export default function VehicleForm({
     const files = items.map(item => item.file).filter((file): file is File => file !== undefined);
     console.log('Media files selected:', files);
     setData('media', files);
+  };
+
+  const handleFeatureToggle = (featureId: number) => {
+    const currentFeatures = data.features as number[];
+    if (currentFeatures.includes(featureId)) {
+      setData('features', currentFeatures.filter(id => id !== featureId));
+    } else {
+      setData('features', [...currentFeatures, featureId]);
+    }
   };
 
   const handleTabChange = (tab: string) => {
@@ -288,14 +299,32 @@ export default function VehicleForm({
         </TabsContent>
 
         <TabsContent value="Features" className="grid gap-4 rounded-xl border bg-card p-4">
-          <div className="space-y-2">
+          <div className="space-y-4">
             <Label htmlFor="features">Features</Label>
-            <Textarea 
-              id="features" 
-              name="features" 
-              value={data.features} 
-              onChange={(e) => setData('features', e.target.value)} 
-            />
+            {features.length === 0 ? (
+              <div className="text-sm text-muted-foreground">
+                No features available. Please seed the features table first.
+              </div>
+            ) : (
+              <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                {features.map((feature) => (
+                  <div key={feature.id} className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id={`feature-${feature.id}`}
+                      name="features[]"
+                      value={feature.id}
+                      checked={(data.features as number[]).includes(feature.id)}
+                      onChange={() => handleFeatureToggle(feature.id)}
+                      className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <Label htmlFor={`feature-${feature.id}`} className="cursor-pointer">
+                      {feature.name || feature.title}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            )}
             <InputError message={errors.features} />
           </div>
 

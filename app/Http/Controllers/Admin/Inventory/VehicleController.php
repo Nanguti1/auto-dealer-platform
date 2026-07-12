@@ -22,6 +22,7 @@ use App\Models\TrimLevel;
 use App\Models\Vehicle;
 use App\Models\VehicleCategory;
 use App\Models\VehicleCondition;
+use App\Models\VehicleFeature;
 use App\Models\VehicleStatus;
 use App\Services\Inventory\VehicleService;
 use Illuminate\Http\RedirectResponse;
@@ -109,6 +110,14 @@ class VehicleController extends Controller
                 'value' => $status->id,
                 'label' => $status->name,
             ]),
+            'features' => VehicleFeature::active()->get()->map(fn ($feature) => [
+                'id' => $feature->id,
+                'name' => $feature->name,
+                'title' => $feature->name,
+                'slug' => $feature->slug,
+                'category' => $feature->category,
+                'is_active' => $feature->is_active,
+            ]),
         ]);
     }
 
@@ -155,7 +164,7 @@ class VehicleController extends Controller
     {
         $this->authorize('update', $vehicle);
 
-        $vehicle->load('media');
+        $vehicle->load(['media', 'features']);
 
         // Format media data for MediaUpload component
         $media = $vehicle->media->map(fn ($mediaItem) => [
@@ -164,8 +173,12 @@ class VehicleController extends Controller
             'alt' => $mediaItem->alt_text,
         ])->toArray();
 
+        // Format features data for checkbox selection
+        $featureIds = $vehicle->features->pluck('id')->toArray();
+
         $vehicleArray = $vehicle->toArray();
         $vehicleArray['media'] = $media ?? [];
+        $vehicleArray['features'] = $featureIds ?? [];
 
         return Inertia::render('Admin/Inventory/Vehicles/Edit', [
             'vehicle' => $vehicleArray,
@@ -229,6 +242,14 @@ class VehicleController extends Controller
             'inventoryStatuses' => InventoryStatus::active()->get()->map(fn ($status) => [
                 'value' => $status->id,
                 'label' => $status->name,
+            ]),
+            'features' => VehicleFeature::active()->get()->map(fn ($feature) => [
+                'id' => $feature->id,
+                'name' => $feature->name,
+                'title' => $feature->name,
+                'slug' => $feature->slug,
+                'category' => $feature->category,
+                'is_active' => $feature->is_active,
             ]),
         ]);
     }

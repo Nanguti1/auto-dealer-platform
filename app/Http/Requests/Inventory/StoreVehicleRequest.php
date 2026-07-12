@@ -69,14 +69,6 @@ class StoreVehicleRequest extends FormRequest
      */
     protected function prepareForValidation(): void
     {
-        // Convert comma-separated features string to array
-        if ($this->has('features') && is_string($this->input('features'))) {
-            $features = array_filter(array_map('trim', explode(',', $this->input('features'))));
-            // Reindex array to ensure sequential keys for validation
-            $features = array_values($features);
-            $this->merge(['features' => $features]);
-        }
-
         // Ensure array fields are arrays
         $arrayFields = ['features', 'specifications', 'metadata'];
         foreach ($arrayFields as $field) {

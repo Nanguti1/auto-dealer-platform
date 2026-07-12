@@ -1,6 +1,7 @@
 import InventoryShell, { BackButton } from '@/components/admin/inventory/inventory-shell';
 import VehicleForm from '@/components/admin/inventory/vehicle-form';
 import admin from '@/routes/admin';
+import type { AdminFeature } from '@/components/admin/inventory/types';
 
 interface CreateProps {
   branches: Array<{ value: number; label: string }>;
@@ -18,6 +19,7 @@ interface CreateProps {
   vehicleConditions: Array<{ value: number; label: string }>;
   vehicleStatuses: Array<{ value: number; label: string }>;
   inventoryStatuses: Array<{ value: number; label: string }>;
+  features: AdminFeature[];
 }
 
 export default function Create({
@@ -36,6 +38,7 @@ export default function Create({
   vehicleConditions,
   vehicleStatuses,
   inventoryStatuses,
+  features,
 }: CreateProps) {
   return (
     <InventoryShell title="Create Vehicle" description="Add a new unit to inventory." actions={<BackButton />}>
@@ -56,6 +59,7 @@ export default function Create({
         vehicleConditions={vehicleConditions}
         vehicleStatuses={vehicleStatuses}
         inventoryStatuses={inventoryStatuses}
+        features={features}
       />
     </InventoryShell>
   );

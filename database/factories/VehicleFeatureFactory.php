@@ -26,8 +26,10 @@ class VehicleFeatureFactory extends Factory
             'Ventilated Seats', 'Premium Audio', 'Wireless Charging', '360-Degree Camera',
         ];
 
+        $featureName = fake()->unique()->randomElement($features);
+
         return [
-            'name' => fake()->randomElement($features),
+            'name' => $featureName,
             'slug' => fake()->slug(),
             'category' => fake()->randomElement($categories),
             'is_active' => fake()->boolean(80),
