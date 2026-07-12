@@ -124,7 +124,10 @@ class VehicleController extends Controller
             $this->service->handleMediaUploads($vehicle, $mediaFiles);
         }
 
-        return redirect()->route('admin.vehicles.index')->with('success', 'Created successfully.');
+        $isDraft = $request->boolean('save_as_draft');
+        $message = $isDraft ? 'Draft saved successfully.' : 'Created successfully.';
+
+        return redirect()->route('admin.vehicles.edit', $vehicle)->with('success', $message);
     }
 
     public function show(Vehicle $vehicle): Response
@@ -242,7 +245,10 @@ class VehicleController extends Controller
             $this->service->handleMediaUploads($vehicle, $mediaFiles);
         }
 
-        return back()->with('success', 'Updated successfully.');
+        $isDraft = $request->boolean('save_as_draft');
+        $message = $isDraft ? 'Draft saved successfully.' : 'Updated successfully.';
+
+        return back()->with('success', $message);
     }
 
     public function destroy(Vehicle $vehicle): RedirectResponse

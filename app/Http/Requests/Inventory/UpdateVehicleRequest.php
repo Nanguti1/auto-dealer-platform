@@ -60,6 +60,7 @@ class UpdateVehicleRequest extends FormRequest
             'inventory_status_id' => ['sometimes', 'nullable', 'integer', 'exists:inventory_statuses,id'],
             'media' => ['sometimes', 'nullable', 'array'],
             'media.*' => ['sometimes', 'nullable', 'file', 'image', 'max:10240'],
+            'save_as_draft' => ['sometimes', 'boolean'],
         ];
     }
 
