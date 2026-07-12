@@ -114,6 +114,11 @@ class Vehicle extends Model
         return $this->hasMany(VehicleGallery::class);
     }
 
+    public function media(): HasMany
+    {
+        return $this->hasMany(VehicleGallery::class);
+    }
+
     public function videos(): HasMany
     {
         return $this->hasMany(VehicleVideo::class);

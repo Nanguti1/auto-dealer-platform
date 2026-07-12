@@ -71,8 +71,20 @@ class VehicleController extends Controller
     {
         $this->authorize('view', $vehicle);
 
+        $vehicle->load('media');
+
+        // Format media data for MediaUpload component
+        $media = $vehicle->media->map(fn ($mediaItem) => [
+            'id' => $mediaItem->id,
+            'url' => $mediaItem->path,
+            'alt' => $mediaItem->alt_text,
+        ])->toArray();
+
+        $vehicleArray = $vehicle->toArray();
+        $vehicleArray['media'] = $media ?? [];
+
         return Inertia::render('Admin/Inventory/Vehicles/Show', [
-            'vehicle' => $vehicle,
+            'vehicle' => $vehicleArray,
         ]);
     }
 
@@ -80,8 +92,20 @@ class VehicleController extends Controller
     {
         $this->authorize('update', $vehicle);
 
+        $vehicle->load('media');
+
+        // Format media data for MediaUpload component
+        $media = $vehicle->media->map(fn ($mediaItem) => [
+            'id' => $mediaItem->id,
+            'url' => $mediaItem->path,
+            'alt' => $mediaItem->alt_text,
+        ])->toArray();
+
+        $vehicleArray = $vehicle->toArray();
+        $vehicleArray['media'] = $media ?? [];
+
         return Inertia::render('Admin/Inventory/Vehicles/Edit', [
-            'vehicle' => $vehicle,
+            'vehicle' => $vehicleArray,
             'branches' => Branch::active()->get()->map(fn ($branch) => [
                 'value' => $branch->id,
                 'label' => $branch->name,

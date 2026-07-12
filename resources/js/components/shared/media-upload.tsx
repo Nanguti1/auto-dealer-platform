@@ -206,11 +206,20 @@ interface MediaUploadProps {
 }
 
 function MediaUpload({ name = 'media', value = [], onChange, existingMedia = [], className }: MediaUploadProps) {
-    const [items, setItems] = React.useState<MediaUploadItem[]>(value);
+    const [items, setItems] = React.useState<MediaUploadItem[]>([]);
 
+    // Initialize with existing media on mount (only run once)
     React.useEffect(() => {
-        setItems(value);
-    }, [value]);
+        if (existingMedia && Array.isArray(existingMedia) && existingMedia.length > 0) {
+            const formattedMedia = existingMedia.map((media: any) => ({
+                id: media.id || String(Math.random()),
+                url: media.url || media.path,
+                alt: media.alt || media.alt_text,
+            }));
+            setItems(formattedMedia);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const update = (next: MediaUploadItem[]) => {
         setItems(next);

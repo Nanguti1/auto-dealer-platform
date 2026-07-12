@@ -124,8 +124,6 @@ export default function VehicleForm({
           setData('media', files);
         };
 
-        console.log('Current form data media:', data.media);
-
         return (
         <>
           <input type="hidden" name="_method" value={method === 'post' ? 'post' : 'put'} />
@@ -193,9 +191,9 @@ export default function VehicleForm({
             <TabsContent value="Media" className="grid gap-4 rounded-xl border bg-card p-4">
               <div className="space-y-2">
                 <Label htmlFor="media">Media</Label>
-                <MediaUpload 
-                  name="media" 
-                  existingMedia={vehicle?.media} 
+                <MediaUpload
+                  name="media"
+                  existingMedia={vehicle?.media ?? []}
                   onChange={handleMediaChange}
                 />
                 <InputError message={errors.media} />
