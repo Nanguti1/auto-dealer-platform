@@ -15,9 +15,10 @@ interface PaginationProps extends React.ComponentProps<'nav'> {
     currentPage?: number;
     lastPage?: number;
     baseUrl?: string;
+    onPageChange?: (page: number) => void;
 }
 
-function Pagination({ className, links, currentPage = 1, lastPage = 1, baseUrl = '?page=', ...props }: PaginationProps) {
+function Pagination({ className, links, currentPage = 1, lastPage = 1, baseUrl = '?page=', onPageChange, ...props }: PaginationProps) {
     const generatedLinks: PaginationLinkItem[] = links ?? Array.from({ length: lastPage }, (_, index) => {
         const page = index + 1;
         return { url: `${baseUrl}${page}`, label: String(page), active: page === currentPage };

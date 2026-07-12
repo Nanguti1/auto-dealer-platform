@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Public;
 use App\Events\LeadCreated;
 use App\Http\Controllers\Controller;
 use App\Models\Lead;
+use App\Models\TradeInRequest;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -31,21 +32,31 @@ class TradeInController extends Controller
             'notes' => 'nullable|string',
         ]);
 
+        // Split name into first and last name
+        $nameParts = explode(' ', trim($validated['name']), 2);
+        $firstName = $nameParts[0] ?? '';
+        $lastName = $nameParts[1] ?? '';
+
         // Create a lead for the trade-in request
         $lead = Lead::create([
-            'name' => $validated['name'],
+            'first_name' => $firstName,
+            'last_name' => $lastName,
             'email' => $validated['email'],
-            'phone' => $request->input('phone'),
             'source' => 'trade-in',
             'status' => 'new',
-            'notes' => json_encode([
-                'make' => $validated['make'],
-                'model' => $validated['model'],
-                'year' => $validated['year'],
-                'mileage' => $validated['mileage'] ?? null,
-                'vin' => $validated['vin'] ?? null,
+        ]);
+
+        // Create a trade-in request with vehicle details
+        $tradeIn = TradeInRequest::create([
+            'make' => $validated['make'],
+            'model' => $validated['model'],
+            'year' => $validated['year'],
+            'mileage' => $validated['mileage'] ?? null,
+            'vin' => $validated['vin'] ?? null,
+            'status' => 'submitted',
+            'condition_report' => [
                 'notes' => $validated['notes'] ?? null,
-            ]),
+            ],
         ]);
 
         event(new LeadCreated($lead));

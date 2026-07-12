@@ -204,11 +204,9 @@ const AdminDataTable = React.memo(function AdminDataTable<T extends { id: number
       </div>
 
       {/* Pagination */}
-      <Pagination
-        currentPage={rows.current_page}
-        totalPages={rows.last_page}
-        onPageChange={(page) => apply({ page })}
-      />
+      {rows.links && rows.links.length > 0 ? (
+        <Pagination links={rows.links} />
+      ) : null}
     </div>
   );
 }) as <T extends { id: number }>(props: Props<T>) => React.JSX.Element;

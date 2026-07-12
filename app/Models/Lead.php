@@ -13,7 +13,7 @@ class Lead extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['crm_stage_id', 'assigned_user_id', 'vehicle_id', 'source', 'status', 'first_name', 'last_name', 'email', 'phone', 'budget', 'last_contacted_at', 'name', 'notes'];
+    protected $fillable = ['crm_stage_id', 'assigned_user_id', 'vehicle_id', 'source', 'status', 'first_name', 'last_name', 'email', 'phone', 'budget', 'last_contacted_at'];
 
     protected function casts(): array
     {
