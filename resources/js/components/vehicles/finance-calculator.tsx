@@ -12,7 +12,7 @@ interface FinanceCalculatorProps {
 }
 
 export default function FinanceCalculator({ defaultPrice = 50000, className }: FinanceCalculatorProps) {
-    const { formatPrice } = useCurrency();
+    const formatPrice = useFormatCurrency();
     const [price, setPrice] = React.useState(defaultPrice);
     const [downPayment, setDownPayment] = React.useState(Math.round(defaultPrice * 0.1));
     const [rate, setRate] = React.useState(5.9);
@@ -56,18 +56,18 @@ export default function FinanceCalculator({ defaultPrice = 50000, className }: F
 
                 <div className="rounded-xl bg-primary/5 p-5 text-center">
                     <p className="text-sm text-muted-foreground">Estimated Monthly Payment</p>
-                    <p className="text-3xl font-bold tracking-tight text-primary">{formatPrice(monthlyPayment)}</p>
+                    <p className="text-3xl font-bold tracking-tight text-primary">{formatPrice(monthlyPayment, { showSymbol: true })}</p>
                     <p className="mt-1 text-xs text-muted-foreground">per month for {term} months</p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <p className="text-muted-foreground">Loan Amount</p>
-                        <p className="font-semibold">{formatPrice(loanAmount)}</p>
+                        <p className="font-semibold">{formatPrice(loanAmount, { showSymbol: true })}</p>
                     </div>
                     <div>
                         <p className="text-muted-foreground">Total Interest</p>
-                        <p className="font-semibold">{formatPrice(totalInterest)}</p>
+                        <p className="font-semibold">{formatPrice(totalInterest, { showSymbol: true })}</p>
                     </div>
                 </div>
 

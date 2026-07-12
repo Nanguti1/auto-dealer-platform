@@ -229,8 +229,8 @@ class VehicleController extends Controller
             'galleries' => $vehicle->galleries->map(fn ($gallery) => [
                 'id' => $gallery->id,
                 'path' => $gallery->path,
-                'alt' => $gallery->alt ?? $vehicle->title,
-                'isPrimary' => $gallery->is_primary ?? false,
+                'alt' => $gallery->alt_text ?? $vehicle->title,
+                'isPrimary' => (bool) $gallery->is_primary,
             ])->toArray(),
             'features' => $vehicle->features->map(fn ($feature) => [
                 'id' => $feature->id,

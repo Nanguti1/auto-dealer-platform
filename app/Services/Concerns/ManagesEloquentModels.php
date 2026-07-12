@@ -103,6 +103,10 @@ trait ManagesEloquentModels
                 unset($modelData['specifications']);
             }
 
+            // Remove non-model fields that are handled separately
+            unset($modelData['save_as_draft']);
+            unset($modelData['media']);
+
             $model = $this->modelClass()::query()->create($modelData);
 
             // Handle features array for Vehicle model
@@ -159,6 +163,10 @@ trait ManagesEloquentModels
                 $model->specifications()->delete();
                 $model->specifications()->createMany($specifications);
             }
+
+            // Remove non-model fields that are handled separately
+            unset($data['save_as_draft']);
+            unset($data['media']);
 
             $model->update($data);
 

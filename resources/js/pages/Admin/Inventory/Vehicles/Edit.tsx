@@ -46,7 +46,7 @@ export default function Edit({
     <InventoryShell title="Edit Vehicle" description="Update inventory details and publication settings." actions={<BackButton href={admin.vehicles.show(vehicle.id).url} />}>
       <VehicleForm
         vehicle={vehicle}
-        action={admin.vehicles.update(vehicle.id).form().action}
+        action={admin.vehicles.update.form(vehicle.id).action}
         method="put"
         branches={branches}
         makes={makes}

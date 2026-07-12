@@ -87,6 +87,9 @@ class StoreVehicleRequest extends FormRequest
             if (! is_array($mediaFiles)) {
                 $this->merge(['media' => [$mediaFiles]]);
             }
+        } else {
+            // Ensure media is always an array, even if no files are uploaded
+            $this->merge(['media' => []]);
         }
     }
 

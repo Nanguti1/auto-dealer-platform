@@ -31,4 +31,9 @@ class VehicleGallery extends Model
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
     }
+
+    public function getPathAttribute(): string
+    {
+        return $this->attributes['path'] ? asset('storage/'.$this->getRawOriginal('path')) : '';
+    }
 }
