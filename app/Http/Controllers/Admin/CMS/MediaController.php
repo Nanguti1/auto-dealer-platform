@@ -23,7 +23,7 @@ class MediaController extends Controller
         $this->authorize('viewAny', Media::class);
 
         return Inertia::render('Admin/CMS/Media/Index', [
-            'media' => $this->service->paginate($request->query()),
+            'mediaFiles' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
     }

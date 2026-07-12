@@ -17,56 +17,100 @@ class LeadPolicy
 
     public function view(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicle'));
     }
 
     public function create(User $user): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && $user->branch_id !== null;
     }
 
     public function update(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicle')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicle')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && ($model->branch_id ? $model->isAccessibleBy($user) : $model->isAccessibleThrough($user, 'vehicle')) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function feature(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function publish(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function approve(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function reject(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function assign(User $user, Lead $model): bool
     {
+        if ($user->role?->name === RoleEnum::ADMIN->value) {
+            return true;
+        }
+
         return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

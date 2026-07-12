@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Imports\StoreImportPaymentRequest;
 use App\Http\Requests\Imports\UpdateImportPaymentRequest;
 use App\Models\ImportPayment;
+use App\Models\VehicleImport;
 use App\Services\Imports\ImportPaymentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,9 @@ class ImportPaymentController extends Controller
     {
         $this->authorize('create', ImportPayment::class);
 
-        return Inertia::render('Admin/Imports/Payments/Create');
+        return Inertia::render('Admin/Imports/Payments/Create', [
+            'importRequests' => VehicleImport::latest()->get(['id', 'reference_number', 'origin_country']),
+        ]);
     }
 
     public function store(StoreImportPaymentRequest $request): RedirectResponse
@@ -57,6 +60,7 @@ class ImportPaymentController extends Controller
 
         return Inertia::render('Admin/Imports/Payments/Edit', [
             'importPayment' => $importPayment->load(['vehicleImport', 'payment']),
+            'importRequests' => VehicleImport::latest()->get(['id', 'reference_number', 'origin_country']),
         ]);
     }
 

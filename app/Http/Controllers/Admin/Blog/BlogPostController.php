@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Blog;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Blog\StoreBlogPostRequest;
 use App\Http\Requests\Blog\UpdateBlogPostRequest;
+use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Services\Blog\BlogService;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +33,19 @@ class BlogPostController extends Controller
     {
         $this->authorize('create', BlogPost::class);
 
-        return Inertia::render('Admin/Blog/Posts/Create');
+        $categories = BlogCategory::select('id', 'name')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'label' => $category->name,
+                ];
+            });
+
+        return Inertia::render('Admin/Blog/Posts/Create', [
+            'categories' => $categories,
+        ]);
     }
 
     public function store(StoreBlogPostRequest $request): RedirectResponse
@@ -55,8 +68,19 @@ class BlogPostController extends Controller
     {
         $this->authorize('update', $blogPost);
 
+        $categories = BlogCategory::select('id', 'name')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'label' => $category->name,
+                ];
+            });
+
         return Inertia::render('Admin/Blog/Posts/Edit', [
             'blogPost' => $blogPost,
+            'categories' => $categories,
         ]);
     }
 

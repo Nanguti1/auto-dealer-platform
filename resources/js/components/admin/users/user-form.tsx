@@ -65,6 +65,11 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
                 <Input id="password" name="password" type="password" defaultValue={user?.password ?? ''} />
                 <InputError message={errors.password} />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor="password_confirmation">Password Confirmation</Label>
+                <Input id="password_confirmation" name="password_confirmation" type="password" defaultValue={user?.password ?? ''} />
+                <InputError message={errors.password_confirmation} />
+              </div>
             </TabsContent>
             <TabsContent value="contact" className="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-2">
               <div className="space-y-2">

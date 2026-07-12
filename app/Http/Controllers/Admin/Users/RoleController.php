@@ -13,7 +13,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -33,9 +32,7 @@ class RoleController extends Controller
     {
         $this->authorize('create', Role::class);
 
-        return Inertia::render('Admin/Users/Roles/Create', [
-            'permissions' => Permission::all(),
-        ]);
+        return Inertia::render('Admin/Users/Roles/Create');
     }
 
     public function store(StoreRoleRequest $request): RedirectResponse
@@ -50,7 +47,7 @@ class RoleController extends Controller
         $this->authorize('view', $role);
 
         return Inertia::render('Admin/Users/Roles/Show', [
-            'role' => $role->load('permissions'),
+            'role' => $role,
         ]);
     }
 
@@ -59,8 +56,7 @@ class RoleController extends Controller
         $this->authorize('update', $role);
 
         return Inertia::render('Admin/Users/Roles/Edit', [
-            'role' => $role->load('permissions'),
-            'permissions' => Permission::all(),
+            'role' => $role,
         ]);
     }
 

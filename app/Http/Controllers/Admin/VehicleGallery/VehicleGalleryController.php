@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\VehicleGallery;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\VehicleGallery\StoreVehicleGalleryRequest;
 use App\Http\Requests\VehicleGallery\UpdateVehicleGalleryRequest;
+use App\Models\Vehicle;
 use App\Models\VehicleGallery;
 use App\Services\VehicleGallery\VehicleGalleryService;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +33,19 @@ class VehicleGalleryController extends Controller
     {
         $this->authorize('create', VehicleGallery::class);
 
-        return Inertia::render('Admin/Inventory/Gallery/Create');
+        $vehicles = Vehicle::select('id', 'year', 'make', 'model')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($vehicle) {
+                return [
+                    'id' => $vehicle->id,
+                    'label' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
+                ];
+            });
+
+        return Inertia::render('Admin/Inventory/Gallery/Create', [
+            'vehicles' => $vehicles,
+        ]);
     }
 
     public function store(StoreVehicleGalleryRequest $request): RedirectResponse
@@ -55,8 +68,19 @@ class VehicleGalleryController extends Controller
     {
         $this->authorize('update', $vehicleGallery);
 
+        $vehicles = Vehicle::select('id', 'year', 'make', 'model')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->map(function ($vehicle) {
+                return [
+                    'id' => $vehicle->id,
+                    'label' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
+                ];
+            });
+
         return Inertia::render('Admin/Inventory/Gallery/Edit', [
             'vehicleGallery' => $vehicleGallery,
+            'vehicles' => $vehicles,
         ]);
     }
 

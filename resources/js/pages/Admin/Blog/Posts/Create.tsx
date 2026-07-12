@@ -2,14 +2,14 @@ import adminRoutes from '@/routes/admin';
 import BlogForm from '@/components/admin/cms/blog-form';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 
-export default function Create() {
+export default function Create({ categories }: { categories: Array<{ id: number; label: string }> }) {
   return (
     <CmsShell
       title="Create Blog Post"
       description="Write and publish a new blog post."
       actions={<CmsBackButton />}
     >
-      <BlogForm action={adminRoutes.blogPosts.store().url} method="post" />
+      <BlogForm action={adminRoutes.blogPosts.store().url} method="post" categories={categories} />
     </CmsShell>
   );
 }

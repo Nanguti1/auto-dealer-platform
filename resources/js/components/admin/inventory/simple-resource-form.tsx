@@ -1,4 +1,4 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { FormShell, FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
 import { ImageDropzone } from '@/components/shared/media-upload';
 import type { AdminFeature, AdminGallery } from './types';
 
@@ -41,7 +41,18 @@ export function FeatureForm({ feature, action }: { feature?: AdminFeature; actio
   );
 }
 
-export function GalleryForm({ gallery, action }: { gallery?: AdminGallery; action: string }) {
+interface GalleryFormProps {
+  gallery?: AdminGallery;
+  action: string;
+  vehicles?: Array<{ id: number; label: string }>;
+}
+
+export function GalleryForm({ gallery, action, vehicles = [] }: GalleryFormProps) {
+  const vehicleOptions = vehicles.map(vehicle => ({
+    value: vehicle.id,
+    label: vehicle.label,
+  }));
+
   return (
     <FormShell
       action={action}
@@ -51,12 +62,14 @@ export function GalleryForm({ gallery, action }: { gallery?: AdminGallery; actio
       className="max-w-2xl"
     >
       <FormSection gridCols={1}>
-        <FormField
+        <ForeignSelector
           name="vehicle_id"
-          label="Vehicle ID"
-          type="number"
-          value={String(gallery?.vehicle_id ?? '')}
-          onChange={() => {}}
+          label="Vehicle"
+          value={gallery?.vehicle_id}
+          options={vehicleOptions}
+          placeholder="Select a vehicle"
+          searchable
+          required
         />
         <div className="space-y-2">
           <label htmlFor="path" className="text-sm font-medium">Image</label>

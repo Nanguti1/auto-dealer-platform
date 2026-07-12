@@ -22,7 +22,7 @@ class ImportShipmentPolicy
 
     public function create(User $user): bool
     {
-        return $user !== null && $user->branch_id !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function update(User $user, ImportShipment $model): bool

@@ -1,4 +1,4 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { FormShell, FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
 import { ImageDropzone } from '@/components/shared/media-upload';
 import { generateSlug } from '@/lib/slug-utils';
 import * as React from 'react';
@@ -11,10 +11,22 @@ const statusOptions = [
   { value: 'archived', label: 'Archived' },
 ];
 
-export default function BlogForm({ blogPost, action, method = 'post' }: { blogPost?: BlogPost; action: string; method?: 'post' | 'put' }) {
+interface BlogFormProps {
+  blogPost?: BlogPost;
+  action: string;
+  method?: 'post' | 'put';
+  categories?: Array<{ id: number; label: string }>;
+}
+
+export default function BlogForm({ blogPost, action, method = 'post', categories = [] }: BlogFormProps) {
   const [title, setTitle] = React.useState(blogPost?.title ?? '');
   const [slug, setSlug] = React.useState(blogPost?.slug ?? '');
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!blogPost?.slug);
+
+  const categoryOptions = categories.map(category => ({
+    value: category.id,
+    label: category.label,
+  }));
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -52,12 +64,13 @@ export default function BlogForm({ blogPost, action, method = 'post' }: { blogPo
           value={slug}
           onChange={handleSlugChange}
         />
-        <FormField
+        <ForeignSelector
           name="blog_category_id"
           label="Category"
-          type="number"
-          value={String(blogPost?.blog_category_id ?? '')}
-          onChange={() => {}}
+          value={blogPost?.blog_category_id}
+          options={categoryOptions}
+          placeholder="Select a category"
+          searchable
         />
         <FormField
           name="author_id"

@@ -1,7 +1,7 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import type { ImportPayment } from '@/components/admin/imports/types';
 
-export default function PaymentForm({ payment, action, method = 'post' }: { payment?: ImportPayment; action: string; method?: 'post' | 'put' }) {
+export default function PaymentForm({ payment, action, method = 'post', importRequests }: { payment?: ImportPayment; action: string; method?: 'post' | 'put'; importRequests?: Array<{ id: number; reference_number: string; origin_country: string }> }) {
   return (
     <FormShell
       action={action}
@@ -11,11 +11,15 @@ export default function PaymentForm({ payment, action, method = 'post' }: { paym
     >
       <FormSection title="Payment Details" gridCols={3}>
         <FormField
-          name="import_request_id"
-          label="Import request ID"
-          type="number"
-          value={String(payment?.import_request_id ?? '')}
+          name="vehicle_import_id"
+          label="Import Request"
+          type="select"
+          value={String(payment?.vehicle_import_id ?? '')}
           onChange={() => {}}
+          options={importRequests?.map(req => ({
+            value: String(req.id),
+            label: `${req.reference_number} - ${req.origin_country}`,
+          })) ?? []}
         />
         <FormField
           name="amount"

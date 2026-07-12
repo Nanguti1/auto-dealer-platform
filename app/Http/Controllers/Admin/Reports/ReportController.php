@@ -53,7 +53,7 @@ class ReportController extends Controller
             'summary' => [
                 'totalSales' => (int) $paymentStats->total_sales,
                 'totalRevenue' => (float) $paymentStats->total_revenue,
-                'totalVehicles' => Vehicle::forBranch($user)->count(),
+                'totalVehicles' => Vehicle::query()->when($user, fn ($query) => $query->forBranch($user))->count(),
                 'totalLeads' => (int) $leadStats->total_leads,
                 'conversionRate' => $conversionRate,
                 'avgFinanceAmount' => $this->getAvgFinanceAmount($request, $user),
@@ -100,25 +100,29 @@ class ReportController extends Controller
 
         $user = $request->user();
 
-        $inventoryData = Vehicle::forBranch($user)
+        $inventoryData = Vehicle::query()
+            ->when($user, fn ($query) => $query->forBranch($user))
             ->join('inventory_statuses', 'vehicles.inventory_status_id', '=', 'inventory_statuses.id')
             ->selectRaw('inventory_status_id, inventory_statuses.name as status_name, COUNT(*) as count, AVG(sale_price) as avg_price')
             ->groupBy('inventory_status_id', 'inventory_statuses.name')
             ->get();
 
-        $inventoryByMake = Vehicle::forBranch($user)
+        $inventoryByMake = Vehicle::query()
+            ->when($user, fn ($query) => $query->forBranch($user))
             ->join('makes', 'vehicles.make_id', '=', 'makes.id')
             ->selectRaw('make_id, makes.name as make_name, COUNT(*) as count')
             ->groupBy('make_id', 'makes.name')
             ->get();
 
-        $inventoryByBodyType = Vehicle::forBranch($user)
+        $inventoryByBodyType = Vehicle::query()
+            ->when($user, fn ($query) => $query->forBranch($user))
             ->join('body_types', 'vehicles.body_type_id', '=', 'body_types.id')
             ->selectRaw('body_type_id, body_types.name as body_type_name, COUNT(*) as count')
             ->groupBy('body_type_id', 'body_types.name')
             ->get();
 
-        $agedInventory = Vehicle::forBranch($user)
+        $agedInventory = Vehicle::query()
+            ->when($user, fn ($query) => $query->forBranch($user))
             ->where('created_at', '<', now()->subDays(90))
             ->count();
 
@@ -178,7 +182,7 @@ class ReportController extends Controller
 
         $financeData = FinanceApplication::forBranchThrough($user, 'vehicle')
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->selectRaw('DATE(created_at) as date, COUNT(*) as count, SUM(requested_amount) as total_requested, SUM(approved_amount) as total_approved')
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count, SUM(requested_amount) as total_requested, SUM(requested_amount) as total_approved')
             ->groupBy('date')
             ->orderBy('date')
             ->get();
@@ -242,7 +246,7 @@ class ReportController extends Controller
 
         $data = match ($type) {
             'sales' => $this->getSalesExportData($request),
-            'inventory' => $this->getInventoryExportData(),
+            'inventory' => $this->getInventoryExportData($request),
             'leads' => $this->getLeadsExportData($request),
             'finance' => $this->getFinanceExportData($request),
             default => throw new \InvalidArgumentException('Invalid report type'),
@@ -261,7 +265,7 @@ class ReportController extends Controller
             ->whereBetween('created_at', [
                 $request->query('start_date', now()->subDays(30)),
                 $request->query('end_date', now()),
-            ])->where('status', 'approved')->avg('approved_amount') ?? 0;
+            ])->where('status', 'approved')->avg('requested_amount') ?? 0;
     }
 
     private function getSalesExportData(Request $request): string
@@ -287,7 +291,8 @@ class ReportController extends Controller
     private function getInventoryExportData(Request $request): string
     {
         $user = $request->user();
-        $vehicles = Vehicle::forBranch($user)
+        $vehicles = Vehicle::query()
+            ->when($user, fn ($query) => $query->forBranch($user))
             ->with(['make', 'vehicleModel', 'inventoryStatus'])
             ->get();
 
@@ -337,7 +342,6 @@ class ReportController extends Controller
             'Date' => fn ($application) => $application->created_at,
             'Customer' => fn ($application) => $application->user?->name ?? 'N/A',
             'Requested Amount' => fn ($application) => $application->requested_amount,
-            'Approved Amount' => fn ($application) => $application->approved_amount ?? 0,
             'Status' => fn ($application) => $application->status,
             'Lender' => fn ($application) => $application->lender?->name ?? 'N/A',
         ]);

@@ -119,9 +119,12 @@ export default function VehicleForm({
       {({ errors, processing, data, setData }) => {
         const handleMediaChange = (items: MediaUploadItem[]) => {
           const files = items.map(item => item.file).filter((file): file is File => file !== undefined);
+          console.log('Media files selected:', files);
           // Update Inertia form data with the files
           setData('media', files);
         };
+
+        console.log('Current form data media:', data.media);
 
         return (
         <>

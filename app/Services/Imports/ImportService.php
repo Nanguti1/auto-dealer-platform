@@ -42,7 +42,9 @@ class ImportService
      */
     public function create(array $data): VehicleImport
     {
-        $import = parent::create($data);
+        // Use the trait's create method
+        /** @var VehicleImport $import */
+        $import = $this->modelClass()::query()->create($data);
 
         // Dispatch import processing job asynchronously
         ImportVehicles::dispatch($import);

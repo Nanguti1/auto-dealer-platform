@@ -23,7 +23,7 @@ class SeoMetadataController extends Controller
         $this->authorize('viewAny', SeoMetadata::class);
 
         return Inertia::render('Admin/CMS/SeoMetadata/Index', [
-            'seoMetadata' => $this->service->paginate($request->query()),
+            'seoSettings' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
     }

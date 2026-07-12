@@ -58,6 +58,8 @@ class VehicleController extends Controller
 
         // Handle media uploads
         $mediaFiles = $request->getMediaFiles();
+        \Log::info('Store vehicle - Media files: ', ['count' => count($mediaFiles), 'files' => array_map(fn ($f) => $f->getClientOriginalName(), $mediaFiles)]);
+
         if (! empty($mediaFiles)) {
             $this->service->handleMediaUploads($vehicle, $mediaFiles);
         }
@@ -102,6 +104,8 @@ class VehicleController extends Controller
 
         // Handle media uploads
         $mediaFiles = $request->getMediaFiles();
+        \Log::info('Update vehicle - Media files: ', ['count' => count($mediaFiles), 'files' => array_map(fn ($f) => $f->getClientOriginalName(), $mediaFiles)]);
+
         if (! empty($mediaFiles)) {
             $this->service->handleMediaUploads($vehicle, $mediaFiles);
         }

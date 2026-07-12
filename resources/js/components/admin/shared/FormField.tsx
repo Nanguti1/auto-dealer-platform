@@ -49,6 +49,7 @@ export default function FormField({
 }: FormFieldProps) {
   const fieldId = id || name;
   const hasError = Boolean(error);
+  const isControlled = onChange && onChange.toString() !== '() => {}';
 
   const renderInput = () => {
     const baseProps = {
@@ -66,7 +67,8 @@ export default function FormField({
           <Textarea
             {...baseProps}
             placeholder={placeholder}
-            value={String(value ?? '')}
+            value={isControlled ? String(value ?? '') : undefined}
+            defaultValue={!isControlled ? String(value ?? '') : undefined}
             onChange={(e) => onChange?.(e.target.value)}
             className={hasError ? 'border-destructive' : ''}
           />
@@ -86,7 +88,8 @@ export default function FormField({
         return (
           <select
             {...baseProps}
-            value={String(value ?? '')}
+            value={isControlled ? String(value ?? '') : undefined}
+            defaultValue={!isControlled ? String(value ?? '') : undefined}
             onChange={(e) => onChange?.(e.target.value)}
             className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${hasError ? 'border-destructive' : ''}`}
           >
@@ -107,7 +110,8 @@ export default function FormField({
         return (
           <Switch
             {...baseProps}
-            checked={Boolean(value)}
+            checked={isControlled ? Boolean(value) : undefined}
+            defaultChecked={!isControlled ? Boolean(value) : undefined}
             onCheckedChange={(checked) => onChange?.(checked)}
           />
         );
@@ -117,7 +121,8 @@ export default function FormField({
           <input
             {...baseProps}
             type="checkbox"
-            checked={Boolean(value)}
+            checked={isControlled ? Boolean(value) : undefined}
+            defaultChecked={!isControlled ? Boolean(value) : undefined}
             onChange={(e) => onChange?.(e.target.checked)}
             className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
           />
@@ -129,7 +134,8 @@ export default function FormField({
             {...baseProps}
             type={type}
             placeholder={placeholder}
-            value={String(value ?? '')}
+            value={isControlled ? String(value ?? '') : undefined}
+            defaultValue={!isControlled ? String(value ?? '') : undefined}
             required={required}
             min={min}
             max={max}

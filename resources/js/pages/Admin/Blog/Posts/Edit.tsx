@@ -2,14 +2,14 @@ import BlogForm from '@/components/admin/cms/blog-form';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { BlogPost } from '@/components/admin/cms/types';
 
-export default function Edit({ blogPost }: { blogPost: BlogPost }) {
+export default function Edit({ blogPost, categories }: { blogPost: BlogPost; categories: Array<{ id: number; label: string }> }) {
   return (
     <CmsShell
       title="Edit Blog Post"
       description="Update blog post content and publication settings."
       actions={<CmsBackButton href={`/admin/blog-posts/${blogPost.id}`} />}
     >
-      <BlogForm blogPost={blogPost} action={`/admin/blog-posts/${blogPost.id}`} method="put" />
+      <BlogForm blogPost={blogPost} action={`/admin/blog-posts/${blogPost.id}`} method="put" categories={categories} />
     </CmsShell>
   );
 }
