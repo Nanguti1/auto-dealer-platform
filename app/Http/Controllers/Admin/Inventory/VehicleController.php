@@ -7,10 +7,22 @@ namespace App\Http\Controllers\Admin\Inventory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Inventory\StoreVehicleRequest;
 use App\Http\Requests\Inventory\UpdateVehicleRequest;
+use App\Models\BodyType;
 use App\Models\Branch;
+use App\Models\Color;
+use App\Models\DriveType;
+use App\Models\EngineType;
+use App\Models\FuelType;
+use App\Models\InteriorColor;
+use App\Models\InventoryStatus;
 use App\Models\Make;
 use App\Models\Model;
+use App\Models\TransmissionType;
+use App\Models\TrimLevel;
 use App\Models\Vehicle;
+use App\Models\VehicleCategory;
+use App\Models\VehicleCondition;
+use App\Models\VehicleStatus;
 use App\Services\Inventory\VehicleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -48,6 +60,54 @@ class VehicleController extends Controller
                 'value' => $model->id,
                 'label' => $model->name,
                 'make_id' => $model->make_id,
+            ]),
+            'vehicleCategories' => VehicleCategory::active()->get()->map(fn ($category) => [
+                'value' => $category->id,
+                'label' => $category->name,
+            ]),
+            'trimLevels' => TrimLevel::active()->get()->map(fn ($trim) => [
+                'value' => $trim->id,
+                'label' => $trim->name,
+            ]),
+            'bodyTypes' => BodyType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'fuelTypes' => FuelType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'transmissionTypes' => TransmissionType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'driveTypes' => DriveType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'engineTypes' => EngineType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'colors' => Color::active()->get()->map(fn ($color) => [
+                'value' => $color->id,
+                'label' => $color->name,
+            ]),
+            'interiorColors' => InteriorColor::active()->get()->map(fn ($color) => [
+                'value' => $color->id,
+                'label' => $color->name,
+            ]),
+            'vehicleConditions' => VehicleCondition::active()->get()->map(fn ($condition) => [
+                'value' => $condition->id,
+                'label' => $condition->name,
+            ]),
+            'vehicleStatuses' => VehicleStatus::active()->get()->map(fn ($status) => [
+                'value' => $status->id,
+                'label' => $status->name,
+            ]),
+            'inventoryStatuses' => InventoryStatus::active()->get()->map(fn ($status) => [
+                'value' => $status->id,
+                'label' => $status->name,
             ]),
         ]);
     }
@@ -118,6 +178,54 @@ class VehicleController extends Controller
                 'value' => $model->id,
                 'label' => $model->name,
                 'make_id' => $model->make_id,
+            ]),
+            'vehicleCategories' => VehicleCategory::active()->get()->map(fn ($category) => [
+                'value' => $category->id,
+                'label' => $category->name,
+            ]),
+            'trimLevels' => TrimLevel::active()->get()->map(fn ($trim) => [
+                'value' => $trim->id,
+                'label' => $trim->name,
+            ]),
+            'bodyTypes' => BodyType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'fuelTypes' => FuelType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'transmissionTypes' => TransmissionType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'driveTypes' => DriveType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'engineTypes' => EngineType::active()->get()->map(fn ($type) => [
+                'value' => $type->id,
+                'label' => $type->name,
+            ]),
+            'colors' => Color::active()->get()->map(fn ($color) => [
+                'value' => $color->id,
+                'label' => $color->name,
+            ]),
+            'interiorColors' => InteriorColor::active()->get()->map(fn ($color) => [
+                'value' => $color->id,
+                'label' => $color->name,
+            ]),
+            'vehicleConditions' => VehicleCondition::active()->get()->map(fn ($condition) => [
+                'value' => $condition->id,
+                'label' => $condition->name,
+            ]),
+            'vehicleStatuses' => VehicleStatus::active()->get()->map(fn ($status) => [
+                'value' => $status->id,
+                'label' => $status->name,
+            ]),
+            'inventoryStatuses' => InventoryStatus::active()->get()->map(fn ($status) => [
+                'value' => $status->id,
+                'label' => $status->name,
             ]),
         ]);
     }

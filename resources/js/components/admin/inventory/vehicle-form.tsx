@@ -65,6 +65,18 @@ export default function VehicleForm({
   branches = [],
   makes = [],
   models = [],
+  vehicleCategories = [],
+  trimLevels = [],
+  bodyTypes = [],
+  fuelTypes = [],
+  transmissionTypes = [],
+  driveTypes = [],
+  engineTypes = [],
+  colors = [],
+  interiorColors = [],
+  vehicleConditions = [],
+  vehicleStatuses = [],
+  inventoryStatuses = [],
 }: {
   vehicle?: AdminVehicle;
   action: string;
@@ -72,6 +84,18 @@ export default function VehicleForm({
   branches?: Array<{ value: number; label: string }>;
   makes?: Array<{ value: number; label: string }>;
   models?: Array<{ value: number; label: string; make_id: number }>;
+  vehicleCategories?: Array<{ value: number; label: string }>;
+  trimLevels?: Array<{ value: number; label: string }>;
+  bodyTypes?: Array<{ value: number; label: string }>;
+  fuelTypes?: Array<{ value: number; label: string }>;
+  transmissionTypes?: Array<{ value: number; label: string }>;
+  driveTypes?: Array<{ value: number; label: string }>;
+  engineTypes?: Array<{ value: number; label: string }>;
+  colors?: Array<{ value: number; label: string }>;
+  interiorColors?: Array<{ value: number; label: string }>;
+  vehicleConditions?: Array<{ value: number; label: string }>;
+  vehicleStatuses?: Array<{ value: number; label: string }>;
+  inventoryStatuses?: Array<{ value: number; label: string }>;
 }) {
   const [title, setTitle] = React.useState(vehicle?.title ?? '');
   const [slug, setSlug] = React.useState(vehicle?.slug ?? '');
@@ -169,9 +193,19 @@ export default function VehicleForm({
             </TabsContent>
 
             <TabsContent value="Specifications" className="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-3">
-              {['mileage', 'vehicle_category_id', 'trim_level_id', 'body_type_id', 'fuel_type_id', 'transmission_type_id', 'drive_type_id', 'engine_type_id', 'color_id', 'interior_color_id', 'vehicle_condition_id', 'vehicle_status_id', 'inventory_status_id'].map((field) => (
-                <Field key={field} name={field} label={field.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} type="number" value={vehicle?.[field as keyof AdminVehicle] as number} error={errors[field as keyof typeof errors] as string} />
-              ))}
+              <Field name="mileage" label="Mileage" type="number" value={vehicle?.mileage} error={errors.mileage} />
+              <SelectField name="vehicle_category_id" label="Vehicle Category" value={vehicle?.vehicle_category_id} error={errors.vehicle_category_id} options={vehicleCategories} placeholder="Select category" />
+              <SelectField name="trim_level_id" label="Trim Level" value={vehicle?.trim_level_id} error={errors.trim_level_id} options={trimLevels} placeholder="Select trim level" />
+              <SelectField name="body_type_id" label="Body Type" value={vehicle?.body_type_id} error={errors.body_type_id} options={bodyTypes} placeholder="Select body type" />
+              <SelectField name="fuel_type_id" label="Fuel Type" value={vehicle?.fuel_type_id} error={errors.fuel_type_id} options={fuelTypes} placeholder="Select fuel type" />
+              <SelectField name="transmission_type_id" label="Transmission Type" value={vehicle?.transmission_type_id} error={errors.transmission_type_id} options={transmissionTypes} placeholder="Select transmission" />
+              <SelectField name="drive_type_id" label="Drive Type" value={vehicle?.drive_type_id} error={errors.drive_type_id} options={driveTypes} placeholder="Select drive type" />
+              <SelectField name="engine_type_id" label="Engine Type" value={vehicle?.engine_type_id} error={errors.engine_type_id} options={engineTypes} placeholder="Select engine type" />
+              <SelectField name="color_id" label="Color" value={vehicle?.color_id} error={errors.color_id} options={colors} placeholder="Select color" />
+              <SelectField name="interior_color_id" label="Interior Color" value={vehicle?.interior_color_id} error={errors.interior_color_id} options={interiorColors} placeholder="Select interior color" />
+              <SelectField name="vehicle_condition_id" label="Vehicle Condition" value={vehicle?.vehicle_condition_id} error={errors.vehicle_condition_id} options={vehicleConditions} placeholder="Select condition" />
+              <SelectField name="vehicle_status_id" label="Vehicle Status" value={vehicle?.vehicle_status_id} error={errors.vehicle_status_id} options={vehicleStatuses} placeholder="Select status" />
+              <SelectField name="inventory_status_id" label="Inventory Status" value={vehicle?.inventory_status_id} error={errors.inventory_status_id} options={inventoryStatuses} placeholder="Select inventory status" />
             </TabsContent>
 
             <TabsContent value="Features" className="grid gap-4 rounded-xl border bg-card p-4">
