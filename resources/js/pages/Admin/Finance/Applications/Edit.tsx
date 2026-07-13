@@ -4,7 +4,7 @@ import { applicantName } from '@/components/admin/finance/helpers';
 import type { FinanceApplication } from '@/components/admin/finance/types';
 import admin from '@/routes/admin';
 
-export default function Edit({ financeApplication, users, lenders, vehicles }: { financeApplication: FinanceApplication; users: Array<{ id: number; name: string; email?: string }>; lenders: Array<{ id: number; name: string }>; vehicles: Array<{ id: number; make: string; model: string; year: number; price: number }> }) {
+export default function Edit({ financeApplication, users, lenders, vehicles }: { financeApplication: FinanceApplication; users: Array<{ id: number; name: string; email?: string }>; lenders: Array<{ id: number; name: string }>; vehicles: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }> }) {
   return (
     <FinanceShell title="Edit Finance Application" description={applicantName(financeApplication)} actions={<FinanceBackButton href={admin.financeApplications.show(financeApplication.id).url} />}>
       <FinanceForm financeApplication={financeApplication} action={admin.financeApplications.update(financeApplication.id).url} method="put" users={users} lenders={lenders} vehicles={vehicles} cancelUrl={admin.financeApplications.show(financeApplication.id).url} />

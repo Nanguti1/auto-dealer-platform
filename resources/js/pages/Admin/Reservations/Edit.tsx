@@ -3,7 +3,7 @@ import ReservationShell, { ReservationBackButton } from '@/components/admin/rese
 import type { ReservationRecord } from '@/components/admin/reservations/types';
 import admin from '@/routes/admin';
 
-export default function Edit({ reservation, vehicles, users }: { reservation: ReservationRecord; vehicles: Array<{ id: number; name: string; make?: string; model?: string; year?: number }>; users: Array<{ id: number; name: string; email?: string }> }) {
+export default function Edit({ reservation, vehicles, users }: { reservation: ReservationRecord; vehicles: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>; users: Array<{ id: number; name: string; email?: string }> }) {
   return (
     <ReservationShell 
       title={`Edit Reservation #${reservation.id}`} 

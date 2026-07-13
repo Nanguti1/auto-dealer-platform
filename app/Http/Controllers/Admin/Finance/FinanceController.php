@@ -39,7 +39,16 @@ class FinanceController extends Controller
         return Inertia::render('Admin/Finance/Applications/Create', [
             'users' => User::select('id', 'name', 'email')->get(),
             'lenders' => Lender::select('id', 'name')->get(),
-            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')->get(),
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
+                    'year' => $vehicle->year,
+                    'price' => $vehicle->sale_price,
+                ]),
         ]);
     }
 
@@ -69,7 +78,16 @@ class FinanceController extends Controller
             'financeApplication' => $financeApplication,
             'users' => User::select('id', 'name', 'email')->get(),
             'lenders' => Lender::select('id', 'name')->get(),
-            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')->get(),
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
+                    'year' => $vehicle->year,
+                    'price' => $vehicle->sale_price,
+                ]),
         ]);
     }
 

@@ -8,7 +8,7 @@ interface ReservationFormProps {
   reservation?: ReservationRecord;
   action: string;
   method?: 'post' | 'put';
-  vehicles?: Array<{ id: number; name: string; make?: string; model?: string; year?: number }>;
+  vehicles?: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>;
   users?: Array<{ id: number; name: string; email?: string }>;
   cancelUrl?: string;
 }
@@ -24,7 +24,7 @@ const statusOptions = [
 export default function ReservationForm({ reservation, action, method = 'post', vehicles = [], users = [], cancelUrl }: ReservationFormProps) {
   const vehicleOptions = vehicles.map(vehicle => ({
     value: vehicle.id,
-    label: vehicle.name || `${vehicle.make} ${vehicle.model} ${vehicle.year}` || `Vehicle #${vehicle.id}`,
+    label: vehicle.name || `Vehicle #${vehicle.id}`,
   }));
 
   const userOptions = users.map(user => ({

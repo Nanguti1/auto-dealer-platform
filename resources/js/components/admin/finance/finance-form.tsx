@@ -10,7 +10,7 @@ interface FinanceFormProps {
   method?: 'post' | 'put';
   users?: Array<{ id: number; name: string; email?: string }>;
   lenders?: Array<{ id: number; name: string }>;
-  vehicles?: Array<{ id: number; make: string; model: string; year: number; price: number }>;
+  vehicles?: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>;
   cancelUrl?: string;
 }
 
@@ -42,7 +42,7 @@ export default function FinanceForm({ financeApplication, action, method = 'post
 
   const vehicleOptions = vehicles.map(vehicle => ({
     value: vehicle.id,
-    label: `${vehicle.year} ${vehicle.make} ${vehicle.model} - $${vehicle.price?.toLocaleString() || 'N/A'}`,
+    label: vehicle.name || `${vehicle.year} ${vehicle.make} ${vehicle.model} - $${vehicle.price?.toLocaleString() || 'N/A'}`,
   }));
 
   const { data, setData, post, put, processing, errors } = useForm({

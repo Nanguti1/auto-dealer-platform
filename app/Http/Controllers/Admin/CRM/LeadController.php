@@ -36,15 +36,15 @@ class LeadController extends Controller
         $this->authorize('create', Lead::class);
 
         return Inertia::render('Admin/CRM/Leads/Create', [
-            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
-                    'make' => $vehicle->make,
-                    'model' => $vehicle->model,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
                     'year' => $vehicle->year,
-                    'price' => $vehicle->price,
+                    'price' => $vehicle->sale_price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()
@@ -85,15 +85,15 @@ class LeadController extends Controller
 
         return Inertia::render('Admin/CRM/Leads/Edit', [
             'lead' => $lead,
-            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
-                    'make' => $vehicle->make,
-                    'model' => $vehicle->model,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
                     'year' => $vehicle->year,
-                    'price' => $vehicle->price,
+                    'price' => $vehicle->sale_price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()

@@ -2,7 +2,7 @@ import ReservationForm from '@/components/admin/reservations/reservation-form';
 import ReservationShell, { ReservationBackButton } from '@/components/admin/reservations/reservation-shell';
 import admin from '@/routes/admin';
 
-export default function Create({ vehicles, users }: { vehicles: Array<{ id: number; name: string; make?: string; model?: string; year?: number }>; users: Array<{ id: number; name: string; email?: string }> }) {
+export default function Create({ vehicles, users }: { vehicles: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>; users: Array<{ id: number; name: string; email?: string }> }) {
   return (
     <ReservationShell 
       title="Create Reservation" 

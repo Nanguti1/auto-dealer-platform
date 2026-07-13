@@ -4,7 +4,7 @@ import LeadForm from '@/components/admin/crm/lead-form';
 import type { LeadRecord } from '@/components/admin/crm/types';
 import admin from '@/routes/admin';
 
-export default function Edit({ lead, vehicles, users, crmStages }: { lead: LeadRecord; vehicles: Array<{ id: number; name: string; make?: string; model?: string; year?: number }>; users: Array<{ id: number; name: string; email?: string }>; crmStages: Array<{ id: number; name: string; pipeline_id?: number }> }) {
+export default function Edit({ lead, vehicles, users, crmStages }: { lead: LeadRecord; vehicles: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>; users: Array<{ id: number; name: string; email?: string }>; crmStages: Array<{ id: number; name: string; pipeline_id?: number }> }) {
   return (
     <CrmShell title={`Edit ${leadName(lead)}`} description="Update CRM lead details and pipeline metadata." actions={<CrmBackButton href={admin.leads.show(lead.id).url} />}>
       <LeadForm lead={lead} action={admin.leads.update(lead.id).url} method="put" vehicles={vehicles} users={users} crmStages={crmStages} cancelUrl={admin.leads.show(lead.id).url} />

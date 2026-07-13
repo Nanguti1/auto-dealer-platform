@@ -35,16 +35,16 @@ class ReservationController extends Controller
         $this->authorize('create', VehicleReservation::class);
 
         return Inertia::render('Admin/Reservations/Create', [
-            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
-                ->where('status', 'available')
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
+                ->whereHas('inventoryStatus', fn ($query) => $query->where('slug', 'available'))
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
-                    'make' => $vehicle->make,
-                    'model' => $vehicle->model,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
                     'year' => $vehicle->year,
-                    'price' => $vehicle->price,
+                    'price' => $vehicle->sale_price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()
@@ -78,15 +78,15 @@ class ReservationController extends Controller
 
         return Inertia::render('Admin/Reservations/Edit', [
             'reservation' => $vehicleReservation,
-            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
-                    'make' => $vehicle->make,
-                    'model' => $vehicle->model,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
                     'year' => $vehicle->year,
-                    'price' => $vehicle->price,
+                    'price' => $vehicle->sale_price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()

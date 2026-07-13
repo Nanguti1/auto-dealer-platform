@@ -9,7 +9,7 @@ interface LeadFormProps {
   lead?: LeadRecord;
   action: string;
   method?: 'post' | 'put';
-  vehicles?: Array<{ id: number; name: string; make?: string; model?: string; year?: number }>;
+  vehicles?: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>;
   users?: Array<{ id: number; name: string; email?: string }>;
   crmStages?: Array<{ id: number; name: string; pipeline_id?: number }>;
   cancelUrl?: string;
@@ -45,7 +45,7 @@ const priorityOptions = [
 export default function LeadForm({ lead, action, method = 'post', vehicles = [], users = [], crmStages = [], cancelUrl }: LeadFormProps) {
   const vehicleOptions = vehicles.map(vehicle => ({
     value: vehicle.id,
-    label: vehicle.name || `${vehicle.make} ${vehicle.model} ${vehicle.year}` || `Vehicle #${vehicle.id}`,
+    label: vehicle.name || `Vehicle #${vehicle.id}`,
   }));
 
   const userOptions = users.map(user => ({
