@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Sales;
 
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\Concerns\ManagesEloquentModels;
@@ -70,7 +71,7 @@ class InvoiceService
 
             // If caller supplied a payment_id for legacy compatibility, attach that payment to this invoice
             if (isset($data['payment_id']) && $data['payment_id']) {
-                $payment = \App\Models\Payment::find($data['payment_id']);
+                $payment = Payment::find($data['payment_id']);
                 if ($payment) {
                     $payment->update(['invoice_id' => $invoice->id]);
                 }

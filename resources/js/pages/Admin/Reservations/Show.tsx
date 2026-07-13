@@ -8,8 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import admin from '@/routes/admin';
 
-export default function Show({ vehicleReservation }: { vehicleReservation: ReservationRecord }) {
-  const reservation = vehicleReservation;
+export default function Show({ reservation }: { reservation: ReservationRecord }) {
   const status = statusBadge(reservation.status);
 
   return (

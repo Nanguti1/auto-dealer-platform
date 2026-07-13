@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Reservations;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reservations\StoreReservationRequest;
 use App\Http\Requests\Reservations\UpdateReservationRequest;
+use App\Models\User;
+use App\Models\Vehicle;
 use App\Models\VehicleReservation;
 use App\Services\Reservations\ReservationService;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +34,25 @@ class ReservationController extends Controller
     {
         $this->authorize('create', VehicleReservation::class);
 
-        return Inertia::render('Admin/Reservations/Create');
+        return Inertia::render('Admin/Reservations/Create', [
+            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+                ->where('status', 'available')
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => $vehicle->name,
+                    'make' => $vehicle->make,
+                    'model' => $vehicle->model,
+                    'year' => $vehicle->year,
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]),
+        ]);
     }
 
     public function store(StoreReservationRequest $request): RedirectResponse
@@ -47,7 +67,7 @@ class ReservationController extends Controller
         $this->authorize('view', $vehicleReservation);
 
         return Inertia::render('Admin/Reservations/Show', [
-            'vehicleReservation' => $vehicleReservation,
+            'reservation' => $vehicleReservation,
         ]);
     }
 
@@ -56,7 +76,23 @@ class ReservationController extends Controller
         $this->authorize('update', $vehicleReservation);
 
         return Inertia::render('Admin/Reservations/Edit', [
-            'vehicleReservation' => $vehicleReservation,
+            'reservation' => $vehicleReservation,
+            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => $vehicle->name,
+                    'make' => $vehicle->make,
+                    'model' => $vehicle->model,
+                    'year' => $vehicle->year,
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]),
         ]);
     }
 

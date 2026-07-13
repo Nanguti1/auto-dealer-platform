@@ -9,6 +9,7 @@ use App\Jobs\ProcessVehicleImages;
 use App\Models\VehicleGallery;
 use App\Services\Concerns\ManagesEloquentModels;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 
 class VehicleGalleryService
 {
@@ -40,6 +41,6 @@ class VehicleGalleryService
      */
     protected function createModel(array $data): VehicleGallery
     {
-        return \Illuminate\Support\Facades\DB::transaction(fn (): VehicleGallery => VehicleGallery::query()->create($data));
+        return DB::transaction(fn (): VehicleGallery => VehicleGallery::query()->create($data));
     }
 }

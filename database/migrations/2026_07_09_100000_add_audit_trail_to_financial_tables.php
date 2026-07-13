@@ -145,7 +145,7 @@ return new class extends Migration
                     if (in_array($column, $columnNames)) {
                         try {
                             $table_schema->dropConstrainedForeignId($column);
-                        } catch (\Exception $e) {
+                        } catch (Exception $e) {
                             // Column doesn't have foreign key constraint, try dropping directly
                             if (in_array($column, $columnNames) && ! str_ends_with($column, '_at')) {
                                 $table_schema->dropColumn($column);

@@ -12,7 +12,7 @@ class Refund extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['branch_id','user_id', 'payment_id', 'invoice_id', 'refund_number', 'amount', 'currency', 'reason', 'status', 'processed_at', 'notes'];
+    protected $fillable = ['branch_id', 'user_id', 'payment_id', 'invoice_id', 'refund_number', 'amount', 'currency', 'reason', 'status', 'processed_at', 'notes'];
 
     protected function casts(): array
     {

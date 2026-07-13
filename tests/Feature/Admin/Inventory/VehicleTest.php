@@ -2,13 +2,14 @@
 
 namespace Tests\Feature\Admin\Inventory;
 
-use App\Models\Role;
-use App\Models\User;
-use App\Models\VehicleFeature;
-use App\Models\Make;
-use App\Models\Model;
 use App\Models\Branch;
 use App\Models\InventoryStatus;
+use App\Models\Make;
+use App\Models\Model;
+use App\Models\Role;
+use App\Models\User;
+use App\Models\Vehicle;
+use App\Models\VehicleFeature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -83,7 +84,7 @@ class VehicleTest extends TestCase
     public function test_vehicle_can_be_updated_with_features()
     {
         $features = VehicleFeature::factory()->count(3)->create();
-        $vehicle = \App\Models\Vehicle::factory()->create();
+        $vehicle = Vehicle::factory()->create();
         $make = Make::factory()->create();
         $model = Model::factory()->create(['make_id' => $make->id]);
 

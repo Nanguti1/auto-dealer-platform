@@ -7,7 +7,10 @@ namespace App\Http\Controllers\Admin\CRM;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CRM\StoreLeadRequest;
 use App\Http\Requests\CRM\UpdateLeadRequest;
+use App\Models\CrmStage;
 use App\Models\Lead;
+use App\Models\User;
+use App\Models\Vehicle;
 use App\Services\CRM\LeadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +35,31 @@ class LeadController extends Controller
     {
         $this->authorize('create', Lead::class);
 
-        return Inertia::render('Admin/CRM/Leads/Create');
+        return Inertia::render('Admin/CRM/Leads/Create', [
+            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => $vehicle->name,
+                    'make' => $vehicle->make,
+                    'model' => $vehicle->model,
+                    'year' => $vehicle->year,
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]),
+            'crmStages' => CrmStage::select('id', 'name', 'pipeline_id')
+                ->get()
+                ->map(fn ($stage) => [
+                    'id' => $stage->id,
+                    'name' => $stage->name,
+                    'pipeline_id' => $stage->pipeline_id,
+                ]),
+        ]);
     }
 
     public function store(StoreLeadRequest $request): RedirectResponse
@@ -57,6 +84,29 @@ class LeadController extends Controller
 
         return Inertia::render('Admin/CRM/Leads/Edit', [
             'lead' => $lead,
+            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => $vehicle->name,
+                    'make' => $vehicle->make,
+                    'model' => $vehicle->model,
+                    'year' => $vehicle->year,
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]),
+            'crmStages' => CrmStage::select('id', 'name', 'pipeline_id')
+                ->get()
+                ->map(fn ($stage) => [
+                    'id' => $stage->id,
+                    'name' => $stage->name,
+                    'pipeline_id' => $stage->pipeline_id,
+                ]),
         ]);
     }
 

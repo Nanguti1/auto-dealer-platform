@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -69,24 +69,30 @@ return new class extends Migration
             $userIds = [];
 
             foreach ($rows as $r) {
-                if ($r->vehicle_id) $vehicleIds[] = $r->vehicle_id;
-                if ($r->invoice_id) $invoiceIds[] = $r->invoice_id;
-                if ($r->user_id) $userIds[] = $r->user_id;
+                if ($r->vehicle_id) {
+                    $vehicleIds[] = $r->vehicle_id;
+                }
+                if ($r->invoice_id) {
+                    $invoiceIds[] = $r->invoice_id;
+                }
+                if ($r->user_id) {
+                    $userIds[] = $r->user_id;
+                }
             }
 
             $vehicleBranchMap = [];
             if (count($vehicleIds) > 0) {
-                $vehicleBranchMap = DB::table('vehicles')->whereIn('id', array_unique($vehicleIds))->pluck('branch_id','id')->toArray();
+                $vehicleBranchMap = DB::table('vehicles')->whereIn('id', array_unique($vehicleIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $invoiceBranchMap = [];
             if (count($invoiceIds) > 0) {
-                $invoiceBranchMap = DB::table('invoices')->whereIn('id', array_unique($invoiceIds))->pluck('branch_id','id')->toArray();
+                $invoiceBranchMap = DB::table('invoices')->whereIn('id', array_unique($invoiceIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $userBranchMap = [];
             if (count($userIds) > 0) {
-                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id','id')->toArray();
+                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id', 'id')->toArray();
             }
 
             foreach ($rows as $r) {
@@ -112,24 +118,30 @@ return new class extends Migration
             $userIds = [];
 
             foreach ($rows as $r) {
-                if ($r->invoice_id) $invoiceIds[] = $r->invoice_id;
-                if ($r->payment_id) $paymentIds[] = $r->payment_id;
-                if ($r->user_id) $userIds[] = $r->user_id;
+                if ($r->invoice_id) {
+                    $invoiceIds[] = $r->invoice_id;
+                }
+                if ($r->payment_id) {
+                    $paymentIds[] = $r->payment_id;
+                }
+                if ($r->user_id) {
+                    $userIds[] = $r->user_id;
+                }
             }
 
             $invoiceBranchMap = [];
             if (count($invoiceIds) > 0) {
-                $invoiceBranchMap = DB::table('invoices')->whereIn('id', array_unique($invoiceIds))->pluck('branch_id','id')->toArray();
+                $invoiceBranchMap = DB::table('invoices')->whereIn('id', array_unique($invoiceIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $paymentBranchMap = [];
             if (count($paymentIds) > 0) {
-                $paymentBranchMap = DB::table('payments')->whereIn('id', array_unique($paymentIds))->pluck('branch_id','id')->toArray();
+                $paymentBranchMap = DB::table('payments')->whereIn('id', array_unique($paymentIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $userBranchMap = [];
             if (count($userIds) > 0) {
-                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id','id')->toArray();
+                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id', 'id')->toArray();
             }
 
             foreach ($rows as $r) {
@@ -155,24 +167,30 @@ return new class extends Migration
             $userIds = [];
 
             foreach ($rows as $r) {
-                if ($r->payment_id) $paymentIds[] = $r->payment_id;
-                if ($r->invoice_id) $invoiceIds[] = $r->invoice_id;
-                if ($r->user_id) $userIds[] = $r->user_id;
+                if ($r->payment_id) {
+                    $paymentIds[] = $r->payment_id;
+                }
+                if ($r->invoice_id) {
+                    $invoiceIds[] = $r->invoice_id;
+                }
+                if ($r->user_id) {
+                    $userIds[] = $r->user_id;
+                }
             }
 
             $paymentBranchMap = [];
             if (count($paymentIds) > 0) {
-                $paymentBranchMap = DB::table('payments')->whereIn('id', array_unique($paymentIds))->pluck('branch_id','id')->toArray();
+                $paymentBranchMap = DB::table('payments')->whereIn('id', array_unique($paymentIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $invoiceBranchMap = [];
             if (count($invoiceIds) > 0) {
-                $invoiceBranchMap = DB::table('invoices')->whereIn('id', array_unique($invoiceIds))->pluck('branch_id','id')->toArray();
+                $invoiceBranchMap = DB::table('invoices')->whereIn('id', array_unique($invoiceIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $userBranchMap = [];
             if (count($userIds) > 0) {
-                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id','id')->toArray();
+                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id', 'id')->toArray();
             }
 
             foreach ($rows as $r) {
@@ -196,18 +214,22 @@ return new class extends Migration
             $vehicleIds = [];
             $userIds = [];
             foreach ($rows as $r) {
-                if ($r->vehicle_id) $vehicleIds[] = $r->vehicle_id;
-                if ($r->user_id) $userIds[] = $r->user_id;
+                if ($r->vehicle_id) {
+                    $vehicleIds[] = $r->vehicle_id;
+                }
+                if ($r->user_id) {
+                    $userIds[] = $r->user_id;
+                }
             }
 
             $vehicleBranchMap = [];
             if (count($vehicleIds) > 0) {
-                $vehicleBranchMap = DB::table('vehicles')->whereIn('id', array_unique($vehicleIds))->pluck('branch_id','id')->toArray();
+                $vehicleBranchMap = DB::table('vehicles')->whereIn('id', array_unique($vehicleIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $userBranchMap = [];
             if (count($userIds) > 0) {
-                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id','id')->toArray();
+                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id', 'id')->toArray();
             }
 
             foreach ($rows as $r) {
@@ -229,18 +251,22 @@ return new class extends Migration
             $vehicleIds = [];
             $userIds = [];
             foreach ($rows as $r) {
-                if ($r->vehicle_id) $vehicleIds[] = $r->vehicle_id;
-                if ($r->user_id) $userIds[] = $r->user_id;
+                if ($r->vehicle_id) {
+                    $vehicleIds[] = $r->vehicle_id;
+                }
+                if ($r->user_id) {
+                    $userIds[] = $r->user_id;
+                }
             }
 
             $vehicleBranchMap = [];
             if (count($vehicleIds) > 0) {
-                $vehicleBranchMap = DB::table('vehicles')->whereIn('id', array_unique($vehicleIds))->pluck('branch_id','id')->toArray();
+                $vehicleBranchMap = DB::table('vehicles')->whereIn('id', array_unique($vehicleIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $userBranchMap = [];
             if (count($userIds) > 0) {
-                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id','id')->toArray();
+                $userBranchMap = DB::table('users')->whereIn('id', array_unique($userIds))->pluck('branch_id', 'id')->toArray();
             }
 
             foreach ($rows as $r) {
@@ -262,18 +288,22 @@ return new class extends Migration
             $vehicleImportIds = [];
             $paymentIds = [];
             foreach ($rows as $r) {
-                if ($r->vehicle_import_id) $vehicleImportIds[] = $r->vehicle_import_id;
-                if ($r->payment_id) $paymentIds[] = $r->payment_id;
+                if ($r->vehicle_import_id) {
+                    $vehicleImportIds[] = $r->vehicle_import_id;
+                }
+                if ($r->payment_id) {
+                    $paymentIds[] = $r->payment_id;
+                }
             }
 
             $vehicleImportBranchMap = [];
             if (count($vehicleImportIds) > 0) {
-                $vehicleImportBranchMap = DB::table('vehicle_imports')->whereIn('id', array_unique($vehicleImportIds))->pluck('branch_id','id')->toArray();
+                $vehicleImportBranchMap = DB::table('vehicle_imports')->whereIn('id', array_unique($vehicleImportIds))->pluck('branch_id', 'id')->toArray();
             }
 
             $paymentBranchMap = [];
             if (count($paymentIds) > 0) {
-                $paymentBranchMap = DB::table('payments')->whereIn('id', array_unique($paymentIds))->pluck('branch_id','id')->toArray();
+                $paymentBranchMap = DB::table('payments')->whereIn('id', array_unique($paymentIds))->pluck('branch_id', 'id')->toArray();
             }
 
             foreach ($rows as $r) {

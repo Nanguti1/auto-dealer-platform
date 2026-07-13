@@ -1,4 +1,7 @@
-import { FormShell, FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save, X } from 'lucide-react';
 import type { FinanceApplication } from './types';
 
 interface FinanceFormProps {
@@ -7,9 +10,25 @@ interface FinanceFormProps {
   method?: 'post' | 'put';
   users?: Array<{ id: number; name: string; email?: string }>;
   lenders?: Array<{ id: number; name: string }>;
+  cancelUrl?: string;
 }
 
-export default function FinanceForm({ financeApplication, action, method = 'post', users = [], lenders = [] }: FinanceFormProps) {
+const statusOptions = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'in_review', label: 'In Review' },
+  { value: 'funded', label: 'Funded' },
+];
+
+const approvalStatusOptions = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'needs_review', label: 'Needs Review' },
+];
+
+export default function FinanceForm({ financeApplication, action, method = 'post', users = [], lenders = [], cancelUrl }: FinanceFormProps) {
   const userOptions = users.map(user => ({
     value: user.id,
     label: user.name || user.email || `User #${user.id}`,
@@ -20,55 +39,84 @@ export default function FinanceForm({ financeApplication, action, method = 'post
     label: lender.name || `Lender #${lender.id}`,
   }));
 
+  const { data, setData, post, put, processing, errors } = useForm({
+    requested_amount: financeApplication?.requested_amount ?? '',
+    down_payment: financeApplication?.down_payment ?? '',
+    term_months: financeApplication?.term_months ?? '',
+    interest_rate: financeApplication?.interest_rate ?? '',
+    estimated_monthly_payment: financeApplication?.estimated_monthly_payment ?? '',
+    status: financeApplication?.status ?? 'pending',
+    approval_status: financeApplication?.approval_status ?? 'pending',
+    assigned_user_id: financeApplication?.assigned_user_id ?? financeApplication?.assignedUser?.id ?? financeApplication?.officer?.id ?? '',
+    lender_id: financeApplication?.lender_id ?? '',
+    notes: String(financeApplication?.notes?.[0]?.body ?? financeApplication?.notes?.[0]?.note ?? ''),
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (method === 'post') {
+      post(action);
+    } else {
+      put(action);
+    }
+  };
+
   return (
-    <FormShell
-      action={action}
-      method={method}
-      submitLabel="Save finance application"
-      className="max-w-4xl"
-    >
+    <form onSubmit={handleSubmit} className="max-w-4xl">
+      {(method === 'put' || method === 'patch') && (
+        <input type="hidden" name="_method" value={method} />
+      )}
+
       <FormSection title="Loan Details" gridCols={3}>
         <FormField
           name="requested_amount"
           label="Requested amount"
           type="number"
-          value={String(financeApplication?.requested_amount ?? '')}
-          onChange={() => {}}
+          value={data.requested_amount}
+          error={errors.requested_amount}
+          onChange={(value) => setData('requested_amount', value)}
         />
         <FormField
           name="down_payment"
           label="Deposit"
           type="number"
-          value={String(financeApplication?.down_payment ?? '')}
-          onChange={() => {}}
+          value={data.down_payment}
+          error={errors.down_payment}
+          onChange={(value) => setData('down_payment', value)}
         />
         <FormField
           name="term_months"
           label="Repayment period"
           type="number"
-          value={String(financeApplication?.term_months ?? '')}
-          onChange={() => {}}
+          value={data.term_months}
+          error={errors.term_months}
+          onChange={(value) => setData('term_months', value)}
         />
         <FormField
           name="interest_rate"
           label="Interest rate"
           type="number"
           step="0.01"
-          value={String(financeApplication?.interest_rate ?? '')}
-          onChange={() => {}}
+          value={data.interest_rate}
+          error={errors.interest_rate}
+          onChange={(value) => setData('interest_rate', value)}
         />
         <FormField
           name="estimated_monthly_payment"
           label="Monthly payment"
           type="number"
-          value={String(financeApplication?.estimated_monthly_payment ?? '')}
-          onChange={() => {}}
+          value={data.estimated_monthly_payment}
+          error={errors.estimated_monthly_payment}
+          onChange={(value) => setData('estimated_monthly_payment', value)}
         />
         <FormField
           name="status"
           label="Status"
-          value={financeApplication?.status ?? 'pending'}
-          onChange={() => {}}
+          type="select"
+          value={data.status}
+          error={errors.status}
+          options={statusOptions}
+          onChange={(value) => setData('status', value)}
         />
       </FormSection>
 
@@ -76,24 +124,31 @@ export default function FinanceForm({ financeApplication, action, method = 'post
         <FormField
           name="approval_status"
           label="Approval status"
-          value={financeApplication?.approval_status ?? 'pending'}
-          onChange={() => {}}
+          type="select"
+          value={data.approval_status}
+          error={errors.approval_status}
+          options={approvalStatusOptions}
+          onChange={(value) => setData('approval_status', value)}
         />
         <ForeignSelector
           name="assigned_user_id"
           label="Assigned officer"
-          value={financeApplication?.assigned_user_id ?? financeApplication?.assignedUser?.id ?? financeApplication?.officer?.id}
+          value={data.assigned_user_id}
+          error={errors.assigned_user_id}
           options={userOptions}
           placeholder="Select an officer"
           searchable
+          onChange={(value) => setData('assigned_user_id', value)}
         />
         <ForeignSelector
           name="lender_id"
           label="Lender"
-          value={financeApplication?.lender_id}
+          value={data.lender_id}
+          error={errors.lender_id}
           options={lenderOptions}
           placeholder="Select a lender"
           searchable
+          onChange={(value) => setData('lender_id', value)}
         />
       </FormSection>
 
@@ -102,10 +157,26 @@ export default function FinanceForm({ financeApplication, action, method = 'post
           name="notes"
           label="Notes"
           type="textarea"
-          value={String(financeApplication?.notes?.[0]?.body ?? financeApplication?.notes?.[0]?.note ?? '')}
-          onChange={() => {}}
+          value={data.notes}
+          error={errors.notes}
+          onChange={(value) => setData('notes', value)}
         />
       </FormSection>
-    </FormShell>
+
+      <div className="flex justify-end gap-4 mt-6">
+        {cancelUrl && (
+          <Button type="button" variant="outline" asChild>
+            <a href={cancelUrl}>
+              <X className="mr-2 size-4" />
+              Cancel
+            </a>
+          </Button>
+        )}
+        <Button type="submit" disabled={processing}>
+          <Save className="mr-2 size-4" />
+          {processing ? 'Saving...' : 'Save finance application'}
+        </Button>
+      </div>
+    </form>
   );
 }

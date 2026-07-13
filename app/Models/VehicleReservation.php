@@ -11,7 +11,7 @@ class VehicleReservation extends Model
 {
     use BranchAware, HasFactory;
 
-    protected $fillable = ['branch_id','vehicle_id', 'user_id', 'deposit_amount', 'status', 'expires_at'];
+    protected $fillable = ['branch_id', 'vehicle_id', 'user_id', 'deposit_amount', 'status', 'expires_at'];
 
     protected function casts(): array
     {

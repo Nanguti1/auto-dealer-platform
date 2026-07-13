@@ -13,7 +13,7 @@ class Invoice extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['branch_id','user_id', 'vehicle_id', 'invoice_number', 'subtotal', 'tax_total', 'total', 'status', 'issued_at', 'due_at'];
+    protected $fillable = ['branch_id', 'user_id', 'vehicle_id', 'invoice_number', 'subtotal', 'tax_total', 'total', 'status', 'issued_at', 'due_at'];
 
     protected function casts(): array
     {
