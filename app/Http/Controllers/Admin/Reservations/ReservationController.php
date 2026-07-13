@@ -35,15 +35,16 @@ class ReservationController extends Controller
         $this->authorize('create', VehicleReservation::class);
 
         return Inertia::render('Admin/Reservations/Create', [
-            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
                 ->where('status', 'available')
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => $vehicle->name,
+                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
                     'make' => $vehicle->make,
                     'model' => $vehicle->model,
                     'year' => $vehicle->year,
+                    'price' => $vehicle->price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()
@@ -77,14 +78,15 @@ class ReservationController extends Controller
 
         return Inertia::render('Admin/Reservations/Edit', [
             'reservation' => $vehicleReservation,
-            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => $vehicle->name,
+                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
                     'make' => $vehicle->make,
                     'model' => $vehicle->model,
                     'year' => $vehicle->year,
+                    'price' => $vehicle->price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()

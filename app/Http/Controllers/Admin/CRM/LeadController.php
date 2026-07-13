@@ -36,14 +36,15 @@ class LeadController extends Controller
         $this->authorize('create', Lead::class);
 
         return Inertia::render('Admin/CRM/Leads/Create', [
-            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => $vehicle->name,
+                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
                     'make' => $vehicle->make,
                     'model' => $vehicle->model,
                     'year' => $vehicle->year,
+                    'price' => $vehicle->price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()
@@ -84,14 +85,15 @@ class LeadController extends Controller
 
         return Inertia::render('Admin/CRM/Leads/Edit', [
             'lead' => $lead,
-            'vehicles' => Vehicle::select('id', 'name', 'make', 'model', 'year')
+            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')
                 ->get()
                 ->map(fn ($vehicle) => [
                     'id' => $vehicle->id,
-                    'name' => $vehicle->name,
+                    'name' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
                     'make' => $vehicle->make,
                     'model' => $vehicle->model,
                     'year' => $vehicle->year,
+                    'price' => $vehicle->price,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()

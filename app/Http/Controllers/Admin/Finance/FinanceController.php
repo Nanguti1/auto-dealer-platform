@@ -11,6 +11,7 @@ use App\Http\Requests\Finance\UpdateFinanceApplicationRequest;
 use App\Models\FinanceApplication;
 use App\Models\Lender;
 use App\Models\User;
+use App\Models\Vehicle;
 use App\Services\Finance\FinanceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -38,6 +39,7 @@ class FinanceController extends Controller
         return Inertia::render('Admin/Finance/Applications/Create', [
             'users' => User::select('id', 'name', 'email')->get(),
             'lenders' => Lender::select('id', 'name')->get(),
+            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')->get(),
         ]);
     }
 
@@ -67,6 +69,7 @@ class FinanceController extends Controller
             'financeApplication' => $financeApplication,
             'users' => User::select('id', 'name', 'email')->get(),
             'lenders' => Lender::select('id', 'name')->get(),
+            'vehicles' => Vehicle::select('id', 'make', 'model', 'year', 'price')->get(),
         ]);
     }
 

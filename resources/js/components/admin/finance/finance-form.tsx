@@ -10,6 +10,7 @@ interface FinanceFormProps {
   method?: 'post' | 'put';
   users?: Array<{ id: number; name: string; email?: string }>;
   lenders?: Array<{ id: number; name: string }>;
+  vehicles?: Array<{ id: number; make: string; model: string; year: number; price: number }>;
   cancelUrl?: string;
 }
 
@@ -28,7 +29,7 @@ const approvalStatusOptions = [
   { value: 'needs_review', label: 'Needs Review' },
 ];
 
-export default function FinanceForm({ financeApplication, action, method = 'post', users = [], lenders = [], cancelUrl }: FinanceFormProps) {
+export default function FinanceForm({ financeApplication, action, method = 'post', users = [], lenders = [], vehicles = [], cancelUrl }: FinanceFormProps) {
   const userOptions = users.map(user => ({
     value: user.id,
     label: user.name || user.email || `User #${user.id}`,
@@ -39,7 +40,14 @@ export default function FinanceForm({ financeApplication, action, method = 'post
     label: lender.name || `Lender #${lender.id}`,
   }));
 
+  const vehicleOptions = vehicles.map(vehicle => ({
+    value: vehicle.id,
+    label: `${vehicle.year} ${vehicle.make} ${vehicle.model} - $${vehicle.price?.toLocaleString() || 'N/A'}`,
+  }));
+
   const { data, setData, post, put, processing, errors } = useForm({
+    vehicle_id: financeApplication?.vehicle_id ?? '',
+    user_id: financeApplication?.user_id ?? '',
     requested_amount: financeApplication?.requested_amount ?? '',
     down_payment: financeApplication?.down_payment ?? '',
     term_months: financeApplication?.term_months ?? '',
@@ -66,6 +74,29 @@ export default function FinanceForm({ financeApplication, action, method = 'post
       {(method === 'put' || method === 'patch') && (
         <input type="hidden" name="_method" value={method} />
       )}
+
+      <FormSection title="Application Details" gridCols={2}>
+        <ForeignSelector
+          name="vehicle_id"
+          label="Vehicle"
+          value={data.vehicle_id}
+          error={errors.vehicle_id}
+          options={vehicleOptions}
+          placeholder="Select a vehicle"
+          searchable
+          onChange={(value) => setData('vehicle_id', value)}
+        />
+        <ForeignSelector
+          name="user_id"
+          label="Customer"
+          value={data.user_id}
+          error={errors.user_id}
+          options={userOptions}
+          placeholder="Select a customer"
+          searchable
+          onChange={(value) => setData('user_id', value)}
+        />
+      </FormSection>
 
       <FormSection title="Loan Details" gridCols={3}>
         <FormField
