@@ -107,6 +107,12 @@ trait ManagesEloquentModels
             unset($modelData['save_as_draft']);
             unset($modelData['media']);
 
+            // Handle applicant_data for FinanceApplication model
+            $model = new ($this->modelClass());
+            if ($model instanceof FinanceApplication && ! isset($modelData['applicant_data'])) {
+                $modelData['applicant_data'] = [];
+            }
+
             $model = $this->modelClass()::query()->create($modelData);
 
             // Handle features array for Vehicle model
@@ -167,6 +173,11 @@ trait ManagesEloquentModels
             // Remove non-model fields that are handled separately
             unset($data['save_as_draft']);
             unset($data['media']);
+
+            // Handle applicant_data for FinanceApplication model
+            if ($model instanceof FinanceApplication && ! isset($data['applicant_data'])) {
+                $data['applicant_data'] = [];
+            }
 
             $model->update($data);
 

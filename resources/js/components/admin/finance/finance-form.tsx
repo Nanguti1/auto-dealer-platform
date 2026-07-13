@@ -15,10 +15,10 @@ interface FinanceFormProps {
 }
 
 const statusOptions = [
-  { value: 'pending', label: 'Pending' },
+  { value: 'submitted', label: 'Submitted' },
+  { value: 'under_review', label: 'Under Review' },
   { value: 'approved', label: 'Approved' },
   { value: 'rejected', label: 'Rejected' },
-  { value: 'in_review', label: 'In Review' },
   { value: 'funded', label: 'Funded' },
 ];
 
@@ -53,11 +53,12 @@ export default function FinanceForm({ financeApplication, action, method = 'post
     term_months: financeApplication?.term_months ?? '',
     interest_rate: financeApplication?.interest_rate ?? '',
     estimated_monthly_payment: financeApplication?.estimated_monthly_payment ?? '',
-    status: financeApplication?.status ?? 'pending',
+    status: financeApplication?.status ?? 'submitted',
     approval_status: financeApplication?.approval_status ?? 'pending',
     assigned_user_id: financeApplication?.assigned_user_id ?? financeApplication?.assignedUser?.id ?? financeApplication?.officer?.id ?? '',
     lender_id: financeApplication?.lender_id ?? '',
     notes: String(financeApplication?.notes?.[0]?.body ?? financeApplication?.notes?.[0]?.note ?? ''),
+    applicant_data: financeApplication?.applicant_data ?? {},
   });
 
   const handleSubmit = (e: React.FormEvent) => {
