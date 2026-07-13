@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { Eye, Pencil, Trash2, MapPin, Building2, MoreHorizontal } from 'lucide-react';
+import { Eye, Pencil, Trash2, MapPin, Building2, MoreHorizontal, Plus } from 'lucide-react';
 import * as React from 'react';
 import type { Paginated } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
@@ -9,7 +9,8 @@ import { LoadingState, EmptyState, InlineError } from '@/components/admin/shared
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import branches from '@/routes/admin/branches';
+import admin from '@/routes/admin';
+import BranchShell from '@/components/admin/branches/branch-shell';
 
 interface Branch {
   id: number;
@@ -24,7 +25,7 @@ interface Branch {
   created_at: string;
 }
 
-export default function Index({ branches, filters = {} }: { branches: Paginated<Branch>; filters?: Record<string, any> }) {
+export default function Index({ branches: branchesData, filters = {} }: { branches: Paginated<Branch>; filters?: Record<string, any> }) {
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
@@ -33,7 +34,7 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
   const handleDelete = React.useCallback(() => {
     if (deleteId) {
       setIsDeleting(true);
-      router.delete(branches.destroy.url(deleteId), {
+      router.delete(admin.branches.destroy(deleteId).url, {
         onSuccess: () => {
           setDeleteId(null);
           setIsDeleting(false);
@@ -53,7 +54,7 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
       sortable: true,
       render: (branch) => (
         <div>
-          <Link className="font-medium hover:underline" href={branches.show.url(branch.id)}>
+          <Link className="font-medium hover:underline" href={admin.branches.show(branch.id).url}>
             {branch.name}
           </Link>
           <p className="text-xs text-muted-foreground">{branch.code}</p>
@@ -101,61 +102,36 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
 
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Branches</h1>
-            <p className="text-muted-foreground">Manage your dealership branches and locations.</p>
-          </div>
-        </div>
+      <BranchShell title="Branches" description="Manage your dealership branches and locations." actions={<Button asChild><Link href={admin.branches.create().url}><Plus className="mr-2 h-4 w-4" />Add Branch</Link></Button>}>
         <LoadingState message="Loading branches..." variant="full-page" />
-      </div>
+      </BranchShell>
     );
   }
 
   if (error) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Branches</h1>
-            <p className="text-muted-foreground">Manage your dealership branches and locations.</p>
-          </div>
-        </div>
+      <BranchShell title="Branches" description="Manage your dealership branches and locations." actions={<Button asChild><Link href={admin.branches.create().url}><Plus className="mr-2 h-4 w-4" />Add Branch</Link></Button>}>
         <InlineError
           error={error}
           onRetry={() => {
             setError(null);
-            router.visit(branches.index.url());
+            router.visit(admin.branches.index().url);
           }}
         />
-      </div>
+      </BranchShell>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Branches</h1>
-          <p className="text-muted-foreground">Manage your dealership branches and locations.</p>
-        </div>
-        <Button asChild>
-          <Link href={branches.create.url()}>
-            <Building2 className="mr-2 size-4" />
-            Create Branch
-          </Link>
-        </Button>
-      </div>
-
-      {branches.data.length === 0 ? (
+    <BranchShell title="Branches" description="Manage your dealership branches and locations." actions={<Button asChild><Link href={admin.branches.create().url}><Plus className="mr-2 h-4 w-4" />Add Branch</Link></Button>}>
+      {branchesData.data.length === 0 ? (
         <EmptyState
           title="No branches found"
           description="Get started by creating your first branch location."
           icon={<Building2 className="size-12 text-muted-foreground" />}
           action={
             <Button asChild>
-              <Link href={branches.create.url()}>
+              <Link href={admin.branches.create().url}>
                 <Building2 className="mr-2 size-4" />
                 Create Branch
               </Link>
@@ -164,11 +140,11 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
         />
       ) : (
         <AdminDataTable
-          rows={branches}
+          rows={branchesData}
           filters={filters}
           columns={columns}
-          baseUrl={branches.index.url()}
-          createUrl={branches.create.url()}
+          baseUrl={admin.branches.index().url}
+          createUrl={admin.branches.create().url}
           createLabel="Create Branch"
           rowActions={(branch) => (
             <>
@@ -180,13 +156,13 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem asChild>
-                    <Link href={branches.show.url(branch.id)} aria-label={`View branch ${branch.id}`}>
+                    <Link href={admin.branches.show(branch.id).url} aria-label={`View branch ${branch.id}`}>
                       <Eye className="mr-2 size-4" aria-hidden="true" />
                       View
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link href={branches.edit.url(branch.id)} aria-label={`Edit branch ${branch.id}`}>
+                    <Link href={admin.branches.edit(branch.id).url} aria-label={`Edit branch ${branch.id}`}>
                       <Pencil className="mr-2 size-4" aria-hidden="true" />
                       Edit
                     </Link>
@@ -210,6 +186,6 @@ export default function Index({ branches, filters = {} }: { branches: Paginated<
           )}
         />
       )}
-    </div>
+    </BranchShell>
   );
 }

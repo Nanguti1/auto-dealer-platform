@@ -23,7 +23,7 @@ function Switch({ className, checked, defaultChecked = false, onCheckedChange, n
 
     return (
         <>
-            {name && <input type="hidden" name={name} value={currentChecked ? value : ''} />}
+            {name && <input type="hidden" name={name} value={currentChecked ? '1' : '0'} />}
             <button
                 type="button"
                 role="switch"

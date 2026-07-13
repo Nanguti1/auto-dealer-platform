@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, Pencil, Plus } from 'lucide-react';
 import * as React from 'react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import CustomerShell from '@/components/admin/customers/customer-shell';
@@ -43,7 +43,7 @@ const Index = React.memo(function Index({ customers, filters = {} }: { customers
 
   if (isLoading) {
     return (
-      <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity.">
+      <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity." actions={<Button asChild><Link href={admin.customers.create().url}><Plus className="mr-2 h-4 w-4" />Add Customer</Link></Button>}>
         <LoadingState message="Loading customers..." variant="full-page" />
       </CustomerShell>
     );
@@ -51,7 +51,7 @@ const Index = React.memo(function Index({ customers, filters = {} }: { customers
 
   if (error) {
     return (
-      <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity.">
+      <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity." actions={<Button asChild><Link href={admin.customers.create().url}><Plus className="mr-2 h-4 w-4" />Add Customer</Link></Button>}>
         <InlineError
           error={error}
           onRetry={() => {
@@ -64,7 +64,7 @@ const Index = React.memo(function Index({ customers, filters = {} }: { customers
   }
 
   return (
-    <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity.">
+    <CustomerShell title="Customers" description="Manage customer profiles, engagement, purchases, and account activity." actions={<Button asChild><Link href={admin.customers.create().url}><Plus className="mr-2 h-4 w-4" />Add Customer</Link></Button>}>
       {customers.data.length === 0 ? (
         <EmptyCustomers onCreate={() => router.visit(admin.customers.create().url)} />
       ) : (

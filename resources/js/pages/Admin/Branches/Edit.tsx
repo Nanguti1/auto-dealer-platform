@@ -4,7 +4,8 @@ import { ArrowLeft } from 'lucide-react';
 import * as React from 'react';
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
-import branches from '@/routes/admin/branches';
+import admin from '@/routes/admin';
+import BranchShell, { BranchBackButton } from '@/components/admin/branches/branch-shell';
 
 interface Branch {
   id: number;
@@ -45,26 +46,13 @@ export default function Edit({ branch }: { branch: Branch }) {
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Edit Branch</h1>
-          <p className="text-muted-foreground">Update branch information for {branch.name}.</p>
-        </div>
-        <Button variant="outline" asChild>
-          <Link href={branches.show.url(branch.id)}>
-            <ArrowLeft className="mr-2 size-4" />
-            Back to Branch
-          </Link>
-        </Button>
-      </div>
-
+    <BranchShell title="Edit Branch" description={`Update branch information for ${branch.name}.`} actions={<BranchBackButton href={admin.branches.show(branch.id).url} label="Back to Branch" />}>
       <FormShell
-        action={branches.update.url(branch.id)}
+        action={admin.branches.update(branch.id).url}
         method="put"
         submitLabel="Save Changes"
         cancelLabel="Cancel"
-        cancelUrl={branches.show.url(branch.id)}
+        cancelUrl={admin.branches.show(branch.id).url}
         className="grid gap-6 md:grid-cols-2"
       >
         <FormSection title="Basic Information" className="md:col-span-2" gridCols={2}>
@@ -202,6 +190,6 @@ export default function Edit({ branch }: { branch: Branch }) {
           />
         </FormSection>
       </FormShell>
-    </div>
+    </BranchShell>
   );
 }

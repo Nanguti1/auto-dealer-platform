@@ -4,7 +4,8 @@ import { ArrowLeft } from 'lucide-react';
 import * as React from 'react';
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
-import branches from '@/routes/admin/branches';
+import admin from '@/routes/admin';
+import BranchShell, { BranchBackButton } from '@/components/admin/branches/branch-shell';
 
 export default function Create() {
   const { data, setData, post, processing, errors } = useForm({
@@ -27,30 +28,17 @@ export default function Create() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    post(branches.store.url());
+    post(admin.branches.store().url);
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Create Branch</h1>
-          <p className="text-muted-foreground">Add a new branch location to your dealership.</p>
-        </div>
-        <Button variant="outline" asChild>
-          <Link href={branches.index.url()}>
-            <ArrowLeft className="mr-2 size-4" />
-            Back to Branches
-          </Link>
-        </Button>
-      </div>
-
+    <BranchShell title="Create Branch" description="Add a new branch location to your dealership." actions={<BranchBackButton />}>
       <FormShell
-        action={branches.store.url()}
+        action={admin.branches.store().url}
         method="post"
         submitLabel="Create Branch"
         cancelLabel="Cancel"
-        cancelUrl={branches.index.url()}
+        cancelUrl={admin.branches.index().url}
         className="grid gap-6 md:grid-cols-2"
       >
         <FormSection title="Basic Information" className="md:col-span-2" gridCols={2}>
@@ -188,6 +176,6 @@ export default function Create() {
           />
         </FormSection>
       </FormShell>
-    </div>
+    </BranchShell>
   );
 }
