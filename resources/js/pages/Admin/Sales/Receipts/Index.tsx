@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Eye, Printer } from 'lucide-react';
+import { Eye, Printer, Plus } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import { customerName } from '@/components/admin/customers/helpers';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
@@ -10,6 +10,7 @@ import type { ReceiptFilters, ReceiptPagination, Receipt } from '@/components/ad
 import { RowActionsDropdown } from '@/components/admin/shared';
 import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
+import adminRoutes from '@/routes/admin';
 
 export default function Index({ receipts, filters = {} }: { receipts: ReceiptPagination; filters?: ReceiptFilters }) {
   const formatCurrency = useFormatCurrency();
@@ -24,7 +25,18 @@ export default function Index({ receipts, filters = {} }: { receipts: ReceiptPag
   ];
 
   return (
-    <PaymentShell title="Receipts" description="View and manage payment receipts for customer transactions.">
+    <PaymentShell 
+      title="Receipts" 
+      description="View and manage payment receipts for customer transactions."
+      actions={
+        <Button asChild>
+          <Link href={adminRoutes.receipts.create().url}>
+            <Plus className="mr-2 size-4" />
+            Create Receipt
+          </Link>
+        </Button>
+      }
+    >
       <AdminDataTable
         rows={receipts}
         filters={filters}

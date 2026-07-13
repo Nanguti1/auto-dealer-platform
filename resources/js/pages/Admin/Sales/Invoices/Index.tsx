@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Eye, FileText } from 'lucide-react';
+import { Eye, FileText, Plus } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import { customerName } from '@/components/admin/customers/helpers';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
@@ -11,6 +11,7 @@ import type { InvoiceFilters, InvoicePagination, Invoice } from '@/components/ad
 import { RowActionsDropdown } from '@/components/admin/shared';
 import { useFormatCurrency } from '@/components/admin/shared/CurrencyFormatter';
 import { Button } from '@/components/ui/button';
+import adminRoutes from '@/routes/admin';
 
 export default function Index({ invoices, filters = {} }: { invoices: InvoicePagination; filters?: InvoiceFilters }) {
   const formatCurrency = useFormatCurrency();
@@ -28,7 +29,18 @@ export default function Index({ invoices, filters = {} }: { invoices: InvoicePag
   ];
 
   return (
-    <PaymentShell title="Invoices" description="Manage customer invoices, line items, taxes, discounts, and payment tracking.">
+    <PaymentShell 
+      title="Invoices" 
+      description="Manage customer invoices, line items, taxes, discounts, and payment tracking."
+      actions={
+        <Button asChild>
+          <Link href={adminRoutes.invoices.create().url}>
+            <Plus className="mr-2 size-4" />
+            Create Invoice
+          </Link>
+        </Button>
+      }
+    >
       <AdminDataTable
         rows={invoices}
         filters={filters}

@@ -7,6 +7,8 @@ namespace App\Http\Controllers\Admin\Sales;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sales\StoreReceiptRequest;
 use App\Http\Requests\Sales\UpdateReceiptRequest;
+use App\Models\Customer;
+use App\Models\Payment;
 use App\Models\Receipt;
 use App\Services\Sales\ReceiptService;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +34,10 @@ class ReceiptController extends Controller
     {
         $this->authorize('create', Receipt::class);
 
-        return Inertia::render('Admin/Sales/Receipts/Create');
+        return Inertia::render('Admin/Sales/Receipts/Create', [
+            'payments' => Payment::select(['id', 'amount', 'currency', 'payment_method'])->with('customer')->get(),
+            'customers' => Customer::select(['id', 'name', 'email'])->get(),
+        ]);
     }
 
     public function store(StoreReceiptRequest $request): RedirectResponse

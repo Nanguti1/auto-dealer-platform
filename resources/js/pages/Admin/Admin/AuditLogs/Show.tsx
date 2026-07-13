@@ -5,6 +5,10 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import auditLogs from '@/routes/admin/audit-logs';
+import AdminLayout from '@/layouts/admin/admin-layout';
+import PageHeader from '@/components/admin/page-header';
+import PageWrapper from '@/components/admin/page-wrapper';
+import type { BreadcrumbItem } from '@/types/navigation';
 
 interface AuditLogUser {
   id: number;
@@ -88,95 +92,103 @@ export default function Show({ log }: { log: AuditLog }) {
     );
   };
 
+  const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Admin', href: '/admin/dashboard' },
+    { title: 'Audit Logs', href: auditLogs.index.url() },
+    { title: `Log #${log.id}`, href: auditLogs.show.url(log.id) },
+  ];
+
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Audit Log Details</h1>
-          <p className="text-muted-foreground">View detailed information about this audit log entry.</p>
+    <AdminLayout title="Audit Log Details" breadcrumbs={breadcrumbs}>
+      <PageWrapper>
+        <PageHeader
+          title="Audit Log Details"
+          description="View detailed information about this audit log entry."
+          actions={
+            <Button variant="outline" asChild>
+              <Link href={auditLogs.index.url()}>
+                <ArrowLeft className="mr-2 size-4" />
+                Back to Logs
+              </Link>
+            </Button>
+          }
+        />
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <User className="size-5" />
+                Basic Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">ID</p>
+                <p className="text-lg font-semibold">{log.id}</p>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-muted-foreground">Event</p>
+                <Badge variant="outline" className="font-mono text-sm">
+                  {log.event}
+                </Badge>
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="size-4 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">User</p>
+                  <p>{log.user?.name ?? 'System'}</p>
+                  {log.user?.email && <p className="text-sm text-muted-foreground">{log.user.email}</p>}
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Calendar className="size-4 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">Created At</p>
+                  <p>{new Date(log.created_at).toLocaleString()}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Globe className="size-5" />
+                Request Information
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Globe className="size-4 text-muted-foreground" />
+                <div>
+                  <p className="text-sm font-medium text-muted-foreground">IP Address</p>
+                  <p className="font-mono text-sm">{log.ip_address ?? '—'}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2">
+                <Monitor className="size-4 text-muted-foreground mt-1" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-muted-foreground">User Agent</p>
+                  <p className="text-sm break-all">{log.user_agent ?? '—'}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
-        <Button variant="outline" asChild>
-          <Link href={auditLogs.index.url()}>
-            <ArrowLeft className="mr-2 size-4" />
-            Back to Logs
-          </Link>
-        </Button>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <User className="size-5" />
-              Basic Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">ID</p>
-              <p className="text-lg font-semibold">{log.id}</p>
-            </div>
-            <div>
-              <p className="text-sm font-medium text-muted-foreground">Event</p>
-              <Badge variant="outline" className="font-mono text-sm">
-                {log.event}
-              </Badge>
-            </div>
-            <div className="flex items-center gap-2">
-              <User className="size-4 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">User</p>
-                <p>{log.user?.name ?? 'System'}</p>
-                {log.user?.email && <p className="text-sm text-muted-foreground">{log.user.email}</p>}
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="size-4 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Created At</p>
-                <p>{new Date(log.created_at).toLocaleString()}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
 
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Globe className="size-5" />
-              Request Information
+              <FileText className="size-5" />
+              Changes
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Globe className="size-4 text-muted-foreground" />
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">IP Address</p>
-                <p className="font-mono text-sm">{log.ip_address ?? '—'}</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <Monitor className="size-4 text-muted-foreground mt-1" />
-              <div className="flex-1">
-                <p className="text-sm font-medium text-muted-foreground">User Agent</p>
-                <p className="text-sm break-all">{log.user_agent ?? '—'}</p>
-              </div>
-            </div>
+          <CardContent>
+            <div className="h-[400px] overflow-y-auto pr-4">{renderChanges()}</div>
           </CardContent>
         </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="size-5" />
-            Changes
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[400px] overflow-y-auto pr-4">{renderChanges()}</div>
-        </CardContent>
-      </Card>
-    </div>
+      </PageWrapper>
+    </AdminLayout>
   );
 }

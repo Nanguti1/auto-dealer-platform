@@ -25,6 +25,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import auditLogs from '@/routes/admin/audit-logs';
+import AdminLayout from '@/layouts/admin/admin-layout';
+import PageHeader from '@/components/admin/page-header';
+import PageWrapper from '@/components/admin/page-wrapper';
+import type { BreadcrumbItem } from '@/types/navigation';
 
 interface AuditLog {
   id: number;
@@ -124,159 +128,160 @@ url.searchParams.set(key, value);
     },
   ];
 
+  const breadcrumbs: BreadcrumbItem[] = [
+    { title: 'Admin', href: '/admin/dashboard' },
+    { title: 'Audit Logs', href: auditLogs.index.url() },
+  ];
+
   if (isLoading) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
-            <p className="text-muted-foreground">View and filter system activity logs.</p>
-          </div>
-        </div>
-        <LoadingState message="Loading audit logs..." variant="full-page" />
-      </div>
+      <AdminLayout title="Audit Logs" breadcrumbs={breadcrumbs}>
+        <PageWrapper>
+          <PageHeader title="Audit Logs" description="View and filter system activity logs." />
+          <LoadingState message="Loading audit logs..." variant="full-page" />
+        </PageWrapper>
+      </AdminLayout>
     );
   }
 
   if (error) {
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
-            <p className="text-muted-foreground">View and filter system activity logs.</p>
-          </div>
-        </div>
-        <InlineError
-          error={error}
-          onRetry={() => {
-            setError(null);
-            router.visit(auditLogs.index.url());
-          }}
-        />
-      </div>
+      <AdminLayout title="Audit Logs" breadcrumbs={breadcrumbs}>
+        <PageWrapper>
+          <PageHeader title="Audit Logs" description="View and filter system activity logs." />
+          <InlineError
+            error={error}
+            onRetry={() => {
+              setError(null);
+              router.visit(auditLogs.index.url());
+            }}
+          />
+        </PageWrapper>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Audit Logs</h1>
-          <p className="text-muted-foreground">View and filter system activity logs.</p>
-        </div>
-        <div className="flex gap-2">
-          <Dialog open={showFilters} onOpenChange={setShowFilters}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Filter className="mr-2 size-4" />
-                Filters
+    <AdminLayout title="Audit Logs" breadcrumbs={breadcrumbs}>
+      <PageWrapper>
+        <PageHeader
+          title="Audit Logs"
+          description="View and filter system activity logs."
+          actions={
+            <div className="flex gap-2">
+              <Dialog open={showFilters} onOpenChange={setShowFilters}>
+                <DialogTrigger asChild>
+                  <Button variant="outline">
+                    <Filter className="mr-2 size-4" />
+                    Filters
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Filter Audit Logs</DialogTitle>
+                    <DialogDescription>Apply filters to narrow down the audit logs.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4 py-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="search">Search</Label>
+                      <Input
+                        id="search"
+                        placeholder="Search by event or user..."
+                        value={localFilters.search ?? ''}
+                        onChange={(e) => handleFilterChange('search', e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="user_id">User</Label>
+                      <Select
+                        value={localFilters.user_id ?? ''}
+                        onValueChange={(value) => handleFilterChange('user_id', value)}
+                      >
+                        <SelectTrigger id="user_id">
+                          <SelectValue placeholder="Select user" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="">All Users</SelectItem>
+                          {users.map((user) => (
+                            <SelectItem key={user.id} value={user.id.toString()}>
+                              {user.name} ({user.email})
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="event">Event</Label>
+                      <Input
+                        id="event"
+                        placeholder="e.g., created, updated, deleted"
+                        value={localFilters.event ?? ''}
+                        onChange={(e) => handleFilterChange('event', e.target.value)}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="date_from">Date From</Label>
+                        <Input
+                          id="date_from"
+                          type="date"
+                          value={localFilters.date_from ?? ''}
+                          onChange={(e) => handleFilterChange('date_from', e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="date_to">Date To</Label>
+                        <Input
+                          id="date_to"
+                          type="date"
+                          value={localFilters.date_to ?? ''}
+                          onChange={(e) => handleFilterChange('date_to', e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end gap-2 pt-4">
+                      <Button variant="outline" onClick={clearFilters}>
+                        <X className="mr-2 size-4" />
+                        Clear
+                      </Button>
+                      <Button onClick={applyFilters}>
+                        <Search className="mr-2 size-4" />
+                        Apply Filters
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              <Button variant="outline" onClick={handleExport}>
+                <Download className="mr-2 size-4" />
+                Export
               </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Filter Audit Logs</DialogTitle>
-                <DialogDescription>Apply filters to narrow down the audit logs.</DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="search">Search</Label>
-                  <Input
-                    id="search"
-                    placeholder="Search by event or user..."
-                    value={localFilters.search ?? ''}
-                    onChange={(e) => handleFilterChange('search', e.target.value)}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="user_id">User</Label>
-                  <Select
-                    value={localFilters.user_id ?? ''}
-                    onValueChange={(value) => handleFilterChange('user_id', value)}
-                  >
-                    <SelectTrigger id="user_id">
-                      <SelectValue placeholder="Select user" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">All Users</SelectItem>
-                      {users.map((user) => (
-                        <SelectItem key={user.id} value={user.id.toString()}>
-                          {user.name} ({user.email})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="event">Event</Label>
-                  <Input
-                    id="event"
-                    placeholder="e.g., created, updated, deleted"
-                    value={localFilters.event ?? ''}
-                    onChange={(e) => handleFilterChange('event', e.target.value)}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="date_from">Date From</Label>
-                    <Input
-                      id="date_from"
-                      type="date"
-                      value={localFilters.date_from ?? ''}
-                      onChange={(e) => handleFilterChange('date_from', e.target.value)}
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="date_to">Date To</Label>
-                    <Input
-                      id="date_to"
-                      type="date"
-                      value={localFilters.date_to ?? ''}
-                      onChange={(e) => handleFilterChange('date_to', e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-end gap-2 pt-4">
-                  <Button variant="outline" onClick={clearFilters}>
-                    <X className="mr-2 size-4" />
-                    Clear
-                  </Button>
-                  <Button onClick={applyFilters}>
-                    <Search className="mr-2 size-4" />
-                    Apply Filters
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
-          <Button variant="outline" onClick={handleExport}>
-            <Download className="mr-2 size-4" />
-            Export
-          </Button>
-        </div>
-      </div>
+            </div>
+          }
+        />
 
-      {logs.data.length === 0 ? (
-        <EmptyState
-          title="No audit logs found"
-          description="There are no audit logs matching your criteria."
-          icon={<Eye className="size-12 text-muted-foreground" />}
-        />
-      ) : (
-        <AdminDataTable
-          rows={logs}
-          filters={filters}
-          columns={columns}
-          baseUrl={auditLogs.index.url()}
-          rowActions={(log) => (
-            <Button variant="ghost" size="icon" asChild>
-              <Link href={auditLogs.show.url(log.id)}>
-                <Eye className="size-4" />
-              </Link>
-            </Button>
-          )}
-        />
-      )}
-    </div>
+        {logs.data.length === 0 ? (
+          <EmptyState
+            title="No audit logs found"
+            description="There are no audit logs matching your criteria."
+            icon={<Eye className="size-12 text-muted-foreground" />}
+          />
+        ) : (
+          <AdminDataTable
+            rows={logs}
+            filters={filters}
+            columns={columns}
+            baseUrl={auditLogs.index.url()}
+            rowActions={(log) => (
+              <Button variant="ghost" size="icon" asChild>
+                <Link href={auditLogs.show.url(log.id)}>
+                  <Eye className="size-4" />
+                </Link>
+              </Button>
+            )}
+          />
+        )}
+      </PageWrapper>
+    </AdminLayout>
   );
 }

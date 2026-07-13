@@ -7,7 +7,10 @@ namespace App\Http\Controllers\Admin\Sales;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sales\StoreInvoiceRequest;
 use App\Http\Requests\Sales\UpdateInvoiceRequest;
+use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Vehicle;
+use App\Models\VehicleReservation;
 use App\Services\Sales\InvoiceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +35,11 @@ class InvoiceController extends Controller
     {
         $this->authorize('create', Invoice::class);
 
-        return Inertia::render('Admin/Sales/Invoices/Create');
+        return Inertia::render('Admin/Sales/Invoices/Create', [
+            'customers' => Customer::select(['id', 'name', 'email'])->get(),
+            'vehicles' => Vehicle::select(['id', 'stock_number', 'make_id', 'model_id'])->with(['make', 'model'])->get(),
+            'reservations' => VehicleReservation::select(['id', 'reservation_number', 'customer_id'])->with('customer')->get(),
+        ]);
     }
 
     public function store(StoreInvoiceRequest $request): RedirectResponse
