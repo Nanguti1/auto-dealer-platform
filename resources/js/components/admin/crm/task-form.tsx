@@ -1,49 +1,90 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import type { CrmTask } from './types';
 
+const statusOptions = [
+  { value: 'open', label: 'Open' },
+  { value: 'in_progress', label: 'In Progress' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
+
+const priorityOptions = [
+  { value: 'low', label: 'Low' },
+  { value: 'normal', label: 'Normal' },
+  { value: 'high', label: 'High' },
+  { value: 'urgent', label: 'Urgent' },
+];
+
 export default function TaskForm({ task, action, leadId }: { task?: CrmTask; action: string; leadId?: number }) {
+  const { data, setData, post, put, errors, processing } = useForm({
+    title: task?.title ?? '',
+    description: task?.description ?? '',
+    status: task?.status ?? 'open',
+    priority: task?.priority ?? 'normal',
+    due_at: task?.due_at ? new Date(task.due_at).toISOString().slice(0, 16) : '',
+    assigned_user_id: task?.assigned_user_id ?? '',
+    lead_id: leadId ?? task?.lead_id ?? '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (task) {
+      put(action);
+    } else {
+      post(action);
+    }
+  };
+
   return (
-    <FormShell
-      action={action}
-      method={task ? 'put' : 'post'}
-      submitLabel="Save task"
-      className="max-w-3xl"
-    >
-      {leadId && <input type="hidden" name="lead_id" value={leadId} />}
+    <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
+      {task && <input type="hidden" name="_method" value="put" />}
+      {data.lead_id && <input type="hidden" name="lead_id" value={data.lead_id} />}
       <FormSection gridCols={1} fullWidth>
         <FormField
           name="title"
           label="Title"
-          value={task?.title ?? ''}
-          onChange={() => {}}
+          value={data.title}
+          error={errors.title}
+          onChange={(value) => setData('title', value)}
         />
       </FormSection>
       <FormSection gridCols={2}>
         <FormField
           name="status"
           label="Status"
-          value={task?.status ?? 'open'}
-          onChange={() => {}}
+          type="select"
+          value={data.status}
+          error={errors.status}
+          options={statusOptions}
+          onChange={(value) => setData('status', value)}
         />
         <FormField
           name="priority"
           label="Priority"
-          value={task?.priority ?? 'normal'}
-          onChange={() => {}}
+          type="select"
+          value={data.priority}
+          error={errors.priority}
+          options={priorityOptions}
+          onChange={(value) => setData('priority', value)}
         />
         <FormField
           name="due_at"
           label="Due date"
           type="datetime-local"
-          value={task?.due_at ?? ''}
-          onChange={() => {}}
+          value={data.due_at}
+          error={errors.due_at}
+          onChange={(value) => setData('due_at', value)}
         />
         <FormField
           name="assigned_user_id"
           label="Assigned user ID"
           type="number"
-          value={String(task?.assigned_user_id ?? '')}
-          onChange={() => {}}
+          value={String(data.assigned_user_id)}
+          error={errors.assigned_user_id}
+          onChange={(value) => setData('assigned_user_id', value)}
         />
       </FormSection>
       <FormSection gridCols={1} fullWidth>
@@ -51,10 +92,20 @@ export default function TaskForm({ task, action, leadId }: { task?: CrmTask; act
           name="description"
           label="Description"
           type="richtext"
-          value={task?.description ?? ''}
-          onChange={() => {}}
+          value={data.description}
+          error={errors.description}
+          onChange={(value) => setData('description', value)}
         />
       </FormSection>
-    </FormShell>
+      <div className="flex justify-end gap-4">
+        <Button
+          type="submit"
+          disabled={processing}
+        >
+          <Save className="mr-2 h-4 w-4" />
+          {processing ? 'Saving...' : 'Save task'}
+        </Button>
+      </div>
+    </form>
   );
 }

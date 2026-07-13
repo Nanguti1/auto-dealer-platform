@@ -22,7 +22,7 @@ class CrmFollowUpPolicy
 
     public function create(User $user): bool
     {
-        return $user !== null && $user->branch_id !== null;
+        return $user !== null && ($user->branch_id !== null || in_array($user->role?->name, [RoleEnum::ADMIN->value], true));
     }
 
     public function update(User $user, CrmFollowUp $model): bool

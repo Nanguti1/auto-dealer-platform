@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { Archive, Eye, Pencil, Receipt, RotateCcw } from 'lucide-react';
+import { Archive, Eye, Pencil, Plus, Receipt, RotateCcw } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
@@ -29,7 +29,18 @@ export default function Index({ payments, filters = {} }: { payments: PaymentPag
   ];
 
   return (
-    <PaymentShell title="Payments" description="Manage customer payments, transactions, refunds, receipts, and payment history.">
+    <PaymentShell 
+      title="Payments" 
+      description="Manage customer payments, transactions, refunds, receipts, and payment history."
+      actions={
+        <Button asChild>
+          <Link href="/admin/payments/create">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Payment
+          </Link>
+        </Button>
+      }
+    >
       <AdminDataTable
         rows={payments}
         filters={filters}

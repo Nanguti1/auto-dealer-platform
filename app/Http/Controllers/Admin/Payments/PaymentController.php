@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Payments\StorePaymentRequest;
 use App\Http\Requests\Payments\UpdatePaymentRequest;
 use App\Models\Payment;
+use App\Models\User;
+use App\Models\Vehicle;
+use App\Models\VehicleReservation;
 use App\Services\Payments\PaymentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +35,35 @@ class PaymentController extends Controller
     {
         $this->authorize('create', Payment::class);
 
-        return Inertia::render('Admin/Payments/Create');
+        return Inertia::render('Admin/Payments/Create', [
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
+                    'year' => $vehicle->year,
+                    'price' => $vehicle->sale_price,
+                    'stock_number' => $vehicle->stock_number,
+                ]),
+            'reservations' => VehicleReservation::with(['vehicle', 'user'])
+                ->where('status', 'pending')
+                ->get()
+                ->map(fn ($reservation) => [
+                    'id' => $reservation->id,
+                    'vehicle_name' => $reservation->vehicle ? "{$reservation->vehicle->year} {$reservation->vehicle->make->name} {$reservation->vehicle->vehicleModel->name}" : 'Unknown vehicle',
+                    'customer_name' => $reservation->user->name ?? $reservation->user->email ?? 'Unknown customer',
+                    'deposit_amount' => $reservation->deposit_amount,
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]),
+        ]);
     }
 
     public function store(StorePaymentRequest $request): RedirectResponse
@@ -57,6 +88,33 @@ class PaymentController extends Controller
 
         return Inertia::render('Admin/Payments/Edit', [
             'payment' => $payment,
+            'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
+                ->get()
+                ->map(fn ($vehicle) => [
+                    'id' => $vehicle->id,
+                    'name' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
+                    'make' => $vehicle->make->name,
+                    'model' => $vehicle->vehicleModel->name,
+                    'year' => $vehicle->year,
+                    'price' => $vehicle->sale_price,
+                    'stock_number' => $vehicle->stock_number,
+                ]),
+            'reservations' => VehicleReservation::with(['vehicle', 'user'])
+                ->where('status', 'pending')
+                ->get()
+                ->map(fn ($reservation) => [
+                    'id' => $reservation->id,
+                    'vehicle_name' => $reservation->vehicle ? "{$reservation->vehicle->year} {$reservation->vehicle->make->name} {$reservation->vehicle->vehicleModel->name}" : 'Unknown vehicle',
+                    'customer_name' => $reservation->user->name ?? $reservation->user->email ?? 'Unknown customer',
+                    'deposit_amount' => $reservation->deposit_amount,
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ]),
         ]);
     }
 

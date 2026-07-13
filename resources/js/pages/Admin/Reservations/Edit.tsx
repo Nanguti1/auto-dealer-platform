@@ -3,7 +3,12 @@ import ReservationShell, { ReservationBackButton } from '@/components/admin/rese
 import type { ReservationRecord } from '@/components/admin/reservations/types';
 import admin from '@/routes/admin';
 
-export default function Edit({ reservation, vehicles, users }: { reservation: ReservationRecord; vehicles: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>; users: Array<{ id: number; name: string; email?: string }> }) {
+export default function Edit({ reservation, vehicles, customers, users }: { 
+  reservation: ReservationRecord; 
+  vehicles: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>; 
+  customers: Array<{ id: number; name: string; email: string; customer_number: string }>;
+  users: Array<{ id: number; name: string; email?: string }> 
+}) {
   return (
     <ReservationShell 
       title={`Edit Reservation #${reservation.id}`} 
@@ -15,6 +20,7 @@ export default function Edit({ reservation, vehicles, users }: { reservation: Re
         action={admin.reservations.update(reservation.id).url} 
         method="put" 
         vehicles={vehicles}
+        customers={customers}
         users={users}
         cancelUrl={admin.reservations.show(reservation.id).url}
       />

@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { Archive, CheckCircle2, Eye, Pencil, XCircle } from 'lucide-react';
+import { Archive, CheckCircle2, Eye, Pencil, Plus, XCircle } from 'lucide-react';
 import * as React from 'react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import FinanceShell from '@/components/admin/finance/finance-shell';
@@ -55,7 +55,18 @@ export default function Index({ financeApplications, filters = {} }: { financeAp
   }
 
   return (
-    <FinanceShell title="Finance Applications" description="Review applications, loan details, approvals, documents, officers, and financing activity.">
+    <FinanceShell 
+      title="Finance Applications" 
+      description="Review applications, loan details, approvals, documents, officers, and financing activity."
+      actions={
+        <Button asChild>
+          <Link href="/admin/finance-applications/create">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Application
+          </Link>
+        </Button>
+      }
+    >
       {financeApplications.data.length === 0 ? (
         <EmptyFinanceApplications onCreate={() => router.visit('/admin/finance-applications/create')} />
       ) : (

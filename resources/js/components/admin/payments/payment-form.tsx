@@ -1,90 +1,195 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import type { Payment } from './types';
 
-export default function PaymentForm({ payment, action }: { payment?: Payment; action: string }) {
+interface PaymentFormProps {
+  payment?: Payment;
+  action: string;
+  vehicles?: Array<{ id: number; name: string; make: string; model: string; year: number; price: number; stock_number: string }>;
+  reservations?: Array<{ id: number; vehicle_name: string; customer_name: string; deposit_amount: number }>;
+  users?: Array<{ id: number; name: string; email: string }>;
+}
+
+const paymentMethodOptions = [
+  { value: 'cash', label: 'Cash' },
+  { value: 'credit_card', label: 'Credit Card' },
+  { value: 'debit_card', label: 'Debit Card' },
+  { value: 'bank_transfer', label: 'Bank Transfer' },
+  { value: 'check', label: 'Check' },
+  { value: 'financing', label: 'Financing' },
+  { value: 'online', label: 'Online Payment' },
+];
+
+const statusOptions = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'completed', label: 'Completed' },
+  { value: 'failed', label: 'Failed' },
+  { value: 'refunded', label: 'Refunded' },
+  { value: 'cancelled', label: 'Cancelled' },
+];
+
+export default function PaymentForm({ payment, action, vehicles = [], reservations = [], users = [] }: PaymentFormProps) {
+  const { data, setData, post, put, processing, errors } = useForm({
+    user_id: payment?.user_id ?? '',
+    vehicle_id: payment?.vehicle_id ?? '',
+    vehicle_reservation_id: payment?.vehicle_reservation_id ?? '',
+    amount: payment?.amount ?? '',
+    currency: payment?.currency ?? 'USD',
+    method: payment?.method ?? '',
+    status: payment?.status ?? 'pending',
+    transaction_reference: payment?.transaction_reference ?? '',
+    paid_at: payment?.paid_at ? new Date(payment.paid_at).toISOString().slice(0, 16) : '',
+    notes: payment?.metadata?.notes ?? '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Include notes in metadata and remove from root level
+    const { notes, ...formDataWithoutNotes } = data;
+    const formData = {
+      ...formDataWithoutNotes,
+      metadata: {
+        ...payment?.metadata,
+        notes: notes,
+      },
+    };
+    
+    if (payment) {
+      put(action, formData);
+    } else {
+      post(action, formData);
+    }
+  };
+
+  const vehicleOptions = vehicles.map(vehicle => ({
+    value: vehicle.id,
+    label: `${vehicle.name} - ${vehicle.stock_number}`,
+  }));
+
+  const reservationOptions = reservations.map(reservation => ({
+    value: reservation.id,
+    label: `${reservation.vehicle_name} - ${reservation.customer_name} ($${reservation.deposit_amount})`,
+  }));
+
+  const userOptions = users.map(user => ({
+    value: user.id,
+    label: user.name || user.email || `User #${user.id}`,
+  }));
+
   return (
-    <FormShell
-      action={action}
-      method={payment ? 'put' : 'post'}
-      submitLabel="Save payment"
-      className="max-w-4xl"
-    >
-      <FormSection title="References" gridCols={3}>
-        <FormField
+    <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
+      {(payment) && (
+        <input type="hidden" name="_method" value="put" />
+      )}
+
+      <FormSection title="References" gridCols={2}>
+        <ForeignSelector
           name="user_id"
-          label="Customer ID"
-          type="number"
-          value={String(payment?.user_id ?? '')}
-          onChange={() => {}}
+          label="User"
+          value={data.user_id}
+          error={errors.user_id}
+          options={userOptions}
+          placeholder="Select a user"
+          searchable
+          onChange={(value) => setData('user_id', value)}
         />
-        <FormField
+        <ForeignSelector
           name="vehicle_id"
-          label="Vehicle ID"
-          type="number"
-          value={String(payment?.vehicle_id ?? '')}
-          onChange={() => {}}
+          label="Vehicle"
+          value={data.vehicle_id}
+          error={errors.vehicle_id}
+          options={vehicleOptions}
+          placeholder="Select a vehicle"
+          searchable
+          onChange={(value) => setData('vehicle_id', value)}
         />
-        <FormField
+        <ForeignSelector
           name="vehicle_reservation_id"
-          label="Reservation ID"
-          type="number"
-          value={String(payment?.vehicle_reservation_id ?? '')}
-          onChange={() => {}}
+          label="Reservation"
+          value={data.vehicle_reservation_id}
+          error={errors.vehicle_reservation_id}
+          options={reservationOptions}
+          placeholder="Select a reservation"
+          searchable
+          onChange={(value) => setData('vehicle_reservation_id', value)}
         />
       </FormSection>
 
-      <FormSection title="Payment Details" gridCols={3}>
+      <FormSection title="Payment Details" gridCols={2}>
         <FormField
           name="amount"
           label="Amount"
           type="number"
           step="0.01"
-          value={String(payment?.amount ?? '')}
-          onChange={() => {}}
+          value={data.amount}
+          error={errors.amount}
+          onChange={(value) => setData('amount', value)}
         />
         <FormField
           name="currency"
           label="Currency"
-          value={payment?.currency ?? 'USD'}
-          onChange={() => {}}
+          value={data.currency}
+          error={errors.currency}
+          onChange={(value) => setData('currency', value)}
         />
         <FormField
           name="method"
           label="Payment method"
-          value={payment?.method ?? ''}
-          onChange={() => {}}
+          type="select"
+          value={data.method}
+          error={errors.method}
+          options={paymentMethodOptions}
+          onChange={(value) => setData('method', value)}
         />
         <FormField
           name="status"
           label="Status"
-          value={payment?.status ?? 'pending'}
-          onChange={() => {}}
+          type="select"
+          value={data.status}
+          error={errors.status}
+          options={statusOptions}
+          onChange={(value) => setData('status', value)}
         />
         <FormField
           name="transaction_reference"
           label="Transaction reference"
-          value={payment?.transaction_reference ?? ''}
-          onChange={() => {}}
+          value={data.transaction_reference}
+          error={errors.transaction_reference}
+          onChange={(value) => setData('transaction_reference', value)}
         />
         <FormField
           name="paid_at"
           label="Payment date"
           type="datetime-local"
-          value={payment?.paid_at ? new Date(payment.paid_at).toISOString().slice(0, 16) : ''}
-          onChange={() => {}}
+          value={data.paid_at}
+          error={errors.paid_at}
+          onChange={(value) => setData('paid_at', value)}
         />
       </FormSection>
 
-      <FormSection title="Metadata" gridCols={1} fullWidth>
+      <FormSection title="Additional Information" gridCols={1}>
         <FormField
-          name="metadata"
-          label="Metadata (JSON)"
+          name="notes"
+          label="Notes"
           type="textarea"
-          value={JSON.stringify(payment?.metadata ?? {}, null, 2)}
-          onChange={() => {}}
-          className="font-mono text-xs"
+          value={data.notes}
+          error={errors.notes}
+          onChange={(value) => setData('notes', value)}
         />
       </FormSection>
-    </FormShell>
+
+      <div className="flex justify-end gap-4">
+        <Button
+          type="submit"
+          disabled={processing}
+        >
+          <Save className="mr-2 h-4 w-4" />
+          {processing ? 'Saving...' : 'Save Payment'}
+        </Button>
+      </div>
+    </form>
   );
 }

@@ -25,11 +25,12 @@ class StorePaymentRequest extends FormRequest
             'invoice_id' => ['sometimes', 'nullable', 'exists:invoices,id'],
             'amount' => ['required', 'numeric', 'min:0.01'],
             'currency' => ['sometimes', 'nullable', 'string', 'max:3', 'in:USD,EUR,GBP,CAD'],
-            'method' => ['required', 'string', 'in:credit_card,debit_card,bank_transfer,cash,check'],
-            'status' => ['sometimes', 'nullable', 'string', 'in:pending,completed,failed,refunded'],
+            'method' => ['required', 'string', 'in:credit_card,debit_card,bank_transfer,cash,check,financing,online'],
+            'status' => ['sometimes', 'nullable', 'string', 'in:pending,completed,failed,refunded,cancelled'],
             'transaction_reference' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:payments,transaction_reference'],
             'paid_at' => ['sometimes', 'nullable', 'date'],
             'metadata' => ['sometimes', 'nullable', 'array'],
+            'metadata.notes' => ['sometimes', 'nullable', 'string'],
         ];
     }
 }

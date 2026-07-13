@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Reservations;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reservations\StoreReservationRequest;
 use App\Http\Requests\Reservations\UpdateReservationRequest;
+use App\Models\Customer;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\VehicleReservation;
@@ -45,6 +46,14 @@ class ReservationController extends Controller
                     'model' => $vehicle->vehicleModel->name,
                     'year' => $vehicle->year,
                     'price' => $vehicle->sale_price,
+                ]),
+            'customers' => Customer::select('id', 'first_name', 'last_name', 'email', 'customer_number')
+                ->get()
+                ->map(fn ($customer) => [
+                    'id' => $customer->id,
+                    'name' => "{$customer->first_name} {$customer->last_name}",
+                    'email' => $customer->email,
+                    'customer_number' => $customer->customer_number,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()
@@ -87,6 +96,14 @@ class ReservationController extends Controller
                     'model' => $vehicle->vehicleModel->name,
                     'year' => $vehicle->year,
                     'price' => $vehicle->sale_price,
+                ]),
+            'customers' => Customer::select('id', 'first_name', 'last_name', 'email', 'customer_number')
+                ->get()
+                ->map(fn ($customer) => [
+                    'id' => $customer->id,
+                    'name' => "{$customer->first_name} {$customer->last_name}",
+                    'email' => $customer->email,
+                    'customer_number' => $customer->customer_number,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()
