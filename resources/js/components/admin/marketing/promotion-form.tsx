@@ -1,6 +1,7 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import { ImageDropzone } from '@/components/shared/media-upload';
 import type { Promotion } from './types';
+import * as React from 'react';
 
 const promotionTypeOptions = [
   { value: 'discount', label: 'Discount' },
@@ -21,6 +22,16 @@ function formatDate(value?: string): string {
 
 export default function PromotionForm({ promotion, action, method = 'post' }: { promotion?: Promotion; action: string; method?: 'post' | 'put' }) {
   const rules = promotion?.rules ?? {};
+  const [name, setName] = React.useState(promotion?.name ?? promotion?.title ?? '');
+  const [type, setType] = React.useState(promotion?.type ?? 'discount');
+  const [description, setDescription] = React.useState(promotion?.description ?? String(rules.description ?? ''));
+  const [value, setValue] = React.useState(String(promotion?.value ?? promotion?.discount ?? ''));
+  const [startsAt, setStartsAt] = React.useState(formatDate(promotion?.starts_at));
+  const [endsAt, setEndsAt] = React.useState(formatDate(promotion?.ends_at));
+  const [status, setStatus] = React.useState(promotion?.status ?? (promotion?.is_active ? 'active' : 'draft'));
+  const [visibility, setVisibility] = React.useState(promotion?.visibility ?? String(rules.visibility ?? 'public'));
+  const [featuredVehicles, setFeaturedVehicles] = React.useState((promotion?.featured_vehicles ?? promotion?.vehicles ?? []).map((vehicle) => vehicle.title ?? vehicle.stock_number ?? vehicle.id).join(', '));
+  const [isActive, setIsActive] = React.useState(promotion?.is_active ?? true);
 
   return (
     <FormShell
@@ -34,16 +45,16 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
         <FormField
           name="name"
           label="Campaign name"
-          value={promotion?.name ?? promotion?.title ?? ''}
-          onChange={() => {}}
+          value={name}
+          onChange={setName}
         />
         <FormField
           name="type"
           label="Promotion type"
           type="select"
-          value={promotion?.type ?? 'discount'}
+          value={type}
           options={promotionTypeOptions}
-          onChange={() => {}}
+          onChange={setType}
         />
       </FormSection>
 
@@ -52,8 +63,8 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           name="description"
           label="Description"
           type="textarea"
-          value={promotion?.description ?? String(rules.description ?? '')}
-          onChange={() => {}}
+          value={description}
+          onChange={setDescription}
         />
       </FormSection>
 
@@ -83,22 +94,22 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           label="Discount"
           type="number"
           step="0.01"
-          value={String(promotion?.value ?? promotion?.discount ?? '')}
-          onChange={() => {}}
+          value={value}
+          onChange={setValue}
         />
         <FormField
           name="starts_at"
           label="Start date"
           type="datetime-local"
-          value={formatDate(promotion?.starts_at)}
-          onChange={() => {}}
+          value={startsAt}
+          onChange={setStartsAt}
         />
         <FormField
           name="ends_at"
           label="End date"
           type="datetime-local"
-          value={formatDate(promotion?.ends_at)}
-          onChange={() => {}}
+          value={endsAt}
+          onChange={setEndsAt}
         />
       </FormSection>
 
@@ -106,16 +117,16 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
         <FormField
           name="status"
           label="Status"
-          value={promotion?.status ?? (promotion?.is_active ? 'active' : 'draft')}
-          onChange={() => {}}
+          value={status}
+          onChange={setStatus}
         />
         <FormField
           name="visibility"
           label="Visibility"
           type="select"
-          value={promotion?.visibility ?? String(rules.visibility ?? 'public')}
+          value={visibility}
           options={visibilityOptions}
-          onChange={() => {}}
+          onChange={setVisibility}
         />
       </FormSection>
 
@@ -124,9 +135,9 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           name="featured_vehicles"
           label="Featured vehicles"
           type="textarea"
-          value={(promotion?.featured_vehicles ?? promotion?.vehicles ?? []).map((vehicle) => vehicle.title ?? vehicle.stock_number ?? vehicle.id).join(', ')}
+          value={featuredVehicles}
           placeholder="Use existing backend format or vehicle identifiers"
-          onChange={() => {}}
+          onChange={setFeaturedVehicles}
         />
       </FormSection>
 
@@ -135,8 +146,8 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           name="is_active"
           label="Active"
           type="switch"
-          value={promotion?.is_active ?? true}
-          onChange={() => {}}
+          value={isActive}
+          onChange={setIsActive}
         />
       </FormSection>
     </FormShell>

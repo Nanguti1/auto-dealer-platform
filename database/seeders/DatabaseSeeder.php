@@ -48,6 +48,10 @@ class DatabaseSeeder extends Seeder
             BranchSeeder::class,
             // Configuration Seeders
             SettingsSeeder::class,
+            // Blog Seeders
+            BlogCategorySeeder::class,
+            BlogTagSeeder::class,
+            BlogPostSeeder::class,
             // Sample Data
             VehicleSeeder::class,
         ]);

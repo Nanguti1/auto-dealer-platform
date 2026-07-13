@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
-import { Eye, Pencil, Search, Globe, Share2 } from 'lucide-react';
+import { Eye, Pencil, Search, Globe, Share2, Plus } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { SeoSettings, Paginated } from '@/components/admin/cms/types';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
@@ -60,7 +61,7 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
       <CmsShell
         title="SEO Metadata"
         description="Manage global SEO settings, Open Graph, and structured data."
-        actions={null}
+        actions={<Button asChild><Link href={adminRoutes.seoMetadata.create().url}><Plus className="mr-2 h-4 w-4" />Create SEO Settings</Link></Button>}
       >
         <LoadingState message="Loading SEO settings..." variant="full-page" />
       </CmsShell>
@@ -72,7 +73,7 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
       <CmsShell
         title="SEO Metadata"
         description="Manage global SEO settings, Open Graph, and structured data."
-        actions={null}
+        actions={<Button asChild><Link href={adminRoutes.seoMetadata.create().url}><Plus className="mr-2 h-4 w-4" />Create SEO Settings</Link></Button>}
       >
         <InlineError
           error={error}
@@ -89,12 +90,13 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
     <CmsShell
       title="SEO Metadata"
       description="Manage global SEO settings, Open Graph, and structured data."
-      actions={null}
+      actions={<Button asChild><Link href={adminRoutes.seoMetadata.create().url}><Plus className="mr-2 h-4 w-4" />Create SEO Settings</Link></Button>}
     >
       {seoSettings.data.length === 0 ? (
         <EmptyGeneric
           title="No SEO settings"
           description="Configure your SEO settings to improve your website's visibility."
+          action={{ label: 'Create SEO Settings', onClick: () => router.visit(adminRoutes.seoMetadata.create().url) }}
         />
       ) : (
         <AdminDataTable

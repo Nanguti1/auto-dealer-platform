@@ -6,10 +6,12 @@ import { ImageDropzone } from '@/components/shared/media-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import * as React from 'react';
 
-export default function Create() {
+export default function MediaUpload() {
+  const [category, setCategory] = React.useState('images');
+
   return (
     <CmsShell
       title="Upload Media"
@@ -48,17 +50,18 @@ export default function Create() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select name="category" defaultValue="images">
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="images">Images</SelectItem>
-                  <SelectItem value="documents">Documents</SelectItem>
-                  <SelectItem value="videos">Videos</SelectItem>
-                  <SelectItem value="other">Other</SelectItem>
-                </SelectContent>
-              </Select>
+              <select
+                id="category"
+                name="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="images">Images</option>
+                <option value="documents">Documents</option>
+                <option value="videos">Videos</option>
+                <option value="other">Other</option>
+              </select>
               <InputError message={errors.category} />
             </div>
             <Button className="w-fit" disabled={processing}>{processing ? 'Uploading…' : 'Upload Media'}</Button>

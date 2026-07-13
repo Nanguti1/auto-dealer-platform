@@ -1,5 +1,6 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import type { HomePageSection } from './types';
+import * as React from 'react';
 
 const sectionTypeOptions = [
   { value: 'featured_vehicles', label: 'Featured Vehicles' },
@@ -12,6 +13,12 @@ const sectionTypeOptions = [
 ];
 
 export default function HomeSectionForm({ homeSection, action, method = 'post' }: { homeSection?: HomePageSection; action: string; method?: 'post' | 'put' }) {
+  const [sectionType, setSectionType] = React.useState(homeSection?.section_type ?? 'featured_vehicles');
+  const [title, setTitle] = React.useState(homeSection?.title ?? '');
+  const [displayOrder, setDisplayOrder] = React.useState(String(homeSection?.display_order ?? 0));
+  const [content, setContent] = React.useState(homeSection?.content ? JSON.stringify(homeSection.content, null, 2) : '');
+  const [isVisible, setIsVisible] = React.useState(homeSection?.is_visible ?? true);
+
   return (
     <FormShell
       action={action}
@@ -24,39 +31,39 @@ export default function HomeSectionForm({ homeSection, action, method = 'post' }
           name="section_type"
           label="Section Type"
           type="select"
-          value={homeSection?.section_type ?? 'featured_vehicles'}
+          value={sectionType}
           options={sectionTypeOptions}
-          onChange={() => {}}
+          onChange={setSectionType}
         />
         <FormField
           name="title"
           label="Title"
-          value={homeSection?.title ?? ''}
-          onChange={() => {}}
+          value={title}
+          onChange={setTitle}
         />
         <FormField
           name="display_order"
           label="Display Order"
           type="number"
-          value={String(homeSection?.display_order ?? 0)}
-          onChange={() => {}}
+          value={displayOrder}
+          onChange={setDisplayOrder}
         />
         <FormField
           name="content"
           label="Content (JSON)"
           type="textarea"
-          value={homeSection?.content ? JSON.stringify(homeSection.content, null, 2) : ''}
+          value={content}
           placeholder='{"items": [1, 2, 3]}'
           hint="Enter section-specific configuration as JSON."
-          onChange={() => {}}
+          onChange={setContent}
           className="font-mono text-xs"
         />
         <FormField
           name="is_visible"
           label="Visible"
           type="switch"
-          value={homeSection?.is_visible ?? true}
-          onChange={() => {}}
+          value={isVisible}
+          onChange={setIsVisible}
         />
       </FormSection>
     </FormShell>

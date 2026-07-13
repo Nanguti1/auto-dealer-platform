@@ -32,7 +32,7 @@ class MediaController extends Controller
     {
         $this->authorize('create', Media::class);
 
-        return Inertia::render('Admin/CMS/Media/Create');
+        return Inertia::render('Admin/CMS/Media/Upload');
     }
 
     public function store(StoreMediaRequest $request): RedirectResponse

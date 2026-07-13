@@ -1,8 +1,17 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import { ImageDropzone } from '@/components/shared/media-upload';
 import type { HeroSlider } from './types';
+import * as React from 'react';
 
 export default function HeroSliderForm({ heroSlider, action, method = 'post' }: { heroSlider?: HeroSlider; action: string; method?: 'post' | 'put' }) {
+  const [title, setTitle] = React.useState(heroSlider?.title ?? '');
+  const [subtitle, setSubtitle] = React.useState(heroSlider?.subtitle ?? '');
+  const [ctaButtonText, setCtaButtonText] = React.useState(heroSlider?.cta_button_text ?? '');
+  const [ctaButtonUrl, setCtaButtonUrl] = React.useState(heroSlider?.cta_button_url ?? '');
+  const [displayOrder, setDisplayOrder] = React.useState(String(heroSlider?.display_order ?? 0));
+  const [isActive, setIsActive] = React.useState(heroSlider?.is_active ?? true);
+  const [isPublished, setIsPublished] = React.useState(heroSlider?.is_published ?? false);
+
   return (
     <FormShell
       action={action}
@@ -15,15 +24,15 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
         <FormField
           name="title"
           label="Title"
-          value={heroSlider?.title ?? ''}
-          onChange={() => {}}
+          value={title}
+          onChange={setTitle}
         />
         <FormField
           name="subtitle"
           label="Subtitle"
           type="textarea"
-          value={heroSlider?.subtitle ?? ''}
-          onChange={() => {}}
+          value={subtitle}
+          onChange={setSubtitle}
         />
         <div className="space-y-2">
           <label htmlFor="image" className="text-sm font-medium">Hero Image</label>
@@ -46,35 +55,35 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
         <FormField
           name="cta_button_text"
           label="CTA Button Text"
-          value={heroSlider?.cta_button_text ?? ''}
-          onChange={() => {}}
+          value={ctaButtonText}
+          onChange={setCtaButtonText}
         />
         <FormField
           name="cta_button_url"
           label="CTA Button URL"
-          value={heroSlider?.cta_button_url ?? ''}
-          onChange={() => {}}
+          value={ctaButtonUrl}
+          onChange={setCtaButtonUrl}
         />
         <FormField
           name="display_order"
           label="Display Order"
           type="number"
-          value={String(heroSlider?.display_order ?? 0)}
-          onChange={() => {}}
+          value={displayOrder}
+          onChange={setDisplayOrder}
         />
         <FormField
           name="is_active"
           label="Active"
           type="switch"
-          value={heroSlider?.is_active ?? true}
-          onChange={() => {}}
+          value={isActive}
+          onChange={setIsActive}
         />
         <FormField
           name="is_published"
           label="Published"
           type="switch"
-          value={heroSlider?.is_published ?? false}
-          onChange={() => {}}
+          value={isPublished}
+          onChange={setIsPublished}
         />
       </FormSection>
     </FormShell>
