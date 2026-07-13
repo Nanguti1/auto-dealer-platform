@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Form } from '@inertiajs/react';
 import { Save } from 'lucide-react';
 import InputError from '@/components/input-error';
@@ -42,6 +43,31 @@ interface UserFormProps {
 export default function UserForm({ user, roles = [], branches = [], action, method = 'post' }: UserFormProps) {
   const userRoles = user?.roles?.map((r) => r.id) || [];
 
+  const [formData, setFormData] = React.useState({
+    name: user?.name ?? '',
+    password: '',
+    password_confirmation: '',
+    email: user?.email ?? '',
+    phone: user?.phone ?? '',
+    branch_id: String(user?.branch_id ?? ''),
+    roles: userRoles,
+    preferences_timezone: user?.preferences?.timezone ?? '',
+    preferences_language: user?.preferences?.language ?? 'en',
+  });
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleRoleChange = (roleId: number, checked: boolean) => {
+    setFormData(prev => ({
+      ...prev,
+      roles: checked
+        ? [...prev.roles, roleId]
+        : prev.roles.filter(id => id !== roleId)
+    }));
+  };
+
   return (
     <Form action={action} method="post" className="space-y-6">
       {({ errors, processing }) => (
@@ -57,29 +83,57 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
             <TabsContent value="personal" className="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">Name</Label>
-                <Input id="name" name="name" defaultValue={user?.name ?? ''} />
+                <Input
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                />
                 <InputError message={errors.name} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password{method === 'put' ? ' (leave blank to keep current)' : ''}</Label>
-                <Input id="password" name="password" type="password" defaultValue={user?.password ?? ''} />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                />
                 <InputError message={errors.password} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password_confirmation">Password Confirmation</Label>
-                <Input id="password_confirmation" name="password_confirmation" type="password" defaultValue={user?.password ?? ''} />
+                <Input
+                  id="password_confirmation"
+                  name="password_confirmation"
+                  type="password"
+                  value={formData.password_confirmation}
+                  onChange={(e) => handleInputChange('password_confirmation', e.target.value)}
+                />
                 <InputError message={errors.password_confirmation} />
               </div>
             </TabsContent>
             <TabsContent value="contact" className="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" defaultValue={user?.email ?? ''} />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                />
                 <InputError message={errors.email} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="phone">Phone</Label>
-                <Input id="phone" name="phone" defaultValue={user?.phone ?? ''} />
+                <Input
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                />
                 <InputError message={errors.phone} />
               </div>
               <div className="space-y-2">
@@ -87,7 +141,8 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
                 <select
                   id="branch_id"
                   name="branch_id"
-                  defaultValue={user?.branch_id ?? ''}
+                  value={formData.branch_id}
+                  onChange={(e) => handleInputChange('branch_id', e.target.value)}
                   className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
                 >
                   <option value="">Select branch</option>
@@ -108,9 +163,8 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
                     <div key={role.id} className="flex items-center space-x-2">
                       <Checkbox
                         id={`role-${role.id}`}
-                        name="roles[]"
-                        value={role.id}
-                        defaultChecked={userRoles.includes(role.id)}
+                        checked={formData.roles.includes(role.id)}
+                        onCheckedChange={(checked) => handleRoleChange(role.id, checked === true)}
                       />
                       <Label htmlFor={`role-${role.id}`} className="font-normal">
                         {role.display_name || role.name}
@@ -120,16 +174,30 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
                 </div>
                 <InputError message={errors.roles} />
               </div>
+              {/* Hidden inputs to ensure roles are submitted */}
+              {formData.roles.map((roleId) => (
+                <input key={roleId} type="hidden" name="roles[]" value={roleId} />
+              ))}
             </TabsContent>
             <TabsContent value="preferences" className="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="preferences[timezone]">Timezone</Label>
-                <Input id="preferences[timezone]" name="preferences[timezone]" defaultValue={user?.preferences?.timezone ?? ''} />
+                <Input
+                  id="preferences[timezone]"
+                  name="preferences[timezone]"
+                  value={formData.preferences_timezone}
+                  onChange={(e) => handleInputChange('preferences_timezone', e.target.value)}
+                />
                 <InputError message={errors['preferences.timezone']} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="preferences[language]">Language</Label>
-                <Input id="preferences[language]" name="preferences[language]" defaultValue={user?.preferences?.language ?? 'en'} />
+                <Input
+                  id="preferences[language]"
+                  name="preferences[language]"
+                  value={formData.preferences_language}
+                  onChange={(e) => handleInputChange('preferences_language', e.target.value)}
+                />
                 <InputError message={errors['preferences.language']} />
               </div>
             </TabsContent>

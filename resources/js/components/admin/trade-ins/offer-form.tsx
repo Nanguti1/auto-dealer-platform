@@ -1,7 +1,19 @@
+import * as React from 'react';
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
 import type { TradeInOffer } from './types';
 
 export default function OfferForm({ offer, action, tradeInRequestId }: { offer?: TradeInOffer; action: string; tradeInRequestId?: number }) {
+  const [formData, setFormData] = React.useState({
+    offer_amount: String(offer?.offer_amount ?? ''),
+    valid_until: offer?.valid_until ? new Date(offer.valid_until).toISOString().slice(0, 16) : '',
+    status: offer?.status ?? 'pending',
+    notes: offer?.notes ?? '',
+  });
+
+  const handleChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
   return (
     <FormShell
       action={action}
@@ -15,21 +27,21 @@ export default function OfferForm({ offer, action, tradeInRequestId }: { offer?:
           name="offer_amount"
           label="Offer amount"
           type="number"
-          value={String(offer?.offer_amount ?? '')}
-          onChange={() => {}}
+          value={formData.offer_amount}
+          onChange={(value) => handleChange('offer_amount', value)}
         />
         <FormField
           name="valid_until"
           label="Expiration date"
           type="datetime-local"
-          value={offer?.valid_until ?? ''}
-          onChange={() => {}}
+          value={formData.valid_until}
+          onChange={(value) => handleChange('valid_until', value)}
         />
         <FormField
           name="status"
           label="Status"
-          value={offer?.status ?? 'pending'}
-          onChange={() => {}}
+          value={formData.status}
+          onChange={(value) => handleChange('status', value)}
         />
       </FormSection>
 
@@ -38,8 +50,8 @@ export default function OfferForm({ offer, action, tradeInRequestId }: { offer?:
           name="notes"
           label="Notes"
           type="textarea"
-          value={offer?.notes ?? ''}
-          onChange={() => {}}
+          value={formData.notes}
+          onChange={(value) => handleChange('notes', value)}
         />
       </FormSection>
     </FormShell>
