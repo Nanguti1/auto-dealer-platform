@@ -36,10 +36,12 @@ interface InventoryShowProps {
 export default function InventoryShow({ vehicle: serverVehicle, related: serverRelated }: InventoryShowProps) {
     const vehicle = serverVehicle;
     const related = serverRelated ?? [];
+    const { props } = usePage();
+    const isAuthenticated = !!props.auth?.user;
 
-    const { toggle: toggleWishlist, isWishlisted } = useWishlist();
+    const { toggle: toggleWishlist, isWishlisted } = useWishlist(isAuthenticated ? (props.auth.user.wishlist_vehicle_ids ?? []) : []);
     const { toggle: toggleCompare, isInCompare, maxReached } = useCompare();
-    const { record } = useRecentlyViewed();
+    const { record } = useRecentlyViewed(isAuthenticated ? (props.auth.user.recently_viewed_vehicle_ids ?? []) : []);
     const formatPrice = useFormatCurrency();
     const [shareCopied, setShareCopied] = React.useState(false);
     const shouldReduceMotion = useReducedMotion();

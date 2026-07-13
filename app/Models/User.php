@@ -34,6 +34,11 @@ class User extends Authenticatable implements MustVerifyEmail
         'remember_token',
     ];
 
+    protected $appends = [
+        'wishlist_vehicle_ids',
+        'recently_viewed_vehicle_ids',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -70,6 +75,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Wishlist::class);
     }
 
+    public function getWishlistVehicleIdsAttribute(): array
+    {
+        return $this->wishlists()->pluck('vehicle_id')->toArray();
+    }
+
     public function savedSearches()
     {
         return $this->hasMany(SavedSearch::class);
@@ -78,6 +88,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public function recentlyViewedVehicles()
     {
         return $this->hasMany(RecentlyViewedVehicle::class);
+    }
+
+    public function getRecentlyViewedVehicleIdsAttribute(): array
+    {
+        return $this->recentlyViewedVehicles()
+            ->orderBy('viewed_at', 'desc')
+            ->pluck('vehicle_id')
+            ->toArray();
     }
 
     public function vehicleReservations()
