@@ -64,7 +64,7 @@ trait ManagesEloquentModels
         $eagerLoadMap = [
             Vehicle::class => ['make', 'vehicleModel', 'inventoryStatus'],
             Lead::class => ['crmStage', 'vehicle'],
-            FinanceApplication::class => ['lender', 'vehicle', 'customer', 'user'],
+            FinanceApplication::class => ['lender', 'vehicle', 'user'],
             VehicleReservation::class => ['vehicle', 'user'],
             Customer::class => ['user'],
         ];

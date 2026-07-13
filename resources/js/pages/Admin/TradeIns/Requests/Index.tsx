@@ -1,5 +1,5 @@
 import { Link, router } from '@inertiajs/react';
-import { Archive, CheckCircle2, Eye, Pencil, XCircle } from 'lucide-react';
+import { Archive, CheckCircle2, Eye, Pencil, Plus, XCircle } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
@@ -8,6 +8,7 @@ import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInStatusBadge from '@/components/admin/trade-ins/trade-in-status-badge';
 import type { TradeInFilters, TradeInPagination, TradeInRequest } from '@/components/admin/trade-ins/types';
 import { RowActionsDropdown } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
 
 export default function Index({ tradeIns, filters = {} }: { tradeIns: TradeInPagination; filters?: TradeInFilters }) {
   const columns: Column<TradeInRequest>[] = [
@@ -21,5 +22,5 @@ export default function Index({ tradeIns, filters = {} }: { tradeIns: TradeInPag
     { key: 'updated_at', label: 'Last updated', sortable: true, render: (row) => formatDateTime(row.updated_at) },
   ];
 
-  return <TradeInShell title="Trade-In Requests" description="Manage trade-in intake, valuation, inspection, assignment, approvals, and follow-up."><AdminDataTable rows={tradeIns} filters={filters} columns={columns} baseUrl="/admin/trade-ins" rowActions={(row) => <RowActionsDropdown ariaLabel={`Actions for trade-in ${row.id}`} actions={[{ label: 'View', icon: <Eye />, href: `/admin/trade-ins/${row.id}` }, { label: 'Edit', icon: <Pencil />, href: `/admin/trade-ins/${row.id}/edit` }, { label: 'Approve', icon: <CheckCircle2 />, onClick: () => router.patch(`/admin/trade-ins/${row.id}/approve`) }, { label: 'Reject', icon: <XCircle />, onClick: () => router.patch(`/admin/trade-ins/${row.id}/reject`) }, { label: 'Delete', icon: <Archive />, destructive: true, onClick: () => router.delete(`/admin/trade-ins/${row.id}`) }]} />} /></TradeInShell>;
+  return <TradeInShell title="Trade-In Requests" description="Manage trade-in intake, valuation, inspection, assignment, approvals, and follow-up." actions={<Button asChild><Link href="/admin/trade-ins/create"><Plus className="mr-2 h-4 w-4" />Create Trade-In</Link></Button>}><AdminDataTable rows={tradeIns} filters={filters} columns={columns} baseUrl="/admin/trade-ins" rowActions={(row) => <RowActionsDropdown ariaLabel={`Actions for trade-in ${row.id}`} actions={[{ label: 'View', icon: <Eye />, href: `/admin/trade-ins/${row.id}` }, { label: 'Edit', icon: <Pencil />, href: `/admin/trade-ins/${row.id}/edit` }, { label: 'Approve', icon: <CheckCircle2 />, onClick: () => router.patch(`/admin/trade-ins/${row.id}/approve`) }, { label: 'Reject', icon: <XCircle />, onClick: () => router.patch(`/admin/trade-ins/${row.id}/reject`) }, { label: 'Delete', icon: <Archive />, destructive: true, onClick: () => router.delete(`/admin/trade-ins/${row.id}`) }]} />} /></TradeInShell>;
 }
