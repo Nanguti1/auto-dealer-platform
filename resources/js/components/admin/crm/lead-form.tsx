@@ -11,7 +11,7 @@ interface LeadFormProps {
   method?: 'post' | 'put';
   vehicles?: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>;
   users?: Array<{ id: number; name: string; email?: string }>;
-  crmStages?: Array<{ id: number; name: string; pipeline_id?: number }>;
+  crmStages?: Array<{ id: number; name: string }>;
   cancelUrl?: string;
 }
 

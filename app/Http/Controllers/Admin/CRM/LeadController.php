@@ -53,12 +53,11 @@ class LeadController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                 ]),
-            'crmStages' => CrmStage::select('id', 'name', 'pipeline_id')
+            'crmStages' => CrmStage::select('id', 'name')
                 ->get()
                 ->map(fn ($stage) => [
                     'id' => $stage->id,
                     'name' => $stage->name,
-                    'pipeline_id' => $stage->pipeline_id,
                 ]),
         ]);
     }
@@ -102,12 +101,11 @@ class LeadController extends Controller
                     'name' => $user->name,
                     'email' => $user->email,
                 ]),
-            'crmStages' => CrmStage::select('id', 'name', 'pipeline_id')
+            'crmStages' => CrmStage::select('id', 'name')
                 ->get()
                 ->map(fn ($stage) => [
                     'id' => $stage->id,
                     'name' => $stage->name,
-                    'pipeline_id' => $stage->pipeline_id,
                 ]),
         ]);
     }

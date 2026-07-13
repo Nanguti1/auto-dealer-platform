@@ -8,11 +8,11 @@ export { formatDate, formatDateTime, formatNumber, sharedUserName as userName, s
 export { formatCurrency };
 
 export function applicantName(application: FinanceApplication): string {
-  return application.customer ? customerName(application.customer) : userName(application.user);
+  return application.customer ? customerName(application.customer) : sharedUserName(application.user);
 }
 
 export function officerName(application: FinanceApplication): string {
-  return userName(application.assigned_user ?? application.assignedUser ?? application.officer);
+  return sharedUserName(application.assigned_user ?? application.assignedUser ?? application.officer);
 }
 
 export function deposit(application: FinanceApplication): string | number | undefined {
