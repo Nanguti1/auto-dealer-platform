@@ -13,6 +13,11 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
   const [title, setTitle] = React.useState(cmsPage?.title ?? '');
   const [slug, setSlug] = React.useState(cmsPage?.slug ?? '');
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!cmsPage?.slug);
+  const [publishedAt, setPublishedAt] = React.useState(cmsPage?.published_at ? new Date(cmsPage.published_at).toISOString().slice(0, 16) : '');
+  const [isVisible, setIsVisible] = React.useState(cmsPage?.is_visible ?? true);
+  const [content, setContent] = React.useState(cmsPage?.content ?? '');
+  const [metaTitle, setMetaTitle] = React.useState(cmsPage?.meta_title ?? '');
+  const [metaDescription, setMetaDescription] = React.useState(cmsPage?.meta_description ?? '');
 
   const handleTitleChange = (value: string) => {
     setTitle(value);
@@ -61,15 +66,15 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
           name="published_at"
           label="Published at"
           type="datetime-local"
-          value={cmsPage?.published_at ? new Date(cmsPage.published_at).toISOString().slice(0, 16) : ''}
-          onChange={() => {}}
+          value={publishedAt}
+          onChange={setPublishedAt}
         />
         <FormField
           name="is_visible"
           label="Visible"
           type="switch"
-          value={cmsPage?.is_visible ?? true}
-          onChange={() => {}}
+          value={isVisible}
+          onChange={setIsVisible}
         />
       </FormSection>
 
@@ -78,8 +83,8 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
           name="content"
           label="Content"
           type="richtext"
-          value={cmsPage?.content ?? ''}
-          onChange={() => {}}
+          value={content}
+          onChange={setContent}
         />
       </FormSection>
 
@@ -87,15 +92,15 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
         <FormField
           name="meta_title"
           label="Meta title"
-          value={cmsPage?.meta_title ?? ''}
-          onChange={() => {}}
+          value={metaTitle}
+          onChange={setMetaTitle}
         />
         <FormField
           name="meta_description"
           label="Meta description"
           type="textarea"
-          value={cmsPage?.meta_description ?? ''}
-          onChange={() => {}}
+          value={metaDescription}
+          onChange={setMetaDescription}
         />
       </FormSection>
     </FormShell>

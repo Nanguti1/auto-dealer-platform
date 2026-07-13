@@ -3,6 +3,7 @@ import { FormField, FormSection } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import type { CrmTask } from './types';
+import type { User } from '@/types/models';
 
 const statusOptions = [
   { value: 'open', label: 'Open' },
@@ -18,7 +19,7 @@ const priorityOptions = [
   { value: 'urgent', label: 'Urgent' },
 ];
 
-export default function TaskForm({ task, action, leadId }: { task?: CrmTask; action: string; leadId?: number }) {
+export default function TaskForm({ task, action, leadId, users }: { task?: CrmTask; action: string; leadId?: number; users?: User[] }) {
   const { data, setData, post, put, errors, processing } = useForm({
     title: task?.title ?? '',
     description: task?.description ?? '',
@@ -28,6 +29,11 @@ export default function TaskForm({ task, action, leadId }: { task?: CrmTask; act
     assigned_user_id: task?.assigned_user_id ?? '',
     lead_id: leadId ?? task?.lead_id ?? '',
   });
+
+  const userOptions = users?.map(user => ({
+    value: String(user.id),
+    label: user.name || user.email,
+  })) || [];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,10 +86,12 @@ export default function TaskForm({ task, action, leadId }: { task?: CrmTask; act
         />
         <FormField
           name="assigned_user_id"
-          label="Assigned user ID"
-          type="number"
+          label="Assigned user"
+          type="select"
           value={String(data.assigned_user_id)}
           error={errors.assigned_user_id}
+          options={userOptions}
+          placeholder="Select a user"
           onChange={(value) => setData('assigned_user_id', value)}
         />
       </FormSection>

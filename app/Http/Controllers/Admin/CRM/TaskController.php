@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CRM\StoreTaskRequest;
 use App\Http\Requests\CRM\UpdateTaskRequest;
 use App\Models\CrmTask;
+use App\Models\User;
 use App\Services\CRM\TaskService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,9 @@ class TaskController extends Controller
     {
         $this->authorize('create', CrmTask::class);
 
-        return Inertia::render('Admin/CRM/Tasks/Create');
+        return Inertia::render('Admin/CRM/Tasks/Create', [
+            'users' => User::select('id', 'name', 'email')->get(),
+        ]);
     }
 
     public function store(StoreTaskRequest $request): RedirectResponse
@@ -57,6 +60,7 @@ class TaskController extends Controller
 
         return Inertia::render('Admin/CRM/Tasks/Edit', [
             'task' => $task->load('lead', 'assignedUser'),
+            'users' => User::select('id', 'name', 'email')->get(),
         ]);
     }
 

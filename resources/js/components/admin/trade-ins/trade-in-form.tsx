@@ -1,66 +1,111 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import type { TradeInRequest } from './types';
 
+const statusOptions = [
+  { value: 'pending', label: 'Pending' },
+  { value: 'under_review', label: 'Under Review' },
+  { value: 'approved', label: 'Approved' },
+  { value: 'rejected', label: 'Rejected' },
+  { value: 'completed', label: 'Completed' },
+];
+
 export default function TradeInForm({ tradeInRequest, action, method = 'post' }: { tradeInRequest?: TradeInRequest; action: string; method?: 'post' | 'put' }) {
+  const { data, setData, post, put, errors, processing } = useForm({
+    year: tradeInRequest?.year ?? '',
+    make: tradeInRequest?.make ?? '',
+    model: tradeInRequest?.model ?? '',
+    vin: tradeInRequest?.vin ?? '',
+    mileage: tradeInRequest?.mileage ?? '',
+    status: tradeInRequest?.status ?? 'pending',
+    estimated_value: tradeInRequest?.estimated_value ?? '',
+    offered_value: tradeInRequest?.offered_value ?? '',
+    condition_report: tradeInRequest?.condition_report ? JSON.stringify(tradeInRequest.condition_report, null, 2) : '{}',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Parse condition_report back to object
+    const formData = {
+      ...data,
+      condition_report: JSON.parse(data.condition_report || '{}'),
+    };
+    
+    if (tradeInRequest) {
+      put(action, formData);
+    } else {
+      post(action, formData);
+    }
+  };
+
   return (
-    <FormShell
-      action={action}
-      method={method}
-      submitLabel="Save trade-in request"
-      className="max-w-4xl"
-    >
+    <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
+      {tradeInRequest && <input type="hidden" name="_method" value={method} />}
       <FormSection title="Vehicle Information" gridCols={3}>
         <FormField
           name="year"
           label="Year"
           type="number"
-          value={String(tradeInRequest?.year ?? '')}
-          onChange={() => {}}
+          value={data.year}
+          error={errors.year}
+          onChange={(value) => setData('year', value)}
         />
         <FormField
           name="make"
           label="Make"
-          value={tradeInRequest?.make ?? ''}
-          onChange={() => {}}
+          value={data.make}
+          error={errors.make}
+          onChange={(value) => setData('make', value)}
         />
         <FormField
           name="model"
           label="Model"
-          value={tradeInRequest?.model ?? ''}
-          onChange={() => {}}
+          value={data.model}
+          error={errors.model}
+          onChange={(value) => setData('model', value)}
         />
         <FormField
           name="vin"
           label="VIN"
-          value={tradeInRequest?.vin ?? ''}
-          onChange={() => {}}
+          value={data.vin}
+          error={errors.vin}
+          onChange={(value) => setData('vin', value)}
         />
         <FormField
           name="mileage"
           label="Mileage"
           type="number"
-          value={String(tradeInRequest?.mileage ?? '')}
-          onChange={() => {}}
+          value={data.mileage}
+          error={errors.mileage}
+          onChange={(value) => setData('mileage', value)}
         />
         <FormField
           name="status"
           label="Status"
-          value={tradeInRequest?.status ?? 'pending'}
-          onChange={() => {}}
+          type="select"
+          value={data.status}
+          error={errors.status}
+          options={statusOptions}
+          onChange={(value) => setData('status', value)}
         />
         <FormField
           name="estimated_value"
           label="Estimated value"
           type="number"
-          value={String(tradeInRequest?.estimated_value ?? '')}
-          onChange={() => {}}
+          value={data.estimated_value}
+          error={errors.estimated_value}
+          onChange={(value) => setData('estimated_value', value)}
         />
         <FormField
           name="offered_value"
           label="Offered value"
           type="number"
-          value={String(tradeInRequest?.offered_value ?? '')}
-          onChange={() => {}}
+          value={data.offered_value}
+          error={errors.offered_value}
+          onChange={(value) => setData('offered_value', value)}
         />
       </FormSection>
 
@@ -69,11 +114,22 @@ export default function TradeInForm({ tradeInRequest, action, method = 'post' }:
           name="condition_report"
           label="Condition report"
           type="textarea"
-          value={JSON.stringify(tradeInRequest?.condition_report ?? {}, null, 2)}
-          onChange={() => {}}
+          value={data.condition_report}
+          error={errors.condition_report}
+          onChange={(value) => setData('condition_report', value)}
           className="font-mono text-xs"
         />
       </FormSection>
-    </FormShell>
+
+      <div className="flex justify-end gap-4">
+        <Button
+          type="submit"
+          disabled={processing}
+        >
+          <Save className="mr-2 h-4 w-4" />
+          {processing ? 'Saving...' : 'Save trade-in request'}
+        </Button>
+      </div>
+    </form>
   );
 }

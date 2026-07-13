@@ -22,7 +22,7 @@ class FaqController extends Controller
     {
         $this->authorize('viewAny', Faq::class);
 
-        return Inertia::render('Admin/CMS/Faqs/Index', [
+        return Inertia::render('Admin/CMS/FAQs/Index', [
             'faqs' => $this->service->paginate($request->query()),
             'filters' => $request->query(),
         ]);
@@ -32,7 +32,7 @@ class FaqController extends Controller
     {
         $this->authorize('create', Faq::class);
 
-        return Inertia::render('Admin/CMS/Faqs/Create');
+        return Inertia::render('Admin/CMS/FAQs/Create');
     }
 
     public function store(StoreFaqRequest $request): RedirectResponse
@@ -46,7 +46,7 @@ class FaqController extends Controller
     {
         $this->authorize('view', $faq);
 
-        return Inertia::render('Admin/CMS/Faqs/Show', [
+        return Inertia::render('Admin/CMS/FAQs/Show', [
             'faq' => $faq,
         ]);
     }
@@ -55,7 +55,7 @@ class FaqController extends Controller
     {
         $this->authorize('update', $faq);
 
-        return Inertia::render('Admin/CMS/Faqs/Edit', [
+        return Inertia::render('Admin/CMS/FAQs/Edit', [
             'faq' => $faq,
         ]);
     }

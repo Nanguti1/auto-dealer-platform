@@ -11,7 +11,7 @@ class DynamicCmsPage extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
-    protected $fillable = ['title', 'slug', 'body', 'status', 'published_at'];
+    protected $fillable = ['title', 'slug', 'body', 'content', 'status', 'published_at', 'is_visible', 'meta_title', 'meta_description'];
 
     protected function casts(): array
     {
