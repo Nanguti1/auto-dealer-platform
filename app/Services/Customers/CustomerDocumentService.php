@@ -34,6 +34,29 @@ class CustomerDocumentService
         return $document->fresh();
     }
 
+    public function update(CustomerDocument $document, array $data, ?UploadedFile $file = null): CustomerDocument
+    {
+        DB::transaction(function () use ($document, $data, $file): void {
+            // Update metadata
+            if (isset($data['name'])) {
+                $document->name = $data['name'];
+            }
+            if (isset($data['type'])) {
+                $document->type = $data['type'];
+            }
+
+            // Handle file replacement if provided
+            if ($file) {
+                $this->delete($document);
+                $this->upload($document, $file, $document->type);
+            } else {
+                $document->save();
+            }
+        });
+
+        return $document->fresh();
+    }
+
     public function delete(CustomerDocument $document): void
     {
         DB::transaction(function () use ($document): void {

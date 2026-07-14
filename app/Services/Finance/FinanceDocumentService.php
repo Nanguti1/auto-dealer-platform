@@ -34,6 +34,29 @@ class FinanceDocumentService
         return $document->fresh();
     }
 
+    public function update(FinanceDocument $document, array $data, ?UploadedFile $file = null): FinanceDocument
+    {
+        DB::transaction(function () use ($document, $data, $file): void {
+            // Update metadata
+            if (isset($data['name'])) {
+                $document->name = $data['name'];
+            }
+            if (isset($data['type'])) {
+                $document->type = $data['type'];
+            }
+
+            // Handle file replacement if provided
+            if ($file) {
+                $this->delete($document);
+                $this->upload($document, $file, $document->type);
+            } else {
+                $document->save();
+            }
+        });
+
+        return $document->fresh();
+    }
+
     public function delete(FinanceDocument $document): void
     {
         DB::transaction(function () use ($document): void {

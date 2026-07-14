@@ -15,7 +15,7 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!cmsPage?.slug);
   const [publishedAt, setPublishedAt] = React.useState(cmsPage?.published_at ? new Date(cmsPage.published_at).toISOString().slice(0, 16) : '');
   const [isVisible, setIsVisible] = React.useState(cmsPage?.is_visible ?? true);
-  const [content, setContent] = React.useState(cmsPage?.content ?? '');
+  const [body, setBody] = React.useState(cmsPage?.body ?? '');
   const [metaTitle, setMetaTitle] = React.useState(cmsPage?.meta_title ?? '');
   const [metaDescription, setMetaDescription] = React.useState(cmsPage?.meta_description ?? '');
 
@@ -80,11 +80,11 @@ export default function PageForm({ cmsPage, action, method = 'post' }: { cmsPage
 
       <FormSection title="Content" gridCols={1} fullWidth>
         <FormField
-          name="content"
+          name="body"
           label="Content"
           type="richtext"
-          value={content}
-          onChange={setContent}
+          value={body}
+          onChange={setBody}
         />
       </FormSection>
 

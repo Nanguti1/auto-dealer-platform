@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class DynamicCmsPageFactory extends Factory
@@ -10,14 +9,14 @@ class DynamicCmsPageFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
             'title' => fake()->sentence(3),
             'slug' => fake()->slug(),
-            'content' => fake()->paragraphs(3, true),
+            'body' => fake()->paragraphs(3, true),
+            'status' => fake()->randomElement(['draft', 'published', 'archived']),
+            'is_visible' => fake()->boolean(),
             'meta_title' => fake()->sentence(),
             'meta_description' => fake()->sentence(),
-            'is_published' => fake()->boolean(),
-            'published_at' => fake()->optional()->date(),
+            'published_at' => fake()->optional()->dateTime(),
         ];
     }
 }

@@ -155,6 +155,8 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::patch('trade-ins/{trade_in}/approve', [TradeInController::class, 'approve'])->name('trade-ins.approve');
         Route::patch('trade-ins/{trade_in}/reject', [TradeInController::class, 'reject'])->name('trade-ins.reject');
         Route::patch('trade-ins/{trade_in}/convert-to-inventory', [TradeInController::class, 'convertToInventory'])->name('trade-ins.convert-to-inventory');
+        Route::get('trade-ins/{tradeIn}/inspection/create', [InspectionController::class, 'create'])->name('trade-ins.inspection.create');
+        Route::post('trade-ins/{tradeIn}/inspection', [InspectionController::class, 'store'])->name('trade-ins.inspection.store');
         Route::resource('inspections', InspectionController::class);
         Route::patch('inspections/{inspection}/complete', [InspectionController::class, 'complete'])->name('inspections.complete');
         Route::resource('offers', OfferController::class);

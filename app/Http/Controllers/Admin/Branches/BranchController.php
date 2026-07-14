@@ -37,7 +37,7 @@ class BranchController extends Controller
 
     public function store(StoreBranchRequest $request): RedirectResponse
     {
-        Branch::create($request->validated());
+        $this->service->create($request->validated());
 
         return redirect()->route('admin.branches.index')->with('success', 'Branch created successfully.');
     }
@@ -62,7 +62,7 @@ class BranchController extends Controller
 
     public function update(UpdateBranchRequest $request, Branch $branch): RedirectResponse
     {
-        $branch->update($request->validated());
+        $this->service->update($branch, $request->validated());
 
         return back()->with('success', 'Branch updated successfully.');
     }
@@ -70,7 +70,7 @@ class BranchController extends Controller
     public function destroy(Branch $branch): RedirectResponse
     {
         $this->authorize('delete', $branch);
-        $branch->delete();
+        $this->service->delete($branch);
 
         return redirect()->route('admin.branches.index')->with('success', 'Branch deleted successfully.');
     }

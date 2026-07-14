@@ -75,23 +75,7 @@ class ImportDocumentController extends Controller
         $document = ImportDocument::findOrFail($document);
         $this->authorize('update', $document);
 
-        $validated = $request->validated();
-
-        // Update document metadata
-        if (isset($validated['name'])) {
-            $document->name = $validated['name'];
-        }
-        if (isset($validated['type'])) {
-            $document->type = $validated['type'];
-        }
-
-        // Handle file replacement if provided
-        if ($request->hasFile('file')) {
-            $this->service->delete($document);
-            $this->service->upload($document, $request->file('file'), $document->type);
-        }
-
-        $document->save();
+        $this->service->update($document, $request->validated(), $request->file('file'));
 
         return redirect()->route('admin.imports.documents.index', $vehicleImport)->with('success', 'Document updated successfully.');
     }

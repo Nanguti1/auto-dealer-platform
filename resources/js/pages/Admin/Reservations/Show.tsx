@@ -9,6 +9,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import admin from '@/routes/admin';
 
 export default function Show({ reservation }: { reservation: ReservationRecord }) {
+  if (!reservation?.id) {
+    return (
+      <ReservationShell 
+        title="Error" 
+        description="Invalid reservation data."
+      >
+        <div className="text-destructive">Reservation ID is missing.</div>
+      </ReservationShell>
+    );
+  }
+
   const status = statusBadge(reservation.status);
 
   return (

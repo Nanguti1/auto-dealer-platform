@@ -1,4 +1,7 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import { ImageDropzone } from '@/components/shared/media-upload';
 import type { Promotion } from './types';
 import * as React from 'react';
@@ -16,45 +19,64 @@ const visibilityOptions = [
   { value: 'featured', label: 'Featured' },
 ];
 
+const statusOptions = [
+  { value: 'active', label: 'Active' },
+  { value: 'draft', label: 'Draft' },
+  { value: 'scheduled', label: 'Scheduled' },
+  { value: 'expired', label: 'Expired' },
+];
+
 function formatDate(value?: string): string {
   return value ? new Date(value).toISOString().slice(0, 16) : '';
 }
 
 export default function PromotionForm({ promotion, action, method = 'post' }: { promotion?: Promotion; action: string; method?: 'post' | 'put' }) {
   const rules = promotion?.rules ?? {};
-  const [name, setName] = React.useState(promotion?.name ?? promotion?.title ?? '');
-  const [type, setType] = React.useState(promotion?.type ?? 'discount');
-  const [description, setDescription] = React.useState(promotion?.description ?? String(rules.description ?? ''));
-  const [value, setValue] = React.useState(String(promotion?.value ?? promotion?.discount ?? ''));
-  const [startsAt, setStartsAt] = React.useState(formatDate(promotion?.starts_at));
-  const [endsAt, setEndsAt] = React.useState(formatDate(promotion?.ends_at));
-  const [status, setStatus] = React.useState(promotion?.status ?? (promotion?.is_active ? 'active' : 'draft'));
-  const [visibility, setVisibility] = React.useState(promotion?.visibility ?? String(rules.visibility ?? 'public'));
-  const [featuredVehicles, setFeaturedVehicles] = React.useState((promotion?.featured_vehicles ?? promotion?.vehicles ?? []).map((vehicle) => vehicle.title ?? vehicle.stock_number ?? vehicle.id).join(', '));
-  const [isActive, setIsActive] = React.useState(promotion?.is_active ?? true);
+  const { data, setData, post, put, processing, errors } = useForm({
+    name: promotion?.name ?? promotion?.title ?? '',
+    type: promotion?.type ?? 'discount',
+    description: promotion?.description ?? String(rules.description ?? ''),
+    value: String(promotion?.value ?? promotion?.discount ?? ''),
+    starts_at: formatDate(promotion?.starts_at),
+    ends_at: formatDate(promotion?.ends_at),
+    status: promotion?.status ?? (promotion?.is_active ? 'active' : 'draft'),
+    visibility: promotion?.visibility ?? String(rules.visibility ?? 'public'),
+    featured_vehicles: (promotion?.featured_vehicles ?? promotion?.vehicles ?? []).map((vehicle) => vehicle.title ?? vehicle.stock_number ?? vehicle.id).join(', '),
+    is_active: promotion?.is_active ?? true,
+    banner: null as File | null,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (promotion) {
+      put(action, {
+        forceFormData: true,
+      });
+    } else {
+      post(action, {
+        forceFormData: true,
+      });
+    }
+  };
 
   return (
-    <FormShell
-      action={action}
-      method={method}
-      submitLabel="Save promotion"
-      encType="multipart/form-data"
-      className="max-w-3xl"
-    >
+    <form onSubmit={handleSubmit} className="max-w-3xl space-y-6" encType="multipart/form-data">
       <FormSection title="Basic Information" gridCols={2}>
         <FormField
           name="name"
           label="Campaign name"
-          value={name}
-          onChange={setName}
+          value={data.name}
+          error={errors.name}
+          onChange={(value) => setData('name', value)}
         />
         <FormField
           name="type"
           label="Promotion type"
           type="select"
-          value={type}
+          value={data.type}
+          error={errors.type}
           options={promotionTypeOptions}
-          onChange={setType}
+          onChange={(value) => setData('type', value)}
         />
       </FormSection>
 
@@ -63,8 +85,9 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           name="description"
           label="Description"
           type="textarea"
-          value={description}
-          onChange={setDescription}
+          value={data.description}
+          error={errors.description}
+          onChange={(value) => setData('description', value)}
         />
       </FormSection>
 
@@ -75,16 +98,23 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
             multiple={false}
             previewUrl={promotion?.banner_path}
             onFilesSelected={(files) => {
-              const input = document.querySelector('input[name="banner"]') as HTMLInputElement | null;
-
-              if (input && files[0]) {
-                const transfer = new DataTransfer();
-                transfer.items.add(files[0]);
-                input.files = transfer.files;
+              if (files.length > 0) {
+                setData('banner', files[0]);
               }
             }}
           />
-          <input id="banner" name="banner" type="file" accept="image/*" className="hidden" />
+          <input 
+            id="banner" 
+            name="banner" 
+            type="file" 
+            accept="image/*" 
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setData('banner', e.target.files[0]);
+              }
+            }}
+          />
         </div>
       </FormSection>
 
@@ -94,22 +124,25 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           label="Discount"
           type="number"
           step="0.01"
-          value={value}
-          onChange={setValue}
+          value={data.value}
+          error={errors.value}
+          onChange={(value) => setData('value', value)}
         />
         <FormField
           name="starts_at"
           label="Start date"
           type="datetime-local"
-          value={startsAt}
-          onChange={setStartsAt}
+          value={data.starts_at}
+          error={errors.starts_at}
+          onChange={(value) => setData('starts_at', value)}
         />
         <FormField
           name="ends_at"
           label="End date"
           type="datetime-local"
-          value={endsAt}
-          onChange={setEndsAt}
+          value={data.ends_at}
+          error={errors.ends_at}
+          onChange={(value) => setData('ends_at', value)}
         />
       </FormSection>
 
@@ -117,16 +150,20 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
         <FormField
           name="status"
           label="Status"
-          value={status}
-          onChange={setStatus}
+          type="select"
+          value={data.status}
+          error={errors.status}
+          options={statusOptions}
+          onChange={(value) => setData('status', value)}
         />
         <FormField
           name="visibility"
           label="Visibility"
           type="select"
-          value={visibility}
+          value={data.visibility}
+          error={errors.visibility}
           options={visibilityOptions}
-          onChange={setVisibility}
+          onChange={(value) => setData('visibility', value)}
         />
       </FormSection>
 
@@ -135,9 +172,10 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           name="featured_vehicles"
           label="Featured vehicles"
           type="textarea"
-          value={featuredVehicles}
+          value={data.featured_vehicles}
+          error={errors.featured_vehicles}
           placeholder="Use existing backend format or vehicle identifiers"
-          onChange={setFeaturedVehicles}
+          onChange={(value) => setData('featured_vehicles', value)}
         />
       </FormSection>
 
@@ -146,10 +184,17 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
           name="is_active"
           label="Active"
           type="switch"
-          value={isActive}
-          onChange={setIsActive}
+          value={data.is_active}
+          error={errors.is_active}
+          onChange={(value) => setData('is_active', value)}
         />
       </FormSection>
-    </FormShell>
+      <div className="flex justify-end gap-4">
+        <Button type="submit" disabled={processing}>
+          <Save className="mr-2 size-4" />
+          {processing ? 'Saving...' : 'Save promotion'}
+        </Button>
+      </div>
+    </form>
   );
 }

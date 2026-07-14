@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeIns\StoreInspectionRequest;
 use App\Http\Requests\TradeIns\UpdateInspectionRequest;
 use App\Models\TradeInInspection;
+use App\Models\TradeInRequest;
 use App\Services\TradeIns\InspectionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,16 +29,29 @@ class InspectionController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request, ?int $tradeIn = null): Response
     {
         $this->authorize('create', TradeInInspection::class);
 
-        return Inertia::render('Admin/TradeIns/Inspections/Create');
+        $tradeInRequest = null;
+        if ($tradeIn) {
+            $tradeInRequest = TradeInRequest::find($tradeIn);
+        } elseif ($request->has('trade_in')) {
+            $tradeInRequest = TradeInRequest::find($request->input('trade_in'));
+        }
+
+        return Inertia::render('Admin/TradeIns/Inspections/Create', [
+            'tradeInRequest' => $tradeInRequest,
+        ]);
     }
 
-    public function store(StoreInspectionRequest $request): RedirectResponse
+    public function store(StoreInspectionRequest $request, ?int $tradeIn = null): RedirectResponse
     {
         $this->service->create($request->validated());
+
+        if ($tradeIn) {
+            return redirect()->route('admin.trade-ins.show', $tradeIn)->with('success', 'Inspection created successfully.');
+        }
 
         return redirect()->route('admin.inspections.index')->with('success', 'Inspection created successfully.');
     }

@@ -3,12 +3,22 @@ import ReservationShell, { ReservationBackButton } from '@/components/admin/rese
 import type { ReservationRecord } from '@/components/admin/reservations/types';
 import admin from '@/routes/admin';
 
-export default function Edit({ reservation, vehicles, customers, users }: { 
+export default function Edit({ reservation, vehicles, users }: { 
   reservation: ReservationRecord; 
   vehicles: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>; 
-  customers: Array<{ id: number; name: string; email: string; customer_number: string }>;
   users: Array<{ id: number; name: string; email?: string }> 
 }) {
+  if (!reservation?.id) {
+    return (
+      <ReservationShell 
+        title="Error" 
+        description="Invalid reservation data."
+      >
+        <div className="text-destructive">Reservation ID is missing.</div>
+      </ReservationShell>
+    );
+  }
+
   return (
     <ReservationShell 
       title={`Edit Reservation #${reservation.id}`} 
@@ -20,7 +30,6 @@ export default function Edit({ reservation, vehicles, customers, users }: {
         action={admin.reservations.update(reservation.id).url} 
         method="put" 
         vehicles={vehicles}
-        customers={customers}
         users={users}
         cancelUrl={admin.reservations.show(reservation.id).url}
       />

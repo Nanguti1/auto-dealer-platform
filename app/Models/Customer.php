@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Concerns\BranchAware;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use BranchAware, HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = ['user_id', 'customer_number', 'first_name', 'last_name', 'email', 'phone', 'date_of_birth', 'preferences'];
 

@@ -35,8 +35,8 @@ class ReceiptController extends Controller
         $this->authorize('create', Receipt::class);
 
         return Inertia::render('Admin/Sales/Receipts/Create', [
-            'payments' => Payment::select(['id', 'amount', 'currency', 'payment_method'])->with('customer')->get(),
-            'customers' => Customer::select(['id', 'name', 'email'])->get(),
+            'payments' => Payment::select(['id', 'amount', 'currency', 'method', 'status'])->with('user')->get(),
+            'customers' => Customer::select(['id', 'first_name', 'last_name', 'email', 'customer_number'])->get(),
         ]);
     }
 
@@ -62,6 +62,8 @@ class ReceiptController extends Controller
 
         return Inertia::render('Admin/Sales/Receipts/Edit', [
             'receipt' => $receipt->load(['payment', 'invoice', 'user']),
+            'payments' => Payment::select(['id', 'amount', 'currency', 'method', 'status'])->with('user')->get(),
+            'customers' => Customer::select(['id', 'first_name', 'last_name', 'email', 'customer_number'])->get(),
         ]);
     }
 

@@ -33,13 +33,14 @@ class VehicleGalleryController extends Controller
     {
         $this->authorize('create', VehicleGallery::class);
 
-        $vehicles = Vehicle::select('id', 'year', 'make', 'model')
+        $vehicles = Vehicle::with(['make', 'vehicleModel'])
+            ->select('id', 'year', 'make_id', 'model_id')
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($vehicle) {
                 return [
                     'id' => $vehicle->id,
-                    'label' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
+                    'label' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
                 ];
             });
 
@@ -68,13 +69,14 @@ class VehicleGalleryController extends Controller
     {
         $this->authorize('update', $vehicleGallery);
 
-        $vehicles = Vehicle::select('id', 'year', 'make', 'model')
+        $vehicles = Vehicle::with(['make', 'vehicleModel'])
+            ->select('id', 'year', 'make_id', 'model_id')
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(function ($vehicle) {
                 return [
                     'id' => $vehicle->id,
-                    'label' => "{$vehicle->year} {$vehicle->make} {$vehicle->model}",
+                    'label' => "{$vehicle->year} {$vehicle->make->name} {$vehicle->vehicleModel->name}",
                 ];
             });
 

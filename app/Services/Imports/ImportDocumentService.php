@@ -34,6 +34,29 @@ class ImportDocumentService
         return $document->fresh();
     }
 
+    public function update(ImportDocument $document, array $data, ?UploadedFile $file = null): ImportDocument
+    {
+        DB::transaction(function () use ($document, $data, $file): void {
+            // Update metadata
+            if (isset($data['name'])) {
+                $document->name = $data['name'];
+            }
+            if (isset($data['type'])) {
+                $document->type = $data['type'];
+            }
+
+            // Handle file replacement if provided
+            if ($file) {
+                $this->delete($document);
+                $this->upload($document, $file, $document->type);
+            } else {
+                $document->save();
+            }
+        });
+
+        return $document->fresh();
+    }
+
     public function delete(ImportDocument $document): void
     {
         DB::transaction(function () use ($document): void {

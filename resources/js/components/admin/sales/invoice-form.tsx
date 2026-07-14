@@ -4,8 +4,10 @@ import type { Invoice } from '@/components/admin/payments/types';
 
 interface Customer {
   id: number;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
+  customer_number: string;
 }
 
 interface Vehicle {
@@ -18,7 +20,7 @@ interface Vehicle {
 interface Reservation {
   id: number;
   reservation_number: string;
-  customer: { id: number; name: string };
+  customer: { id: number; first_name: string; last_name: string };
 }
 
 export default function InvoiceForm({
@@ -61,12 +63,12 @@ export default function InvoiceForm({
 
   const customerOptions = customers.map(c => ({
     value: String(c.id),
-    label: `${c.name} (${c.email})`,
+    label: `${c.first_name} ${c.last_name} (${c.email}) - ${c.customer_number}`,
   }));
 
   const reservationOptions = reservations.map(r => ({
     value: String(r.id),
-    label: `${r.reservation_number} - ${r.customer.name}`,
+    label: `${r.reservation_number} - ${r.customer.first_name} ${r.customer.last_name}`,
   }));
 
   return (

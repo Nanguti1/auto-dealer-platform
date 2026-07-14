@@ -70,7 +70,15 @@ class ShipmentController extends Controller
     public function updateTracking(Request $request, ImportShipment $shipment): RedirectResponse
     {
         $this->authorize('update', $shipment);
-        $this->service->updateTracking($shipment, $request->all());
+
+        $validated = $request->validate([
+            'tracking_number' => ['nullable', 'string', 'max:255'],
+            'carrier' => ['nullable', 'string', 'max:255'],
+            'estimated_arrival' => ['nullable', 'date'],
+            'status' => ['nullable', 'string', 'in:pending,in_transit,delivered,cancelled'],
+        ]);
+
+        $this->service->updateTracking($shipment, $validated);
 
         return back()->with('success', 'Shipment tracking updated successfully.');
     }

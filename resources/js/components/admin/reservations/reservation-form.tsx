@@ -21,15 +21,10 @@ const statusOptions = [
   { value: 'expired', label: 'Expired' },
 ];
 
-export default function ReservationForm({ reservation, action, method = 'post', vehicles = [], customers = [], users = [], cancelUrl }: ReservationFormProps) {
+export default function ReservationForm({ reservation, action, method = 'post', vehicles = [], users = [], cancelUrl }: ReservationFormProps) {
   const vehicleOptions = vehicles.map(vehicle => ({
     value: vehicle.id,
     label: vehicle.name || `Vehicle #${vehicle.id}`,
-  }));
-
-  const customerOptions = customers.map(customer => ({
-    value: customer.id,
-    label: `${customer.name} (${customer.customer_number})`,
   }));
 
   const userOptions = users.map(user => ({
@@ -73,17 +68,6 @@ export default function ReservationForm({ reservation, action, method = 'post', 
           onChange={(value) => setData('vehicle_id', value)}
         />
         <ForeignSelector
-          name="customer_id"
-          label="Customer"
-          value={data.customer_id}
-          error={errors.customer_id}
-          options={customerOptions}
-          placeholder="Select a customer"
-          searchable
-          required
-          onChange={(value) => setData('customer_id', value)}
-        />
-        <ForeignSelector
           name="user_id"
           label="User"
           value={data.user_id}
@@ -91,6 +75,7 @@ export default function ReservationForm({ reservation, action, method = 'post', 
           options={userOptions}
           placeholder="Select a user"
           searchable
+          required
           onChange={(value) => setData('user_id', value)}
         />
         <FormField

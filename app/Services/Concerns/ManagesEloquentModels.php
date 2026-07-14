@@ -66,7 +66,6 @@ trait ManagesEloquentModels
             Lead::class => ['crmStage', 'vehicle'],
             FinanceApplication::class => ['lender', 'vehicle', 'user'],
             VehicleReservation::class => ['vehicle', 'user'],
-            Customer::class => ['user'],
         ];
 
         if (isset($eagerLoadMap[$model::class])) {
@@ -226,6 +225,12 @@ trait ManagesEloquentModels
                     $query->forBranchThrough($user, $relationship);
                 }
             }
+            // Special handling for Customer model through user relationship
+            elseif ($model::class === Customer::class) {
+                $query->whereHas('user', function ($q) use ($user) {
+                    $q->where('branch_id', $user->branch_id);
+                });
+            }
         }
 
         $search = Arr::get($filters, 'search');
@@ -280,7 +285,6 @@ trait ManagesEloquentModels
             CrmFollowUp::class => 'lead',
             CustomerDocument::class => 'customer.user',
             CustomerNote::class => 'customer.user',
-            Customer::class => 'user',
         ];
 
         return $relationships[$model::class] ?? null;

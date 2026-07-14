@@ -16,6 +16,8 @@ class UpdateSeoMetadataRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'seoable_type' => ['sometimes', 'string'],
+            'seoable_id' => ['sometimes', 'integer'],
             'meta_title' => ['sometimes', 'string', 'max:255'],
             'meta_description' => ['sometimes', 'string'],
             'canonical_url' => ['nullable', 'string', 'max:500'],

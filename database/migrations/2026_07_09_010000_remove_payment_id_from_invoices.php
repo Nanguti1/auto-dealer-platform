@@ -35,9 +35,17 @@ return new class extends Migration
                 }
             });
 
-            // Drop foreign key and column - Laravel will handle associated indexes
+            // Drop foreign key, indexes, and column
             Schema::table('invoices', function (Blueprint $table) {
                 $table->dropForeign(['payment_id']);
+                // Drop the composite index that references payment_id
+                if (Schema::hasIndex('invoices', 'invoices_payment_status_index')) {
+                    $table->dropIndex('invoices_payment_status_index');
+                }
+                // Drop any other indexes that reference payment_id
+                if (Schema::hasIndex('invoices', 'invoices_payment_id_index')) {
+                    $table->dropIndex('invoices_payment_id_index');
+                }
                 $table->dropColumn('payment_id');
             });
         }
@@ -49,6 +57,11 @@ return new class extends Migration
         if (! Schema::hasColumn('invoices', 'payment_id')) {
             Schema::table('invoices', function (Blueprint $table) {
                 $table->foreignId('payment_id')->nullable()->after('vehicle_id')->constrained()->nullOnDelete();
+            });
+
+            // Recreate the composite index that was dropped
+            Schema::table('invoices', function (Blueprint $table) {
+                $table->index(['payment_id', 'status'], 'invoices_payment_status_index');
             });
 
             // Backfill invoices.payment_id from payments.invoice_id where possible (if a payment points to an invoice)

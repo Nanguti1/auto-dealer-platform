@@ -12,7 +12,7 @@ class Refund extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['branch_id', 'user_id', 'payment_id', 'invoice_id', 'refund_number', 'amount', 'currency', 'reason', 'status', 'processed_at', 'notes'];
+    protected $fillable = ['branch_id', 'user_id', 'payment_id', 'invoice_id', 'refund_number', 'amount', 'currency', 'reason', 'status', 'processed_at', 'created_by', 'updated_by', 'refunded_by'];
 
     protected function casts(): array
     {
@@ -40,5 +40,20 @@ class Refund extends Model
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'invoice_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function refundedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'refunded_by');
     }
 }

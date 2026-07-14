@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Sales;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Sales\StoreRefundRequest;
 use App\Http\Requests\Sales\UpdateRefundRequest;
+use App\Models\Payment;
 use App\Models\Refund;
 use App\Services\Sales\RefundService;
 use Illuminate\Http\RedirectResponse;
@@ -32,7 +33,9 @@ class RefundController extends Controller
     {
         $this->authorize('create', Refund::class);
 
-        return Inertia::render('Admin/Sales/Refunds/Create');
+        return Inertia::render('Admin/Sales/Refunds/Create', [
+            'payments' => Payment::with('customer')->select('id', 'amount', 'customer_id')->get(),
+        ]);
     }
 
     public function store(StoreRefundRequest $request): RedirectResponse
@@ -57,6 +60,7 @@ class RefundController extends Controller
 
         return Inertia::render('Admin/Sales/Refunds/Edit', [
             'refund' => $refund->load(['payment', 'invoice', 'user']),
+            'payments' => Payment::with('customer')->select('id', 'amount', 'customer_id')->get(),
         ]);
     }
 

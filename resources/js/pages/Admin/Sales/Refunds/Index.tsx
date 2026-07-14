@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { Eye, RotateCcw } from 'lucide-react';
+import { Eye, RotateCcw, Plus } from 'lucide-react';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
@@ -26,7 +26,18 @@ export default function Index({ refunds, filters = {} }: { refunds: RefundPagina
   ];
 
   return (
-    <PaymentShell title="Refunds" description="Manage refund requests, approvals, processing, and refund history.">
+    <PaymentShell 
+      title="Refunds" 
+      description="Manage refund requests, approvals, processing, and refund history."
+      actions={
+        <Button asChild>
+          <Link href="/admin/refunds/create">
+            <Plus className="mr-2 h-4 w-4" />
+            Create Refund
+          </Link>
+        </Button>
+      }
+    >
       <AdminDataTable
         rows={refunds}
         filters={filters}

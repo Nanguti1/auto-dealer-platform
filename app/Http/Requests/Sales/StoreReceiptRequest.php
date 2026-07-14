@@ -25,7 +25,6 @@ class StoreReceiptRequest extends FormRequest
             'user_id' => ['required', 'exists:users,id'],
             'receipt_number' => ['sometimes', 'nullable', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0.01'],
-            'payment_method' => ['sometimes', 'nullable', 'string', 'in:credit_card,debit_card,bank_transfer,cash,check'],
             'status' => ['sometimes', 'nullable', 'string', 'in:issued,void'],
             'notes' => ['sometimes', 'nullable', 'string'],
         ];

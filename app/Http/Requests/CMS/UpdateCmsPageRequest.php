@@ -24,14 +24,17 @@ class UpdateCmsPageRequest extends FormRequest
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
             'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:dynamic_cms_pages,slug,'.$cmsPage],
             'body' => ['sometimes', 'nullable', 'string'],
-            'content' => ['sometimes', 'nullable', 'string'],
             'status' => ['sometimes', 'nullable', 'string', 'in:draft,published,archived'],
             'published_at' => ['sometimes', 'nullable', 'date'],
+            'is_visible' => ['sometimes', 'nullable', 'boolean'],
+            'meta_title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'meta_description' => ['sometimes', 'nullable', 'string'],
         ];
     }
 
     protected function prepareForValidation(): void
     {
+        // Map frontend 'content' field to 'body' field for backward compatibility
         if ($this->has('content') && ! $this->has('body')) {
             $this->merge(['body' => $this->input('content')]);
         }

@@ -1,4 +1,7 @@
-import { FormShell, FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import { ImageDropzone } from '@/components/shared/media-upload';
 import { generateSlug } from '@/lib/slug-utils';
 import * as React from 'react';
@@ -19,8 +22,6 @@ interface BlogFormProps {
 }
 
 export default function BlogForm({ blogPost, action, method = 'post', categories = [] }: BlogFormProps) {
-  const [title, setTitle] = React.useState(blogPost?.title ?? '');
-  const [slug, setSlug] = React.useState(blogPost?.slug ?? '');
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = React.useState(!!blogPost?.slug);
 
   const categoryOptions = categories.map(category => ({
@@ -28,71 +29,98 @@ export default function BlogForm({ blogPost, action, method = 'post', categories
     label: category.label,
   }));
 
+  const { data, setData, post, put, processing, errors } = useForm({
+    title: blogPost?.title ?? '',
+    slug: blogPost?.slug ?? '',
+    blog_category_id: blogPost?.blog_category_id ?? null,
+    author_id: blogPost?.author_id ?? null,
+    status: blogPost?.status ?? 'draft',
+    published_at: blogPost?.published_at ? new Date(blogPost.published_at).toISOString().slice(0, 16) : '',
+    excerpt: blogPost?.excerpt ?? '',
+    body: blogPost?.body ?? '',
+    is_featured: blogPost?.is_featured ?? false,
+    featured_image: null as File | null,
+  });
+
   const handleTitleChange = (value: string) => {
-    setTitle(value);
+    setData('title', value);
     // Only auto-generate slug if it hasn't been manually edited
     if (!isSlugManuallyEdited) {
-      setSlug(generateSlug(value));
+      setData('slug', generateSlug(value));
     }
   };
 
   const handleSlugChange = (value: string) => {
-    setSlug(value);
+    setData('slug', value);
     setIsSlugManuallyEdited(true);
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (blogPost) {
+      put(action, {
+        forceFormData: true,
+      });
+    } else {
+      post(action, {
+        forceFormData: true,
+      });
+    }
+  };
+
   return (
-    <FormShell
-      action={action}
-      method={method}
-      submitLabel="Save blog post"
-      encType="multipart/form-data"
-      className="max-w-4xl"
-    >
-      <input type="hidden" name="slug" value={slug} />
+    <form onSubmit={handleSubmit} className="max-w-4xl space-y-6" encType="multipart/form-data">
+      <input type="hidden" name="slug" value={data.slug} />
       <FormSection title="Basic Information" gridCols={2}>
         <FormField
           name="title"
           label="Title"
-          value={title}
+          value={data.title}
+          error={errors.title}
           onChange={handleTitleChange}
           className="md:col-span-2"
         />
         <FormField
           name="slug"
           label="Slug"
-          value={slug}
+          value={data.slug}
+          error={errors.slug}
           onChange={handleSlugChange}
         />
         <ForeignSelector
           name="blog_category_id"
           label="Category"
-          value={blogPost?.blog_category_id}
+          value={data.blog_category_id}
+          error={errors.blog_category_id}
           options={categoryOptions}
           placeholder="Select a category"
           searchable
+          onChange={(value) => setData('blog_category_id', value)}
         />
         <FormField
           name="author_id"
           label="Author"
           type="number"
-          value={String(blogPost?.author_id ?? '')}
-          onChange={() => {}}
+          value={String(data.author_id)}
+          error={errors.author_id}
+          onChange={(value) => setData('author_id', Number(value))}
         />
         <FormField
           name="status"
           label="Status"
           type="select"
-          value={blogPost?.status ?? 'draft'}
+          value={data.status}
+          error={errors.status}
           options={statusOptions}
-          onChange={() => {}}
+          onChange={(value) => setData('status', value)}
         />
         <FormField
           name="published_at"
           label="Published at"
           type="datetime-local"
-          value={blogPost?.published_at ? new Date(blogPost.published_at).toISOString().slice(0, 16) : ''}
-          onChange={() => {}}
+          value={data.published_at}
+          error={errors.published_at}
+          onChange={(value) => setData('published_at', value)}
         />
       </FormSection>
 
@@ -101,15 +129,17 @@ export default function BlogForm({ blogPost, action, method = 'post', categories
           name="excerpt"
           label="Excerpt"
           type="textarea"
-          value={blogPost?.excerpt ?? ''}
-          onChange={() => {}}
+          value={data.excerpt}
+          error={errors.excerpt}
+          onChange={(value) => setData('excerpt', value)}
         />
         <FormField
           name="body"
           label="Content"
           type="richtext"
-          value={blogPost?.body ?? ''}
-          onChange={() => {}}
+          value={data.body}
+          error={errors.body}
+          onChange={(value) => setData('body', value)}
         />
       </FormSection>
 
@@ -118,18 +148,26 @@ export default function BlogForm({ blogPost, action, method = 'post', categories
           <label htmlFor="featured_image" className="text-sm font-medium">Cover image</label>
           <ImageDropzone
             onFilesSelected={(files) => {
-              const input = document.querySelector('input[name="featured_image"]') as HTMLInputElement | null;
-              if (input && files[0]) {
-                const transfer = new DataTransfer();
-                transfer.items.add(files[0]);
-                input.files = transfer.files;
+              if (files.length > 0) {
+                setData('featured_image', files[0]);
               }
             }}
             accept="image/*"
             multiple={false}
             previewUrl={blogPost?.featured_image_path}
           />
-          <input id="featured_image" name="featured_image" type="file" accept="image/*" className="hidden" />
+          <input 
+            id="featured_image" 
+            name="featured_image" 
+            type="file" 
+            accept="image/*" 
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files && e.target.files.length > 0) {
+                setData('featured_image', e.target.files[0]);
+              }
+            }}
+          />
         </div>
       </FormSection>
 
@@ -138,10 +176,17 @@ export default function BlogForm({ blogPost, action, method = 'post', categories
           name="is_featured"
           label="Featured"
           type="switch"
-          value={blogPost?.is_featured ?? false}
-          onChange={() => {}}
+          value={data.is_featured}
+          error={errors.is_featured}
+          onChange={(value) => setData('is_featured', value)}
         />
       </FormSection>
-    </FormShell>
+      <div className="flex justify-end gap-4">
+        <Button type="submit" disabled={processing}>
+          <Save className="mr-2 size-4" />
+          {processing ? 'Saving...' : 'Save blog post'}
+        </Button>
+      </div>
+    </form>
   );
 }

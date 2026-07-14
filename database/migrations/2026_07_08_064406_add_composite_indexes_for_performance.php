@@ -51,8 +51,10 @@ return new class extends Migration
             $table->index(['user_id', 'status'], 'invoices_user_status_index');
             // For vehicle invoice filtering
             $table->index(['vehicle_id', 'status'], 'invoices_vehicle_status_index');
-            // For payment-invoice relationship
-            $table->index(['payment_id', 'status'], 'invoices_payment_status_index');
+            // For payment-invoice relationship (only if payment_id column exists)
+            if (Schema::hasColumn('invoices', 'payment_id')) {
+                $table->index(['payment_id', 'status'], 'invoices_payment_status_index');
+            }
             // For time-based invoice reports
             $table->index(['issued_at', 'status'], 'invoices_issued_status_index');
         });
@@ -90,7 +92,10 @@ return new class extends Migration
         Schema::table('invoices', function (Blueprint $table) {
             $table->dropIndex('invoices_user_status_index');
             $table->dropIndex('invoices_vehicle_status_index');
-            $table->dropIndex('invoices_payment_status_index');
+            // Only drop if it exists
+            if (Schema::hasIndex('invoices', 'invoices_payment_status_index')) {
+                $table->dropIndex('invoices_payment_status_index');
+            }
             $table->dropIndex('invoices_issued_status_index');
         });
     }

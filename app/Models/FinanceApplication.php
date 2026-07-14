@@ -13,7 +13,7 @@ class FinanceApplication extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['branch_id', 'vehicle_id', 'user_id', 'lender_id', 'requested_amount', 'down_payment', 'term_months', 'interest_rate', 'estimated_monthly_payment', 'status', 'applicant_data'];
+    protected $fillable = ['branch_id', 'vehicle_id', 'user_id', 'lender_id', 'requested_amount', 'down_payment', 'term_months', 'interest_rate', 'estimated_monthly_payment', 'status', 'applicant_data', 'created_by', 'updated_by', 'approved_by', 'approved_at', 'rejected_by', 'rejected_at'];
 
     protected function casts(): array
     {
@@ -24,6 +24,8 @@ class FinanceApplication extends Model
             'interest_rate' => 'decimal:2',
             'estimated_monthly_payment' => 'decimal:2',
             'term_months' => 'integer',
+            'approved_at' => 'datetime',
+            'rejected_at' => 'datetime',
         ];
     }
 
@@ -50,5 +52,25 @@ class FinanceApplication extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(FinanceDocument::class, 'finance_application_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function approvedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    public function rejectedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'rejected_by');
     }
 }

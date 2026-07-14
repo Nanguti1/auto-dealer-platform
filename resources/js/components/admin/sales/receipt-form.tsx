@@ -6,18 +6,22 @@ interface Payment {
   id: number;
   amount: number;
   currency: string;
-  payment_method: string;
-  customer?: {
+  method: string;
+  status: string;
+  user?: {
     id: number;
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
   };
 }
 
 interface Customer {
   id: number;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
+  customer_number: string;
 }
 
 export default function ReceiptForm({
@@ -38,7 +42,6 @@ export default function ReceiptForm({
     customer_id: String(receipt?.customer_id ?? ''),
     amount: String(receipt?.amount ?? ''),
     currency: receipt?.currency ?? 'USD',
-    payment_method: receipt?.payment_method ?? '',
     issued_at: receipt?.issued_at ? new Date(receipt.issued_at).toISOString().slice(0, 16) : '',
     notes: receipt?.notes ?? '',
   });
@@ -49,12 +52,12 @@ export default function ReceiptForm({
 
   const paymentOptions = payments.map(p => ({
     value: String(p.id),
-    label: `${p.payment_method} - ${p.amount} ${p.currency}${p.customer ? ` (${p.customer.name})` : ''}`,
+    label: `${p.method} - ${p.amount} ${p.currency} (${p.status})${p.user ? ` (${p.user.first_name} ${p.user.last_name})` : ''}`,
   }));
 
   const customerOptions = customers.map(c => ({
     value: String(c.id),
-    label: `${c.name} (${c.email})`,
+    label: `${c.first_name} ${c.last_name} (${c.email}) - ${c.customer_number}`,
   }));
 
   return (
@@ -94,12 +97,6 @@ export default function ReceiptForm({
           label="Currency"
           value={formData.currency}
           onChange={(value) => handleChange('currency', value)}
-        />
-        <FormField
-          name="payment_method"
-          label="Payment method"
-          value={formData.payment_method}
-          onChange={(value) => handleChange('payment_method', value)}
         />
         <FormField
           name="issued_at"

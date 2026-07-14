@@ -13,7 +13,7 @@ class VehicleImport extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'supplier_id', 'vehicle_id', 'reference_number', 'origin_country', 'destination_port', 'estimated_cost', 'status', 'request_data'];
+    protected $fillable = ['branch_id', 'user_id', 'supplier_id', 'vehicle_id', 'reference_number', 'origin_country', 'destination_port', 'estimated_cost', 'status', 'request_data'];
 
     protected function casts(): array
     {

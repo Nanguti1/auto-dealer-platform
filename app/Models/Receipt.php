@@ -12,7 +12,7 @@ class Receipt extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['branch_id', 'user_id', 'payment_id', 'invoice_id', 'receipt_number', 'amount', 'currency', 'status', 'issued_at'];
+    protected $fillable = ['branch_id', 'user_id', 'payment_id', 'invoice_id', 'receipt_number', 'amount', 'currency', 'status', 'issued_at', 'created_by', 'updated_by', 'issued_by'];
 
     protected function casts(): array
     {
@@ -40,5 +40,20 @@ class Receipt extends Model
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'invoice_id');
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function issuedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'issued_by');
     }
 }

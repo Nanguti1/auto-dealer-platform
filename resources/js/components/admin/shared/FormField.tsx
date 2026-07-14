@@ -49,7 +49,7 @@ export default function FormField({
 }: FormFieldProps) {
   const fieldId = id || name;
   const hasError = Boolean(error);
-  const isControlled = onChange && onChange.toString() !== '() => {}';
+  const isControlled = typeof onChange === 'function';
 
   const renderInput = () => {
     const baseProps = {

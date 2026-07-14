@@ -1,4 +1,7 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import type { HomePageSection } from './types';
 import * as React from 'react';
 
@@ -13,59 +16,93 @@ const sectionTypeOptions = [
 ];
 
 export default function HomeSectionForm({ homeSection, action, method = 'post' }: { homeSection?: HomePageSection; action: string; method?: 'post' | 'put' }) {
-  const [sectionType, setSectionType] = React.useState(homeSection?.section_type ?? 'featured_vehicles');
-  const [title, setTitle] = React.useState(homeSection?.title ?? '');
-  const [displayOrder, setDisplayOrder] = React.useState(String(homeSection?.display_order ?? 0));
-  const [content, setContent] = React.useState(homeSection?.content ? JSON.stringify(homeSection.content, null, 2) : '');
-  const [isVisible, setIsVisible] = React.useState(homeSection?.is_visible ?? true);
+  const { data, setData, post, put, processing, errors } = useForm({
+    section_type: homeSection?.section_type ?? 'featured_vehicles',
+    title: homeSection?.title ?? '',
+    display_order: homeSection?.display_order ?? 0,
+    content: homeSection?.content ? JSON.stringify(homeSection.content, null, 2) : '',
+    is_visible: homeSection?.is_visible ?? true,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Parse content JSON with error handling
+    let parsedContent = null;
+    if (data.content) {
+      try {
+        parsedContent = JSON.parse(data.content);
+      } catch (error) {
+        alert('Invalid JSON in content field. Please check your syntax.');
+        return;
+      }
+    }
+    
+    const formData = {
+      ...data,
+      content: parsedContent,
+    };
+    
+    if (homeSection) {
+      put(action, formData);
+    } else {
+      post(action, formData);
+    }
+  };
 
   return (
-    <FormShell
-      action={action}
-      method={method}
-      submitLabel="Save section"
-      className="max-w-2xl"
-    >
+    <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
       <FormSection gridCols={1}>
         <FormField
           name="section_type"
           label="Section Type"
           type="select"
-          value={sectionType}
+          value={data.section_type}
+          error={errors.section_type}
           options={sectionTypeOptions}
-          onChange={setSectionType}
+          onChange={(value) => setData('section_type', value)}
         />
         <FormField
           name="title"
           label="Title"
-          value={title}
-          onChange={setTitle}
+          value={data.title}
+          error={errors.title}
+          onChange={(value) => setData('title', value)}
         />
         <FormField
           name="display_order"
           label="Display Order"
           type="number"
-          value={displayOrder}
-          onChange={setDisplayOrder}
+          value={String(data.display_order)}
+          error={errors.display_order}
+          onChange={(value) => setData('display_order', Number(value))}
         />
         <FormField
           name="content"
           label="Content (JSON)"
           type="textarea"
-          value={content}
+          value={data.content}
+          error={errors.content}
           placeholder='{"items": [1, 2, 3]}'
           hint="Enter section-specific configuration as JSON."
-          onChange={setContent}
+          onChange={(value) => setData('content', value)}
           className="font-mono text-xs"
         />
         <FormField
           name="is_visible"
           label="Visible"
           type="switch"
-          value={isVisible}
-          onChange={setIsVisible}
+          value={data.is_visible}
+          error={errors.is_visible}
+          onChange={(value) => setData('is_visible', value)}
         />
       </FormSection>
-    </FormShell>
+      <div className="flex justify-end gap-4">
+        <Button type="submit" disabled={processing}>
+          <Save className="mr-2 size-4" />
+          {processing ? 'Saving...' : 'Save section'}
+        </Button>
+      </div>
+    </form>
   );
 }

@@ -22,22 +22,24 @@ export default function TradeInForm({ tradeInRequest, action, method = 'post' }:
     status: tradeInRequest?.status ?? 'pending',
     estimated_value: tradeInRequest?.estimated_value ?? '',
     offered_value: tradeInRequest?.offered_value ?? '',
-    condition_report: tradeInRequest?.condition_report ? JSON.stringify(tradeInRequest.condition_report, null, 2) : '{}',
+    condition_report: typeof tradeInRequest?.condition_report === 'string' 
+      ? tradeInRequest.condition_report 
+      : tradeInRequest?.condition_report?.notes ?? '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Parse condition_report back to object
-    const formData = {
+    // Convert plain text to JSON structure before submit
+    const submitData = {
       ...data,
-      condition_report: JSON.parse(data.condition_report || '{}'),
+      condition_report: data.condition_report ? { notes: data.condition_report } : null,
     };
     
     if (tradeInRequest) {
-      put(action, formData);
+      put(action, submitData);
     } else {
-      post(action, formData);
+      post(action, submitData);
     }
   };
 
@@ -114,10 +116,9 @@ export default function TradeInForm({ tradeInRequest, action, method = 'post' }:
           name="condition_report"
           label="Condition report"
           type="textarea"
-          value={data.condition_report}
+          value={typeof data.condition_report === 'string' ? data.condition_report : data.condition_report?.notes ?? ''}
           error={errors.condition_report}
           onChange={(value) => setData('condition_report', value)}
-          className="font-mono text-xs"
         />
       </FormSection>
 

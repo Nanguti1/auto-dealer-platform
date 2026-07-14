@@ -1,4 +1,7 @@
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { useForm } from '@inertiajs/react';
+import { FormField, FormSection } from '@/components/admin/shared';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import type { CrmActivity } from './types';
 import * as React from 'react';
 
@@ -17,47 +20,61 @@ const statusOptions = [
 ];
 
 export default function ActivityForm({ activity, action, leadId }: { activity?: CrmActivity; action: string; leadId?: number }) {
-  const [dueAt, setDueAt] = React.useState(activity?.due_at ? new Date(activity.due_at).toISOString().slice(0, 16) : '');
-  const [completedAt, setCompletedAt] = React.useState(activity?.completed_at ? new Date(activity.completed_at).toISOString().slice(0, 16) : '');
+  const { data, setData, post, put, processing, errors } = useForm({
+    type: activity?.type ?? 'follow-up',
+    status: activity?.status ?? 'open',
+    due_at: activity?.due_at ? new Date(activity.due_at).toISOString().slice(0, 16) : '',
+    completed_at: activity?.completed_at ? new Date(activity.completed_at).toISOString().slice(0, 16) : '',
+    notes: activity?.notes ?? '',
+    lead_id: leadId ?? '',
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (activity) {
+      put(action);
+    } else {
+      post(action);
+    }
+  };
 
   return (
-    <FormShell
-      action={action}
-      method={activity ? 'put' : 'post'}
-      submitLabel="Save activity"
-      className="max-w-3xl"
-    >
+    <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
       {leadId && <input type="hidden" name="lead_id" value={leadId} />}
       <FormSection gridCols={2}>
         <FormField
           name="type"
           label="Type"
           type="select"
-          value={activity?.type ?? 'follow-up'}
+          value={data.type}
+          error={errors.type}
           options={typeOptions}
-          onChange={() => {}}
+          onChange={(value) => setData('type', value)}
         />
         <FormField
           name="status"
           label="Status"
           type="select"
-          value={activity?.status ?? 'open'}
+          value={data.status}
+          error={errors.status}
           options={statusOptions}
-          onChange={() => {}}
+          onChange={(value) => setData('status', value)}
         />
         <FormField
           name="due_at"
           label="Due at"
           type="datetime-local"
-          value={dueAt}
-          onChange={setDueAt}
+          value={data.due_at}
+          error={errors.due_at}
+          onChange={(value) => setData('due_at', value)}
         />
         <FormField
           name="completed_at"
           label="Completed at"
           type="datetime-local"
-          value={completedAt}
-          onChange={setCompletedAt}
+          value={data.completed_at}
+          error={errors.completed_at}
+          onChange={(value) => setData('completed_at', value)}
         />
       </FormSection>
       <FormSection gridCols={1} fullWidth>
@@ -65,10 +82,17 @@ export default function ActivityForm({ activity, action, leadId }: { activity?: 
           name="notes"
           label="Notes"
           type="richtext"
-          value={activity?.notes ?? ''}
-          onChange={() => {}}
+          value={data.notes}
+          error={errors.notes}
+          onChange={(value) => setData('notes', value)}
         />
       </FormSection>
-    </FormShell>
+      <div className="flex justify-end gap-4">
+        <Button type="submit" disabled={processing}>
+          <Save className="mr-2 size-4" />
+          {processing ? 'Saving...' : 'Save activity'}
+        </Button>
+      </div>
+    </form>
   );
 }

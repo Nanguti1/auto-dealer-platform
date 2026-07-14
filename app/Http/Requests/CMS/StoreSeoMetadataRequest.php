@@ -16,6 +16,8 @@ class StoreSeoMetadataRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'seoable_type' => ['required', 'string'],
+            'seoable_id' => ['required', 'integer'],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string'],
             'canonical_url' => ['nullable', 'string', 'max:500'],
