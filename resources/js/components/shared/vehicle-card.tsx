@@ -56,13 +56,19 @@ export default function VehicleCard({
       <Card className={cn('group overflow-hidden border-0 shadow-sm ring-1 ring-border/50 transition-all hover:-translate-y-1 hover:shadow-xl', className)}>
         <div className="relative aspect-[4/3] overflow-hidden bg-muted">
           <Link href={href}>
-            <img
-              src={vehicle.image}
-              alt={`${vehicle.year} ${vehicle.brand} ${vehicle.model}`}
-              loading="lazy"
-              decoding="async"
-              className="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
-            />
+            {vehicle.image && vehicle.image.trim() !== '' ? (
+              <img
+                src={vehicle.image}
+                alt={`${vehicle.year} ${vehicle.brand} ${vehicle.model}`}
+                loading="lazy"
+                decoding="async"
+                className="h-full w-full object-cover transition-transform duration-500 motion-safe:group-hover:scale-105"
+              />
+            ) : (
+              <div className="aspect-[4/3] w-full rounded-xl bg-muted flex items-center justify-center">
+                <span className="text-muted-foreground">No image</span>
+              </div>
+            )}
           </Link>
 
           <div className="absolute inset-x-0 top-0 flex items-start justify-between p-3">

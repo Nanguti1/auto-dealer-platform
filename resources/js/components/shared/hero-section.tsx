@@ -33,11 +33,13 @@ export default function HeroSection({
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 bg-cover bg-center">
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
-        <img
-          src={image}
-          alt="Luxury vehicles"
-          className="w-full h-full object-cover"
-        />
+        {image && image.trim() !== '' && (
+          <img
+            src={image}
+            alt="Luxury vehicles"
+            className="w-full h-full object-cover"
+          />
+        )}
       </div>
 
       {/* Content */}

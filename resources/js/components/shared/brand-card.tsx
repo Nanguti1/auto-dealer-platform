@@ -21,11 +21,17 @@ export default function BrandCard({ brand, className }: BrandCardProps) {
           className
         )}
       >
-        <img
-          src={brand.logo}
-          alt={brand.name}
-          className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110"
-        />
+        {brand.logo && brand.logo.trim() !== '' ? (
+          <img
+            src={brand.logo}
+            alt={brand.name}
+            className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110"
+          />
+        ) : (
+          <div className="absolute inset-0 w-full h-full bg-muted flex items-center justify-center">
+            <span className="text-muted-foreground">{brand.name}</span>
+          </div>
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
           <h3 className="font-semibold text-lg mb-1">{brand.name}</h3>

@@ -1,6 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Calendar, Car, DollarSign, Eye, Pencil, Trash2, User } from 'lucide-react';
 import * as React from 'react';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { customerName, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
@@ -15,6 +16,7 @@ import admin from '@/routes/admin';
 export default function Index({ reservations, filters = {} }: { reservations: ReservationPagination; filters?: ReservationFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
+  const [deleteId, setDeleteId] = React.useState<number | null>(null);
   const formatCurrency = useFormatCurrency();
   
   const columns: Column<ReservationRecord>[] = [
@@ -141,31 +143,38 @@ export default function Index({ reservations, filters = {} }: { reservations: Re
         createUrl={admin.reservations.create().url}
         createLabel="Create Reservation"
         rowActions={(reservation) => (
-          <RowActionsDropdown
-            ariaLabel={`Actions for reservation ${reservation.id}`}
-            actions={[
-              {
-                label: 'View',
-                icon: <Eye />,
-                href: admin.reservations.show(reservation.id).url,
-              },
-              {
-                label: 'Edit',
-                icon: <Pencil />,
-                href: admin.reservations.edit(reservation.id).url,
-              },
-              {
-                label: 'Delete',
-                icon: <Trash2 />,
-                destructive: true,
-                onClick: () => {
-                  if (confirm('Are you sure you want to delete this reservation?')) {
-                    router.delete(admin.reservations.destroy(reservation.id).url);
-                  }
+          <>
+            <RowActionsDropdown
+              ariaLabel={`Actions for reservation ${reservation.id}`}
+              actions={[
+                {
+                  label: 'View',
+                  icon: <Eye />,
+                  href: admin.reservations.show(reservation.id).url,
                 },
-              },
-            ]}
-          />
+                {
+                  label: 'Edit',
+                  icon: <Pencil />,
+                  href: admin.reservations.edit(reservation.id).url,
+                },
+                {
+                  label: 'Delete',
+                  icon: <Trash2 />,
+                  destructive: true,
+                  onClick: () => setDeleteId(reservation.id),
+                },
+              ]}
+            />
+            <ConfirmationDialog
+              open={deleteId === reservation.id}
+              onOpenChange={(open) => !open && setDeleteId(null)}
+              title="Delete reservation?"
+              description="Are you sure you want to delete this reservation? This action cannot be undone."
+              trigger={<span />}
+              confirmLabel="Delete"
+              onConfirm={() => router.delete(admin.reservations.destroy(reservation.id).url, { onFinish: () => setDeleteId(null) })}
+            />
+          </>
         )}
       />
       )}

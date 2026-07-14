@@ -160,7 +160,6 @@ export default function VehicleForm({
 
   const handleMediaChange = (items: MediaUploadItem[]) => {
     const files = items.map(item => item.file).filter((file): file is File => file !== undefined);
-    console.log('Media files selected:', files);
     setData('media', files);
   };
 

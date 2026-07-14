@@ -87,7 +87,7 @@ function ImageDropzone({ onFilesSelected, className, multiple = true, accept = '
     }, [error]);
 
     // If preview exists, show it with option to remove
-    if (preview && !multiple) {
+    if (preview && preview.trim() !== '' && !multiple) {
         return (
             <div className={cn('relative overflow-hidden rounded-3xl border bg-card', className)}>
                 <img src={preview} alt="Preview" className="h-64 w-full object-cover" />
@@ -180,7 +180,13 @@ return;
         <div className={cn('grid gap-4 sm:grid-cols-2 lg:grid-cols-3', className)}>
             {items.map((item, index) => (
                 <figure key={item.id} className="group overflow-hidden rounded-2xl border bg-card shadow-sm">
-                    <img src={item.url} alt={item.alt ?? `Uploaded image ${index + 1}`} className="aspect-[4/3] w-full object-cover" />
+                    {item.url && item.url.trim() !== '' ? (
+                        <img src={item.url} alt={item.alt ?? `Uploaded image ${index + 1}`} className="aspect-[4/3] w-full object-cover" />
+                    ) : (
+                        <div className="aspect-[4/3] w-full bg-muted flex items-center justify-center">
+                            <span className="text-muted-foreground">No image</span>
+                        </div>
+                    )}
                     <figcaption className="flex items-center justify-between gap-2 p-3">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground"><GripVertical className="size-4" /> Image {index + 1}</div>
                         <div className="flex gap-1">

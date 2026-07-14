@@ -1,5 +1,7 @@
 import { Link, router } from '@inertiajs/react';
 import { Calendar, Car, DollarSign, Pencil, Trash2, User } from 'lucide-react';
+import * as React from 'react';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import { customerName, formatCurrency, formatDateTime, statusBadge, vehicleName } from '@/components/admin/reservations/helpers';
 import ReservationShell, { ReservationBackButton } from '@/components/admin/reservations/reservation-shell';
 import type { ReservationRecord } from '@/components/admin/reservations/types';
@@ -9,6 +11,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import admin from '@/routes/admin';
 
 export default function Show({ reservation }: { reservation: ReservationRecord }) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+
   if (!reservation?.id) {
     return (
       <ReservationShell 
@@ -31,11 +35,7 @@ export default function Show({ reservation }: { reservation: ReservationRecord }
           <ReservationBackButton />
           <Button 
             variant="outline" 
-            onClick={() => {
-              if (confirm('Are you sure you want to delete this reservation?')) {
-                router.delete(admin.reservations.destroy(reservation.id).url);
-              }
-            }}
+            onClick={() => setDeleteDialogOpen(true)}
           >
             <Trash2 className="mr-2 size-4" />
             Delete
@@ -46,6 +46,15 @@ export default function Show({ reservation }: { reservation: ReservationRecord }
               Edit
             </Link>
           </Button>
+          <ConfirmationDialog
+            open={deleteDialogOpen}
+            onOpenChange={setDeleteDialogOpen}
+            title="Delete reservation?"
+            description="Are you sure you want to delete this reservation? This action cannot be undone."
+            trigger={<span />}
+            confirmLabel="Delete"
+            onConfirm={() => router.delete(admin.reservations.destroy(reservation.id).url)}
+          />
         </>
       }
     >

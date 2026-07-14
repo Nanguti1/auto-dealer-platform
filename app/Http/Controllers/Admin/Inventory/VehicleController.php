@@ -143,7 +143,7 @@ class VehicleController extends Controller
     {
         $this->authorize('view', $vehicle);
 
-        $vehicle->load('media');
+        $vehicle->load(['media', 'make', 'vehicleModel', 'inventoryStatus', 'fuelType', 'transmissionType', 'vehicleCondition', 'color', 'interiorColor', 'branch', 'vehicleCategory', 'bodyType', 'driveType', 'engineType', 'trimLevel', 'vehicleStatus']);
 
         // Format media data for MediaUpload component
         $media = $vehicle->media->map(fn ($mediaItem) => [
@@ -164,7 +164,7 @@ class VehicleController extends Controller
     {
         $this->authorize('update', $vehicle);
 
-        $vehicle->load(['media', 'features']);
+        $vehicle->load(['media', 'features', 'make', 'vehicleModel', 'inventoryStatus', 'fuelType', 'transmissionType', 'vehicleCondition', 'color', 'interiorColor', 'branch', 'vehicleCategory', 'bodyType', 'driveType', 'engineType', 'trimLevel', 'vehicleStatus']);
 
         // Format media data for MediaUpload component
         $media = $vehicle->media->map(fn ($mediaItem) => [

@@ -62,7 +62,7 @@ trait ManagesEloquentModels
     protected function applyEagerLoading(Builder $query, EloquentModel $model): void
     {
         $eagerLoadMap = [
-            Vehicle::class => ['make', 'vehicleModel', 'inventoryStatus'],
+            Vehicle::class => ['make', 'vehicleModel', 'inventoryStatus', 'fuelType', 'transmissionType', 'vehicleCondition', 'color', 'interiorColor', 'branch', 'vehicleCategory', 'bodyType', 'driveType', 'engineType', 'trimLevel', 'vehicleStatus'],
             Lead::class => ['crmStage', 'vehicle'],
             FinanceApplication::class => ['lender', 'vehicle', 'user'],
             VehicleReservation::class => ['vehicle', 'user'],

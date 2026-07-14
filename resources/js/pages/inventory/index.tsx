@@ -200,7 +200,13 @@ return 'grid';
                                         <div className="space-y-4">
                                             {vehicles.map((vehicle) => (
                                                 <article key={vehicle.id} className="group grid gap-4 rounded-2xl border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg md:grid-cols-[240px_1fr_auto]">
-                                                    <img src={vehicle.image} alt={vehicle.name} className="aspect-[4/3] w-full rounded-xl object-cover md:aspect-auto md:h-full" loading="lazy" />
+                                                    {vehicle.image && vehicle.image.trim() !== '' ? (
+                                                        <img src={vehicle.image} alt={vehicle.name} className="aspect-[4/3] w-full rounded-xl object-cover md:aspect-auto md:h-full" loading="lazy" />
+                                                    ) : (
+                                                        <div className="aspect-[4/3] w-full rounded-xl bg-muted flex items-center justify-center md:aspect-auto md:h-full">
+                                                            <span className="text-muted-foreground">No image</span>
+                                                        </div>
+                                                    )}
                                                     <div className="space-y-2">
                                                         <Badge variant="secondary" className="capitalize">{vehicle.condition ?? 'available'}</Badge>
                                                         <h3 className="text-xl font-semibold group-hover:text-primary"><Link href={`/inventory/${vehicle.slug}`}>{vehicle.name}</Link></h3>

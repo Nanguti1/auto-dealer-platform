@@ -9,7 +9,7 @@ import { LoadingState, EmptyState, InlineError } from '@/components/admin/shared
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import admin from '@/routes/admin';
+import admin from '@/routes/admin/index';
 import BranchShell from '@/components/admin/branches/branch-shell';
 
 interface Branch {
@@ -40,7 +40,7 @@ export default function Index({ branches: branchesData, filters = {} }: { branch
           setIsDeleting(false);
         },
         onError: (errors) => {
-          setError(new Error(errors.message || 'Failed to delete branch'));
+          setError(new Error(Object.values(errors).join(', ') || 'Failed to delete branch'));
           setIsDeleting(false);
         },
       });

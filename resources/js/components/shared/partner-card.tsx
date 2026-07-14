@@ -19,11 +19,17 @@ export default function PartnerCard({ partner, className }: PartnerCardProps) {
         className
       )}
     >
-      <img
-        src={partner.logo}
-        alt={partner.name}
-        className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110"
-      />
+      {partner.logo && partner.logo.trim() !== '' ? (
+        <img
+          src={partner.logo}
+          alt={partner.name}
+          className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-110"
+        />
+      ) : (
+        <div className="absolute inset-0 w-full h-full bg-muted flex items-center justify-center">
+          <span className="text-muted-foreground">{partner.name}</span>
+        </div>
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
         <h3 className="font-semibold text-lg">{partner.name}</h3>

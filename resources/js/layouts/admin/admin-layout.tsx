@@ -478,7 +478,7 @@ return 'A';
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={user?.avatar_url} alt={user?.name} />
+                      <AvatarImage src={user?.avatar_url || undefined} alt={user?.name} />
                       <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
                     </Avatar>
                   </Button>
