@@ -12,6 +12,9 @@ use App\Events\LeadAssigned;
 use App\Events\LeadCreated;
 use App\Events\PromotionCreated;
 use App\Events\ReservationCreated;
+use App\Events\SupplierCreated;
+use App\Events\SupplierDeleted;
+use App\Events\SupplierUpdated;
 use App\Events\TradeInApproved;
 use App\Events\TradeInSubmitted;
 use App\Events\VehicleCreated;
@@ -35,6 +38,7 @@ use App\Models\Lead;
 use App\Models\Make;
 use App\Models\Model;
 use App\Models\Setting;
+use App\Models\Supplier;
 use App\Models\TradeInRequest;
 use App\Models\Vehicle;
 use App\Models\VehicleCondition;
@@ -48,6 +52,7 @@ use App\Observers\LeadObserver;
 use App\Observers\MakeObserver;
 use App\Observers\ModelObserver;
 use App\Observers\SettingObserver;
+use App\Observers\SupplierObserver;
 use App\Observers\TradeInRequestObserver;
 use App\Observers\VehicleConditionObserver;
 use App\Observers\VehicleImportObserver;
@@ -152,6 +157,23 @@ class EventServiceProvider extends ServiceProvider
             RecordAuditLog::class,
         ],
 
+        // Supplier Events
+        SupplierCreated::class => [
+            SendNotification::class,
+            GenerateActivity::class,
+            RecordAuditLog::class,
+        ],
+        SupplierUpdated::class => [
+            SendNotification::class,
+            GenerateActivity::class,
+            RecordAuditLog::class,
+        ],
+        SupplierDeleted::class => [
+            SendNotification::class,
+            GenerateActivity::class,
+            RecordAuditLog::class,
+        ],
+
         // Laravel Auth Events
         Login::class => [
             LogUserLogin::class,
@@ -183,6 +205,7 @@ class EventServiceProvider extends ServiceProvider
         FinanceApplication::observe(FinanceApplicationObserver::class);
         TradeInRequest::observe(TradeInRequestObserver::class);
         VehicleImport::observe(VehicleImportObserver::class);
+        Supplier::observe(SupplierObserver::class);
         Setting::observe(SettingObserver::class);
         Make::observe(MakeObserver::class);
         Model::observe(ModelObserver::class);

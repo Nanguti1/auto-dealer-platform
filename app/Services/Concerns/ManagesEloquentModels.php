@@ -21,6 +21,7 @@ use App\Models\Payment;
 use App\Models\Receipt;
 use App\Models\Refund;
 use App\Models\Review;
+use App\Models\Supplier;
 use App\Models\TestDriveBooking;
 use App\Models\TradeInRequest;
 use App\Models\Vehicle;
@@ -66,6 +67,7 @@ trait ManagesEloquentModels
             Lead::class => ['crmStage', 'vehicle'],
             FinanceApplication::class => ['lender', 'vehicle', 'user'],
             VehicleReservation::class => ['vehicle', 'user'],
+            Supplier::class => ['branch', 'createdBy', 'updatedBy'],
         ];
 
         if (isset($eagerLoadMap[$model::class])) {
@@ -236,7 +238,7 @@ trait ManagesEloquentModels
         $search = Arr::get($filters, 'search');
 
         $searchableColumns = array_values(array_intersect(
-            ['name', 'title', 'email', 'stock_number', 'vin', 'status'],
+            ['name', 'title', 'email', 'stock_number', 'vin', 'status', 'company_name', 'supplier_code', 'contact_person', 'phone', 'registration_number'],
             $model->getFillable(),
         ));
 
@@ -250,6 +252,10 @@ trait ManagesEloquentModels
 
         if (Arr::has($filters, 'status') && in_array('status', $model->getFillable(), true)) {
             $query->where('status', Arr::get($filters, 'status'));
+        }
+
+        if (Arr::has($filters, 'supplier_type') && in_array('supplier_type', $model->getFillable(), true)) {
+            $query->where('supplier_type', Arr::get($filters, 'supplier_type'));
         }
 
         return $query;

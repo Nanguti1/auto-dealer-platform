@@ -131,4 +131,12 @@ enum RoleEnum: string
     {
         return in_array($this, [self::ADMIN, self::MANAGER, self::FINANCE_MANAGER], true);
     }
+
+    /**
+     * Check if the role can manage suppliers.
+     */
+    public function canManageSuppliers(): bool
+    {
+        return in_array($this, [self::ADMIN, self::MANAGER, self::INVENTORY_MANAGER], true);
+    }
 }

@@ -36,6 +36,7 @@ use App\Http\Controllers\Admin\Sales\InvoiceController;
 use App\Http\Controllers\Admin\Sales\ReceiptController;
 use App\Http\Controllers\Admin\Sales\RefundController;
 use App\Http\Controllers\Admin\Settings\SettingController;
+use App\Http\Controllers\Admin\Suppliers\SupplierController;
 use App\Http\Controllers\Admin\TradeIns\InspectionController;
 use App\Http\Controllers\Admin\TradeIns\OfferController;
 use App\Http\Controllers\Admin\TradeIns\TradeInController;
@@ -133,6 +134,7 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::post('vehicles/{vehicle}/duplicate', [VehicleController::class, 'duplicate'])->name('vehicles.duplicate');
         Route::resource('vehicle-galleries', VehicleGalleryController::class);
         Route::resource('vehicle-features', VehicleFeatureController::class);
+        Route::resource('suppliers', SupplierController::class);
         Route::resource('customers', CustomerController::class);
         Route::prefix('customers/{customer}')->group(function (): void {
             Route::resource('documents', DocumentController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])->names([

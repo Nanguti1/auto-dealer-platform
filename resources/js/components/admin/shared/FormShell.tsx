@@ -15,6 +15,7 @@ interface FormShellProps {
   processingLabel?: string;
   className?: string;
   encType?: 'application/x-www-form-urlencoded' | 'multipart/form-data';
+  errors?: Record<string, string>;
 }
 
 export default function FormShell({
@@ -29,16 +30,19 @@ export default function FormShell({
   processingLabel = 'Saving...',
   className = '',
   encType = 'application/x-www-form-urlencoded',
+  errors: externalErrors,
 }: FormShellProps) {
   return (
     <Form action={action} method={method} encType={encType} className={className}>
-      {({ errors, processing }) => (
+      {({ errors: inertiaErrors, processing }) => (
         <>
           {(method === 'put' || method === 'patch') && (
             <input type="hidden" name="_method" value={method} />
           )}
 
-          {typeof children === 'function' ? children({ errors, processing }) : children}
+          {typeof children === 'function' 
+            ? children({ errors: { ...inertiaErrors, ...externalErrors }, processing }) 
+            : children}
 
           <div className="flex justify-end gap-4 mt-6">
             {cancelUrl && (

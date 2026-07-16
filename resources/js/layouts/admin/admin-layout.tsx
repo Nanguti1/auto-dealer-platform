@@ -41,6 +41,7 @@ import {
   UserCheck,
   Receipt,
   FileClock,
+  Package,
 } from 'lucide-react';
 import * as React from 'react';
 import { ErrorBoundary, LoadingState } from '@/components/admin/shared';
@@ -161,6 +162,7 @@ return 'A';
             { name: 'Vehicles', href: adminRoutes.vehicles.index().url, icon: Car },
             { name: 'Features', href: adminRoutes.vehicleFeatures.index().url, icon: Sparkles },
             { name: 'Gallery', href: adminRoutes.vehicleGalleries.index().url, icon: ImageIcon },
+            { name: 'Suppliers', href: adminRoutes.suppliers.index().url, icon: Package },
           ],
         },
         { name: 'Customers', href: adminRoutes.customers.index().url, icon: Users },
