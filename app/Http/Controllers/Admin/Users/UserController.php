@@ -71,7 +71,7 @@ class UserController extends Controller
     {
         $this->service->update($user, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.users.show', $user)->with('success', 'Updated successfully.');
     }
 
     public function destroy(User $user): RedirectResponse

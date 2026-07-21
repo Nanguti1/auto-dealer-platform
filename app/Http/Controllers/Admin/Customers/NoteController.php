@@ -79,7 +79,7 @@ class NoteController extends Controller
         $this->authorize('update', $note);
         $this->service->update($note, $request->validated());
 
-        return back()->with('success', 'Note updated successfully.');
+        return redirect()->route('admin.customers.notes.show', [$customer, $note])->with('success', 'Note updated successfully.');
     }
 
     public function destroy(Customer $customer, $note): RedirectResponse

@@ -83,7 +83,7 @@ class TradeInController extends Controller
 
         $this->service->update($tradeInRequest, $data);
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.trade-ins.show', $tradeIn)->with('success', 'Updated successfully.');
     }
 
     public function destroy($tradeIn): RedirectResponse

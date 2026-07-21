@@ -64,7 +64,7 @@ class BlogCategoryController extends Controller
     {
         $this->service->update($blogCategory, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.blog-categories.show', $blogCategory)->with('success', 'Updated successfully.');
     }
 
     public function destroy(BlogCategory $blogCategory): RedirectResponse

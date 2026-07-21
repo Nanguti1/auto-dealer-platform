@@ -143,7 +143,7 @@ class PaymentController extends Controller
     {
         $this->service->update($payment, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.payments.show', $payment)->with('success', 'Updated successfully.');
     }
 
     public function destroy(Payment $payment): RedirectResponse

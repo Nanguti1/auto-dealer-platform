@@ -64,7 +64,7 @@ class BranchController extends Controller
     {
         $this->service->update($branch, $request->validated());
 
-        return back()->with('success', 'Branch updated successfully.');
+        return redirect()->route('admin.branches.show', $branch)->with('success', 'Branch updated successfully.');
     }
 
     public function destroy(Branch $branch): RedirectResponse

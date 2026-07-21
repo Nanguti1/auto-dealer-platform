@@ -77,7 +77,7 @@ class DocumentController extends Controller
 
         $this->service->update($document, $request->validated(), $request->file('file'));
 
-        return redirect()->route('admin.customers.documents.index', $customer)->with('success', 'Document updated successfully.');
+        return redirect()->route('admin.customers.documents.show', [$customer, $document])->with('success', 'Document updated successfully.');
     }
 
     public function destroy(Customer $customer, $document): RedirectResponse

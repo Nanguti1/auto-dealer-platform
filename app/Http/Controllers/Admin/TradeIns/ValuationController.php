@@ -71,7 +71,7 @@ class ValuationController extends Controller
     {
         $this->service->update($valuation, $request->validated());
 
-        return back()->with('success', 'Valuation updated successfully.');
+        return redirect()->route('admin.valuations.show', $valuation)->with('success', 'Valuation updated successfully.');
     }
 
     public function destroy(TradeInValuation $valuation): RedirectResponse

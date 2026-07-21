@@ -77,7 +77,7 @@ class ImportDocumentController extends Controller
 
         $this->service->update($document, $request->validated(), $request->file('file'));
 
-        return redirect()->route('admin.imports.documents.index', $vehicleImport)->with('success', 'Document updated successfully.');
+        return redirect()->route('admin.imports.documents.show', [$vehicleImport, $document])->with('success', 'Document updated successfully.');
     }
 
     public function destroy(VehicleImport $vehicleImport, $document): RedirectResponse

@@ -64,7 +64,7 @@ class ReviewController extends Controller
     {
         $this->service->update($review, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.reviews.show', $review)->with('success', 'Updated successfully.');
     }
 
     public function destroy(Review $review): RedirectResponse

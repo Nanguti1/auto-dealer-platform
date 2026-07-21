@@ -73,7 +73,7 @@ class SupplierController extends Controller
 
         event(new SupplierUpdated($supplier));
 
-        return back()->with('success', 'Supplier updated successfully.');
+        return redirect()->route('admin.suppliers.show', $supplier)->with('success', 'Supplier updated successfully.');
     }
 
     public function destroy(Supplier $supplier): RedirectResponse

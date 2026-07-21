@@ -78,7 +78,7 @@ class ReceiptController extends Controller
     {
         $this->service->update($receipt, $request->validated());
 
-        return back()->with('success', 'Receipt updated successfully.');
+        return redirect()->route('admin.receipts.show', $receipt)->with('success', 'Receipt updated successfully.');
     }
 
     public function destroy(Receipt $receipt): RedirectResponse

@@ -64,7 +64,7 @@ class VehicleFeatureController extends Controller
     {
         $this->service->update($vehicleFeature, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.vehicle-features.show', $vehicleFeature)->with('success', 'Updated successfully.');
     }
 
     public function destroy(VehicleFeature $vehicleFeature): RedirectResponse

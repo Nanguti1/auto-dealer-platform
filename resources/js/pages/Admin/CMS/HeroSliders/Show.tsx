@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Pencil, Calendar, ArrowRight, Image as ImageIcon } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { HeroSlider } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';
@@ -13,9 +14,9 @@ export default function Show({ heroSlider }: { heroSlider: HeroSlider }) {
       description={heroSlider.subtitle ?? ''}
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.heroSliders.index().url} />
           <Button asChild>
-            <Link href={`/admin/hero-sliders/${heroSlider.id}/edit`}>
+            <Link href={adminRoutes.heroSliders.edit(heroSlider.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>

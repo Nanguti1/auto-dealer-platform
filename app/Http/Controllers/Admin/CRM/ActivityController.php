@@ -97,7 +97,7 @@ class ActivityController extends Controller
     {
         $this->service->update($activity, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.activities.show', $activity)->with('success', 'Updated successfully.');
     }
 
     public function destroy(CrmFollowUp $activity): RedirectResponse

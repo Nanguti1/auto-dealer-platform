@@ -64,7 +64,7 @@ class HeroSliderController extends Controller
     {
         $this->service->update($heroSlider, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.hero-sliders.show', $heroSlider)->with('success', 'Updated successfully.');
     }
 
     public function destroy(HeroSlider $heroSlider): RedirectResponse

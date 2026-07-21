@@ -114,7 +114,7 @@ class LeadController extends Controller
     {
         $this->service->update($lead, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.leads.show', $lead)->with('success', 'Updated successfully.');
     }
 
     public function destroy(Lead $lead): RedirectResponse

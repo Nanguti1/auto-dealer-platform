@@ -67,7 +67,7 @@ class CustomerController extends Controller
     {
         $this->service->update($customer, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.customers.show', $customer)->with('success', 'Updated successfully.');
     }
 
     public function destroy(Customer $customer): RedirectResponse

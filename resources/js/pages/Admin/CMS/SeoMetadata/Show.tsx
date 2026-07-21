@@ -27,7 +27,7 @@ export default function Show({ seoSettings }: { seoSettings?: SeoSettings }) {
       description="Global SEO settings and metadata configuration"
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.seoMetadata.index().url} />
           <Button asChild>
             <Link href={adminRoutes.seoMetadata.edit(seoSettings.id).url}>
               <Pencil className="mr-2 size-4" />

@@ -16,7 +16,7 @@ export default function Show({ dynamicCmsPage }: { dynamicCmsPage: CmsPage }) {
       description={dynamicCmsPage.slug ?? ''}
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.cmsPages.index().url} />
           <Button asChild>
             <Link href={adminRoutes.cmsPages.edit(dynamicCmsPage.id).url}>
               <Pencil className="mr-2 size-4" />

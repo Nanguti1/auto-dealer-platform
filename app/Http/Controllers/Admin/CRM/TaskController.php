@@ -97,7 +97,7 @@ class TaskController extends Controller
     {
         $this->service->update($task, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.tasks.show', $task)->with('success', 'Updated successfully.');
     }
 
     public function destroy(CrmTask $task): RedirectResponse

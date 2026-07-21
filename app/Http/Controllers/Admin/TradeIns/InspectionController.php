@@ -78,7 +78,7 @@ class InspectionController extends Controller
     {
         $this->service->update($inspection, $request->validated());
 
-        return back()->with('success', 'Inspection updated successfully.');
+        return redirect()->route('admin.inspections.show', $inspection)->with('success', 'Inspection updated successfully.');
     }
 
     public function complete(TradeInInspection $inspection): RedirectResponse

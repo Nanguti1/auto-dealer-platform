@@ -64,7 +64,7 @@ class BlogTagController extends Controller
     {
         $this->service->update($blogTag, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.blog-tags.show', $blogTag)->with('success', 'Updated successfully.');
     }
 
     public function destroy(BlogTag $blogTag): RedirectResponse

@@ -75,7 +75,7 @@ class RefundController extends Controller
     {
         $this->service->update($refund, $request->validated());
 
-        return back()->with('success', 'Refund updated successfully.');
+        return redirect()->route('admin.refunds.show', $refund)->with('success', 'Refund updated successfully.');
     }
 
     public function process(Refund $refund): RedirectResponse

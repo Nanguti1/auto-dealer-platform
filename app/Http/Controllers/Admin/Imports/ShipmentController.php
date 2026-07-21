@@ -68,7 +68,7 @@ class ShipmentController extends Controller
     {
         $this->service->update($shipment, $request->validated());
 
-        return back()->with('success', 'Shipment updated successfully.');
+        return redirect()->route('admin.shipments.show', $shipment)->with('success', 'Shipment updated successfully.');
     }
 
     public function updateTracking(Request $request, ImportShipment $shipment): RedirectResponse

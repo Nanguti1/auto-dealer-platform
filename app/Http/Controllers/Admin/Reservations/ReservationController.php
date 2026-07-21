@@ -123,7 +123,7 @@ class ReservationController extends Controller
     {
         $this->service->update($reservation, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.reservations.show', $reservation)->with('success', 'Updated successfully.');
     }
 
     public function destroy(VehicleReservation $reservation): RedirectResponse

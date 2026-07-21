@@ -74,7 +74,7 @@ class InvoiceController extends Controller
     {
         $this->service->update($invoice, $request->validated());
 
-        return back()->with('success', 'Invoice updated successfully.');
+        return redirect()->route('admin.invoices.show', $invoice)->with('success', 'Invoice updated successfully.');
     }
 
     public function destroy(Invoice $invoice): RedirectResponse

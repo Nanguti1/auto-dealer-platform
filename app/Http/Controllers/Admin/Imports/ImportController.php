@@ -74,7 +74,7 @@ class ImportController extends Controller
     {
         $this->service->update($import, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.imports.show', $import)->with('success', 'Updated successfully.');
     }
 
     public function destroy(VehicleImport $import): RedirectResponse

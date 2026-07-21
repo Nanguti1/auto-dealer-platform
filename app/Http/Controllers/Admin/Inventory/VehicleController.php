@@ -269,7 +269,7 @@ class VehicleController extends Controller
         $isDraft = $request->boolean('save_as_draft');
         $message = $isDraft ? 'Draft saved successfully.' : 'Updated successfully.';
 
-        return back()->with('success', $message);
+        return redirect()->route('admin.vehicles.show', $vehicle)->with('success', $message);
     }
 
     public function destroy(Vehicle $vehicle): RedirectResponse

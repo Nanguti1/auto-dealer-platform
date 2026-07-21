@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { Pencil, Calendar, ChevronDown, ChevronUp, FolderOpen } from 'lucide-react';
 import * as React from 'react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { Faq } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';
@@ -16,9 +17,9 @@ export default function Show({ faq }: { faq: Faq }) {
       description={faq.category ?? ''}
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.faqs.index().url} />
           <Button asChild>
-            <Link href={`/admin/faqs/${faq.id}/edit`}>
+            <Link href={adminRoutes.faqs.edit(faq.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>

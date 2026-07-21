@@ -68,7 +68,7 @@ class ImportPaymentController extends Controller
     {
         $this->service->update($importPayment, $request->validated());
 
-        return back()->with('success', 'Import payment updated successfully.');
+        return redirect()->route('admin.import-payments.show', $importPayment)->with('success', 'Import payment updated successfully.');
     }
 
     public function markAsPaid(ImportPayment $importPayment): RedirectResponse

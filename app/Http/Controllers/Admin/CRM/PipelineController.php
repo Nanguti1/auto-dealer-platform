@@ -32,6 +32,6 @@ class PipelineController extends Controller
         $this->authorize('update', $lead);
         $this->service->updateLeadStage($lead, $request->validated()['crm_stage_id']);
 
-        return back()->with('success', 'Lead stage updated successfully.');
+        return redirect()->route('admin.leads.show', $lead)->with('success', 'Lead stage updated successfully.');
     }
 }

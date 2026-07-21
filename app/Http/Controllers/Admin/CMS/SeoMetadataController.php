@@ -121,7 +121,7 @@ class SeoMetadataController extends Controller
         $seoMetadata = SeoMetadata::findOrFail($id);
         $this->service->update($seoMetadata, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.seo-metadata.show', $id)->with('success', 'Updated successfully.');
     }
 
     public function destroy($id): RedirectResponse

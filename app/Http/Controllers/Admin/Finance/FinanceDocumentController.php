@@ -77,7 +77,7 @@ class FinanceDocumentController extends Controller
 
         $this->service->update($document, $request->validated(), $request->file('file'));
 
-        return redirect()->route('admin.finance-applications.documents.index', $financeApplication)->with('success', 'Document updated successfully.');
+        return redirect()->route('admin.finance-applications.documents.show', [$financeApplication, $document])->with('success', 'Document updated successfully.');
     }
 
     public function destroy(FinanceApplication $financeApplication, $document): RedirectResponse

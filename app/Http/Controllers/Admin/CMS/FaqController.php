@@ -64,7 +64,7 @@ class FaqController extends Controller
     {
         $this->service->update($faq, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.faqs.show', $faq)->with('success', 'Updated successfully.');
     }
 
     public function destroy(Faq $faq): RedirectResponse

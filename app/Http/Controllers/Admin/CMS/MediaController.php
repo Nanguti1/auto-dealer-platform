@@ -101,7 +101,7 @@ class MediaController extends Controller
         $media = Media::findOrFail($id);
         $this->service->update($media, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.media.show', $id)->with('success', 'Updated successfully.');
     }
 
     public function destroy($id): RedirectResponse

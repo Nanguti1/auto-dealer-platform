@@ -78,7 +78,7 @@ class OfferController extends Controller
     {
         $this->service->update($offer, $request->validated());
 
-        return back()->with('success', 'Offer updated successfully.');
+        return redirect()->route('admin.offers.show', $offer)->with('success', 'Offer updated successfully.');
     }
 
     public function accept(TradeInOffer $offer): RedirectResponse

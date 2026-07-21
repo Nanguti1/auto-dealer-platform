@@ -64,7 +64,7 @@ class CmsPageController extends Controller
     {
         $this->service->update($cmsPage, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.cms-pages.show', $cmsPage)->with('success', 'Updated successfully.');
     }
 
     public function destroy(DynamicCmsPage $cmsPage): RedirectResponse

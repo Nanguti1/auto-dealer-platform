@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Pencil, Calendar, Layout as LayoutIcon, Layers } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { HomePageSection } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';
@@ -13,9 +14,9 @@ export default function Show({ homePageSection }: { homePageSection: HomePageSec
       description={homePageSection.section_type ?? ''}
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.homePageSections.index().url} />
           <Button asChild>
-            <Link href={`/admin/home-page-sections/${homePageSection.id}/edit`}>
+            <Link href={adminRoutes.homePageSections.edit(homePageSection.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>

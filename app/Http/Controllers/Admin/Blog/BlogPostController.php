@@ -91,7 +91,7 @@ class BlogPostController extends Controller
         $blogPost = BlogPost::findOrFail($id);
         $this->service->update($blogPost, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.blog-posts.show', $id)->with('success', 'Updated successfully.');
     }
 
     public function destroy($id): RedirectResponse

@@ -90,7 +90,7 @@ class VehicleGalleryController extends Controller
     {
         $this->service->update($vehicleGallery, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.vehicle-galleries.show', $vehicleGallery)->with('success', 'Updated successfully.');
     }
 
     public function destroy(VehicleGallery $vehicleGallery): RedirectResponse

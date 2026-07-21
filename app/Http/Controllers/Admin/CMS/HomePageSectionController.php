@@ -64,7 +64,7 @@ class HomePageSectionController extends Controller
     {
         $this->service->update($home_page_section, $request->validated());
 
-        return back()->with('success', 'Updated successfully.');
+        return redirect()->route('admin.home-page-sections.show', $home_page_section)->with('success', 'Updated successfully.');
     }
 
     public function destroy(HomePageSection $home_page_section): RedirectResponse
