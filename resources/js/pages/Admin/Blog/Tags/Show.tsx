@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Pencil, Calendar, Globe, Tag as TagIcon } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { BlogTag } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';
@@ -13,9 +14,9 @@ export default function Show({ blogTag }: { blogTag: BlogTag }) {
       description={blogTag.slug ?? ''}
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.blogTags.index().url} />
           <Button asChild>
-            <Link href={`/admin/blog-tags/${blogTag.id}/edit`}>
+            <Link href={adminRoutes.blogTags.edit(blogTag.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>

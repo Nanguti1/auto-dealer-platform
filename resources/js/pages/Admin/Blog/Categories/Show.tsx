@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Pencil, Calendar, Globe, FileText, Hash } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { BlogCategory } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';
@@ -13,9 +14,9 @@ export default function Show({ blogCategory }: { blogCategory: BlogCategory }) {
       description={blogCategory.slug ?? ''}
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.blogCategories.index().url} />
           <Button asChild>
-            <Link href={`/admin/blog-categories/${blogCategory.id}/edit`}>
+            <Link href={adminRoutes.blogCategories.edit(blogCategory.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>

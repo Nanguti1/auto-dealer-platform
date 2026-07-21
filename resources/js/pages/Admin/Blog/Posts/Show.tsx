@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Pencil, Eye, Calendar, User, Folder, MessageCircle, Star } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { BlogPost } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';
@@ -15,9 +16,9 @@ export default function Show({ blogPost }: { blogPost: BlogPost }) {
       description={blogPost.excerpt ?? ''}
       actions={
         <>
-          <CmsBackButton />
+          <CmsBackButton href={adminRoutes.blogPosts.index().url} />
           <Button asChild>
-            <Link href={`/admin/blog-posts/${blogPost.id}/edit`}>
+            <Link href={adminRoutes.blogPosts.edit(blogPost.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>
