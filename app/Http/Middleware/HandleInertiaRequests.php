@@ -38,8 +38,7 @@ class HandleInertiaRequests extends Middleware
     {
         $currencyService = app(CurrencyService::class);
 
-        return [
-            ...parent::share($request),
+        return array_merge(parent::share($request), [
             'name' => config('app.name'),
             'auth' => [
                 'user' => $request->user(),
@@ -51,6 +50,12 @@ class HandleInertiaRequests extends Middleware
                 'currencySymbol' => $currencyService->getCurrentSymbol(),
                 'exchangeRate' => $currencyService->getCurrentExchangeRate(),
             ],
-        ];
+            'flash' => [
+                'success' => $request->session()->get('success'),
+                'error' => $request->session()->get('error'),
+                'warning' => $request->session()->get('warning'),
+                'info' => $request->session()->get('info'),
+            ],
+        ]);
     }
 }

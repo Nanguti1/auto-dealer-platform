@@ -44,7 +44,7 @@ import {
   Package,
 } from 'lucide-react';
 import * as React from 'react';
-import { ErrorBoundary, LoadingState } from '@/components/admin/shared';
+import { ErrorBoundary, LoadingState, FlashMessages } from '@/components/admin/shared';
 import AppearanceToggleTab from '@/components/appearance-tabs';
 import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -280,6 +280,9 @@ return 'A';
   return (
     <div className={cn('min-h-screen bg-background', className)}>
       <Head title={title} />
+
+      {/* Flash Messages */}
+      <FlashMessages />
 
       {/* Skip to content link for keyboard users */}
       <a
