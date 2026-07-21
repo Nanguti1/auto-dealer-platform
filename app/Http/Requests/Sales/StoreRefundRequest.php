@@ -22,7 +22,7 @@ class StoreRefundRequest extends FormRequest
         return [
             'payment_id' => ['required', 'exists:payments,id'],
             'invoice_id' => ['sometimes', 'nullable', 'exists:invoices,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
             'refund_number' => ['sometimes', 'nullable', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0.01'],
             'reason' => ['sometimes', 'nullable', 'string'],

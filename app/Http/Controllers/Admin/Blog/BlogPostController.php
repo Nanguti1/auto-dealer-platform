@@ -55,8 +55,9 @@ class BlogPostController extends Controller
         return redirect()->route('admin.blog-posts.index')->with('success', 'Created successfully.');
     }
 
-    public function show(BlogPost $blogPost): Response
+    public function show($id): Response
     {
+        $blogPost = BlogPost::with(['category', 'author'])->findOrFail($id);
         $this->authorize('view', $blogPost);
 
         return Inertia::render('Admin/Blog/Posts/Show', [
@@ -64,8 +65,9 @@ class BlogPostController extends Controller
         ]);
     }
 
-    public function edit(BlogPost $blogPost): Response
+    public function edit($id): Response
     {
+        $blogPost = BlogPost::with(['category', 'author'])->findOrFail($id);
         $this->authorize('update', $blogPost);
 
         $categories = BlogCategory::select('id', 'name')
@@ -84,15 +86,17 @@ class BlogPostController extends Controller
         ]);
     }
 
-    public function update(UpdateBlogPostRequest $request, BlogPost $blogPost): RedirectResponse
+    public function update(UpdateBlogPostRequest $request, $id): RedirectResponse
     {
+        $blogPost = BlogPost::findOrFail($id);
         $this->service->update($blogPost, $request->validated());
 
         return back()->with('success', 'Updated successfully.');
     }
 
-    public function destroy(BlogPost $blogPost): RedirectResponse
+    public function destroy($id): RedirectResponse
     {
+        $blogPost = BlogPost::findOrFail($id);
         $this->authorize('delete', $blogPost);
         $this->service->delete($blogPost);
 

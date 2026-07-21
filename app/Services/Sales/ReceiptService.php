@@ -20,7 +20,7 @@ class ReceiptService
 
     public function paginate(array $filters = []): LengthAwarePaginator
     {
-        $query = Receipt::query()->with(['payment', 'invoice', 'user']);
+        $query = Receipt::query()->with(['payment', 'invoice', 'user', 'customer']);
 
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {

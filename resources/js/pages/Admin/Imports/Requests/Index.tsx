@@ -10,10 +10,13 @@ import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
 import { LoadingState, EmptyGeneric, InlineError, RowActionsDropdown } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
+import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 
 export default function Index({ imports, filters = {} }: { imports: ImportPagination; filters?: ImportFilters }) {
   const [isLoading, setIsLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
+  const [deleteId, setDeleteId] = React.useState<number | null>(null);
+  const [isDeleting, setIsDeleting] = React.useState(false);
 
   const columns: Column<ImportRequest>[] = [
     { key: 'status', label: 'Status', sortable: true, render: (row) => <ImportStatusBadge status={row.status} /> },
@@ -87,13 +90,32 @@ export default function Index({ imports, filters = {} }: { imports: ImportPagina
                   label: 'Delete',
                   icon: <Archive />,
                   destructive: true,
-                  onClick: () => router.delete(`/admin/imports/${row.id}`),
+                  onClick: () => setDeleteId(row.id),
                 },
               ]}
             />
           )}
         />
       )}
+      <ConfirmationDialog
+        open={deleteId !== null}
+        onOpenChange={(open) => !open && setDeleteId(null)}
+        title="Delete import request?"
+        description="This will permanently delete the import request and all related data. This action cannot be undone."
+        confirmLabel="Delete"
+        onConfirm={() => {
+          if (deleteId) {
+            setIsDeleting(true);
+            router.delete(`/admin/imports/${deleteId}`, {
+              onFinish: () => {
+                setDeleteId(null);
+                setIsDeleting(false);
+              },
+            });
+          }
+        }}
+        isLoading={isDeleting}
+      />
     </ImportShell>
   );
 }

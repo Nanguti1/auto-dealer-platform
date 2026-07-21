@@ -19,12 +19,12 @@ class StoreActivityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lead_id' => ['nullable', 'exists:leads,id'],
+            'lead_id' => ['required', 'exists:leads,id'],
             'assigned_user_id' => ['nullable', 'exists:users,id'],
             'type' => ['required', 'string', 'max:255'],
             'due_at' => ['nullable', 'date'],
             'completed_at' => ['nullable', 'date'],
-            'status' => ['nullable', 'string', 'in:pending,in_progress,completed,cancelled'],
+            'status' => ['required', 'string', 'in:pending,in_progress,completed,cancelled'],
             'notes' => ['nullable', 'string'],
         ];
     }

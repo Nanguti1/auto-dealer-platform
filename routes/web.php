@@ -159,8 +159,10 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::patch('trade-ins/{trade_in}/convert-to-inventory', [TradeInController::class, 'convertToInventory'])->name('trade-ins.convert-to-inventory');
         Route::get('trade-ins/{tradeIn}/inspection/create', [InspectionController::class, 'create'])->name('trade-ins.inspection.create');
         Route::post('trade-ins/{tradeIn}/inspection', [InspectionController::class, 'store'])->name('trade-ins.inspection.store');
+        Route::post('trade-ins/{tradeIn}/offer', [OfferController::class, 'store'])->name('trade-ins.offer.store');
         Route::resource('inspections', InspectionController::class);
         Route::patch('inspections/{inspection}/complete', [InspectionController::class, 'complete'])->name('inspections.complete');
+        Route::get('trade-ins/{tradeIn}/offer/create', [OfferController::class, 'create'])->name('trade-ins.offer.create');
         Route::resource('offers', OfferController::class);
         Route::patch('offers/{offer}/accept', [OfferController::class, 'accept'])->name('offers.accept');
         Route::patch('offers/{offer}/reject', [OfferController::class, 'reject'])->name('offers.reject');
@@ -178,9 +180,9 @@ Route::middleware(['auth', 'verified', 'admin'])
             ]);
         });
         Route::resource('reservations', ReservationController::class);
-        Route::patch('reservations/{vehicleReservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
-        Route::patch('reservations/{vehicleReservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
-        Route::patch('reservations/{vehicleReservation}/convert-to-sale', [ReservationController::class, 'convertToSale'])->name('reservations.convert-to-sale');
+        Route::patch('reservations/{reservation}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
+        Route::patch('reservations/{reservation}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
+        Route::patch('reservations/{reservation}/convert-to-sale', [ReservationController::class, 'convertToSale'])->name('reservations.convert-to-sale');
         Route::resource('imports', ImportController::class);
         Route::prefix('imports/{vehicleImport}')->group(function (): void {
             Route::resource('documents', ImportDocumentController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy'])->names([

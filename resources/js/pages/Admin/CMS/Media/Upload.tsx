@@ -24,6 +24,7 @@ export default function MediaUpload() {
             <div className="space-y-2">
               <Label htmlFor="file">Media File</Label>
               <ImageDropzone
+                multiple={false}
                 onFilesSelected={(files) => {
                   const input = document.querySelector('input[name="file"]') as HTMLInputElement;
 

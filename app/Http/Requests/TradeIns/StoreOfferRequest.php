@@ -23,7 +23,7 @@ class StoreOfferRequest extends FormRequest
             'valuation_id' => ['nullable', 'integer', 'exists:trade_in_valuations,id'],
             'created_by' => ['nullable', 'integer', 'exists:users,id'],
             'offer_amount' => ['required', 'numeric', 'min:0'],
-            'valid_until' => ['nullable', 'date'],
+            'valid_until' => ['required', 'date', 'after:now'],
             'status' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
             'terms' => ['nullable', 'array'],

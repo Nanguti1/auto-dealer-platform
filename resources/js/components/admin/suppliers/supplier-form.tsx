@@ -1,11 +1,13 @@
 import { useForm } from '@inertiajs/react';
 import * as React from 'react';
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { FormField, FormSection } from '@/components/admin/shared';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import type { SupplierRecord } from './types';
 
 export default function SupplierForm({ supplier, action, method = 'post' }: { supplier: SupplierRecord; action: string; method?: 'post' | 'put' }) {
-  const { data, setData, processing, errors } = useForm({
+  const { data, setData, processing, errors, post, put } = useForm({
     company_name: supplier.company_name ?? '',
     supplier_code: supplier.supplier_code ?? '',
     contact_person: supplier.contact_person ?? '',
@@ -28,14 +30,17 @@ export default function SupplierForm({ supplier, action, method = 'post' }: { su
     notes: supplier.notes ?? '',
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (method === 'put') {
+      put(action);
+    } else {
+      post(action);
+    }
+  };
+
   return (
-    <FormShell
-      action={action}
-      method={method}
-      submitLabel="Save supplier"
-      className="space-y-6"
-      errors={errors}
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <Tabs defaultValue="basic">
         <TabsList className="flex h-auto w-full flex-wrap justify-start">
           <TabsTrigger value="basic">Basic Information</TabsTrigger>
@@ -228,6 +233,13 @@ export default function SupplierForm({ supplier, action, method = 'post' }: { su
           />
         </TabsContent>
       </Tabs>
-    </FormShell>
+
+      <div className="flex justify-end gap-4 mt-6">
+        <Button type="submit" disabled={processing}>
+          <Save className="mr-2 size-4" />
+          {processing ? 'Saving...' : 'Save supplier'}
+        </Button>
+      </div>
+    </form>
   );
 }

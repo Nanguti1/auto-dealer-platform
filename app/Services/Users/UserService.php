@@ -44,13 +44,7 @@ class UserService
 
     public function create(array $data): User
     {
-        $user = User::create($data);
-
-        if (isset($data['role_id'])) {
-            $user->update(['role_id' => $data['role_id']]);
-        }
-
-        return $user;
+        return User::create($data);
     }
 
     public function update(User $user, array $data): User
@@ -58,6 +52,9 @@ class UserService
         if (empty($data['password'])) {
             unset($data['password']);
         }
+
+        // Remove roles array if present (not a fillable field)
+        unset($data['roles']);
 
         $user->update($data);
 

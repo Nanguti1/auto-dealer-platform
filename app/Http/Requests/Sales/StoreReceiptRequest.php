@@ -22,7 +22,8 @@ class StoreReceiptRequest extends FormRequest
         return [
             'payment_id' => ['required', 'exists:payments,id'],
             'invoice_id' => ['sometimes', 'nullable', 'exists:invoices,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            'customer_id' => ['sometimes', 'nullable', 'exists:customers,id'],
+            'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
             'receipt_number' => ['sometimes', 'nullable', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0.01'],
             'status' => ['sometimes', 'nullable', 'string', 'in:issued,void'],

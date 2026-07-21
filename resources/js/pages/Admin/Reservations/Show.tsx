@@ -135,7 +135,7 @@ export default function Show({ reservation }: { reservation: ReservationRecord }
                   </Link>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {reservation.vehicle.year} {reservation.vehicle.make} {reservation.vehicle.model}
+                  {reservation.vehicle.year} {reservation.vehicle.make?.name} {reservation.vehicle.model?.name}
                 </p>
                 <p className="text-sm font-medium">
                   {formatCurrency(reservation.vehicle.price)}

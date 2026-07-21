@@ -97,14 +97,16 @@ export default function BlogForm({ blogPost, action, method = 'post', categories
           searchable
           onChange={(value) => setData('blog_category_id', value)}
         />
-        <FormField
-          name="author_id"
-          label="Author"
-          type="number"
-          value={String(data.author_id)}
-          error={errors.author_id}
-          onChange={(value) => setData('author_id', Number(value))}
-        />
+        {blogPost && (
+          <FormField
+            name="author_id"
+            label="Author"
+            type="number"
+            value={String(data.author_id)}
+            error={errors.author_id}
+            onChange={(value) => setData('author_id', Number(value))}
+          />
+        )}
         <FormField
           name="status"
           label="Status"

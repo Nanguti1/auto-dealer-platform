@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Media extends Model
 {
@@ -26,12 +27,30 @@ class Media extends Model
         'is_public',
     ];
 
+    protected $hidden = [
+        'mediable_type',
+        'mediable_id',
+    ];
+
+    protected $appends = ['file_path'];
+
     protected function casts(): array
     {
         return [
             'is_public' => 'boolean',
             'file_size' => 'integer',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
+    }
+
+    public function getFilePathAttribute(): string
+    {
+        if ($this->path && $this->disk) {
+            return Storage::disk($this->disk)->url($this->path);
+        }
+
+        return '';
     }
 
     public function scopeRecent($query)

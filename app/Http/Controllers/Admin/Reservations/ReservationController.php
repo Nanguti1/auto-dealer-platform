@@ -72,21 +72,25 @@ class ReservationController extends Controller
         return redirect()->route('admin.reservations.index')->with('success', 'Created successfully.');
     }
 
-    public function show(VehicleReservation $vehicleReservation): Response
+    public function show(VehicleReservation $reservation): Response
     {
-        $this->authorize('view', $vehicleReservation);
+        $this->authorize('view', $reservation);
+
+        $reservation->load(['vehicle.make', 'vehicle.vehicleModel', 'customer', 'user']);
 
         return Inertia::render('Admin/Reservations/Show', [
-            'reservation' => $vehicleReservation,
+            'reservation' => $reservation,
         ]);
     }
 
-    public function edit(VehicleReservation $vehicleReservation): Response
+    public function edit(VehicleReservation $reservation): Response
     {
-        $this->authorize('update', $vehicleReservation);
+        $this->authorize('update', $reservation);
+
+        $reservation->load(['vehicle.make', 'vehicle.vehicleModel', 'customer', 'user']);
 
         return Inertia::render('Admin/Reservations/Edit', [
-            'reservation' => $vehicleReservation,
+            'reservation' => $reservation,
             'vehicles' => Vehicle::with(['make', 'vehicleModel', 'inventoryStatus'])
                 ->get()
                 ->map(fn ($vehicle) => [
@@ -115,47 +119,50 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function update(UpdateReservationRequest $request, VehicleReservation $vehicleReservation): RedirectResponse
+    public function update(UpdateReservationRequest $request, VehicleReservation $reservation): RedirectResponse
     {
-        $this->service->update($vehicleReservation, $request->validated());
+        $this->service->update($reservation, $request->validated());
 
         return back()->with('success', 'Updated successfully.');
     }
 
-    public function destroy(VehicleReservation $vehicleReservation): RedirectResponse
+    public function destroy(VehicleReservation $reservation): RedirectResponse
     {
-        $this->authorize('delete', $vehicleReservation);
-        $this->service->delete($vehicleReservation);
+        $this->authorize('delete', $reservation);
+        $this->service->delete($reservation);
 
         return redirect()->route('admin.reservations.index')->with('success', 'Deleted successfully.');
     }
 
-    public function confirm(VehicleReservation $vehicleReservation): RedirectResponse
+    public function confirm(VehicleReservation $reservation): RedirectResponse
     {
-        $this->authorize('update', $vehicleReservation);
-        $vehicleReservation->confirm();
+        $this->authorize('update', $reservation);
+        $reservation->confirm();
 
         return back()->with('success', 'Reservation confirmed successfully.');
     }
 
-    public function cancel(VehicleReservation $vehicleReservation): RedirectResponse
+    public function cancel(VehicleReservation $reservation): RedirectResponse
     {
-        $this->authorize('update', $vehicleReservation);
-        $vehicleReservation->cancel();
+        $this->authorize('update', $reservation);
+        $reservation->cancel();
 
         return back()->with('success', 'Reservation cancelled successfully.');
     }
 
-    public function convertToSale(VehicleReservation $vehicleReservation): RedirectResponse
+    public function convertToSale(VehicleReservation $reservation): RedirectResponse
     {
-        $this->authorize('update', $vehicleReservation);
+        $this->authorize('update', $reservation);
 
-        $vehicleReservation->update(['status' => 'converted']);
-        $vehicleReservation->vehicle->markAsSold($vehicleReservation->user);
+        $reservation->update(['status' => 'converted']);
+
+        $user = $reservation->customer?->user ?? $reservation->user;
+        $reservation->vehicle->markAsSold($user);
 
         return redirect()->route('admin.invoices.create', [
-            'vehicle_id' => $vehicleReservation->vehicle_id,
-            'user_id' => $vehicleReservation->user_id,
+            'vehicle_id' => $reservation->vehicle_id,
+            'customer_id' => $reservation->customer_id,
+            'user_id' => $reservation->user_id,
         ])->with('success', 'Reservation converted to sale successfully.');
     }
 }

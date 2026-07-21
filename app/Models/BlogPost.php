@@ -14,7 +14,7 @@ class BlogPost extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
-    protected $fillable = ['blog_category_id', 'author_id', 'title', 'slug', 'excerpt', 'body', 'featured_image_path', 'status', 'published_at'];
+    protected $fillable = ['blog_category_id', 'author_id', 'title', 'slug', 'excerpt', 'body', 'featured_image_path', 'status', 'published_at', 'featured_image', 'is_featured'];
 
     protected function casts(): array
     {

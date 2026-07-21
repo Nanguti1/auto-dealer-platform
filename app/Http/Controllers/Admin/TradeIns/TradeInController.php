@@ -37,13 +37,21 @@ class TradeInController extends Controller
 
     public function store(StoreTradeInRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $data = $request->validated();
+
+        // Convert condition_report from string to array if needed
+        if (isset($data['condition_report']) && is_string($data['condition_report'])) {
+            $data['condition_report'] = json_decode($data['condition_report'], true) ?? [];
+        }
+
+        $this->service->create($data);
 
         return redirect()->route('admin.trade-ins.index')->with('success', 'Created successfully.');
     }
 
-    public function show(TradeInRequest $tradeInRequest): Response
+    public function show($tradeIn): Response
     {
+        $tradeInRequest = TradeInRequest::findOrFail($tradeIn);
         $this->authorize('view', $tradeInRequest);
 
         return Inertia::render('Admin/TradeIns/Requests/Show', [
@@ -51,8 +59,9 @@ class TradeInController extends Controller
         ]);
     }
 
-    public function edit(TradeInRequest $tradeInRequest): Response
+    public function edit($tradeIn): Response
     {
+        $tradeInRequest = TradeInRequest::findOrFail($tradeIn);
         $this->authorize('update', $tradeInRequest);
 
         return Inertia::render('Admin/TradeIns/Requests/Edit', [
@@ -60,39 +69,53 @@ class TradeInController extends Controller
         ]);
     }
 
-    public function update(UpdateTradeInRequest $request, TradeInRequest $tradeInRequest): RedirectResponse
+    public function update(UpdateTradeInRequest $request, $tradeIn): RedirectResponse
     {
-        $this->service->update($tradeInRequest, $request->validated());
+        $tradeInRequest = TradeInRequest::findOrFail($tradeIn);
+        $this->authorize('update', $tradeInRequest);
+
+        $data = $request->validated();
+
+        // Convert condition_report from string to array if needed
+        if (isset($data['condition_report']) && is_string($data['condition_report'])) {
+            $data['condition_report'] = json_decode($data['condition_report'], true) ?? [];
+        }
+
+        $this->service->update($tradeInRequest, $data);
 
         return back()->with('success', 'Updated successfully.');
     }
 
-    public function destroy(TradeInRequest $tradeInRequest): RedirectResponse
+    public function destroy($tradeIn): RedirectResponse
     {
+        $tradeInRequest = TradeInRequest::findOrFail($tradeIn);
         $this->authorize('delete', $tradeInRequest);
         $this->service->delete($tradeInRequest);
 
         return redirect()->route('admin.trade-ins.index')->with('success', 'Deleted successfully.');
     }
 
-    public function approve(TradeInRequest $tradeInRequest): RedirectResponse
+    public function approve($tradeIn): RedirectResponse
     {
+        $tradeInRequest = TradeInRequest::findOrFail($tradeIn);
         $this->authorize('update', $tradeInRequest);
         $this->service->approve($tradeInRequest);
 
         return back()->with('success', 'Trade-in approved successfully.');
     }
 
-    public function reject(TradeInRequest $tradeInRequest): RedirectResponse
+    public function reject($tradeIn): RedirectResponse
     {
+        $tradeInRequest = TradeInRequest::findOrFail($tradeIn);
         $this->authorize('update', $tradeInRequest);
         $this->service->reject($tradeInRequest);
 
         return back()->with('success', 'Trade-in rejected successfully.');
     }
 
-    public function convertToInventory(TradeInRequest $tradeInRequest): RedirectResponse
+    public function convertToInventory($tradeIn): RedirectResponse
     {
+        $tradeInRequest = TradeInRequest::findOrFail($tradeIn);
         $this->authorize('update', $tradeInRequest);
         $this->service->convertToInventory($tradeInRequest);
 

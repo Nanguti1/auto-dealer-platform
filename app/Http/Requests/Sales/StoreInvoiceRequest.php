@@ -19,6 +19,7 @@ class StoreInvoiceRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'customer_id' => ['sometimes', 'nullable', 'exists:customers,id'],
             'vehicle_id' => ['sometimes', 'nullable', 'exists:vehicles,id'],
             'payment_id' => ['sometimes', 'nullable', 'exists:payments,id'],
             'user_id' => ['sometimes', 'nullable', 'exists:users,id'],

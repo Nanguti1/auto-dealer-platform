@@ -45,6 +45,7 @@ export interface CrmStage {
 export interface CrmActivity {
   id: number;
   lead_id?: number;
+  assigned_user_id?: number;
   type?: string;
   status?: string;
   due_at?: string;
@@ -52,6 +53,7 @@ export interface CrmActivity {
   notes?: string;
   lead?: LeadRecord;
   assigned_user?: { name?: string };
+  assignedUser?: { name?: string; email?: string };
 }
 
 export interface CrmTask {
@@ -66,6 +68,7 @@ export interface CrmTask {
   completed_at?: string;
   lead?: LeadRecord;
   assigned_user?: { name?: string };
+  assignedUser?: { name?: string; email?: string };
 }
 
 export interface CrmNote {

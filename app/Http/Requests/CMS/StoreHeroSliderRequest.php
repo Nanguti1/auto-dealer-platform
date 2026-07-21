@@ -18,7 +18,7 @@ class StoreHeroSliderRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:255'],
-            'image_path' => ['required', 'string', 'max:500'],
+            'image' => ['required', 'file', 'image', 'max:10240'], // Max 10MB
             'cta_label' => ['nullable', 'string', 'max:255'],
             'cta_url' => ['nullable', 'string', 'max:500'],
             'is_active' => ['nullable', 'boolean'],

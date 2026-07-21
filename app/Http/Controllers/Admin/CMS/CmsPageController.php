@@ -42,35 +42,35 @@ class CmsPageController extends Controller
         return redirect()->route('admin.cms-pages.index')->with('success', 'Created successfully.');
     }
 
-    public function show(DynamicCmsPage $dynamicCmsPage): Response
+    public function show(DynamicCmsPage $cmsPage): Response
     {
-        $this->authorize('view', $dynamicCmsPage);
+        $this->authorize('view', $cmsPage);
 
         return Inertia::render('Admin/CMS/Pages/Show', [
-            'dynamicCmsPage' => $dynamicCmsPage,
+            'dynamicCmsPage' => $cmsPage,
         ]);
     }
 
-    public function edit(DynamicCmsPage $dynamicCmsPage): Response
+    public function edit(DynamicCmsPage $cmsPage): Response
     {
-        $this->authorize('update', $dynamicCmsPage);
+        $this->authorize('update', $cmsPage);
 
         return Inertia::render('Admin/CMS/Pages/Edit', [
-            'dynamicCmsPage' => $dynamicCmsPage,
+            'dynamicCmsPage' => $cmsPage,
         ]);
     }
 
-    public function update(UpdateCmsPageRequest $request, DynamicCmsPage $dynamicCmsPage): RedirectResponse
+    public function update(UpdateCmsPageRequest $request, DynamicCmsPage $cmsPage): RedirectResponse
     {
-        $this->service->update($dynamicCmsPage, $request->validated());
+        $this->service->update($cmsPage, $request->validated());
 
         return back()->with('success', 'Updated successfully.');
     }
 
-    public function destroy(DynamicCmsPage $dynamicCmsPage): RedirectResponse
+    public function destroy(DynamicCmsPage $cmsPage): RedirectResponse
     {
-        $this->authorize('delete', $dynamicCmsPage);
-        $this->service->delete($dynamicCmsPage);
+        $this->authorize('delete', $cmsPage);
+        $this->service->delete($cmsPage);
 
         return redirect()->route('admin.cms-pages.index')->with('success', 'Deleted successfully.');
     }

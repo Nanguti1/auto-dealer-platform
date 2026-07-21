@@ -89,6 +89,27 @@ class ImportRequestTest extends TestCase
         ]);
     }
 
+    public function test_can_delete_import_request_via_controller()
+    {
+        $import = VehicleImport::factory()->create();
+
+        $response = $this->delete(route('admin.imports.destroy', $import));
+
+        $response->assertRedirect(route('admin.imports.index'));
+        $this->assertSoftDeleted('vehicle_imports', [
+            'id' => $import->id,
+        ]);
+    }
+
+    public function test_can_view_import_request_via_controller()
+    {
+        $import = VehicleImport::factory()->create();
+
+        $response = $this->get(route('admin.imports.show', $import));
+
+        $response->assertStatus(200);
+    }
+
     public function test_import_request_has_shipments()
     {
         $import = VehicleImport::factory()->create();

@@ -14,19 +14,29 @@ const typeOptions = [
 ];
 
 const statusOptions = [
-  { value: 'open', label: 'Open' },
+  { value: 'pending', label: 'Pending' },
+  { value: 'in_progress', label: 'In Progress' },
   { value: 'completed', label: 'Completed' },
   { value: 'cancelled', label: 'Cancelled' },
 ];
 
-export default function ActivityForm({ activity, action, leadId }: { activity?: CrmActivity; action: string; leadId?: number }) {
+interface ActivityFormProps {
+  activity?: CrmActivity;
+  action: string;
+  leadId?: number;
+  leads?: Array<{ id: number; name: string }>;
+  users?: Array<{ id: number; name: string }>;
+}
+
+export default function ActivityForm({ activity, action, leadId, leads, users }: ActivityFormProps) {
   const { data, setData, post, put, processing, errors } = useForm({
     type: activity?.type ?? 'follow-up',
-    status: activity?.status ?? 'open',
+    status: activity?.status ?? 'pending',
     due_at: activity?.due_at ? new Date(activity.due_at).toISOString().slice(0, 16) : '',
     completed_at: activity?.completed_at ? new Date(activity.completed_at).toISOString().slice(0, 16) : '',
     notes: activity?.notes ?? '',
     lead_id: leadId ?? '',
+    assigned_user_id: activity?.assigned_user_id ?? '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,6 +52,29 @@ export default function ActivityForm({ activity, action, leadId }: { activity?: 
     <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
       {leadId && <input type="hidden" name="lead_id" value={leadId} />}
       <FormSection gridCols={2}>
+        {!leadId && leads && leads.length > 0 && (
+          <FormField
+            name="lead_id"
+            label="Lead"
+            type="select"
+            value={data.lead_id}
+            error={errors.lead_id}
+            options={leads.map((lead) => ({ value: lead.id.toString(), label: lead.name }))}
+            onChange={(value) => setData('lead_id', value)}
+            required
+          />
+        )}
+        {users && users.length > 0 && (
+          <FormField
+            name="assigned_user_id"
+            label="Assigned to"
+            type="select"
+            value={data.assigned_user_id}
+            error={errors.assigned_user_id}
+            options={users.map((user) => ({ value: user.id.toString(), label: user.name }))}
+            onChange={(value) => setData('assigned_user_id', value)}
+          />
+        )}
         <FormField
           name="type"
           label="Type"

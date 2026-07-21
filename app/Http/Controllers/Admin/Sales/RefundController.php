@@ -40,7 +40,14 @@ class RefundController extends Controller
 
     public function store(StoreRefundRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $data = $request->validated();
+
+        // Automatically set user_id to the currently authenticated user if not provided
+        if (! isset($data['user_id'])) {
+            $data['user_id'] = $request->user()->id;
+        }
+
+        $this->service->create($data);
 
         return redirect()->route('admin.refunds.index')->with('success', 'Refund created successfully.');
     }

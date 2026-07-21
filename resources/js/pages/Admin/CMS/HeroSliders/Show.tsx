@@ -30,9 +30,9 @@ export default function Show({ heroSlider }: { heroSlider: HeroSlider }) {
           </CardHeader>
           <CardContent>
             <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
-              {heroSlider.image_path ? (
+              {heroSlider.image_url ? (
                 <img
-                  src={heroSlider.image_path}
+                  src={heroSlider.image_url}
                   alt={heroSlider.title ?? 'Hero slider'}
                   className="h-full w-full object-cover"
                 />
@@ -44,10 +44,10 @@ export default function Show({ heroSlider }: { heroSlider: HeroSlider }) {
               <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/70 to-transparent p-6 text-white">
                 <h2 className="text-2xl font-bold">{heroSlider.title ?? 'No title'}</h2>
                 {heroSlider.subtitle && <p className="text-lg opacity-90">{heroSlider.subtitle}</p>}
-                {heroSlider.cta_button_text && (
+                {heroSlider.cta_label && (
                   <Button className="mt-4 w-fit bg-white text-black hover:bg-gray-100">
-                    {heroSlider.cta_button_text}
-                    {heroSlider.cta_button_url && <ArrowRight className="ml-2 size-4" />}
+                    {heroSlider.cta_label}
+                    {heroSlider.cta_url && <ArrowRight className="ml-2 size-4" />}
                   </Button>
                 )}
               </div>
@@ -63,22 +63,19 @@ export default function Show({ heroSlider }: { heroSlider: HeroSlider }) {
             <CardContent className="space-y-3">
               <div>
                 <span className="text-sm text-muted-foreground">CTA Button Text:</span>
-                <p className="text-sm font-medium">{heroSlider.cta_button_text ?? '—'}</p>
+                <p className="text-sm font-medium">{heroSlider.cta_label ?? '—'}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">CTA Button URL:</span>
-                <p className="text-sm font-medium">{heroSlider.cta_button_url ?? '—'}</p>
+                <p className="text-sm font-medium">{heroSlider.cta_url ?? '—'}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">Display Order:</span>
-                <p className="text-sm font-medium">{heroSlider.display_order ?? 0}</p>
+                <p className="text-sm font-medium">{heroSlider.sort_order ?? 0}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge variant={heroSlider.is_active ? 'default' : 'secondary'}>
                   {heroSlider.is_active ? 'Active' : 'Inactive'}
-                </Badge>
-                <Badge variant={heroSlider.is_published ? 'default' : 'secondary'}>
-                  {heroSlider.is_published ? 'Published' : 'Draft'}
                 </Badge>
               </div>
             </CardContent>

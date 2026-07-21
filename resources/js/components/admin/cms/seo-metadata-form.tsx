@@ -1,25 +1,74 @@
 import { FormShell, FormField, FormSection } from '@/components/admin/shared';
-import { ImageDropzone } from '@/components/shared/media-upload';
 import type { SeoSettings } from './types';
 import * as React from 'react';
 
-const robotsDirectiveOptions = [
-  { value: 'index,follow', label: 'Index, Follow' },
-  { value: 'noindex,follow', label: 'No Index, Follow' },
-  { value: 'index,nofollow', label: 'Index, No Follow' },
-  { value: 'noindex,nofollow', label: 'No Index, No Follow' },
+const seoableTypeOptions = [
+  { value: 'App\\Models\\CmsPage', label: 'CMS Page' },
+  { value: 'App\\Models\\DynamicCmsPage', label: 'Dynamic CMS Page' },
+  { value: 'App\\Models\\BlogPost', label: 'Blog Post' },
+  { value: 'App\\Models\\BlogCategory', label: 'Blog Category' },
+  { value: 'App\\Models\\BlogTag', label: 'Blog Tag' },
+  { value: 'App\\Models\\Vehicle', label: 'Vehicle' },
+  { value: 'App\\Models\\Make', label: 'Vehicle Make' },
+  { value: 'App\\Models\\TrimLevel', label: 'Vehicle Trim Level' },
+  { value: 'App\\Models\\Brand', label: 'Brand' },
+  { value: 'App\\Models\\Branch', label: 'Branch' },
+  { value: 'App\\Models\\Customer', label: 'Customer' },
+  { value: 'App\\Models\\HeroSlider', label: 'Hero Slider' },
+  { value: 'App\\Models\\HomePageSection', label: 'Home Page Section' },
+  { value: 'App\\Models\\Faq', label: 'FAQ' },
+  { value: 'App\\Models\\Promotion', label: 'Promotion' },
+  { value: 'App\\Models\\Review', label: 'Review' },
+  { value: 'App\\Models\\Testimonial', label: 'Testimonial' },
+  { value: 'App\\Models\\TradeInRequest', label: 'Trade-In Request' },
+  { value: 'App\\Models\\FinanceApplication', label: 'Finance Application' },
+  { value: 'App\\Models\\TestDriveBooking', label: 'Test Drive Booking' },
+  { value: 'App\\Models\\VehicleReservation', label: 'Vehicle Reservation' },
+  { value: 'App\\Models\\VehicleCategory', label: 'Vehicle Category' },
+  { value: 'App\\Models\\VehicleCondition', label: 'Vehicle Condition' },
+  { value: 'App\\Models\\VehicleStatus', label: 'Vehicle Status' },
 ];
 
 export default function SeoMetadataForm({ seoSettings, action, method = 'post' }: { seoSettings?: SeoSettings; action: string; method?: 'post' | 'put' }) {
-  const [siteName, setSiteName] = React.useState(seoSettings?.site_name ?? '');
-  const [siteDescription, setSiteDescription] = React.useState(seoSettings?.site_description ?? '');
-  const [defaultMetaTitle, setDefaultMetaTitle] = React.useState(seoSettings?.default_meta_title ?? '');
-  const [defaultMetaDescription, setDefaultMetaDescription] = React.useState(seoSettings?.default_meta_description ?? '');
+  const [seoableType, setSeoableType] = React.useState(seoSettings?.seoable_type ?? '');
+  const [seoableId, setSeoableId] = React.useState(seoSettings?.seoable_id ?? '');
+  const [metaTitle, setMetaTitle] = React.useState(seoSettings?.meta_title ?? '');
+  const [metaDescription, setMetaDescription] = React.useState(seoSettings?.meta_description ?? '');
   const [canonicalUrl, setCanonicalUrl] = React.useState(seoSettings?.canonical_url ?? '');
-  const [twitterHandle, setTwitterHandle] = React.useState(seoSettings?.twitter_handle ?? '');
-  const [robotsDirective, setRobotsDirective] = React.useState(seoSettings?.robots_directive ?? 'index,follow');
-  const [structuredData, setStructuredData] = React.useState(seoSettings?.structured_data ? JSON.stringify(seoSettings.structured_data, null, 2) : '');
-  const [sitemapEnabled, setSitemapEnabled] = React.useState(seoSettings?.sitemap_enabled ?? true);
+  const [openGraph, setOpenGraph] = React.useState(seoSettings?.open_graph ? JSON.stringify(seoSettings.open_graph, null, 2) : '{}');
+  const [schemaMarkup, setSchemaMarkup] = React.useState(seoSettings?.schema_markup ? JSON.stringify(seoSettings.schema_markup, null, 2) : '{}');
+  const [openGraphParsed, setOpenGraphParsed] = React.useState<Record<string, unknown>>(seoSettings?.open_graph ?? {});
+  const [schemaMarkupParsed, setSchemaMarkupParsed] = React.useState<Record<string, unknown>>(seoSettings?.schema_markup ?? {});
+
+  const handleOpenGraphChange = (value: string) => {
+    setOpenGraph(value);
+    try {
+      const parsed = value ? JSON.parse(value) : {};
+      setOpenGraphParsed(parsed);
+      // Update hidden input
+      const hiddenInput = document.querySelector('input[name="open_graph"]') as HTMLInputElement;
+      if (hiddenInput) {
+        hiddenInput.value = JSON.stringify(parsed);
+      }
+    } catch (e) {
+      // Invalid JSON, don't update parsed state
+    }
+  };
+
+  const handleSchemaMarkupChange = (value: string) => {
+    setSchemaMarkup(value);
+    try {
+      const parsed = value ? JSON.parse(value) : {};
+      setSchemaMarkupParsed(parsed);
+      // Update hidden input
+      const hiddenInput = document.querySelector('input[name="schema_markup"]') as HTMLInputElement;
+      if (hiddenInput) {
+        hiddenInput.value = JSON.stringify(parsed);
+      }
+    } catch (e) {
+      // Invalid JSON, don't update parsed state
+    }
+  };
 
   return (
     <FormShell
@@ -29,34 +78,44 @@ export default function SeoMetadataForm({ seoSettings, action, method = 'post' }
       encType="multipart/form-data"
       className="max-w-4xl"
     >
+      <FormSection title="Polymorphic Relation" gridCols={2}>
+        <FormField
+          name="seoable_type"
+          label="Content Type"
+          type="select"
+          value={seoableType}
+          options={seoableTypeOptions}
+          onChange={setSeoableType}
+          hint="Select the type of content this SEO metadata belongs to"
+        />
+        <FormField
+          name="seoable_id"
+          label="Content ID"
+          type="number"
+          value={seoableId}
+          onChange={setSeoableId}
+          placeholder="e.g., 1"
+          hint="The ID of the content this SEO metadata belongs to"
+        />
+      </FormSection>
+
       <FormSection title="Basic Settings" gridCols={2}>
         <FormField
-          name="site_name"
-          label="Site Name"
-          value={siteName}
-          onChange={setSiteName}
+          name="meta_title"
+          label="Meta Title"
+          value={metaTitle}
+          onChange={setMetaTitle}
           className="md:col-span-2"
+          hint="The title displayed in search engine results"
         />
         <FormField
-          name="site_description"
-          label="Site Description"
+          name="meta_description"
+          label="Meta Description"
           type="textarea"
-          value={siteDescription}
-          onChange={setSiteDescription}
+          value={metaDescription}
+          onChange={setMetaDescription}
           className="md:col-span-2"
-        />
-        <FormField
-          name="default_meta_title"
-          label="Default Meta Title"
-          value={defaultMetaTitle}
-          onChange={setDefaultMetaTitle}
-        />
-        <FormField
-          name="default_meta_description"
-          label="Default Meta Description"
-          type="textarea"
-          value={defaultMetaDescription}
-          onChange={setDefaultMetaDescription}
+          hint="A brief description for search engine results"
         />
         <FormField
           name="canonical_url"
@@ -64,65 +123,45 @@ export default function SeoMetadataForm({ seoSettings, action, method = 'post' }
           value={canonicalUrl}
           onChange={setCanonicalUrl}
           className="md:col-span-2"
-        />
-        <FormField
-          name="twitter_handle"
-          label="Twitter Handle"
-          value={twitterHandle}
-          placeholder="@username"
-          onChange={setTwitterHandle}
-        />
-        <FormField
-          name="robots_directive"
-          label="Robots Directive"
-          type="select"
-          value={robotsDirective}
-          options={robotsDirectiveOptions}
-          onChange={setRobotsDirective}
+          hint="The preferred URL for this page to avoid duplicate content"
         />
       </FormSection>
 
-      <FormSection title="Open Graph Image" gridCols={1} fullWidth>
-        <div className="space-y-2">
-          <label htmlFor="og_image" className="text-sm font-medium">Default Open Graph Image</label>
-          <ImageDropzone
-            multiple={false}
-            previewUrl={seoSettings?.og_image}
-            onFilesSelected={(files) => {
-              const input = document.querySelector('input[name="og_image"]') as HTMLInputElement;
-
-              if (input && files.length > 0) {
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(files[0]);
-                input.files = dataTransfer.files;
-              }
-            }}
-            className="mb-2"
-          />
-          <input id="og_image" name="og_image" type="file" accept="image/*" className="hidden" />
-        </div>
-      </FormSection>
-
-      <FormSection title="Structured Data" gridCols={1} fullWidth>
+      <FormSection title="Open Graph Data" gridCols={1} fullWidth>
         <FormField
-          name="structured_data"
-          label="Structured Data (JSON-LD)"
+          name="open_graph_display"
+          label="Open Graph Data (JSON)"
           type="textarea"
-          value={structuredData}
-          placeholder='{"@context": "https://schema.org", ...}'
-          hint="Enter JSON-LD structured data for search engines."
-          onChange={setStructuredData}
+          value={openGraph}
+          placeholder='{"title": "Page Title", "description": "Page Description", "image": "https://example.com/image.jpg"}'
+          hint="Enter Open Graph metadata as JSON for social media sharing."
+          onChange={handleOpenGraphChange}
           className="font-mono text-xs"
         />
+        <input
+          type="hidden"
+          name="open_graph"
+          value={JSON.stringify(openGraphParsed)}
+          readOnly
+        />
       </FormSection>
 
-      <FormSection title="Sitemap" gridCols={1}>
+      <FormSection title="Schema Markup" gridCols={1} fullWidth>
         <FormField
-          name="sitemap_enabled"
-          label="Enable Sitemap"
-          type="switch"
-          value={sitemapEnabled}
-          onChange={setSitemapEnabled}
+          name="schema_markup_display"
+          label="Schema Markup (JSON-LD)"
+          type="textarea"
+          value={schemaMarkup}
+          placeholder='{"@context": "https://schema.org", "@type": "WebPage", ...}'
+          hint="Enter JSON-LD structured data for search engines."
+          onChange={handleSchemaMarkupChange}
+          className="font-mono text-xs"
+        />
+        <input
+          type="hidden"
+          name="schema_markup"
+          value={JSON.stringify(schemaMarkupParsed)}
+          readOnly
         />
       </FormSection>
     </FormShell>

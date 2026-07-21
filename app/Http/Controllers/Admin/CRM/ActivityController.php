@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CRM\StoreActivityRequest;
 use App\Http\Requests\CRM\UpdateActivityRequest;
 use App\Models\CrmFollowUp;
+use App\Models\Lead;
+use App\Models\User;
 use App\Services\CRM\ActivityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +34,23 @@ class ActivityController extends Controller
     {
         $this->authorize('create', CrmFollowUp::class);
 
-        return Inertia::render('Admin/CRM/Activities/Create');
+        return Inertia::render('Admin/CRM/Activities/Create', [
+            'leads' => Lead::select('id', 'first_name', 'last_name', 'email')
+                ->orderBy('last_name')
+                ->orderBy('first_name')
+                ->get()
+                ->map(fn ($lead) => [
+                    'id' => $lead->id,
+                    'name' => $lead->first_name.' '.$lead->last_name.' ('.$lead->email.')',
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->orderBy('name')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name.' ('.$user->email.')',
+                ]),
+        ]);
     }
 
     public function store(StoreActivityRequest $request): RedirectResponse
@@ -57,6 +75,21 @@ class ActivityController extends Controller
 
         return Inertia::render('Admin/CRM/Activities/Edit', [
             'activity' => $activity->load('lead', 'assignedUser'),
+            'leads' => Lead::select('id', 'first_name', 'last_name', 'email')
+                ->orderBy('last_name')
+                ->orderBy('first_name')
+                ->get()
+                ->map(fn ($lead) => [
+                    'id' => $lead->id,
+                    'name' => $lead->first_name.' '.$lead->last_name.' ('.$lead->email.')',
+                ]),
+            'users' => User::select('id', 'name', 'email')
+                ->orderBy('name')
+                ->get()
+                ->map(fn ($user) => [
+                    'id' => $user->id,
+                    'name' => $user->name.' ('.$user->email.')',
+                ]),
         ]);
     }
 

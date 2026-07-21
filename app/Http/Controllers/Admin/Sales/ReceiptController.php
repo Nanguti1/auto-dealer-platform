@@ -42,7 +42,14 @@ class ReceiptController extends Controller
 
     public function store(StoreReceiptRequest $request): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $data = $request->validated();
+
+        // Automatically set user_id to the currently authenticated user if not provided
+        if (! isset($data['user_id'])) {
+            $data['user_id'] = $request->user()->id;
+        }
+
+        $this->service->create($data);
 
         return redirect()->route('admin.receipts.index')->with('success', 'Receipt created successfully.');
     }
@@ -52,7 +59,7 @@ class ReceiptController extends Controller
         $this->authorize('view', $receipt);
 
         return Inertia::render('Admin/Sales/Receipts/Show', [
-            'receipt' => $receipt->load(['payment', 'invoice', 'user']),
+            'receipt' => $receipt->load(['payment', 'invoice', 'user', 'customer']),
         ]);
     }
 
@@ -61,7 +68,7 @@ class ReceiptController extends Controller
         $this->authorize('update', $receipt);
 
         return Inertia::render('Admin/Sales/Receipts/Edit', [
-            'receipt' => $receipt->load(['payment', 'invoice', 'user']),
+            'receipt' => $receipt->load(['payment', 'invoice', 'user', 'customer']),
             'payments' => Payment::select(['id', 'amount', 'currency', 'method', 'status'])->with('user')->get(),
             'customers' => Customer::select(['id', 'first_name', 'last_name', 'email', 'customer_number'])->get(),
         ]);

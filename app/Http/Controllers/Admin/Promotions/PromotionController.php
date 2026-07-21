@@ -49,6 +49,8 @@ class PromotionController extends Controller
     {
         $this->authorize('view', $promotion);
 
+        $promotion->load(['vehicles']);
+
         return Inertia::render('Admin/Marketing/Promotions/Show', [
             'promotion' => $promotion,
         ]);
@@ -58,13 +60,16 @@ class PromotionController extends Controller
     {
         $this->authorize('update', $promotion);
 
+        $promotion->load(['vehicles']);
+
         return Inertia::render('Admin/Marketing/Promotions/Edit', [
             'promotion' => $promotion,
         ]);
     }
 
-    public function update(UpdatePromotionRequest $request, Promotion $promotion): RedirectResponse
+    public function update(UpdatePromotionRequest $request, $id): RedirectResponse
     {
+        $promotion = Promotion::findOrFail($id);
         $this->service->update($promotion, $request->validated());
 
         return back()->with('success', 'Updated successfully.');

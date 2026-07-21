@@ -20,7 +20,7 @@ class InspectionService
 
     public function paginate(array $filters = []): LengthAwarePaginator
     {
-        $query = TradeInInspection::query()->with(['tradeInRequest', 'inspector']);
+        $query = TradeInInspection::query()->with(['tradeInRequest.user', 'inspector']);
 
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {

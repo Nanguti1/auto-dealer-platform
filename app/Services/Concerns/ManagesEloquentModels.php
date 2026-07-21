@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Concerns;
 
+use App\Models\BlogPost;
 use App\Models\CrmFollowUp;
 use App\Models\CrmNote;
 use App\Models\CrmTask;
@@ -18,6 +19,7 @@ use App\Models\ImportShipment;
 use App\Models\Invoice;
 use App\Models\Lead;
 use App\Models\Payment;
+use App\Models\Promotion;
 use App\Models\Receipt;
 use App\Models\Refund;
 use App\Models\Review;
@@ -66,8 +68,11 @@ trait ManagesEloquentModels
             Vehicle::class => ['make', 'vehicleModel', 'inventoryStatus', 'fuelType', 'transmissionType', 'vehicleCondition', 'color', 'interiorColor', 'branch', 'vehicleCategory', 'bodyType', 'driveType', 'engineType', 'trimLevel', 'vehicleStatus'],
             Lead::class => ['crmStage', 'vehicle'],
             FinanceApplication::class => ['lender', 'vehicle', 'user'],
-            VehicleReservation::class => ['vehicle', 'user'],
+            VehicleReservation::class => ['vehicle.make', 'vehicle.vehicleModel', 'customer.user'],
+            Payment::class => ['vehicle.make', 'vehicle.vehicleModel', 'user', 'customer'],
             Supplier::class => ['branch', 'createdBy', 'updatedBy'],
+            BlogPost::class => ['category', 'author'],
+            Promotion::class => ['vehicles', 'coupons'],
         ];
 
         if (isset($eagerLoadMap[$model::class])) {
@@ -112,6 +117,11 @@ trait ManagesEloquentModels
             $model = new ($this->modelClass());
             if ($model instanceof FinanceApplication && ! isset($modelData['applicant_data'])) {
                 $modelData['applicant_data'] = [];
+            }
+
+            // Handle rules for Promotion model
+            if ($model instanceof Promotion && isset($modelData['rules']) && is_array($modelData['rules'])) {
+                $modelData['rules'] = $modelData['rules'];
             }
 
             $model = $this->modelClass()::query()->create($modelData);
@@ -270,7 +280,7 @@ trait ManagesEloquentModels
         $relationships = [
             Lead::class => 'vehicle',
             FinanceApplication::class => 'vehicle',
-            VehicleReservation::class => 'vehicle',
+            VehicleReservation::class => 'customer.user',
             VehicleImport::class => 'vehicle',
             VehicleGallery::class => 'vehicle',
             VehicleSpecification::class => 'vehicle',
@@ -278,7 +288,7 @@ trait ManagesEloquentModels
             VehicleEnquiry::class => 'vehicle',
             TradeInRequest::class => 'vehicle',
             Review::class => 'vehicle',
-            Payment::class => 'vehicle',
+            Payment::class => 'customer.user',
             Invoice::class => 'vehicle',
             Receipt::class => 'payment',
             Refund::class => 'payment',

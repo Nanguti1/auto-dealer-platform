@@ -79,7 +79,7 @@ interface WelcomeProps {
     id: number;
     title: string;
     subtitle: string;
-    image: string;
+    image_url: string;
     ctaLabel: string;
     ctaUrl: string;
   }>;
@@ -140,7 +140,7 @@ export default function Welcome({ featuredVehicles, latestArrivals, heroSliders,
   const heroSlider = heroSliders?.[0] || {
     title: 'Find Your Dream Vehicle',
     subtitle: 'Browse our premium selection of quality vehicles',
-    image: '/images/hero/2027-Mercedes-AMG-CLA45.jpg',
+    image_url: '/images/hero/2027-Mercedes-AMG-CLA45.jpg',
     ctaLabel: 'Browse Inventory',
     ctaUrl: '/inventory',
   };
@@ -155,7 +155,7 @@ export default function Welcome({ featuredVehicles, latestArrivals, heroSliders,
         <HeroSection
           title={heroSlider.title}
           subtitle={heroSlider.subtitle}
-          image={heroSlider.image}
+          image={heroSlider.image_url}
           ctaLabel={heroSlider.ctaLabel}
           ctaUrl={heroSlider.ctaUrl}
         />

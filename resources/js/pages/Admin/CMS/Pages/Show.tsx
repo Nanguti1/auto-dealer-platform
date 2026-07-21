@@ -1,5 +1,6 @@
 import { Link } from '@inertiajs/react';
 import { Pencil, Eye, Calendar, Globe, FileText } from 'lucide-react';
+import adminRoutes from '@/routes/admin';
 import CmsShell, { CmsBackButton } from '@/components/admin/cms/cms-shell';
 import type { CmsPage } from '@/components/admin/cms/types';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +18,7 @@ export default function Show({ dynamicCmsPage }: { dynamicCmsPage: CmsPage }) {
         <>
           <CmsBackButton />
           <Button asChild>
-            <Link href={`/admin/cms-pages/${dynamicCmsPage.id}/edit`}>
+            <Link href={adminRoutes.cmsPages.edit(dynamicCmsPage.id).url}>
               <Pencil className="mr-2 size-4" />
               Edit
             </Link>
@@ -32,8 +33,8 @@ export default function Show({ dynamicCmsPage }: { dynamicCmsPage: CmsPage }) {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="prose prose-sm max-w-none dark:prose-invert">
-              {dynamicCmsPage.content ? (
-                <div dangerouslySetInnerHTML={{ __html: dynamicCmsPage.content }} />
+              {dynamicCmsPage.content || dynamicCmsPage.body ? (
+                <div dangerouslySetInnerHTML={{ __html: dynamicCmsPage.content || dynamicCmsPage.body || '' }} />
               ) : (
                 <p className="text-muted-foreground">No content provided.</p>
               )}

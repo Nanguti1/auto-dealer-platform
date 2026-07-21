@@ -1,5 +1,4 @@
 import { userName as sharedUserName, vehicleName as sharedVehicleName } from '@/lib/name-utils';
-import { customerName } from '@/components/admin/customers/helpers';
 import { imageUrl } from '@/components/admin/inventory/helpers';
 import { formatDate, formatDateTime } from '@/lib/date-utils';
 import { formatCurrency, formatNumber } from '@/lib/format-utils';
@@ -13,7 +12,10 @@ export function tradeInVehicleName(request?: TradeInRequest): string {
 }
 
 export function requesterName(request: TradeInRequest): string {
-  return request.customer ? customerName(request.customer) : userName(request.user);
+  if (request.user) {
+    return sharedUserName(request.user);
+  }
+  return 'No user assigned';
 }
 
 export const desiredVehicle = (request: TradeInRequest) => request.desired_vehicle ?? request.desiredVehicle ?? request.vehicle;

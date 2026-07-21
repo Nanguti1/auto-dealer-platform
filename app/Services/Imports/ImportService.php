@@ -20,7 +20,7 @@ class ImportService
 
     public function paginate(array $filters = []): LengthAwarePaginator
     {
-        $query = VehicleImport::query()->with(['user', 'supplier', 'vehicle', 'documents', 'shipments', 'payments']);
+        $query = VehicleImport::query()->with(['user', 'customer', 'supplier', 'vehicle', 'documents', 'shipments', 'payments']);
 
         if (isset($filters['search'])) {
             $query->where(function ($q) use ($filters) {

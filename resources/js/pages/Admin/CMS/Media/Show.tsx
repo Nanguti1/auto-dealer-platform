@@ -1,20 +1,93 @@
 import { Link, router } from '@inertiajs/react';
 import { ArrowLeft, Download, Trash2, Calendar, File, Image as ImageIcon, Copy } from 'lucide-react';
+import * as React from 'react';
 import adminRoutes from '@/routes/admin';
 import CmsShell from '@/components/admin/cms/cms-shell';
 import type { MediaFile } from '@/components/admin/cms/types';
 import ConfirmationDialog from '@/components/admin/confirmation-dialog';
+import { LoadingState, InlineError } from '@/components/admin/shared';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function Show({ mediaFile }: { mediaFile: MediaFile }) {
+export default function Show({ mediaFile }: { mediaFile?: MediaFile | Record<string, unknown> }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState<Error | null>(null);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <CmsShell
+        title="Media File"
+        description="View media file details."
+        actions={
+          <Button variant="outline" asChild>
+            <Link href={adminRoutes.media.index().url}>
+              <ArrowLeft className="mr-2 size-4" />
+              Back
+            </Link>
+          </Button>
+        }
+      >
+        <LoadingState message="Loading media file..." variant="full-page" />
+      </CmsShell>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <CmsShell
+        title="Media File"
+        description="View media file details."
+        actions={
+          <Button variant="outline" asChild>
+            <Link href={adminRoutes.media.index().url}>
+              <ArrowLeft className="mr-2 size-4" />
+              Back
+            </Link>
+          </Button>
+        }
+      >
+        <InlineError
+          error={error}
+          onRetry={() => {
+            setError(null);
+            router.reload();
+          }}
+        />
+      </CmsShell>
+    );
+  }
+
+  // Handle missing mediaFile
+  if (!mediaFile) {
+    return (
+      <CmsShell
+        title="Media File"
+        description="View media file details."
+        actions={
+          <Button variant="outline" asChild>
+            <Link href={adminRoutes.media.index().url}>
+              <ArrowLeft className="mr-2 size-4" />
+              Back
+            </Link>
+          </Button>
+        }
+      >
+        <InlineError
+          error={new Error('Media file not found')}
+          onRetry={() => router.visit(adminRoutes.media.index().url)}
+        />
+      </CmsShell>
+    );
+  }
 
   const formatFileSize = (bytes?: number) => {
     if (!bytes) {
-return '—';
-}
+      return '—';
+    }
 
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(1024));

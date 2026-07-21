@@ -13,40 +13,27 @@ const sectionTypeOptions = [
   { value: 'featured_blog_posts', label: 'Featured Blog Posts' },
   { value: 'statistics', label: 'Statistics' },
   { value: 'cta_section', label: 'CTA Section' },
+  { value: 'hero_section', label: 'Hero Section' },
+  { value: 'promotional_banners', label: 'Promotional Banners' },
 ];
 
 export default function HomeSectionForm({ homeSection, action, method = 'post' }: { homeSection?: HomePageSection; action: string; method?: 'post' | 'put' }) {
   const { data, setData, post, put, processing, errors } = useForm({
-    section_type: homeSection?.section_type ?? 'featured_vehicles',
-    title: homeSection?.title ?? '',
-    display_order: homeSection?.display_order ?? 0,
+    name: homeSection?.name ?? '',
+    slug: homeSection?.slug ?? '',
+    type: homeSection?.type ?? sectionTypeOptions[0].value,
+    sort_order: homeSection?.sort_order ?? 0,
     content: homeSection?.content ? JSON.stringify(homeSection.content, null, 2) : '',
-    is_visible: homeSection?.is_visible ?? true,
+    is_active: homeSection?.is_active ?? true,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Parse content JSON with error handling
-    let parsedContent = null;
-    if (data.content) {
-      try {
-        parsedContent = JSON.parse(data.content);
-      } catch (error) {
-        alert('Invalid JSON in content field. Please check your syntax.');
-        return;
-      }
-    }
-    
-    const formData = {
-      ...data,
-      content: parsedContent,
-    };
-    
+
     if (homeSection) {
-      put(action, formData);
+      put(action);
     } else {
-      post(action, formData);
+      post(action);
     }
   };
 
@@ -54,28 +41,35 @@ export default function HomeSectionForm({ homeSection, action, method = 'post' }
     <form onSubmit={handleSubmit} className="max-w-2xl space-y-6">
       <FormSection gridCols={1}>
         <FormField
-          name="section_type"
+          name="name"
+          label="Name"
+          value={data.name}
+          error={errors.name}
+          onChange={(value) => setData('name', value)}
+        />
+        <FormField
+          name="slug"
+          label="Slug"
+          value={data.slug}
+          error={errors.slug}
+          onChange={(value) => setData('slug', value)}
+        />
+        <FormField
+          name="type"
           label="Section Type"
           type="select"
-          value={data.section_type}
-          error={errors.section_type}
+          value={data.type}
+          error={errors.type}
           options={sectionTypeOptions}
-          onChange={(value) => setData('section_type', value)}
+          onChange={(value) => setData('type', value)}
         />
         <FormField
-          name="title"
-          label="Title"
-          value={data.title}
-          error={errors.title}
-          onChange={(value) => setData('title', value)}
-        />
-        <FormField
-          name="display_order"
+          name="sort_order"
           label="Display Order"
           type="number"
-          value={String(data.display_order)}
-          error={errors.display_order}
-          onChange={(value) => setData('display_order', Number(value))}
+          value={String(data.sort_order)}
+          error={errors.sort_order}
+          onChange={(value) => setData('sort_order', Number(value))}
         />
         <FormField
           name="content"
@@ -83,18 +77,18 @@ export default function HomeSectionForm({ homeSection, action, method = 'post' }
           type="textarea"
           value={data.content}
           error={errors.content}
-          placeholder='{"items": [1, 2, 3]}'
+          placeholder='{"brand_ids": [1, 2, 3]}'
           hint="Enter section-specific configuration as JSON."
           onChange={(value) => setData('content', value)}
           className="font-mono text-xs"
         />
         <FormField
-          name="is_visible"
-          label="Visible"
+          name="is_active"
+          label="Active"
           type="switch"
-          value={data.is_visible}
-          error={errors.is_visible}
-          onChange={(value) => setData('is_visible', value)}
+          value={data.is_active}
+          error={errors.is_active}
+          onChange={(value) => setData('is_active', value)}
         />
       </FormSection>
       <div className="flex justify-end gap-4">

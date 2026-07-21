@@ -25,4 +25,19 @@ class StoreSeoMetadataRequest extends FormRequest
             'schema_markup' => ['nullable', 'array'],
         ];
     }
+
+    protected function prepareForValidation(): void
+    {
+        if ($this->has('open_graph') && is_string($this->input('open_graph'))) {
+            $this->merge([
+                'open_graph' => json_decode($this->input('open_graph'), true) ?? [],
+            ]);
+        }
+
+        if ($this->has('schema_markup') && is_string($this->input('schema_markup'))) {
+            $this->merge([
+                'schema_markup' => json_decode($this->input('schema_markup'), true) ?? [],
+            ]);
+        }
+    }
 }

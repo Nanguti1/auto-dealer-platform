@@ -36,9 +36,9 @@ class InvoiceController extends Controller
         $this->authorize('create', Invoice::class);
 
         return Inertia::render('Admin/Sales/Invoices/Create', [
-            'customers' => Customer::select(['id', 'first_name', 'last_name', 'email', 'customer_number'])->get(),
             'vehicles' => Vehicle::select(['id', 'stock_number', 'make_id', 'model_id'])->with(['make', 'vehicleModel'])->get(),
-            'reservations' => VehicleReservation::select(['id', 'reservation_number', 'customer_id'])->with('customer')->get(),
+            'customers' => Customer::select(['id', 'first_name', 'last_name', 'email', 'customer_number'])->get(),
+            'reservations' => VehicleReservation::select(['id', 'customer_id'])->with(['customer:id,first_name,last_name'])->get(),
         ]);
     }
 
@@ -54,7 +54,7 @@ class InvoiceController extends Controller
         $this->authorize('view', $invoice);
 
         return Inertia::render('Admin/Sales/Invoices/Show', [
-            'invoice' => $invoice->load(['vehicle', 'payments', 'user', 'receipts', 'refunds']),
+            'invoice' => $invoice->load(['vehicle', 'payments', 'user', 'receipts', 'refunds', 'customer']),
         ]);
     }
 
@@ -63,10 +63,10 @@ class InvoiceController extends Controller
         $this->authorize('update', $invoice);
 
         return Inertia::render('Admin/Sales/Invoices/Edit', [
-            'invoice' => $invoice->load(['vehicle', 'payments', 'user']),
-            'customers' => Customer::select(['id', 'first_name', 'last_name', 'email', 'customer_number'])->get(),
+            'invoice' => $invoice->load(['vehicle', 'payments', 'user', 'customer']),
             'vehicles' => Vehicle::select(['id', 'stock_number', 'make_id', 'model_id'])->with(['make', 'vehicleModel'])->get(),
-            'reservations' => VehicleReservation::select(['id', 'reservation_number', 'customer_id'])->with('customer')->get(),
+            'customers' => Customer::select(['id', 'first_name', 'last_name', 'email', 'customer_number'])->get(),
+            'reservations' => VehicleReservation::select(['id', 'customer_id'])->with(['customer:id,first_name,last_name'])->get(),
         ]);
     }
 

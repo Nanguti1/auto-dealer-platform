@@ -35,8 +35,8 @@ class UserController extends Controller
         $this->authorize('create', User::class);
 
         return Inertia::render('Admin/Users/Create', [
-            'roles' => Role::all(),
-            'branches' => Branch::all(),
+            'roles' => Role::all()->toArray(),
+            'branches' => Branch::all()->toArray(),
         ]);
     }
 
@@ -62,8 +62,8 @@ class UserController extends Controller
 
         return Inertia::render('Admin/Users/Edit', [
             'user' => $user->load('role', 'branch'),
-            'roles' => Role::all(),
-            'branches' => Branch::all(),
+            'roles' => Role::all()->toArray(),
+            'branches' => Branch::all()->toArray(),
         ]);
     }
 

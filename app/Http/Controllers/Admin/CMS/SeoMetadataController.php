@@ -22,8 +22,36 @@ class SeoMetadataController extends Controller
     {
         $this->authorize('viewAny', SeoMetadata::class);
 
+        $pagination = $this->service->paginate($request->query());
+
+        // Transform the data to match the expected format
+        $transformedData = collect($pagination->items())->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'seoable_type' => $item->seoable_type,
+                'seoable_id' => $item->seoable_id,
+                'meta_title' => $item->meta_title,
+                'meta_description' => $item->meta_description,
+                'canonical_url' => $item->canonical_url,
+                'open_graph' => $item->open_graph,
+                'schema_markup' => $item->schema_markup,
+                'created_at' => $item->created_at?->toIso8601String(),
+                'updated_at' => $item->updated_at?->toIso8601String(),
+            ];
+        })->toArray();
+
+        $transformedPagination = [
+            'data' => $transformedData,
+            'meta' => [
+                'current_page' => $pagination->currentPage(),
+                'per_page' => $pagination->perPage(),
+                'total' => $pagination->total(),
+                'last_page' => $pagination->lastPage(),
+            ],
+        ];
+
         return Inertia::render('Admin/CMS/SeoMetadata/Index', [
-            'seoSettings' => $this->service->paginate($request->query()),
+            'seoSettings' => $transformedPagination,
             'filters' => $request->query(),
         ]);
     }
@@ -42,33 +70,63 @@ class SeoMetadataController extends Controller
         return redirect()->route('admin.seo-metadata.index')->with('success', 'Created successfully.');
     }
 
-    public function show(SeoMetadata $seoMetadata): Response
+    public function show($id): Response
     {
+        $seoMetadata = SeoMetadata::findOrFail($id);
         $this->authorize('view', $seoMetadata);
 
+        $seoArray = [
+            'id' => $seoMetadata->id,
+            'seoable_type' => $seoMetadata->seoable_type,
+            'seoable_id' => $seoMetadata->seoable_id,
+            'meta_title' => $seoMetadata->meta_title,
+            'meta_description' => $seoMetadata->meta_description,
+            'canonical_url' => $seoMetadata->canonical_url,
+            'open_graph' => $seoMetadata->open_graph,
+            'schema_markup' => $seoMetadata->schema_markup,
+            'created_at' => $seoMetadata->created_at?->toIso8601String(),
+            'updated_at' => $seoMetadata->updated_at?->toIso8601String(),
+        ];
+
         return Inertia::render('Admin/CMS/SeoMetadata/Show', [
-            'seoMetadata' => $seoMetadata,
+            'seoSettings' => $seoArray,
         ]);
     }
 
-    public function edit(SeoMetadata $seoMetadata): Response
+    public function edit($id): Response
     {
+        $seoMetadata = SeoMetadata::findOrFail($id);
         $this->authorize('update', $seoMetadata);
 
+        $seoArray = [
+            'id' => $seoMetadata->id,
+            'seoable_type' => $seoMetadata->seoable_type,
+            'seoable_id' => $seoMetadata->seoable_id,
+            'meta_title' => $seoMetadata->meta_title,
+            'meta_description' => $seoMetadata->meta_description,
+            'canonical_url' => $seoMetadata->canonical_url,
+            'open_graph' => $seoMetadata->open_graph,
+            'schema_markup' => $seoMetadata->schema_markup,
+            'created_at' => $seoMetadata->created_at?->toIso8601String(),
+            'updated_at' => $seoMetadata->updated_at?->toIso8601String(),
+        ];
+
         return Inertia::render('Admin/CMS/SeoMetadata/Edit', [
-            'seoMetadata' => $seoMetadata,
+            'seoSettings' => $seoArray,
         ]);
     }
 
-    public function update(UpdateSeoMetadataRequest $request, SeoMetadata $seoMetadata): RedirectResponse
+    public function update(UpdateSeoMetadataRequest $request, $id): RedirectResponse
     {
+        $seoMetadata = SeoMetadata::findOrFail($id);
         $this->service->update($seoMetadata, $request->validated());
 
         return back()->with('success', 'Updated successfully.');
     }
 
-    public function destroy(SeoMetadata $seoMetadata): RedirectResponse
+    public function destroy($id): RedirectResponse
     {
+        $seoMetadata = SeoMetadata::findOrFail($id);
         $this->authorize('delete', $seoMetadata);
         $this->service->delete($seoMetadata);
 

@@ -19,9 +19,15 @@ class UpdatePromotionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['sometimes', 'nullable', 'string', 'max:100'],
             'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'title' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:promotions,slug,'.$this->route('promotion')],
+            'type' => ['sometimes', 'nullable', 'string', 'in:discount,seasonal,featured_vehicle,finance'],
+            'value' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'starts_at' => ['nullable', 'date'],
+            'ends_at' => ['nullable', 'date', 'after_or_equal:starts_at'],
+            'is_active' => ['nullable', 'boolean'],
+            'rules' => ['nullable', 'array'],
+            'banner' => ['nullable', 'image', 'max:10240'],
         ];
     }
 }

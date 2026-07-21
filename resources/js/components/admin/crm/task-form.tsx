@@ -3,10 +3,9 @@ import { FormField, FormSection } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import type { CrmTask } from './types';
-import type { User } from '@/types/models';
 
 const statusOptions = [
-  { value: 'open', label: 'Open' },
+  { value: 'pending', label: 'Pending' },
   { value: 'in_progress', label: 'In Progress' },
   { value: 'completed', label: 'Completed' },
   { value: 'cancelled', label: 'Cancelled' },
@@ -14,17 +13,25 @@ const statusOptions = [
 
 const priorityOptions = [
   { value: 'low', label: 'Low' },
-  { value: 'normal', label: 'Normal' },
+  { value: 'medium', label: 'Medium' },
   { value: 'high', label: 'High' },
   { value: 'urgent', label: 'Urgent' },
 ];
 
-export default function TaskForm({ task, action, leadId, users }: { task?: CrmTask; action: string; leadId?: number; users?: User[] }) {
+interface TaskFormProps {
+  task?: CrmTask;
+  action: string;
+  leadId?: number;
+  users?: Array<{ id: number; name: string }>;
+  leads?: Array<{ id: number; name: string }>;
+}
+
+export default function TaskForm({ task, action, leadId, users, leads }: TaskFormProps) {
   const { data, setData, post, put, errors, processing } = useForm({
     title: task?.title ?? '',
     description: task?.description ?? '',
-    status: task?.status ?? 'open',
-    priority: task?.priority ?? 'normal',
+    status: task?.status ?? 'pending',
+    priority: task?.priority ?? 'medium',
     due_at: task?.due_at ? new Date(task.due_at).toISOString().slice(0, 16) : '',
     assigned_user_id: task?.assigned_user_id ?? '',
     lead_id: leadId ?? task?.lead_id ?? '',
@@ -32,7 +39,12 @@ export default function TaskForm({ task, action, leadId, users }: { task?: CrmTa
 
   const userOptions = users?.map(user => ({
     value: String(user.id),
-    label: user.name || user.email,
+    label: user.name,
+  })) || [];
+
+  const leadOptions = leads?.map(lead => ({
+    value: String(lead.id),
+    label: lead.name,
   })) || [];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -47,7 +59,7 @@ export default function TaskForm({ task, action, leadId, users }: { task?: CrmTa
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
       {task && <input type="hidden" name="_method" value="put" />}
-      {data.lead_id && <input type="hidden" name="lead_id" value={data.lead_id} />}
+      {leadId && <input type="hidden" name="lead_id" value={leadId} />}
       <FormSection gridCols={1} fullWidth>
         <FormField
           name="title"
@@ -58,6 +70,18 @@ export default function TaskForm({ task, action, leadId, users }: { task?: CrmTa
         />
       </FormSection>
       <FormSection gridCols={2}>
+        {!leadId && leads && leads.length > 0 && (
+          <FormField
+            name="lead_id"
+            label="Lead"
+            type="select"
+            value={data.lead_id}
+            error={errors.lead_id}
+            options={leadOptions}
+            placeholder="Select a lead"
+            onChange={(value) => setData('lead_id', value)}
+          />
+        )}
         <FormField
           name="status"
           label="Status"

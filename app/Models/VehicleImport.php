@@ -9,17 +9,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+// Missing relationship models
+
 class VehicleImport extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['branch_id', 'user_id', 'supplier_id', 'vehicle_id', 'reference_number', 'origin_country', 'destination_port', 'estimated_cost', 'status', 'request_data'];
+    protected $fillable = ['branch_id', 'user_id', 'customer_id', 'supplier_id', 'vehicle_id', 'reference_number', 'origin_country', 'destination_port', 'estimated_cost', 'status', 'request_data', 'port_of_loading', 'shipping_method', 'insurance_value', 'special_instructions', 'notes', 'assigned_user_id', 'current_stage', 'payment_status', 'estimated_arrival'];
 
     protected function casts(): array
     {
         return [
             'request_data' => 'array',
             'estimated_cost' => 'decimal:2',
+            'insurance_value' => 'decimal:2',
         ];
     }
 
@@ -31,6 +34,16 @@ class VehicleImport extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function assignedUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_user_id');
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function supplier(): BelongsTo
@@ -61,5 +74,20 @@ class VehicleImport extends Model
     public function vehicleMappings(): HasMany
     {
         return $this->hasMany(ImportVehicleMapping::class, 'vehicle_import_id');
+    }
+
+    public function lead(): BelongsTo
+    {
+        return $this->belongsTo(Lead::class, 'lead_id');
+    }
+
+    public function financeApplication(): BelongsTo
+    {
+        return $this->belongsTo(FinanceApplication::class, 'finance_application_id');
+    }
+
+    public function tradeIn(): BelongsTo
+    {
+        return $this->belongsTo(TradeInRequest::class, 'trade_in_id');
     }
 }

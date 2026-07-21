@@ -16,16 +16,10 @@ class StoreMediaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'file_name' => ['required', 'string', 'max:255'],
-            'mime_type' => ['required', 'string', 'max:100'],
-            'file_size' => ['required', 'integer', 'min:0'],
-            'path' => ['required', 'string', 'max:500'],
-            'disk' => ['sometimes', 'string', 'max:50'],
+            'file' => ['required', 'file', 'mimes:jpeg,jpg,png,gif,webp,pdf,doc,docx', 'max:10240'],
             'alt_text' => ['nullable', 'string', 'max:255'],
             'caption' => ['nullable', 'string'],
             'category' => ['nullable', 'string', 'max:100'],
-            'is_public' => ['nullable', 'boolean'],
         ];
     }
 }

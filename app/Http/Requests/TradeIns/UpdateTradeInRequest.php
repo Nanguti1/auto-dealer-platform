@@ -29,7 +29,7 @@ class UpdateTradeInRequest extends FormRequest
             'estimated_value' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'offered_value' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'status' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'condition_report' => ['sometimes', 'nullable', 'array'],
+            'condition_report' => ['sometimes', 'nullable'], // Accept both string and array, will be converted in controller
         ];
     }
 }

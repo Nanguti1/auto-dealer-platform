@@ -18,7 +18,8 @@ class UpdateBranchRequest extends FormRequest
      */
     public function rules(): array
     {
-        $branchId = $this->route('branch')->id;
+        $branch = $this->route('branch');
+        $branchId = is_object($branch) ? $branch->id : $branch;
 
         return [
             'company_id' => ['nullable', 'exists:companies,id'],

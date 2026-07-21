@@ -9,6 +9,7 @@ interface PaymentFormProps {
   action: string;
   vehicles?: Array<{ id: number; name: string; make: string; model: string; year: number; price: number; stock_number: string }>;
   reservations?: Array<{ id: number; vehicle_name: string; customer_name: string; deposit_amount: number }>;
+  customers?: Array<{ id: number; name: string; email: string; customer_number: string }>;
   users?: Array<{ id: number; name: string; email: string }>;
 }
 
@@ -30,9 +31,10 @@ const statusOptions = [
   { value: 'cancelled', label: 'Cancelled' },
 ];
 
-export default function PaymentForm({ payment, action, vehicles = [], reservations = [], users = [] }: PaymentFormProps) {
+export default function PaymentForm({ payment, action, vehicles = [], reservations = [], customers = [], users = [] }: PaymentFormProps) {
   const { data, setData, post, put, processing, errors } = useForm({
     user_id: payment?.user_id ?? '',
+    customer_id: payment?.customer_id ?? '',
     vehicle_id: payment?.vehicle_id ?? '',
     vehicle_reservation_id: payment?.vehicle_reservation_id ?? '',
     amount: payment?.amount ?? '',
@@ -79,6 +81,11 @@ export default function PaymentForm({ payment, action, vehicles = [], reservatio
     label: user.name || user.email || `User #${user.id}`,
   }));
 
+  const customerOptions = customers.map(customer => ({
+    value: customer.id,
+    label: `${customer.name} (${customer.customer_number || 'No number'}) - ${customer.email || 'No email'}`,
+  }));
+
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
       {(payment) && (
@@ -86,6 +93,16 @@ export default function PaymentForm({ payment, action, vehicles = [], reservatio
       )}
 
       <FormSection title="References" gridCols={2}>
+        <ForeignSelector
+          name="customer_id"
+          label="Customer"
+          value={data.customer_id}
+          error={errors.customer_id}
+          options={customerOptions}
+          placeholder="Select a customer"
+          searchable
+          onChange={(value) => setData('customer_id', value)}
+        />
         <ForeignSelector
           name="user_id"
           label="User"

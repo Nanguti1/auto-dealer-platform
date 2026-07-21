@@ -17,7 +17,7 @@ class VehicleImportPolicy
 
     public function view(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle');
+        return $user !== null && $model->isAccessibleBy($user);
     }
 
     public function create(User $user): bool
@@ -27,46 +27,46 @@ class VehicleImportPolicy
 
     public function update(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function delete(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function restore(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function forceDelete(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function feature(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function publish(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function approve(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function reject(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 
     public function assign(User $user, VehicleImport $model): bool
     {
-        return $user !== null && $model->isAccessibleThrough($user, 'vehicle') && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
+        return $user !== null && $model->isAccessibleBy($user) && in_array($user->role?->name, [RoleEnum::ADMIN->value, RoleEnum::MANAGER->value], true);
     }
 }

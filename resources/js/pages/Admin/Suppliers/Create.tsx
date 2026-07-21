@@ -36,7 +36,7 @@ export default function Create() {
 
   return (
     <SupplierShell title="Create Supplier" description="Add a new supplier with company information, contact details, address, and business terms." actions={<SupplierBackButton />}>
-      <SupplierForm supplier={emptySupplier} action={admin.suppliers.store.form().action} />
+      <SupplierForm supplier={emptySupplier} action={admin.suppliers.store().url} />
     </SupplierShell>
   );
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\TradeIns\StoreOfferRequest;
 use App\Http\Requests\TradeIns\UpdateOfferRequest;
 use App\Models\TradeInOffer;
+use App\Models\TradeInRequest;
 use App\Services\TradeIns\OfferService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -28,18 +29,31 @@ class OfferController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request, ?TradeInRequest $tradeIn = null): Response
     {
         $this->authorize('create', TradeInOffer::class);
 
-        return Inertia::render('Admin/TradeIns/Offers/Create');
+        return Inertia::render('Admin/TradeIns/Offers/Create', [
+            'tradeInRequestId' => $tradeIn?->id,
+            'tradeInRequests' => TradeInRequest::select('id', 'make', 'model', 'year', 'vin')->get()->toArray(),
+        ]);
     }
 
-    public function store(StoreOfferRequest $request): RedirectResponse
+    public function store(StoreOfferRequest $request, ?TradeInRequest $tradeIn = null): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $data = $request->validated();
 
-        return redirect()->route('admin.offers.index')->with('success', 'Offer created successfully.');
+        if ($tradeIn) {
+            $data['trade_in_request_id'] = $tradeIn->id;
+        }
+
+        $offer = $this->service->create($data);
+
+        if ($tradeIn) {
+            return redirect()->route('admin.trade-ins.show', $tradeIn)->with('success', 'Offer created successfully.');
+        }
+
+        return redirect()->route('admin.offers.show', $offer)->with('success', 'Offer created successfully.');
     }
 
     public function show(TradeInOffer $offer): Response

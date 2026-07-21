@@ -35,9 +35,9 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
       key: 'image_path',
       label: 'Image',
       render: (slider) => (
-        slider.image_path ? (
+        slider.image_url ? (
           <div className="flex items-center gap-2">
-            <ImageIcon className="size-4 text-muted-foreground" />
+            <img src={slider.image_url} alt={slider.title} className="w-8 h-8 object-cover rounded" />
             <span className="text-xs text-muted-foreground truncate max-w-32">{slider.image_path}</span>
           </div>
         ) : (
@@ -46,10 +46,10 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
       ),
     },
     {
-      key: 'display_order',
+      key: 'sort_order',
       label: 'Order',
       sortable: true,
-      render: (slider) => slider.display_order ?? 0,
+      render: (slider) => slider.sort_order ?? 0,
     },
     {
       key: 'is_active',
@@ -57,15 +57,6 @@ export default function Index({ heroSliders, filters = {} }: { heroSliders: Pagi
       render: (slider) => (
         <Badge variant={slider.is_active ? 'default' : 'secondary'}>
           {slider.is_active ? 'Active' : 'Inactive'}
-        </Badge>
-      ),
-    },
-    {
-      key: 'is_published',
-      label: 'Status',
-      render: (slider) => (
-        <Badge variant={slider.is_published ? 'default' : 'secondary'}>
-          {slider.is_published ? 'Published' : 'Draft'}
         </Badge>
       ),
     },

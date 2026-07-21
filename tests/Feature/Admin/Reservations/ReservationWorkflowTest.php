@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin\Reservations;
 
+use App\Models\Customer;
 use App\Models\InventoryStatus;
 use App\Models\Make;
 use App\Models\Model;
@@ -18,7 +19,7 @@ class ReservationWorkflowTest extends TestCase
 
     protected User $admin;
 
-    protected User $customer;
+    protected Customer $customer;
 
     protected Vehicle $vehicle;
 
@@ -30,7 +31,8 @@ class ReservationWorkflowTest extends TestCase
         $customerRole = Role::factory()->create(['name' => 'customer']);
 
         $this->admin = User::factory()->create(['role_id' => $adminRole->id]);
-        $this->customer = User::factory()->create(['role_id' => $customerRole->id]);
+        $customerUser = User::factory()->create(['role_id' => $customerRole->id]);
+        $this->customer = Customer::factory()->create(['user_id' => $customerUser->id]);
 
         $make = Make::factory()->create();
         $model = Model::factory()->create(['make_id' => $make->id]);
@@ -46,7 +48,7 @@ class ReservationWorkflowTest extends TestCase
     public function test_reservation_can_be_created(): void
     {
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'pending',
             'expires_at' => now()->addHours(24),
@@ -54,7 +56,7 @@ class ReservationWorkflowTest extends TestCase
 
         $this->assertDatabaseHas('vehicle_reservations', [
             'id' => $reservation->id,
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'pending',
         ]);
@@ -65,7 +67,7 @@ class ReservationWorkflowTest extends TestCase
         $reservedStatus = InventoryStatus::factory()->create(['name' => 'Reserved']);
 
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'pending',
             'expires_at' => now()->addHours(24),
@@ -79,7 +81,7 @@ class ReservationWorkflowTest extends TestCase
     public function test_reservation_can_be_confirmed(): void
     {
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'pending',
         ]);
@@ -94,7 +96,7 @@ class ReservationWorkflowTest extends TestCase
         $availableStatus = InventoryStatus::factory()->create(['name' => 'Available']);
 
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'confirmed',
         ]);
@@ -111,7 +113,7 @@ class ReservationWorkflowTest extends TestCase
     public function test_expired_reservation_cannot_be_confirmed(): void
     {
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'pending',
             'expires_at' => now()->subHours(1),
@@ -125,7 +127,7 @@ class ReservationWorkflowTest extends TestCase
         $soldStatus = InventoryStatus::factory()->create(['name' => 'Sold']);
 
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'confirmed',
         ]);
@@ -144,7 +146,7 @@ class ReservationWorkflowTest extends TestCase
         $reservedStatus = InventoryStatus::factory()->create(['name' => 'Reserved']);
 
         $firstReservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'confirmed',
         ]);
@@ -153,12 +155,13 @@ class ReservationWorkflowTest extends TestCase
         $this->vehicle->refresh();
         $this->assertEquals('Reserved', $this->vehicle->inventoryStatus->name);
 
-        $secondCustomer = User::factory()->create([
+        $secondCustomerUser = User::factory()->create([
             'role_id' => Role::where('name', 'customer')->first()->id,
         ]);
+        $secondCustomer = Customer::factory()->create(['user_id' => $secondCustomerUser->id]);
 
         $this->assertDatabaseHas('vehicle_reservations', [
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'confirmed',
         ]);
@@ -167,7 +170,7 @@ class ReservationWorkflowTest extends TestCase
     public function test_reservation_cleanup_job_removes_expired_reservations(): void
     {
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'pending',
             'expires_at' => now()->subHours(1),
@@ -183,14 +186,14 @@ class ReservationWorkflowTest extends TestCase
         $regularCustomer = User::factory()->create(['role_id' => $customerRole->id]);
 
         $reservation = VehicleReservation::factory()->create([
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
             'vehicle_id' => $this->vehicle->id,
             'status' => 'pending',
         ]);
 
         $this->assertDatabaseHas('vehicle_reservations', [
             'id' => $reservation->id,
-            'user_id' => $this->customer->id,
+            'customer_id' => $this->customer->id,
         ]);
     }
 }

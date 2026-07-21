@@ -19,7 +19,8 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'exists:users,id'],
+            'customer_id' => ['required', 'exists:customers,id'],
+            'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
             'vehicle_id' => ['sometimes', 'nullable', 'exists:vehicles,id'],
             'vehicle_reservation_id' => ['sometimes', 'nullable', 'exists:vehicle_reservations,id'],
             'invoice_id' => ['sometimes', 'nullable', 'exists:invoices,id'],

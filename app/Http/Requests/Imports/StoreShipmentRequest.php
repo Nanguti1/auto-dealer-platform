@@ -28,7 +28,6 @@ class StoreShipmentRequest extends FormRequest
             'actual_arrival' => ['sometimes', 'nullable', 'date'],
             'origin' => ['sometimes', 'nullable', 'string', 'max:255'],
             'destination' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'metadata' => ['sometimes', 'nullable', 'array'],
         ];
     }
 }

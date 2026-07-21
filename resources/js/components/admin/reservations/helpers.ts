@@ -15,6 +15,9 @@ return 'No vehicle';
 }
 
 export function customerName(reservation?: ReservationRecord): string {
+  if (reservation?.customer) {
+    return `${reservation.customer.first_name} ${reservation.customer.last_name}`;
+  }
   return reservation?.user?.name ?? reservation?.user?.email ?? 'No customer';
 }
 

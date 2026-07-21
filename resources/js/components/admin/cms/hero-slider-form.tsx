@@ -10,11 +10,10 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
   const { data, setData, post, put, processing, errors } = useForm({
     title: heroSlider?.title ?? '',
     subtitle: heroSlider?.subtitle ?? '',
-    cta_button_text: heroSlider?.cta_button_text ?? '',
-    cta_button_url: heroSlider?.cta_button_url ?? '',
-    display_order: heroSlider?.display_order ?? 0,
+    cta_label: heroSlider?.cta_label ?? '',
+    cta_url: heroSlider?.cta_url ?? '',
+    sort_order: heroSlider?.sort_order ?? 0,
     is_active: heroSlider?.is_active ?? true,
-    is_published: heroSlider?.is_published ?? false,
     image: null as File | null,
   });
 
@@ -53,7 +52,7 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
           <label htmlFor="image" className="text-sm font-medium">Hero Image</label>
           <ImageDropzone
             multiple={false}
-            previewUrl={heroSlider?.image_path}
+            previewUrl={heroSlider?.image_url}
             onFilesSelected={(files) => {
               if (files.length > 0) {
                 setData('image', files[0]);
@@ -61,11 +60,11 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
             }}
             className="mb-2"
           />
-          <input 
-            id="image" 
-            name="image" 
-            type="file" 
-            accept="image/*" 
+          <input
+            id="image"
+            name="image"
+            type="file"
+            accept="image/*"
             className="hidden"
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {
@@ -75,26 +74,26 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
           />
         </div>
         <FormField
-          name="cta_button_text"
+          name="cta_label"
           label="CTA Button Text"
-          value={data.cta_button_text}
-          error={errors.cta_button_text}
-          onChange={(value) => setData('cta_button_text', value)}
+          value={data.cta_label}
+          error={errors.cta_label}
+          onChange={(value) => setData('cta_label', value)}
         />
         <FormField
-          name="cta_button_url"
+          name="cta_url"
           label="CTA Button URL"
-          value={data.cta_button_url}
-          error={errors.cta_button_url}
-          onChange={(value) => setData('cta_button_url', value)}
+          value={data.cta_url}
+          error={errors.cta_url}
+          onChange={(value) => setData('cta_url', value)}
         />
         <FormField
-          name="display_order"
+          name="sort_order"
           label="Display Order"
           type="number"
-          value={String(data.display_order)}
-          error={errors.display_order}
-          onChange={(value) => setData('display_order', Number(value))}
+          value={String(data.sort_order)}
+          error={errors.sort_order}
+          onChange={(value) => setData('sort_order', Number(value))}
         />
         <FormField
           name="is_active"
@@ -103,14 +102,6 @@ export default function HeroSliderForm({ heroSlider, action, method = 'post' }: 
           value={data.is_active}
           error={errors.is_active}
           onChange={(value) => setData('is_active', value)}
-        />
-        <FormField
-          name="is_published"
-          label="Published"
-          type="switch"
-          value={data.is_published}
-          error={errors.is_published}
-          onChange={(value) => setData('is_published', value)}
         />
       </FormSection>
       <div className="flex justify-end gap-4">

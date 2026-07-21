@@ -34,6 +34,7 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
   const rules = promotion?.rules ?? {};
   const { data, setData, post, put, processing, errors } = useForm({
     name: promotion?.name ?? promotion?.title ?? '',
+    slug: promotion?.slug ?? '',
     type: promotion?.type ?? 'discount',
     description: promotion?.description ?? String(rules.description ?? ''),
     value: String(promotion?.value ?? promotion?.discount ?? ''),
@@ -48,12 +49,33 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Transform form data to match backend structure
+    const formData = {
+      name: data.name,
+      slug: data.slug || data.name.toLowerCase().replace(/\s+/g, '-'),
+      type: data.type,
+      value: data.value,
+      starts_at: data.starts_at || null,
+      ends_at: data.ends_at || null,
+      is_active: data.is_active,
+      rules: {
+        description: data.description,
+        visibility: data.visibility,
+        featured_vehicles: data.featured_vehicles,
+        status: data.status,
+      },
+      banner: data.banner,
+    };
+
     if (promotion) {
       put(action, {
+        data: formData,
         forceFormData: true,
       });
     } else {
       post(action, {
+        data: formData,
         forceFormData: true,
       });
     }
@@ -61,13 +83,20 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
 
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl space-y-6" encType="multipart/form-data">
-      <FormSection title="Basic Information" gridCols={2}>
+      <FormSection title="Basic Information" gridCols={3}>
         <FormField
           name="name"
           label="Campaign name"
           value={data.name}
           error={errors.name}
           onChange={(value) => setData('name', value)}
+        />
+        <FormField
+          name="slug"
+          label="Slug"
+          value={data.slug}
+          error={errors.slug}
+          onChange={(value) => setData('slug', value)}
         />
         <FormField
           name="type"
@@ -103,11 +132,11 @@ export default function PromotionForm({ promotion, action, method = 'post' }: { 
               }
             }}
           />
-          <input 
-            id="banner" 
-            name="banner" 
-            type="file" 
-            accept="image/*" 
+          <input
+            id="banner"
+            name="banner"
+            type="file"
+            accept="image/*"
             className="hidden"
             onChange={(e) => {
               if (e.target.files && e.target.files.length > 0) {

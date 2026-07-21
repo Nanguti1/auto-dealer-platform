@@ -29,7 +29,7 @@ class StoreTradeInRequest extends FormRequest
             'estimated_value' => ['nullable', 'numeric', 'min:0'],
             'offered_value' => ['nullable', 'numeric', 'min:0'],
             'status' => ['required', 'string', 'max:255'],
-            'condition_report' => ['nullable', 'array'],
+            'condition_report' => ['nullable'], // Accept both string and array, will be converted in controller
         ];
     }
 }

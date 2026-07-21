@@ -11,10 +11,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function Show({ vehicleImport }: { vehicleImport: ImportRequest }) {
   const timeline = vehicleImport.timeline ?? [];
-  const shipment = vehicleImport.shipment ?? vehicleImport.request_data?.shipment;
+  const shipment = vehicleImport.shipments?.[0] ?? vehicleImport.shipment ?? vehicleImport.request_data?.shipment;
 
   return (
-    <ImportShell title={importVehicleName(vehicleImport)} description={`Import request #${vehicleImport.id} · Updated ${formatDateTime(vehicleImport.updated_at)}`} actions={<><ImportBackButton /><Button variant="outline" asChild><Link href={`/admin/imports/${vehicleImport.id}/shipments`}><Ship className="mr-2 size-4" />Shipment</Link></Button><Button variant="outline" asChild><Link href={`/admin/imports/${vehicleImport.id}/documents`}><FileText className="mr-2 size-4" />Documents</Link></Button><Button asChild><Link href={`/admin/imports/${vehicleImport.id}/edit`}><Pencil className="mr-2 size-4" />Edit</Link></Button></>}>
+    <ImportShell title={importVehicleName(vehicleImport)} description={`Import request #${vehicleImport.id} · Updated ${formatDateTime(vehicleImport.updated_at)}`} actions={<><ImportBackButton /><Button variant="outline" asChild><Link href={`/admin/shipments?vehicle_import_id=${vehicleImport.id}`}><Ship className="mr-2 size-4" />Shipment</Link></Button><Button variant="outline" asChild><Link href={`/admin/imports/${vehicleImport.id}/documents`}><FileText className="mr-2 size-4" />Documents</Link></Button><Button asChild><Link href={`/admin/imports/${vehicleImport.id}/edit`}><Pencil className="mr-2 size-4" />Edit</Link></Button></>}>
       <div className="grid gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader><CardTitle>Customer overview</CardTitle></CardHeader>

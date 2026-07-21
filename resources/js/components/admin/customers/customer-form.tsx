@@ -1,11 +1,13 @@
 import { useForm } from '@inertiajs/react';
 import * as React from 'react';
-import { FormShell, FormField, FormSection } from '@/components/admin/shared';
+import { FormField, FormSection } from '@/components/admin/shared';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { Save } from 'lucide-react';
 import type { CustomerRecord } from './types';
 
 export default function CustomerForm({ customer, action, method = 'post' }: { customer: CustomerRecord; action: string; method?: 'post' | 'put' }) {
-  const { data, setData, processing, errors } = useForm({
+  const { data, setData, processing, errors, post, put } = useForm({
     first_name: customer.first_name ?? '',
     last_name: customer.last_name ?? '',
     date_of_birth: customer.date_of_birth ?? '',
@@ -26,14 +28,17 @@ export default function CustomerForm({ customer, action, method = 'post' }: { cu
     'preferences[lifecycle_stage]': customer.preferences?.lifecycle_stage ?? '',
   });
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (method === 'put') {
+      put(action);
+    } else {
+      post(action);
+    }
+  };
+
   return (
-    <FormShell
-      action={action}
-      method={method}
-      submitLabel="Save customer"
-      className="space-y-6"
-      errors={errors}
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <Tabs defaultValue="personal">
         <TabsList className="flex h-auto w-full flex-wrap justify-start">
           <TabsTrigger value="personal">Personal Information</TabsTrigger>
@@ -183,6 +188,13 @@ export default function CustomerForm({ customer, action, method = 'post' }: { cu
           />
         </TabsContent>
       </Tabs>
-    </FormShell>
+
+      <div className="flex justify-end gap-4 mt-6">
+        <Button type="submit" disabled={processing}>
+          <Save className="mr-2 size-4" />
+          {processing ? 'Saving...' : 'Save customer'}
+        </Button>
+      </div>
+    </form>
   );
 }

@@ -1,14 +1,84 @@
 import { Link } from '@inertiajs/react';
 import { Pencil } from 'lucide-react';
-import { imageUrl, tradeInVehicleName } from '@/components/admin/trade-ins/helpers';
+import { formatDateTime } from '@/lib/date-utils';
+import { formatCurrency } from '@/lib/format-utils';
 import InspectionChecklist from '@/components/admin/trade-ins/inspection-checklist';
 import TradeInShell, { TradeInBackButton } from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInStatusBadge from '@/components/admin/trade-ins/trade-in-status-badge';
-import type { TradeInRequest } from '@/components/admin/trade-ins/types';
+import type { TradeInInspection } from '@/components/admin/trade-ins/types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-export default function Show({ tradeInRequest }: { tradeInRequest: TradeInRequest }) {
- const inspection = tradeInRequest.inspection;
 
- return <TradeInShell title="Vehicle Inspection" description={tradeInVehicleName(tradeInRequest)} actions={<><TradeInBackButton href={`/admin/trade-ins/${tradeInRequest.id}`} /><Button asChild><Link href={`/admin/trade-ins/${tradeInRequest.id}/inspection/edit`}><Pencil className="mr-2 size-4" />Edit inspection</Link></Button></>}><div className="space-y-4"><Card><CardHeader><CardTitle>Inspection status</CardTitle></CardHeader><CardContent className="grid gap-4 md:grid-cols-4"><TradeInStatusBadge status={inspection?.status} /><p>Tires: {inspection?.tire_condition ?? '—'}</p><p>Engine: {inspection?.engine_condition ?? '—'}</p><p>Electrical: {inspection?.electrical_systems ?? '—'}</p></CardContent></Card><InspectionChecklist values={{ exterior: inspection?.exterior, interior: inspection?.interior, mechanical: inspection?.mechanical }} /><div className="grid gap-4 lg:grid-cols-2"><Card><CardHeader><CardTitle>Damage notes</CardTitle></CardHeader><CardContent>{inspection?.damage_notes ?? 'No damage notes recorded.'}</CardContent></Card><Card><CardHeader><CardTitle>Inspector notes</CardTitle></CardHeader><CardContent>{inspection?.inspector_notes ?? 'No inspector notes recorded.'}</CardContent></Card></div><Card><CardHeader><CardTitle>Image gallery</CardTitle></CardHeader><CardContent className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{inspection?.photos?.length ? inspection.photos.map((photo) => <img key={photo.id} src={imageUrl(photo.url ?? photo.path)} alt={photo.alt_text ?? 'Inspection'} className="aspect-video rounded-lg object-cover" />) : <p className="text-sm text-muted-foreground">No inspection photos uploaded.</p>}</CardContent></Card></div></TradeInShell>; 
+export default function Show({ inspection }: { inspection: TradeInInspection }) {
+  const tradeInRequest = inspection.tradeInRequest;
+
+  return (
+    <TradeInShell 
+      title="Vehicle Inspection" 
+      description={tradeInRequest ? `${tradeInRequest.year} ${tradeInRequest.make} ${tradeInRequest.model}` : 'Inspection Details'} 
+      actions={
+        <>
+          <TradeInBackButton href={tradeInRequest ? `/admin/trade-ins/${tradeInRequest.id}` : '/admin/inspections'} />
+          <Button asChild>
+            <Link href={`/admin/inspections/${inspection.id}/edit`}>
+              <Pencil className="mr-2 size-4" />Edit inspection
+            </Link>
+          </Button>
+        </>
+      }
+    >
+      <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Inspection Details</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4 md:grid-cols-2">
+            <div>
+              <p className="text-sm text-muted-foreground">Status</p>
+              <TradeInStatusBadge status={inspection?.status} />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Inspection Date</p>
+              <p className="font-medium">{inspection?.inspection_date ? formatDateTime(inspection.inspection_date) : 'Not scheduled'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Estimated Repair Cost</p>
+              <p className="font-medium">{inspection?.estimated_repair_cost ? formatCurrency(Number(inspection.estimated_repair_cost)) : '—'}</p>
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Inspector</p>
+              <p className="font-medium">{inspection?.inspector?.name || 'Not assigned'}</p>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <InspectionChecklist
+          values={{
+            exterior: inspection?.condition_details?.exterior || {},
+            interior: inspection?.condition_details?.interior || {},
+            mechanical: inspection?.condition_details?.mechanical || {}
+          }}
+        />
+        
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Repair Recommendations</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {inspection?.repair_recommendations || 'No repair recommendations recorded.'}
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Inspector Notes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {inspection?.notes || 'No inspector notes recorded.'}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </TradeInShell>
+  );
 }

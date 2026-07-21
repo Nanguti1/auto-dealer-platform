@@ -3,10 +3,8 @@ import { useForm } from '@inertiajs/react';
 import { Save } from 'lucide-react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 interface Role {
@@ -27,7 +25,7 @@ interface User {
   phone?: string;
   password?: string;
   branch_id?: number;
-  roles?: Role[];
+  role_id?: number;
   branch?: Branch;
   preferences?: Record<string, any>;
 }
@@ -41,8 +39,6 @@ interface UserFormProps {
 }
 
 export default function UserForm({ user, roles = [], branches = [], action, method = 'post' }: UserFormProps) {
-  const userRoles = user?.roles?.map((r) => r.id) || [];
-
   const { data, setData, post, put, processing, errors } = useForm({
     name: user?.name ?? '',
     password: '',
@@ -50,7 +46,7 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
     email: user?.email ?? '',
     phone: user?.phone ?? '',
     branch_id: String(user?.branch_id ?? ''),
-    roles: userRoles,
+    role_id: String(user?.role_id ?? ''),
     preferences_timezone: user?.preferences?.timezone ?? '',
     preferences_language: user?.preferences?.language ?? 'en',
   });
@@ -62,13 +58,6 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
     } else {
       post(action);
     }
-  };
-
-  const handleRoleChange = (roleId: number, checked: boolean) => {
-    setData('roles', checked
-      ? [...data.roles, roleId]
-      : data.roles.filter(id => id !== roleId)
-    );
   };
 
   return (
@@ -158,27 +147,23 @@ export default function UserForm({ user, roles = [], branches = [], action, meth
         </TabsContent>
         <TabsContent value="roles" className="grid gap-4 rounded-xl border bg-card p-4">
           <div className="space-y-2">
-            <Label>Roles</Label>
-            <div className="space-y-2">
+            <Label htmlFor="role_id">Role</Label>
+            <select
+              id="role_id"
+              name="role_id"
+              value={data.role_id}
+              onChange={(e) => setData('role_id', e.target.value)}
+              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background"
+            >
+              <option value="">Select role</option>
               {roles.map((role) => (
-                <div key={role.id} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={`role-${role.id}`}
-                    checked={data.roles.includes(role.id)}
-                    onCheckedChange={(checked) => handleRoleChange(role.id, checked === true)}
-                  />
-                  <Label htmlFor={`role-${role.id}`} className="font-normal">
-                    {role.display_name || role.name}
-                  </Label>
-                </div>
+                <option key={role.id} value={role.id}>
+                  {role.display_name || role.name}
+                </option>
               ))}
-            </div>
-            <InputError message={errors.roles} />
+            </select>
+            <InputError message={errors.role_id} />
           </div>
-          {/* Hidden inputs to ensure roles are submitted */}
-          {data.roles.map((roleId) => (
-            <input key={roleId} type="hidden" name="roles[]" value={roleId} />
-          ))}
         </TabsContent>
         <TabsContent value="preferences" className="grid gap-4 rounded-xl border bg-card p-4 md:grid-cols-2">
           <div className="space-y-2">

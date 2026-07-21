@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Admin\Payments;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Payments\StorePaymentRequest;
 use App\Http\Requests\Payments\UpdatePaymentRequest;
+use App\Models\Customer;
 use App\Models\Payment;
 use App\Models\User;
 use App\Models\Vehicle;
@@ -56,6 +57,14 @@ class PaymentController extends Controller
                     'customer_name' => $reservation->user->name ?? $reservation->user->email ?? 'Unknown customer',
                     'deposit_amount' => $reservation->deposit_amount,
                 ]),
+            'customers' => Customer::select('id', 'first_name', 'last_name', 'email', 'customer_number')
+                ->get()
+                ->map(fn ($customer) => [
+                    'id' => $customer->id,
+                    'name' => "{$customer->first_name} {$customer->last_name}",
+                    'email' => $customer->email,
+                    'customer_number' => $customer->customer_number,
+                ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()
                 ->map(fn ($user) => [
@@ -77,6 +86,8 @@ class PaymentController extends Controller
     {
         $this->authorize('view', $payment);
 
+        $payment->load(['vehicle.make', 'vehicle.vehicleModel', 'user', 'customer']);
+
         return Inertia::render('Admin/Payments/Show', [
             'payment' => $payment,
         ]);
@@ -85,6 +96,8 @@ class PaymentController extends Controller
     public function edit(Payment $payment): Response
     {
         $this->authorize('update', $payment);
+
+        $payment->load(['vehicle.make', 'vehicle.vehicleModel', 'user', 'customer']);
 
         return Inertia::render('Admin/Payments/Edit', [
             'payment' => $payment,
@@ -107,6 +120,14 @@ class PaymentController extends Controller
                     'vehicle_name' => $reservation->vehicle ? "{$reservation->vehicle->year} {$reservation->vehicle->make->name} {$reservation->vehicle->vehicleModel->name}" : 'Unknown vehicle',
                     'customer_name' => $reservation->user->name ?? $reservation->user->email ?? 'Unknown customer',
                     'deposit_amount' => $reservation->deposit_amount,
+                ]),
+            'customers' => Customer::select('id', 'first_name', 'last_name', 'email', 'customer_number')
+                ->get()
+                ->map(fn ($customer) => [
+                    'id' => $customer->id,
+                    'name' => "{$customer->first_name} {$customer->last_name}",
+                    'email' => $customer->email,
+                    'customer_number' => $customer->customer_number,
                 ]),
             'users' => User::select('id', 'name', 'email')
                 ->get()

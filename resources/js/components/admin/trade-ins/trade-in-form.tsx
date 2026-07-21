@@ -14,6 +14,8 @@ const statusOptions = [
 
 export default function TradeInForm({ tradeInRequest, action, method = 'post' }: { tradeInRequest?: TradeInRequest; action: string; method?: 'post' | 'put' }) {
   const { data, setData, post, put, errors, processing } = useForm({
+    user_id: tradeInRequest?.user_id ?? '',
+    vehicle_id: tradeInRequest?.vehicle_id ?? '',
     year: tradeInRequest?.year ?? '',
     make: tradeInRequest?.make ?? '',
     model: tradeInRequest?.model ?? '',
@@ -22,20 +24,33 @@ export default function TradeInForm({ tradeInRequest, action, method = 'post' }:
     status: tradeInRequest?.status ?? 'pending',
     estimated_value: tradeInRequest?.estimated_value ?? '',
     offered_value: tradeInRequest?.offered_value ?? '',
-    condition_report: typeof tradeInRequest?.condition_report === 'string' 
-      ? tradeInRequest.condition_report 
-      : tradeInRequest?.condition_report?.notes ?? '',
+    condition_report: typeof tradeInRequest?.condition_report === 'string'
+      ? tradeInRequest.condition_report
+      : (typeof tradeInRequest?.condition_report === 'object' && tradeInRequest?.condition_report !== null
+        ? JSON.stringify(tradeInRequest.condition_report)
+        : ''),
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Convert plain text to JSON structure before submit
+
+    // Convert condition_report string to JSON structure before submit
+    let conditionReportData = null;
+    if (data.condition_report) {
+      try {
+        // Try to parse as JSON first
+        conditionReportData = JSON.parse(data.condition_report);
+      } catch {
+        // If it's not valid JSON, treat it as plain text
+        conditionReportData = { notes: data.condition_report };
+      }
+    }
+
     const submitData = {
       ...data,
-      condition_report: data.condition_report ? { notes: data.condition_report } : null,
+      condition_report: conditionReportData,
     };
-    
+
     if (tradeInRequest) {
       put(action, submitData);
     } else {
@@ -46,6 +61,8 @@ export default function TradeInForm({ tradeInRequest, action, method = 'post' }:
   return (
     <form onSubmit={handleSubmit} className="max-w-4xl space-y-6">
       {tradeInRequest && <input type="hidden" name="_method" value={method} />}
+      <input type="hidden" name="user_id" value={data.user_id} />
+      <input type="hidden" name="vehicle_id" value={data.vehicle_id} />
       <FormSection title="Vehicle Information" gridCols={3}>
         <FormField
           name="year"

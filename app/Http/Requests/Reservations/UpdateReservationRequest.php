@@ -20,6 +20,7 @@ class UpdateReservationRequest extends FormRequest
     {
         return [
             'vehicle_id' => ['sometimes', 'nullable', 'exists:vehicles,id'],
+            'customer_id' => ['sometimes', 'nullable', 'exists:customers,id'],
             'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
             'deposit_amount' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'status' => ['sometimes', 'nullable', 'string', 'in:pending,confirmed,expired,cancelled,converted'],

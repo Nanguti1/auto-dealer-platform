@@ -17,7 +17,7 @@ export default function Create({ roles = [], branches = [] }: { roles?: Role[]; 
   return (
     <CmsShell
       title="Create User"
-      description="Create a new user account with appropriate roles."
+      description="Create a new user account with appropriate role."
       actions={<CmsBackButton />}
     >
       <UserForm action={adminRoutes.users.store().url} method="post" roles={roles} branches={branches} />

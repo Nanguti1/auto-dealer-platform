@@ -20,7 +20,6 @@ class StoreBlogPostRequest extends FormRequest
     {
         return [
             'blog_category_id' => ['required', 'integer', 'exists:blog_categories,id'],
-            'author_id' => ['required', 'integer', 'exists:users,id'],
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['nullable', 'string', 'max:255', 'unique:blog_posts,slug'],
             'excerpt' => ['nullable', 'string'],
@@ -30,5 +29,12 @@ class StoreBlogPostRequest extends FormRequest
             'published_at' => ['nullable', 'date'],
             'is_featured' => ['nullable', 'boolean'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'author_id' => $this->user()?->id,
+        ]);
     }
 }

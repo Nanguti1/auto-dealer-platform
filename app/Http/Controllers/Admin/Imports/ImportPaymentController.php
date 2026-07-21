@@ -50,7 +50,7 @@ class ImportPaymentController extends Controller
         $this->authorize('view', $importPayment);
 
         return Inertia::render('Admin/Imports/Payments/Show', [
-            'importPayment' => $importPayment->load(['vehicleImport', 'payment']),
+            'importPayment' => $importPayment->load(['vehicleImport.customer', 'vehicleImport.vehicle', 'vehicleImport.supplier', 'vehicleImport.payments']),
         ]);
     }
 
@@ -59,7 +59,7 @@ class ImportPaymentController extends Controller
         $this->authorize('update', $importPayment);
 
         return Inertia::render('Admin/Imports/Payments/Edit', [
-            'importPayment' => $importPayment->load(['vehicleImport', 'payment']),
+            'importPayment' => $importPayment->load(['vehicleImport']),
             'importRequests' => VehicleImport::latest()->get(['id', 'reference_number', 'origin_country']),
         ]);
     }

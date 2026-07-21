@@ -15,7 +15,9 @@ class Promotion extends Model
 
     protected ?string $slugSourceField = 'name';
 
-    protected $fillable = ['name', 'slug', 'type', 'value', 'starts_at', 'ends_at', 'is_active', 'rules'];
+    protected $fillable = ['name', 'slug', 'type', 'value', 'starts_at', 'ends_at', 'is_active', 'rules', 'banner'];
+
+    protected $appends = ['banner_path', 'description', 'campaign_status', 'visibility'];
 
     protected function casts(): array
     {
@@ -46,5 +48,29 @@ class Promotion extends Model
     public function coupons(): HasMany
     {
         return $this->hasMany(Coupon::class);
+    }
+
+    public function getBannerPathAttribute(): ?string
+    {
+        if ($this->banner) {
+            return asset('storage/'.$this->banner);
+        }
+
+        return null;
+    }
+
+    public function getDescriptionAttribute(): ?string
+    {
+        return $this->rules['description'] ?? null;
+    }
+
+    public function getCampaignStatusAttribute(): ?string
+    {
+        return $this->rules['status'] ?? ($this->is_active ? 'active' : 'draft');
+    }
+
+    public function getVisibilityAttribute(): ?string
+    {
+        return $this->rules['visibility'] ?? 'public';
     }
 }

@@ -9,6 +9,7 @@ interface ReservationFormProps {
   action: string;
   method?: 'post' | 'put';
   vehicles?: Array<{ id: number; name: string; make: string; model: string; year: number; price: number }>;
+  customers?: Array<{ id: number; name: string; email?: string; customer_number?: string }>;
   users?: Array<{ id: number; name: string; email?: string }>;
   cancelUrl?: string;
 }
@@ -21,10 +22,15 @@ const statusOptions = [
   { value: 'expired', label: 'Expired' },
 ];
 
-export default function ReservationForm({ reservation, action, method = 'post', vehicles = [], users = [], cancelUrl }: ReservationFormProps) {
+export default function ReservationForm({ reservation, action, method = 'post', vehicles = [], customers = [], users = [], cancelUrl }: ReservationFormProps) {
   const vehicleOptions = vehicles.map(vehicle => ({
     value: vehicle.id,
     label: vehicle.name || `Vehicle #${vehicle.id}`,
+  }));
+
+  const customerOptions = customers.map(customer => ({
+    value: customer.id,
+    label: customer.name || customer.email || `Customer #${customer.id}`,
   }));
 
   const userOptions = users.map(user => ({
@@ -34,6 +40,7 @@ export default function ReservationForm({ reservation, action, method = 'post', 
 
   const { data, setData, post, put, processing, errors } = useForm({
     vehicle_id: reservation?.vehicle_id ?? '',
+    customer_id: reservation?.customer_id ?? '',
     user_id: reservation?.user_id ?? '',
     deposit_amount: reservation?.deposit_amount ?? '',
     status: reservation?.status ?? 'pending',
@@ -68,14 +75,24 @@ export default function ReservationForm({ reservation, action, method = 'post', 
           onChange={(value) => setData('vehicle_id', value)}
         />
         <ForeignSelector
+          name="customer_id"
+          label="Customer"
+          value={data.customer_id}
+          error={errors.customer_id}
+          options={customerOptions}
+          placeholder="Select a customer"
+          searchable
+          required
+          onChange={(value) => setData('customer_id', value)}
+        />
+        <ForeignSelector
           name="user_id"
-          label="User"
+          label="User (Optional)"
           value={data.user_id}
           error={errors.user_id}
           options={userOptions}
           placeholder="Select a user"
           searchable
-          required
           onChange={(value) => setData('user_id', value)}
         />
         <FormField

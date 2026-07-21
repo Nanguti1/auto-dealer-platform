@@ -47,17 +47,21 @@ class TradeInController extends Controller
         ]);
 
         // Create a trade-in request with vehicle details
-        $tradeIn = TradeInRequest::create([
+        $tradeIn = new TradeInRequest([
             'make' => $validated['make'],
             'model' => $validated['model'],
             'year' => $validated['year'],
             'mileage' => $validated['mileage'] ?? null,
             'vin' => $validated['vin'] ?? null,
             'status' => 'submitted',
-            'condition_report' => [
-                'notes' => $validated['notes'] ?? null,
-            ],
         ]);
+
+        // Set condition report separately to avoid array validation issues
+        $tradeIn->condition_report = [
+            'notes' => $validated['notes'] ?? null,
+        ];
+
+        $tradeIn->save();
 
         event(new LeadCreated($lead));
 

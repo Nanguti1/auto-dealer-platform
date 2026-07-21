@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -11,6 +12,7 @@ class InvoiceFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
+            'customer_id' => Customer::factory(),
             'vehicle_id' => null,
 
             'invoice_number' => fake()->bothify('INV-####'),

@@ -20,7 +20,8 @@ class StoreReservationRequest extends FormRequest
     {
         return [
             'vehicle_id' => ['required', 'exists:vehicles,id'],
-            'user_id' => ['required', 'exists:users,id'],
+            'customer_id' => ['required', 'exists:customers,id'],
+            'user_id' => ['sometimes', 'nullable', 'exists:users,id'],
             'deposit_amount' => ['required', 'numeric', 'min:0'],
             'status' => ['sometimes', 'nullable', 'string', 'in:pending,confirmed,expired,cancelled,converted'],
             'expires_at' => ['sometimes', 'nullable', 'date', 'after:now'],

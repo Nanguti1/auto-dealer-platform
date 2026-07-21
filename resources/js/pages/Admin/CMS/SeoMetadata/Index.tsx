@@ -15,23 +15,62 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
   const [error, setError] = React.useState<Error | null>(null);
   const columns: Column<SeoSettings>[] = [
     {
-      key: 'site_name',
-      label: 'Site Name',
+      key: 'seoable_type',
+      label: 'Content Type',
+      sortable: true,
+      render: (settings) => {
+        const typeLabels: Record<string, string> = {
+          'App\\Models\\CmsPage': 'CMS Page',
+          'App\\Models\\DynamicCmsPage': 'Dynamic CMS Page',
+          'App\\Models\\BlogPost': 'Blog Post',
+          'App\\Models\\BlogCategory': 'Blog Category',
+          'App\\Models\\BlogTag': 'Blog Tag',
+          'App\\Models\\Vehicle': 'Vehicle',
+          'App\\Models\\Make': 'Vehicle Make',
+          'App\\Models\\TrimLevel': 'Vehicle Trim Level',
+          'App\\Models\\Brand': 'Brand',
+          'App\\Models\\Branch': 'Branch',
+          'App\\Models\\Customer': 'Customer',
+          'App\\Models\\HeroSlider': 'Hero Slider',
+          'App\\Models\\HomePageSection': 'Home Page Section',
+          'App\\Models\\Faq': 'FAQ',
+          'App\\Models\\Promotion': 'Promotion',
+          'App\\Models\\Review': 'Review',
+          'App\\Models\\Testimonial': 'Testimonial',
+        };
+        return (
+          <div>
+            <Link className="font-medium hover:underline" href={adminRoutes.seoMetadata.show(settings.id).url}>
+              {typeLabels[settings.seoable_type || ''] || settings.seoable_type || 'Unknown'}
+            </Link>
+            <p className="text-xs text-muted-foreground">ID: {settings.seoable_id ?? '—'}</p>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'meta_title',
+      label: 'Meta Title',
       sortable: true,
       render: (settings) => (
-        <div>
-          <Link className="font-medium hover:underline" href={`/admin/seo-metadata/${settings.id}`}>
-            {settings.site_name ?? 'Untitled'}
-          </Link>
-          <p className="text-xs text-muted-foreground">{settings.site_description ?? '—'}</p>
-        </div>
+        settings.meta_title ? (
+          <span className="text-sm truncate max-w-48">{settings.meta_title}</span>
+        ) : (
+          '—'
+        )
       ),
     },
     {
-      key: 'default_meta_title',
-      label: 'Default Meta Title',
+      key: 'meta_description',
+      label: 'Meta Description',
       sortable: true,
-      render: (settings) => settings.default_meta_title ?? '—',
+      render: (settings) => (
+        settings.meta_description ? (
+          <span className="text-xs text-muted-foreground truncate max-w-48">{settings.meta_description}</span>
+        ) : (
+          '—'
+        )
+      ),
     },
     {
       key: 'canonical_url',
@@ -43,15 +82,6 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
         ) : (
           '—'
         )
-      ),
-    },
-    {
-      key: 'sitemap_enabled',
-      label: 'Sitemap',
-      render: (settings) => (
-        <Badge variant={settings.sitemap_enabled ? 'default' : 'secondary'}>
-          {settings.sitemap_enabled ? 'Enabled' : 'Disabled'}
-        </Badge>
       ),
     },
   ];
@@ -106,13 +136,13 @@ export default function Index({ seoSettings }: { seoSettings: Paginated<SeoSetti
         rowActions={(settings) => (
           <div className="flex gap-2">
             <Button variant="ghost" size="sm" asChild>
-              <Link href={`/admin/seo-metadata/${settings.id}`}>
+              <Link href={adminRoutes.seoMetadata.show(settings.id).url}>
                 <Eye className="mr-2 size-4" />
                 View
               </Link>
             </Button>
             <Button variant="ghost" size="sm" asChild>
-              <Link href={`/admin/seo-metadata/${settings.id}/edit`}>
+              <Link href={adminRoutes.seoMetadata.edit(settings.id).url}>
                 <Pencil className="mr-2 size-4" />
                 Edit
               </Link>

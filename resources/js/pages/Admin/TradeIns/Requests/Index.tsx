@@ -5,7 +5,10 @@ import ConfirmationDialog from '@/components/admin/confirmation-dialog';
 import CustomerAvatar from '@/components/admin/customers/customer-avatar';
 import AdminDataTable from '@/components/admin/inventory/admin-data-table';
 import type {Column} from '@/components/admin/inventory/admin-data-table';
-import { desiredVehicle, formatCurrency, formatDateTime, formatNumber, requesterName, tradeInVehicleName, userName, vehicleName } from '@/components/admin/trade-ins/helpers';
+import { desiredVehicle, requesterName, tradeInVehicleName } from '@/components/admin/trade-ins/helpers';
+import { vehicleName } from '@/lib/name-utils';
+import { formatCurrency, formatNumber } from '@/lib/format-utils';
+import { formatDateTime } from '@/lib/date-utils';
 import TradeInShell from '@/components/admin/trade-ins/trade-in-shell';
 import TradeInStatusBadge from '@/components/admin/trade-ins/trade-in-status-badge';
 import type { TradeInFilters, TradeInPagination, TradeInRequest } from '@/components/admin/trade-ins/types';
@@ -17,15 +20,67 @@ export default function Index({ tradeIns, filters = {} }: { tradeIns: TradeInPag
   const [error, setError] = React.useState<Error | null>(null);
   const [deleteId, setDeleteId] = React.useState<number | null>(null);
 
+  const renderStatus = React.useCallback((row: TradeInRequest) => {
+    return <TradeInStatusBadge status={row.status} />;
+  }, []);
+
+  const renderCustomer = React.useCallback((row: TradeInRequest) => {
+    return (
+      <div className="flex items-center gap-3">
+        {row.customer ? <CustomerAvatar customer={row.customer} /> : null}
+        <div>
+          <Link href={`/admin/trade-ins/${row.id}`} className="font-medium hover:underline">
+            {requesterName(row)}
+          </Link>
+          <p className="text-xs text-muted-foreground">
+            {row.customer?.email ?? row.user?.email ?? 'No contact'}
+          </p>
+        </div>
+      </div>
+    );
+  }, []);
+
+  const renderVehicle = React.useCallback((row: TradeInRequest) => {
+    return (
+      <div>
+        {tradeInVehicleName(row)}
+        <p className="text-xs text-muted-foreground">
+          {formatNumber(row.mileage)} mi · VIN {row.vin ?? '—'}
+        </p>
+      </div>
+    );
+  }, []);
+
+  const renderDesiredVehicle = React.useCallback((row: TradeInRequest) => {
+    return vehicleName(desiredVehicle(row));
+  }, []);
+
+  const renderEstimatedValue = React.useCallback((row: TradeInRequest) => {
+    return formatCurrency(row.estimated_value);
+  }, []);
+
+  const renderSalesRep = React.useCallback((row: TradeInRequest) => {
+    const user = row.assigned_user ?? row.assignedUser ?? undefined;
+    return user?.name ?? ([user?.first_name, user?.last_name].filter(Boolean).join(' ') || user?.email || 'Unassigned');
+  }, []);
+
+  const renderCreatedAt = React.useCallback((row: TradeInRequest) => {
+    return formatDateTime(row.created_at);
+  }, []);
+
+  const renderUpdatedAt = React.useCallback((row: TradeInRequest) => {
+    return formatDateTime(row.updated_at);
+  }, []);
+
   const columns: Column<TradeInRequest>[] = [
-    { key: 'status', label: 'Status', sortable: true, render: (row) => <TradeInStatusBadge status={row.status} /> },
-    { key: 'customer', label: 'Customer', render: (row) => <div className="flex items-center gap-3">{row.customer ? <CustomerAvatar customer={row.customer} /> : null}<div><Link href={`/admin/trade-ins/${row.id}`} className="font-medium hover:underline">{requesterName(row)}</Link><p className="text-xs text-muted-foreground">{row.customer?.email ?? row.user?.email ?? 'No contact'}</p></div></div> },
-    { key: 'vehicle', label: 'Trade-in vehicle', sortable: true, render: (row) => <div>{tradeInVehicleName(row)}<p className="text-xs text-muted-foreground">{formatNumber(row.mileage)} mi · VIN {row.vin ?? '—'}</p></div> },
-    { key: 'desired_vehicle', label: 'Desired vehicle', render: (row) => vehicleName(desiredVehicle(row)) },
-    { key: 'estimated_value', label: 'Estimated value', sortable: true, render: (row) => formatCurrency(row.estimated_value) },
-    { key: 'assigned_user_id', label: 'Sales rep', sortable: true, render: (row) => userName(row.assigned_user ?? row.assignedUser) },
-    { key: 'created_at', label: 'Created', sortable: true, render: (row) => formatDateTime(row.created_at) },
-    { key: 'updated_at', label: 'Last updated', sortable: true, render: (row) => formatDateTime(row.updated_at) },
+    { key: 'status', label: 'Status', sortable: true, render: renderStatus },
+    { key: 'customer', label: 'Customer', render: renderCustomer },
+    { key: 'vehicle', label: 'Trade-in vehicle', sortable: true, render: renderVehicle },
+    { key: 'desired_vehicle', label: 'Desired vehicle', render: renderDesiredVehicle },
+    { key: 'estimated_value', label: 'Estimated value', sortable: true, render: renderEstimatedValue },
+    { key: 'assigned_user_id', label: 'Sales rep', sortable: true, render: renderSalesRep },
+    { key: 'created_at', label: 'Created', sortable: true, render: renderCreatedAt },
+    { key: 'updated_at', label: 'Last updated', sortable: true, render: renderUpdatedAt },
   ];
 
   if (isLoading) {

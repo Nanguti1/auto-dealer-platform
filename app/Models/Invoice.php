@@ -13,7 +13,7 @@ class Invoice extends Model
 {
     use BranchAware, HasFactory, SoftDeletes;
 
-    protected $fillable = ['branch_id', 'user_id', 'vehicle_id', 'invoice_number', 'subtotal', 'tax_total', 'total', 'status', 'issued_at', 'due_at', 'created_by', 'updated_by', 'approved_by', 'approved_at', 'cancelled_by', 'cancelled_at'];
+    protected $fillable = ['branch_id', 'user_id', 'vehicle_id', 'customer_id', 'invoice_number', 'subtotal', 'tax_total', 'total', 'status', 'issued_at', 'due_at', 'created_by', 'updated_by', 'approved_by', 'approved_at', 'cancelled_by', 'cancelled_at'];
 
     protected function casts(): array
     {
@@ -36,6 +36,11 @@ class Invoice extends Model
     public function vehicle(): BelongsTo
     {
         return $this->belongsTo(Vehicle::class, 'vehicle_id');
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function user(): BelongsTo

@@ -11,7 +11,7 @@ class VehicleReservation extends Model
 {
     use BranchAware, HasFactory;
 
-    protected $fillable = ['branch_id', 'vehicle_id', 'user_id', 'deposit_amount', 'status', 'expires_at'];
+    protected $fillable = ['branch_id', 'vehicle_id', 'customer_id', 'user_id', 'deposit_amount', 'status', 'expires_at'];
 
     protected function casts(): array
     {
@@ -34,6 +34,11 @@ class VehicleReservation extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'customer_id');
     }
 
     public function confirm(): void

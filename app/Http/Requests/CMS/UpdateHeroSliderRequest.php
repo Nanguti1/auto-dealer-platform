@@ -18,7 +18,7 @@ class UpdateHeroSliderRequest extends FormRequest
         return [
             'title' => ['sometimes', 'string', 'max:255'],
             'subtitle' => ['nullable', 'string', 'max:255'],
-            'image_path' => ['sometimes', 'string', 'max:500'],
+            'image' => ['nullable', 'file', 'image', 'max:10240'], // Max 10MB
             'cta_label' => ['nullable', 'string', 'max:255'],
             'cta_url' => ['nullable', 'string', 'max:500'],
             'is_active' => ['nullable', 'boolean'],

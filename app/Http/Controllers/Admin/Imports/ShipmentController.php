@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Imports\StoreShipmentRequest;
 use App\Http\Requests\Imports\UpdateShipmentRequest;
 use App\Models\ImportShipment;
+use App\Models\VehicleImport;
 use App\Services\Imports\ShipmentService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -32,7 +33,9 @@ class ShipmentController extends Controller
     {
         $this->authorize('create', ImportShipment::class);
 
-        return Inertia::render('Admin/Imports/Shipments/Create');
+        return Inertia::render('Admin/Imports/Shipments/Create', [
+            'vehicleImports' => VehicleImport::select('id', 'reference_number')->get(),
+        ]);
     }
 
     public function store(StoreShipmentRequest $request): RedirectResponse
@@ -47,7 +50,7 @@ class ShipmentController extends Controller
         $this->authorize('view', $shipment);
 
         return Inertia::render('Admin/Imports/Shipments/Show', [
-            'shipment' => $shipment->load(['vehicleImport']),
+            'shipment' => $shipment->load(['vehicleImport.customer', 'vehicleImport.vehicle']),
         ]);
     }
 
@@ -57,6 +60,7 @@ class ShipmentController extends Controller
 
         return Inertia::render('Admin/Imports/Shipments/Edit', [
             'shipment' => $shipment->load(['vehicleImport']),
+            'vehicleImports' => VehicleImport::select('id', 'reference_number')->get(),
         ]);
     }
 

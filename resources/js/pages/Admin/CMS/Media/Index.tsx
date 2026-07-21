@@ -44,7 +44,7 @@ return '—';
       <CmsShell
         title="Media Library"
         description="Manage and organize all media files."
-        actions={<Button asChild><Link href="/admin/media/upload">Upload Media</Link></Button>}
+        actions={<Button asChild><Link href={adminRoutes.media.create().url}>Upload Media</Link></Button>}
       >
         <LoadingState message="Loading media files..." variant="full-page" />
       </CmsShell>
@@ -56,7 +56,7 @@ return '—';
       <CmsShell
         title="Media Library"
         description="Manage and organize all media files."
-        actions={<Button asChild><Link href="/admin/media/upload">Upload Media</Link></Button>}
+        actions={<Button asChild><Link href={adminRoutes.media.create().url}>Upload Media</Link></Button>}
       >
         <InlineError
           error={error}
@@ -73,7 +73,7 @@ return '—';
     <CmsShell
       title="Media Library"
       description="Manage and organize all media files."
-      actions={<Button asChild><Link href="/admin/media/upload">Upload Media</Link></Button>}
+      actions={<Button asChild><Link href={adminRoutes.media.create().url}>Upload Media</Link></Button>}
     >
       <div className="space-y-4">
         <div className="flex flex-col gap-3 rounded-xl border bg-card p-4 lg:flex-row lg:items-center lg:justify-between">
@@ -163,7 +163,7 @@ return '—';
           <EmptyGeneric
             title="No media files"
             description="Upload your first media file to get started."
-            action={{ label: 'Upload Media', onClick: () => router.visit('/admin/media/upload') }}
+            action={{ label: 'Upload Media', onClick: () => router.visit(adminRoutes.media.create().url) }}
           />
         )}
       </div>

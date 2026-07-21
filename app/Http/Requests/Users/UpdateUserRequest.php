@@ -30,8 +30,6 @@ class UpdateUserRequest extends FormRequest
             'date_of_birth' => ['nullable', 'date'],
             'address' => ['nullable', 'array'],
             'preferences' => ['nullable', 'array'],
-            'roles' => ['nullable', 'array'],
-            'roles.*' => ['exists:roles,id'],
         ];
     }
 }

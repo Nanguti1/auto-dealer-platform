@@ -30,12 +30,21 @@ class ImportShipment extends Model
         'origin',
         'destination',
         'metadata',
+        'shipment_reference',
+        'container_number',
+        'shipping_line',
+        'vessel',
+        'port_of_loading',
+        'destination_port',
+        'customs_status',
+        'tracking_events',
     ];
 
     protected function casts(): array
     {
         return [
             'metadata' => 'array',
+            'tracking_events' => 'array',
             'estimated_arrival' => 'datetime',
             'actual_arrival' => 'datetime',
         ];

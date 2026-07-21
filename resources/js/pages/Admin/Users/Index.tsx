@@ -17,7 +17,7 @@ interface User {
   name: string;
   email: string;
   phone?: string;
-  roles?: Array<{ id: number; name: string; display_name: string }>;
+  role?: { id: number; name: string; display_name: string };
   branch?: { id: number; name: string };
   email_verified_at?: string;
   created_at: string;
@@ -48,20 +48,16 @@ export default function Index({ users, filters = {} }: { users: Paginated<User>;
       render: (user) => user.phone ?? '—',
     },
     {
-      key: 'roles',
-      label: 'Roles',
+      key: 'role',
+      label: 'Role',
       render: (user) => (
-        <div className="flex flex-wrap gap-1">
-          {user.roles && user.roles.length > 0 ? (
-            user.roles.map((role) => (
-              <Badge key={role.id} variant="secondary">
-                {role.display_name || role.name}
-              </Badge>
-            ))
-          ) : (
-            <span className="text-muted-foreground">—</span>
-          )}
-        </div>
+        user.role ? (
+          <Badge variant="secondary">
+            {user.role.display_name || user.role.name}
+          </Badge>
+        ) : (
+          <span className="text-muted-foreground">—</span>
+        )
       ),
     },
     {

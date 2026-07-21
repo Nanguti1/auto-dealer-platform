@@ -18,7 +18,7 @@ interface User {
   email?: string;
   phone?: string;
   branch_id?: number;
-  roles?: Role[];
+  role_id?: number;
   branch?: Branch;
   preferences?: Record<string, any>;
 }

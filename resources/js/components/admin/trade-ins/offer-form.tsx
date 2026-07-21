@@ -1,5 +1,5 @@
 import { useForm } from '@inertiajs/react';
-import { FormField, FormSection } from '@/components/admin/shared';
+import { FormField, FormSection, ForeignSelector } from '@/components/admin/shared';
 import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import type { TradeInOffer } from './types';
@@ -9,13 +9,28 @@ function formatDate(value?: string): string {
   return value ? new Date(value).toISOString().slice(0, 16) : '';
 }
 
-export default function OfferForm({ offer, action, tradeInRequestId }: { offer?: TradeInOffer; action: string; tradeInRequestId?: number }) {
+function getDefaultExpirationDate(): string {
+  const date = new Date();
+  date.setDate(date.getDate() + 30); // Default to 30 days from now
+  return date.toISOString().slice(0, 16);
+}
+
+interface OfferFormProps {
+  offer?: TradeInOffer;
+  action: string;
+  tradeInRequestId?: number;
+  tradeInRequests?: Array<{ id: number; make: string; model: string; year: number; vin?: string }>;
+}
+
+export default function OfferForm({ offer, action, tradeInRequestId, tradeInRequests }: OfferFormProps) {
+  const hasPreselectedTradeIn = !!tradeInRequestId;
+
   const { data, setData, post, put, processing, errors } = useForm({
     offer_amount: String(offer?.offer_amount ?? ''),
-    valid_until: formatDate(offer?.valid_until),
+    valid_until: offer ? formatDate(offer.valid_until) : getDefaultExpirationDate(),
     status: offer?.status ?? 'pending',
     notes: offer?.notes ?? '',
-    trade_in_request_id: String(tradeInRequestId ?? ''),
+    trade_in_request_id: hasPreselectedTradeIn ? String(tradeInRequestId) : '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,11 +42,34 @@ export default function OfferForm({ offer, action, tradeInRequestId }: { offer?:
     }
   };
 
+  const tradeInRequestOptions = (tradeInRequests || []).map(req => ({
+    value: req.id,
+    label: `${req.year} ${req.make} ${req.model} ${req.vin ? `(${req.vin})` : ''}`,
+  }));
+
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
       {offer && <input type="hidden" name="_method" value="put" />}
-      {tradeInRequestId && <input type="hidden" name="trade_in_request_id" value={tradeInRequestId} />}
-      
+      {hasPreselectedTradeIn && (
+        <input type="hidden" name="trade_in_request_id" value={data.trade_in_request_id} />
+      )}
+
+      {!hasPreselectedTradeIn && (
+        <FormSection title="Trade-In Request" gridCols={1}>
+          <ForeignSelector
+            name="trade_in_request_id"
+            label="Trade-In Request"
+            value={data.trade_in_request_id}
+            options={tradeInRequestOptions}
+            placeholder="Select a trade-in request"
+            searchable
+            required
+            onChange={(value) => setData('trade_in_request_id', value)}
+            error={errors.trade_in_request_id}
+          />
+        </FormSection>
+      )}
+
       <FormSection title="Offer Details" gridCols={2}>
         <FormField
           name="offer_amount"
@@ -48,6 +86,7 @@ export default function OfferForm({ offer, action, tradeInRequestId }: { offer?:
           value={data.valid_until}
           error={errors.valid_until}
           onChange={(value) => setData('valid_until', value)}
+          required
         />
         <FormField
           name="status"

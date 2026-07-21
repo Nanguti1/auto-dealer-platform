@@ -19,10 +19,11 @@ class UpdateCmsPageRequest extends FormRequest
     public function rules(): array
     {
         $cmsPage = $this->route('cms_page');
+        $cmsPageId = is_object($cmsPage) ? $cmsPage->id : $cmsPage;
 
         return [
             'title' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:dynamic_cms_pages,slug,'.$cmsPage],
+            'slug' => ['sometimes', 'nullable', 'string', 'max:255', 'unique:dynamic_cms_pages,slug,'.$cmsPageId],
             'body' => ['sometimes', 'nullable', 'string'],
             'status' => ['sometimes', 'nullable', 'string', 'in:draft,published,archived'],
             'published_at' => ['sometimes', 'nullable', 'date'],

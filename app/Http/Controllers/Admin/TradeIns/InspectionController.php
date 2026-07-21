@@ -29,31 +29,31 @@ class InspectionController extends Controller
         ]);
     }
 
-    public function create(Request $request, ?int $tradeIn = null): Response
+    public function create(Request $request, ?TradeInRequest $tradeIn = null): Response
     {
         $this->authorize('create', TradeInInspection::class);
 
-        $tradeInRequest = null;
-        if ($tradeIn) {
-            $tradeInRequest = TradeInRequest::find($tradeIn);
-        } elseif ($request->has('trade_in')) {
-            $tradeInRequest = TradeInRequest::find($request->input('trade_in'));
-        }
-
         return Inertia::render('Admin/TradeIns/Inspections/Create', [
-            'tradeInRequest' => $tradeInRequest,
+            'tradeInRequest' => $tradeIn,
+            'tradeInRequests' => TradeInRequest::select('id', 'make', 'model', 'year', 'vin')->get(),
         ]);
     }
 
-    public function store(StoreInspectionRequest $request, ?int $tradeIn = null): RedirectResponse
+    public function store(StoreInspectionRequest $request, ?TradeInRequest $tradeIn = null): RedirectResponse
     {
-        $this->service->create($request->validated());
+        $data = $request->validated();
+
+        if ($tradeIn) {
+            $data['trade_in_request_id'] = $tradeIn->id;
+        }
+
+        $inspection = $this->service->create($data);
 
         if ($tradeIn) {
             return redirect()->route('admin.trade-ins.show', $tradeIn)->with('success', 'Inspection created successfully.');
         }
 
-        return redirect()->route('admin.inspections.index')->with('success', 'Inspection created successfully.');
+        return redirect()->route('admin.inspections.show', $inspection)->with('success', 'Inspection created successfully.');
     }
 
     public function show(TradeInInspection $inspection): Response
@@ -61,7 +61,7 @@ class InspectionController extends Controller
         $this->authorize('view', $inspection);
 
         return Inertia::render('Admin/TradeIns/Inspections/Show', [
-            'inspection' => $inspection->load(['tradeInRequest', 'inspector']),
+            'inspection' => $inspection->load(['tradeInRequest.user', 'inspector']),
         ]);
     }
 
@@ -70,7 +70,7 @@ class InspectionController extends Controller
         $this->authorize('update', $inspection);
 
         return Inertia::render('Admin/TradeIns/Inspections/Edit', [
-            'inspection' => $inspection->load(['tradeInRequest', 'inspector']),
+            'inspection' => $inspection->load(['tradeInRequest.user', 'inspector']),
         ]);
     }
 
