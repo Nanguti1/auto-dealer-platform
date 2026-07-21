@@ -7,7 +7,7 @@ export default function Create() {
     <CmsShell
       title="Create Home Page Section"
       description="Create a new section for the homepage layout."
-      actions={<CmsBackButton />}
+      actions={<CmsBackButton href={adminRoutes.homePageSections.index().url} />}
     >
       <HomeSectionForm action={adminRoutes.homePageSections.store().url} method="post" />
     </CmsShell>

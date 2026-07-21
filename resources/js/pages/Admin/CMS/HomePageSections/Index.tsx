@@ -19,40 +19,40 @@ export default function Index({ homePageSections, filters = {} }: { homePageSect
 
   const columns: Column<HomePageSection>[] = [
     {
-      key: 'title',
+      key: 'name',
       label: 'Title',
       sortable: true,
       render: (section) => (
         <div>
           <Link className="font-medium hover:underline" href={adminRoutes.homePageSections.show(section.id).url}>
-            {section.title ?? 'Untitled'}
+            {section.name ?? 'Untitled'}
           </Link>
-          <p className="text-xs text-muted-foreground">{section.section_type ?? '—'}</p>
+          <p className="text-xs text-muted-foreground">{section.type ?? '—'}</p>
         </div>
       ),
     },
     {
-      key: 'section_type',
+      key: 'type',
       label: 'Type',
       sortable: true,
       render: (section) => (
         <Badge variant="outline" className="capitalize">
-          {section.section_type?.replace('_', ' ') ?? '—'}
+          {section.type?.replace('_', ' ') ?? '—'}
         </Badge>
       ),
     },
     {
-      key: 'display_order',
+      key: 'sort_order',
       label: 'Order',
       sortable: true,
-      render: (section) => section.display_order ?? 0,
+      render: (section) => section.sort_order ?? 0,
     },
     {
-      key: 'is_visible',
+      key: 'is_active',
       label: 'Visibility',
       render: (section) => (
-        <Badge variant={section.is_visible ? 'default' : 'outline'}>
-          {section.is_visible ? 'Visible' : 'Hidden'}
+        <Badge variant={section.is_active ? 'default' : 'outline'}>
+          {section.is_active ? 'Visible' : 'Hidden'}
         </Badge>
       ),
     },

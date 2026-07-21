@@ -10,8 +10,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 export default function Show({ homePageSection }: { homePageSection: HomePageSection }) {
   return (
     <CmsShell
-      title={homePageSection.title ?? 'Untitled Section'}
-      description={homePageSection.section_type ?? ''}
+      title={homePageSection.name ?? 'Untitled Section'}
+      description={homePageSection.type ?? ''}
       actions={
         <>
           <CmsBackButton href={adminRoutes.homePageSections.index().url} />
@@ -31,8 +31,8 @@ export default function Show({ homePageSection }: { homePageSection: HomePageSec
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <span className="text-sm text-muted-foreground">Title:</span>
-              <p className="text-sm font-medium">{homePageSection.title ?? 'No title provided.'}</p>
+              <span className="text-sm text-muted-foreground">Name:</span>
+              <p className="text-sm font-medium">{homePageSection.name ?? 'No name provided.'}</p>
             </div>
             <div>
               <span className="text-sm text-muted-foreground">Content Configuration:</span>
@@ -53,17 +53,17 @@ export default function Show({ homePageSection }: { homePageSection: HomePageSec
                 <LayoutIcon className="size-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Type:</span>
                 <Badge variant="outline" className="capitalize">
-                  {homePageSection.section_type?.replace('_', ' ') ?? '—'}
+                  {homePageSection.type?.replace('_', ' ') ?? '—'}
                 </Badge>
               </div>
               <div className="flex items-center gap-2">
                 <Layers className="size-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Order:</span>
-                <span className="text-sm font-medium">{homePageSection.display_order ?? 0}</span>
+                <span className="text-sm font-medium">{homePageSection.sort_order ?? 0}</span>
               </div>
               <div className="flex items-center gap-2">
-                <Badge variant={homePageSection.is_visible ? 'default' : 'outline'}>
-                  {homePageSection.is_visible ? 'Visible' : 'Hidden'}
+                <Badge variant={homePageSection.is_active ? 'default' : 'outline'}>
+                  {homePageSection.is_active ? 'Visible' : 'Hidden'}
                 </Badge>
               </div>
             </CardContent>
